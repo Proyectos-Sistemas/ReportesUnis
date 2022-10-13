@@ -47,7 +47,7 @@
             <%-- CALENDARIO PARA BUSQUEDA --%>
             <asp:Label ID="FInicio2" runat="server" Visible="false">Fecha inicio:</asp:Label>
             <asp:TextBox ID="CldrCiclosInicio2" runat="server" TextMode="Date" Visible="false"> </asp:TextBox>
-            <asp:Label ID="FFin2" runat="server" Visible="false">Fecha inicio:</asp:Label>
+            <asp:Label ID="FFin2" runat="server" Visible="false">Fecha fin:</asp:Label>
             <asp:TextBox ID="CldrCiclosFin2" runat="server" TextMode="Date" Visible="false">
             </asp:TextBox>
         </div>
