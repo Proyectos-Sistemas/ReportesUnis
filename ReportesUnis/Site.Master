@@ -1,0 +1,206 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="ReportesUnis.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="es">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> Reportes Interfaces</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+    <%-- <webopt:bundlereference runat="server" path="~/Content/css" />--%>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Styles/bootstrap/bootstrap.min.css") %>" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Styles/bootstrap/dataTables.bootstrap4.min.css") %>" />
+    <link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/Styles/fontawesome/all.css") %>" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css" crossorigin="anonymous" />
+
+
+    <script src="<%= ResolveUrl("Scripts/jquery/jquery-3.3.1.min.js") %>"></script>
+    <script src="<%= ResolveUrl("Scripts/bootstrap/bootstrap.min.js") %>"></script>
+    <script src="<%= ResolveUrl("Scripts/dataTables/jquery.dataTables.min.js") %>"></script>
+    <script src="<%= ResolveUrl("Scripts/dataTables/dataTables.fixedColumns.min.js") %>"></script>
+    <script src="<%= ResolveUrl("Scripts/dataTables/dataTables.bootstrap4.min.js") %>"></script>
+
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+
+
+
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="Styles/estilo-unis.css" crossorigin="anonymous" />
+    <script>
+        $(document).ready(function () {
+            console.log("ready");
+            DivCargandoNoVisible();
+
+        });
+        window.onload = function () {
+            console.log("onload");
+
+            if ($('#overlay').length) {
+
+                console.log("overlay exists");
+            } else {
+                var $div = $('<div />').appendTo('body');
+                $div.attr('id', 'overlay');
+                $div.attr('class', 'overlay');
+
+                var $div2 = $('<div />').appendTo('body');
+                $div2.attr('id', 'loading');
+                $div2.attr('class', 'loading');
+                console.log("overlay does not exists");
+                DivCargandoVisible();
+            }
+
+        };
+        function DivCargandoNoVisible() {
+            if ($('#overlay').is(':visible')) {
+                console.log("overlay no visible");
+                $('#overlay').hide();
+            };
+
+            if ($('#loading').is(':visible')) {
+                console.log("loading no visible");
+                $('#loading').hide();
+            };
+        }
+
+        function DivCargandoVisible() {
+            if (!$('#overlay').is(':visible')) {
+                console.log("overlay visible");
+                $('#overlay').show();
+            };
+
+            if (!$('#loading').is(':visible')) {
+                console.log("loading visible");
+                $('#loading').show();
+            };
+        }
+    </script>
+</head>
+<body>
+    <div class="overlay" id="overlay" style=""></div>
+    <div class="loading" id="loading" style="">Cargando. Espere por favor...<div class="lds-dual-ring"></div>
+    </div>
+    <form runat="server" class="needs-validation">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <%--
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />--%>
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+        <nav class="navbar navbar-expand-lg justify-content-center navbar-dark bg-dark">
+
+            <a id="A1" class="navbar-brand" runat="server" href="~/">Interfaces</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+
+                    <li class="nav-item dropdown" id="liNavbarInterfaces">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarInterfaces" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reportes
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a id="MenuLogServipagos" runat="server" validationgroup="RLI_Serbi" class="dropdown-item" href="~/LogSerbipagos">Interfaz SerbiPagos - Campus</a>
+                            <a id="MenuLogInterfaz" runat="server" validationgroup="RLI_CRM_CS" class="dropdown-item" href="~/LogInterfazCC">Interfaz CRM - Campus</a>
+                            <a id="MenuLogInterfazHCMCS" runat="server" validationgroup="RLI_HCM_CS" class="dropdown-item" href="~/LogInterfazHCMCS">Interfaz HCM - Campus</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarHistoricos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Históricos
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a id="MenuHistoricosHCM" runat="server" validationgroup="HISTORICO_HCM" class="dropdown-item" href="~/HistoricoHCM">Históricos HCM</a>
+                            <a id="MenuHistoricosCXC" runat="server" validationgroup="HISTORICO_FINANZAS" class="dropdown-item" href="~/HistoricoCXC">Históricos Cuentas por cobrar</a>
+                            <a id="MenuHistoricosCXP" runat="server" validationgroup="HISTORICO_FINANZAS" class="dropdown-item" href="~/HistoricoCXP">Históricos Cuentas por pagar</a>
+                            <a id="MenuHistoricosGL" runat="server" validationgroup="HISTORICO_FINANZAS" class="dropdown-item" href="~/HistoricoGL">Históricos Contabilidad general</a>
+                        </div>
+                    </li>                    
+                    <li class="nav-item dropdown" id="liNavbarInformacion">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarInformacion" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Información
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a id="RepEstudiantes" runat="server" class="dropdown-item" href="~/ReporteEstudiantes">Reportes de Carné de Estudiantes</a>
+                            <a id="RepEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteEmpleados">Reportes de Carné  de Empleados</a>
+                            <a id="RepCamarasEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicas">Reportes Cámaras Térmicas de Estudiantes</a>
+                            <a id="RepCamarasEmp" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicasEmpleados">Reportes Cámaras Térmicas de Empleados</a>
+                            <a id="CargaCTEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/Cargarfotografia">Carga Masiva de Fotografías Estudiantes</a>
+                            <a id="CargaCTEmp" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/CargarFotografiaEmpleados">Carga Masiva de Fotografías Empleados</a>
+                            <a id="ActEstudiantes" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ActualizacionEstudiantes">Actualización de información de Estudiantes</a>
+                            <a id="ActEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ActualizaciónEmpleados">Actualización de información de Empleados</a>
+                        </div>
+                    </li>
+                </ul>
+
+
+                <ul class="navbar-nav navbar-right">
+                    <li class="navbar-item"><span class="nav-link">¡Hola, <%: Context.User.Identity.Name  %>!</span></li>
+                    <li class="nav-item navbar-text">
+                        <asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText=" Cerrar sesión"
+                            LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <hr />
+            <%-- <footer>
+                <p>UNIS - <%: DateTime.Now.Year %> </p>
+            </footer>--%>
+        </div>
+    </form>
+</body>
+</html>

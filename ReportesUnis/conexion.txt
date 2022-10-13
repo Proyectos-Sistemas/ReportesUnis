@@ -1,0 +1,1 @@
+User ID = UNIS_REPORTES ; Password=#7rEp35#G;Data Source=129.213.93.107/DB080522_PDB1.subnetprod1.vcnproduccion.oraclevcn.com

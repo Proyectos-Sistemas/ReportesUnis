@@ -1,0 +1,103 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Web;
+using System.Windows;
+using Newtonsoft.Json;
+using RestSharp;
+
+namespace ReportesUnis.API
+{
+    public class ConsumoAPI
+    {
+
+        public dynamic Post(string url, string json, string user, string pass)
+        {
+            string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(user + ":" + pass));
+            try
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Authorization", "Basic " + svcCredentials);
+                request.AddHeader("content-type", "application/vnd.oracle.adf.resourceitem+json");
+                request.AddHeader("username", user);
+                request.AddHeader("password", pass);
+                request.AddParameter("application/json", json, ParameterType.RequestBody);
+
+                IRestResponse response = client.Execute(request);
+
+                dynamic datos = JsonConvert.DeserializeObject(response.Content).ToString();
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return 1;
+            }
+        }
+
+        public string Get(string url, string user, string pass)
+        {
+
+            string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(user + ":" + pass));
+
+            HttpWebRequest myWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            myWebRequest.Headers.Add("Authorization", "Basic " + svcCredentials);
+            myWebRequest.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0";
+            myWebRequest.PreAuthenticate = true;
+            myWebRequest.Credentials = new NetworkCredential();
+            myWebRequest.Proxy = null;
+            HttpWebResponse myHttpWebResponse = (HttpWebResponse)myWebRequest.GetResponse();
+            Stream myStream = myHttpWebResponse.GetResponseStream();
+            StreamReader myStreamReader = new StreamReader(myStream);
+
+            string Datos = HttpUtility.HtmlDecode(myStreamReader.ReadToEnd());
+
+            return Datos;
+        }
+
+        public int Patch(string url, string user, string pass, string info, string consulta, string effective)
+        {
+            string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(user + ":" + pass));
+
+            try
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest(Method.PATCH);
+                var range = "RangeMode = CORRECTION;RangeStartDate=" + effective + ";RangeSpan=LOGICAL_ROW_END_DATE";
+                request.AddHeader("Authorization", "Basic " + svcCredentials);
+                request.AddHeader("content-type", "application/vnd.oracle.adf.resourceitem+json");
+                request.AddHeader("username", user);
+                request.AddHeader("password", pass);
+                if (consulta.Equals("legislativeInfo") || consulta.Equals("addresses"))
+                {
+                    request.AddHeader("effective-of", range);
+                    request.AddParameter("application/json", info, ParameterType.RequestBody);
+                }
+                else if (consulta.Equals("addresses"))
+                {
+                    request.AddHeader("effective-of", range);
+                    request.AddParameter("application/vnd.oracle.adf.resourceitem+json", info, ParameterType.RequestBody);
+
+                }else
+                    request.AddParameter("application/vnd.oracle.adf.resourceitem+json", info, ParameterType.RequestBody);
+
+                IRestResponse response = client.Execute(request);
+
+                dynamic datos = JsonConvert.DeserializeObject(response.Content).ToString();
+                return 0;
+            }
+            catch (Exception )
+            {
+                return 1;
+            }
+        }
+
+    }
+}
