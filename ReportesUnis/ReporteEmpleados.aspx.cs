@@ -1858,74 +1858,65 @@ namespace ReportesUnis
             desc = 1;
             dpi = "2334448580101";
             string[] result = dpi.Split(',');
-            string[] sustituto = new string[result.Length];//Regex.Replace(Consultar(), " \"", "");
+            string[] sustituto = new string[result.Length];
             desc = 1;
             string nombre = "ImagenesEmpleados" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
             string constr = TxtURL.Text;
             string ret = "0";
-            int total = 1;
+            int total = result.Count();
+            if (total == 0)
+            {
+                total = 1;
+            }
             DataSetLocalRpt dsDownload = new DataSetLocalRpt();
             for (int i = 0; i < result.Length; i++)
             {
                 sustituto[i] = sustituirCaracteres(result[i].ToString());
                 DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
-                byte[] bs64 = Encoding.ASCII.GetBytes(sustituto[0]);
+                byte[] bs64 = Encoding.ASCII.GetBytes(sustituto[i]);
                 newFila["bytes"] = bs64;
-                //newFila["bytes"] = sustituto[0];
                 newFila["contentType"] = "jpg";
                 newFila["fileName"] = result[i] + ".jpg";
                 dsDownload.Tables["AllDownload"].Rows.Add(newFila);
             }
 
             total = dsDownload.Tables["AllDownload"].Rows.Count;
+            
 
-            ////    string base64 = dsDownload.Tables["AllDownloadEmp"].Rows[0]["bytes"].ToString();
-            //Base64ToImage(dsDownload.Tables["AllDownloadEmp"].Rows[0]["bytes"].ToString());
+            string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
+            File.Create(folder).Close();
 
-            //string base64 = dsDownload.Tables["AllDownloadEmp"].Rows[0]["bytes"].ToString();
-            //string fileName = result[0] + ".jpg";
-            //byte[] imageBytes = Convert.FromBase64String(base64);
-            //MemoryStream ms = new MemoryStream(imageBytes, 0, imageBytes.Length);
-            //ms.Write(imageBytes, 0, imageBytes.Length);
-            //System.Drawing.Image image = System.Drawing.Image.FromStream(ms, true);
-            //image.Save(Server.MapPath("~/Uploads/" + fileName),
-            //System.Drawing.Imaging.ImageFormat.Png);
-            //Image.Save
-            //DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
-            //byte[] base64 = Encoding.ASCII.GetBytes(sustituto[0]);
-            //newFila["bytes"] = base64;
-            //newFila["contentType"] = "jpg";
-            //newFila["fileName"] = dpi + ".jpg";
-            //dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
+            using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
+            {
 
-            Response.Clear();
-            Response.Buffer = true;
-            Response.Charset = "";
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.ContentType = dsDownload.Tables["AllDownloadEmp"].Rows[0]["contentType"].ToString();
-            Response.AppendHeader("Content-Disposition", "attachment; filename=" + dsDownload.Tables["AllDownloadEmp"].Rows[0]["fileName"].ToString());
-            Response.BinaryWrite(bytes);
-            Response.Flush();
-            Response.End();
+                byte[] base64 = Convert.FromBase64String(sustituto[0]);
+                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                {
+                    for (int i = 0; i < total; i++)
+                    {
+                        ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
 
-            //string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
-            //File.Create(folder).Close();
+                        var zipStream = readmeEntry.Open();
+                        zipStream.Write(base64, 0, base64.Length);
 
-            //using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
-            //{
+                    }
+                }
+                /*------------FUNCIONA, PERO SUSTITUYE EL  ZIP POR LA FOTO
+                using (FileStream foto = new FileStream(folder + dsDownload.Tables["AllDownload"].Rows[0]["filename"].ToString(), FileMode.Open))
+                {
+                    using (GZipStream gz = new GZipStream(foto, CompressionMode.Compress, false))
+                    {
+                        gz.Write(base64, 0, base64.Length);
+                    }
+                }
+                ---------------*/
 
-            //    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
-            //    {
-            //        for (int i = 0; i < total; i++)
-            //        {
-            //            ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString());
-            //        }
-            //    }
-            //}
 
-            //Response.ContentType = "application/zip";
-            //Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-            //Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
+            }
+
+            Response.ContentType = "application/zip";
+            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+            Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
             ret = "1";
             //desc = 0;
             return ret;
