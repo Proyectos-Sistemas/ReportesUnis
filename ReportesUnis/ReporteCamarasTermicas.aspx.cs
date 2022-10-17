@@ -42,8 +42,8 @@ namespace ReportesUnis
                 {
                     cmd.CommandText = "SELECT " +
                     "EMPLID, FIRST_NAME, LAST_NAME, ID, TYPE, PERSON_GROUP||Departamento PERSON_GROUP, GENDER, " +
-                    "'' Start_Time_of_Effective_Period, " +
-                    "'' End_Time_of_Effective_Period, " +
+                    /*"MIN (Start_Time_of_Effective_Period) Start_Time_of_Effective_Period, " +
+                    "MAX(End_Time_of_Effective_Period) End_Time_of_Effective_Period, " +*/
                     "CARD, EMAIL, PHONE, REMARK, DOCK_STATION_LOGIN_PASSWORD, SUPPORTISSUEDCUSTOMPROPERTIES, " +
                     "SKINSURFACE_TEMPERATURE, TEMPERATURE_STATUS, DEPARTAMENTO " +
                     "FROM (SELECT DISTINCT PD.EMPLID, PD.FIRST_NAME, " +
@@ -451,7 +451,7 @@ namespace ReportesUnis
                 {
                     for (int k = 0; k < 17; k++)
                     {
-                        for (int j = 0; j < GridViewReporteCT.Columns.Count - 1; j++)
+                        for (int j = 0; j < GridViewReporteCT.Columns.Count-1; j++)
                         {
                             for (int i = 0; i < GridViewReporteCT.Rows.Count; i++)
                             {
@@ -614,7 +614,7 @@ namespace ReportesUnis
                 ////AGREGA EL NOMBRE DE LAS COLUMNAS AL ARCHIVO.  
                 string emplid = "";
                 int total = 0;
-                for (int k = 0; k < GridViewReporteCT.Rows.Count; k++)
+                for (int k = 0; k < GridViewReporteCT .Rows.Count; k++)
                 {
                     emplid += "'" + removeUnicode(GridViewReporteCT.Rows[k].Cells[17].Text) + "',";
                 }
