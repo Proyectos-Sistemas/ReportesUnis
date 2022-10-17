@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Linq;
 using System.Web.UI;//.WebControls;
 using System.Web.Services;
@@ -1870,8 +1870,7 @@ namespace ReportesUnis
             {
                 sustituto[i] = sustituirCaracteres(result[i].ToString());
                 DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
-                string b64 = sustituto[0].ToString();
-                byte[] base64 = Encoding.ASCII.GetBytes(b64);
+                byte[] base64 = Encoding.ASCII.GetBytes(sustituto[0]);
                 //newFila["bytes"] = base64;
                 newFila["bytes"] = sustituto[0];
                 newFila["contentType"] = "jpg";
