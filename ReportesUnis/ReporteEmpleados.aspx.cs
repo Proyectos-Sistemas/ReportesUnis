@@ -17,6 +17,9 @@ using System.Web;
 using Ionic.Zip;
 using static System.Net.WebRequestMethods;
 using File = System.IO.File;
+using System.EnterpriseServices;
+using Microsoft.Reporting.Map.WebForms.BingMaps;
+using DocumentFormat.OpenXml.Spreadsheet;
 //using System.Windows.Controls;
 
 namespace ReportesUnis
@@ -1242,12 +1245,8 @@ namespace ReportesUnis
             }
             else
             {
-                //sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('"', '\n');
-                sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('\"','\t');
-                //sustituto = sustituto.Replace('\\', '\t');
-                sustituto = Regex.Replace(sustituto, @"\n+", " ");
-                //sustituto = Regex.Replace(sustituto, @"\", " ");
-                sustituto = Regex.Replace(sustituto, @"\t", "");
+                sustituto = DecodeStringFromBase64(Consultar(dpi));
+                //sustituto = Regex.Replace(sustituto, "\"", "");
                 int largo = dpi.Length;
                 largo = largo + 52;
                 sustituto = sustituto.Remove(0, largo);
@@ -1512,7 +1511,7 @@ namespace ReportesUnis
                                     newFila["Apellido1"] = (arrlist[i, 13] ?? "").ToString();
                                     newFila["Apellido2"] = (arrlist[i, 14] ?? "").ToString();
                                     newFila["Apellido3"] = (arrlist[i, 15] ?? "").ToString();
-                                    newFila["NOM_IMP"] = (arrlist[i, 12] ?? "").ToString() + " " + (arrlist[i, 13] ?? "").ToString();
+                                    newFila["NOM_IMP"] = (arrlist[i, 11] ?? "").ToString() + " " + (arrlist[i, 13] ?? "").ToString();
                                     newFila["Sexo"] = (arrlist[i, 16] ?? "").ToString();
                                     newFila["CARNE"] = (arrlist[i, 17] ?? "").ToString();
                                     if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 17] ?? "").ToString())
@@ -1568,7 +1567,7 @@ namespace ReportesUnis
                                     newFila["Apellido1"] = (arrlist[i, 15] ?? "").ToString();
                                     newFila["Apellido2"] = (arrlist[i, 16] ?? "").ToString();
                                     newFila["Apellido3"] = (arrlist[i, 17] ?? "").ToString();
-                                    newFila["NOM_IMP"] = (arrlist[i, 13] ?? "").ToString() + " " + (arrlist[i, 17] ?? "").ToString();
+                                    newFila["NOM_IMP"] = (arrlist[i, 13] ?? "").ToString() + " " + (arrlist[i, 15] ?? "").ToString();
                                     newFila["Sexo"] = (arrlist[i, 18] ?? "").ToString();
                                     newFila["CARNE"] = (arrlist[i, 19] ?? "").ToString();
                                     if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 19] ?? "").ToString())
@@ -1869,10 +1868,10 @@ namespace ReportesUnis
             for (int i = 0; i < result.Length; i++)
             {
                 sustituto[i] = sustituirCaracteres(result[i].ToString());
-                DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
-                byte[] base64 = Encoding.ASCII.GetBytes(sustituto[0]);
-                //newFila["bytes"] = base64;
-                newFila["bytes"] = sustituto[0];
+                DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
+                byte[] bs64 = Encoding.ASCII.GetBytes(sustituto[0]);
+                newFila["bytes"] = bs64;
+                //newFila["bytes"] = sustituto[0];
                 newFila["contentType"] = "jpg";
                 newFila["fileName"] = result[i] + ".jpg";
                 dsDownload.Tables["AllDownload"].Rows.Add(newFila);
@@ -1899,38 +1898,39 @@ namespace ReportesUnis
             //newFila["fileName"] = dpi + ".jpg";
             //dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
 
-            //Response.Clear();
-            //Response.Buffer = true;
-            //Response.Charset = "";
-            //Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            //Response.ContentType = dsDownload.Tables["AllDownload"].Rows[0]["contentType"].ToString();
-            //Response.AppendHeader("Content-Disposition", "attachment; filename=" + dsDownload.Tables["AllDownload"].Rows[0]["fileName"].ToString());
-            //Response.BinaryWrite(Encoding.ASCII.GetBytes(sustituto[0]));
-            //Response.Flush();
-            //Response.End();
+            Response.Clear();
+            Response.Buffer = true;
+            Response.Charset = "";
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.ContentType = dsDownload.Tables["AllDownloadEmp"].Rows[0]["contentType"].ToString();
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + dsDownload.Tables["AllDownloadEmp"].Rows[0]["fileName"].ToString());
+            Response.BinaryWrite(bytes);
+            Response.Flush();
+            Response.End();
 
-            string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
-            File.Create(folder).Close();
+            //string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
+            //File.Create(folder).Close();
 
-            using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
-            {
+            //using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
+            //{
 
-                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
-                {
-                    for (int i = 0; i < total; i++)
-                    {
-                        ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString());
-                    }
-                }
-            }
+            //    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+            //    {
+            //        for (int i = 0; i < total; i++)
+            //        {
+            //            ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString());
+            //        }
+            //    }
+            //}
 
-            Response.ContentType = "application/zip";
-            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-            Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
+            //Response.ContentType = "application/zip";
+            //Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+            //Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
             ret = "1";
-            desc = 0;
+            //desc = 0;
             return ret;
         }
+
 
         protected void ButtonFts_Click(object sender, EventArgs e)
         {

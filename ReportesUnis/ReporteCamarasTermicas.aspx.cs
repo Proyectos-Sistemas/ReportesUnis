@@ -42,8 +42,8 @@ namespace ReportesUnis
                 {
                     cmd.CommandText = "SELECT " +
                     "EMPLID, FIRST_NAME, LAST_NAME, ID, TYPE, PERSON_GROUP||Departamento PERSON_GROUP, GENDER, " +
-                    /*"MIN (Start_Time_of_Effective_Period) Start_Time_of_Effective_Period, " +
-                    "MAX(End_Time_of_Effective_Period) End_Time_of_Effective_Period, " +*/
+                        "'' Start_Time_of_Effective_Period, " +
+                        "'' End_Time_of_Effective_Period, " +
                     "CARD, EMAIL, PHONE, REMARK, DOCK_STATION_LOGIN_PASSWORD, SUPPORTISSUEDCUSTOMPROPERTIES, " +
                     "SKINSURFACE_TEMPERATURE, TEMPERATURE_STATUS, DEPARTAMENTO " +
                     "FROM (SELECT DISTINCT PD.EMPLID, PD.FIRST_NAME, " +
@@ -177,8 +177,10 @@ namespace ReportesUnis
                 string min = buscar.ToLower();
                 if (min.Equals("male"))
                     where = "WHERE GENDER LIKE('%M%') ";
-                else if (min.Equals("famale"))
+                else if (min.Equals("female"))
                     where = "WHERE GENDER LIKE ('%F%') ";
+                else
+                    where = "WHERE GENDER LIKE ('%Mujer%') ";
             }
 
             string constr = TxtURL.Text;
@@ -269,6 +271,8 @@ namespace ReportesUnis
                         {
                             BindGrid();
                             lblBusqueda.Text = "No se encontró la información solicitada";
+                            if (LbxBusqueda.Text == "Género")
+                                lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
                         }
                         con.Close();
                     }
