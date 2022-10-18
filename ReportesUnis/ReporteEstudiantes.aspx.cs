@@ -650,26 +650,38 @@ namespace ReportesUnis
                         }
                         con.Close();
 
-
-                        string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
-                        File.Create(folder).Close();
-
-                        using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
+                        if (total > 0)
                         {
+                            string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
+                            File.Create(folder).Close();
 
-                            using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                            using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
                             {
-                                for (int i = 0; i < total; i++)
+
+                                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
                                 {
-                                    ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["fileName"].ToString(), CompressionLevel.Optimal);
+                                    for (int i = 0; i < total; i++)
+                                    {
+                                        byte[] base64 = (byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"];
+                                        ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
+
+                                        var zipStream = readmeEntry.Open();
+                                        zipStream.Write(base64, 0, base64.Length);
+
+                                    }
                                 }
                             }
+
+                            Response.ContentType = "application/zip";
+                            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                            Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
+                            ret = "1";
+                        }
+                        else
+                        {
+                            ret = "2";
                         }
 
-                        Response.ContentType = "application/zip";
-                        Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-                        Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
-                        ret = "1";
                     }
                 }
             }
@@ -690,8 +702,11 @@ namespace ReportesUnis
 
                 string respuesta = DownloadAllFile(emplid);
                 if (respuesta == "0")
+                {
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
-                //DownloadAllFile("'00000000002','00000003980',", 2);
+                }
+                else if (respuesta == "2")
+                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
             }
             catch (Exception x)
             {

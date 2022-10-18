@@ -12,12 +12,17 @@ using System.Linq;
 using System.Web.UI.WebControls;
 using SpreadsheetLight;
 using System.Web.UI;
+using NPOI.Util;
+using System.IO.Compression;
 
 namespace ReportesUnis
 {
     public partial class ReporteCamarasTermicasEmpleados : System.Web.UI.Page
     {
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        int desc = 0;
+        string nombre = "ImagenesEmpleados" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("DATOS_FOTOGRAFIAS") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
@@ -99,7 +104,7 @@ namespace ReportesUnis
         }
 
         [WebMethod]
-        public string ConsultaWS()
+        public string ConsultaWS(string dpi)
         {
             string busqueda = "";
 
@@ -116,30 +121,37 @@ namespace ReportesUnis
             //Obtiene información del servicio (URL y credenciales)
             credencialesEndPoint(archivoConfiguraciones, "Consultar");
 
-            if (LbxBusqueda.Text.Equals("Nombre"))
+            if (desc==0)
             {
-                //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                CuerpoConsultaPorNombre(Variables.wsUsuario, Variables.wsPassword, busqueda);
+                if (LbxBusqueda.Text.Equals("Nombre"))
+                {
+                    //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                    CuerpoConsultaPorNombre(Variables.wsUsuario, Variables.wsPassword, busqueda);
+                }
+                else if (LbxBusqueda.Text.Equals("Apellido"))
+                {
+                    //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                    CuerpoConsultaPorApellido(Variables.wsUsuario, Variables.wsPassword, busqueda);
+                }
+                else if (LbxBusqueda.Text.Equals("ID"))
+                {
+                    //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                    CuerpoConsultaPorID(Variables.wsUsuario, Variables.wsPassword, busqueda);
+                }
+                else if (LbxBusqueda.Text.Equals("Departamento"))
+                {
+                    //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                    CuerpoConsultaPorDepartamento(Variables.wsUsuario, Variables.wsPassword, busqueda);
+                }
+                else if (LbxBusqueda.Text.Equals("Género"))
+                {
+                    //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                    CuerpoConsultaPorGenero(Variables.wsUsuario, Variables.wsPassword, busqueda);
+                }
             }
-            else if (LbxBusqueda.Text.Equals("Apellido"))
+            else
             {
-                //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                CuerpoConsultaPorApellido(Variables.wsUsuario, Variables.wsPassword, busqueda);
-            }
-            else if (LbxBusqueda.Text.Equals("ID"))
-            {
-                //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                CuerpoConsultaPorID(Variables.wsUsuario, Variables.wsPassword, busqueda);
-            }
-            else if (LbxBusqueda.Text.Equals("Departamento"))
-            {
-                //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                CuerpoConsultaPorDepartamento(Variables.wsUsuario, Variables.wsPassword, busqueda);
-            }
-            else if (LbxBusqueda.Text.Equals("Género"))
-            {
-                //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                CuerpoConsultaPorGenero(Variables.wsUsuario, Variables.wsPassword, busqueda);
+                CuerpoConsultaDescarga(Variables.wsUsuario, Variables.wsPassword, dpi);
             }
 
             //Crea un documento de respuesta Campus
@@ -467,6 +479,38 @@ namespace ReportesUnis
                                </soapenv:Body>
                                 </soapenv:Envelope>";
         }
+        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar
+        private static void CuerpoConsultaDescarga(string idPersona, string passwordServicio, string DPI)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
+                                <soapenv:Header/>
+                                <soapenv:Body>
+                                  <v2:runReport>
+                                     <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>            
+                                        <v2:flattenXML>false</v2:flattenXML>
+                                        <v2:parameterNameValues>
+                                        <v2:listOfParamNameValues>
+                                           <!--1st Parameter of BIP Report-->    
+                                            <v2:item>
+                                                <v2:name>DPI</v2:name>
+                                                        <v2:values>
+                                                            <v2:item>" + DPI + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                           </v2:listOfParamNameValues>
+                                        </v2:parameterNameValues>           
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/ConsultaDescargaImagen.xdo</v2:reportAbsolutePath>
+                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                     </v2:reportRequest>
+                                     <v2:userID>" + idPersona + @"</v2:userID>
+                                     <v2:password>" + passwordServicio + @"</v2:password>
+                                  </v2:runReport>
+                               </soapenv:Body>
+                                </soapenv:Envelope>";
+        }
+
 
         //Función para decodificar respuesta de la API
         public string DecodeStringFromBase64(string stringToDecode)
@@ -475,60 +519,73 @@ namespace ReportesUnis
         }
 
         //Sustituye las comillas dobles y elimina los primeros caracteres que corresponden a los Headers
-        public string sustituirCaracteres()
+        public string sustituirCaracteres(string dpi)
         {
             string sustituto = "";//Regex.Replace(Consultar(), " \"", "");
-            sustituto = DecodeStringFromBase64(ConsultaWS()).Replace('"', '\n');
+            sustituto = DecodeStringFromBase64(ConsultaWS("")).Replace('"', '\n');
             sustituto = Regex.Replace(sustituto, @" \n+", "\n");
             sustituto = Regex.Replace(sustituto, @"\n+", "");
 
 
-            if (sustituto.Length > 110)
+            if (desc == 0)
             {
-                if (String.IsNullOrEmpty(TxtBuscador.Text))
+                if (sustituto.Length > 110)
                 {
-                    sustituto = sustituto.Remove(0, 136);
-                }
-                else
-                {
-                    //Se valida que tipo de busqueda se realiza pues este dato lo devuelve el string sustituto y dependiendo
-                    //de eso son los caracteres que se eliminan para que unicamente quede la informacion que se necesita.
+                    if (String.IsNullOrEmpty(TxtBuscador.Text))
+                    {
+                        sustituto = sustituto.Remove(0, 136);
+                    }
+                    else
+                    {
+                        //Se valida que tipo de busqueda se realiza pues este dato lo devuelve el string sustituto y dependiendo
+                        //de eso son los caracteres que se eliminan para que unicamente quede la informacion que se necesita.
 
-                    if (LbxBusqueda.Text.Equals("Nombre"))
-                    {
-                        int largo = 0;
-                        string nombre = TxtBuscador.Text.TrimEnd(' ');
-                        largo = nombre.Length + 90;
-                        sustituto = sustituto.Remove(0, largo);
-                    }
-                    else if (LbxBusqueda.Text.Equals("Apellido"))
-                    {
-                        int largo = 0;
-                        string nombre = TxtBuscador.Text.TrimEnd(' ');
-                        largo = nombre.Length + 94;
-                        sustituto = sustituto.Remove(0, largo);
-                    }
-                    else if (LbxBusqueda.Text.Equals("ID"))
-                    {
-                        int largo = 0;
-                        string nombre = TxtBuscador.Text.TrimEnd(' ');
-                        largo = nombre.Length + 88;
-                        sustituto = sustituto.Remove(0, largo);
-                    }
-                    else if (LbxBusqueda.Text.Equals("Departamento"))
-                    {
-                        int largo = 0;
-                        string nombre = TxtBuscador.Text.TrimEnd(' ');
-                        largo = nombre.Length + 98;
-                        sustituto = sustituto.Remove(0, largo);
-                    }
-                    else if (LbxBusqueda.Text.Equals("Género"))
-                    {
-                        int largo = 0;
-                        largo = 94;
-                        sustituto = sustituto.Remove(0, largo);
+                        if (LbxBusqueda.Text.Equals("Nombre"))
+                        {
+                            int largo = 0;
+                            string nombre = TxtBuscador.Text.TrimEnd(' ');
+                            largo = nombre.Length + 90;
+                            sustituto = sustituto.Remove(0, largo);
+                        }
+                        else if (LbxBusqueda.Text.Equals("Apellido"))
+                        {
+                            int largo = 0;
+                            string nombre = TxtBuscador.Text.TrimEnd(' ');
+                            largo = nombre.Length + 94;
+                            sustituto = sustituto.Remove(0, largo);
+                        }
+                        else if (LbxBusqueda.Text.Equals("ID"))
+                        {
+                            int largo = 0;
+                            string nombre = TxtBuscador.Text.TrimEnd(' ');
+                            largo = nombre.Length + 88;
+                            sustituto = sustituto.Remove(0, largo);
+                        }
+                        else if (LbxBusqueda.Text.Equals("Departamento"))
+                        {
+                            int largo = 0;
+                            string nombre = TxtBuscador.Text.TrimEnd(' ');
+                            largo = nombre.Length + 98;
+                            sustituto = sustituto.Remove(0, largo);
+                        }
+                        else if (LbxBusqueda.Text.Equals("Género"))
+                        {
+                            int largo = 0;
+                            largo = 94;
+                            sustituto = sustituto.Remove(0, largo);
+                        }
                     }
                 }
+            }
+            else
+            {               
+                sustituto = DecodeStringFromBase64(ConsultaWS(dpi)).Replace('\"', '\t');
+                sustituto = Regex.Replace(sustituto, @"\n+", " ");
+                sustituto = Regex.Replace(sustituto, @"\t", "");
+                int largo = dpi.Length;
+                largo = largo + 52;
+                if (sustituto.Length > largo)
+                    sustituto = sustituto.Remove(0, largo);
             }
             return sustituto;
         }
@@ -536,7 +593,7 @@ namespace ReportesUnis
         public void matrizDatos()
         {
             GridViewReporteCT.DataSource = "";
-            string[] result = sustituirCaracteres().Split('|');
+            string[] result = sustituirCaracteres("").Split('|');
             decimal registros = 0;
             decimal count = 0;
             int datos = 0;
@@ -738,7 +795,7 @@ namespace ReportesUnis
                 {
                     for (int k = 0; k < 17; k++)
                     {
-                        for (int j = 0; j < GridViewReporteCT.Columns.Count-1; j++)
+                        for (int j = 0; j < GridViewReporteCT.Columns.Count - 1; j++)
                         {
                             for (int i = 0; i < GridViewReporteCT.Rows.Count; i++)
                             {
@@ -892,5 +949,105 @@ namespace ReportesUnis
             return input;
         }
 
+        protected string DownloadAllFile(string dpi)
+        {
+            desc = 1;
+            //dpi = "2334448580101";
+            string[] result = dpi.Split(',');
+            string[] sustituto = new string[result.Length - 1];//Regex.Replace(Consultar(), " \"", "");
+            string constr = TxtURL.Text;
+            string ret = "0";
+            int total = 0;
+            DataSetLocalRpt dsDownload = new DataSetLocalRpt();
+            for (int i = 0; i < result.Length - 1; i++)
+            {
+                desc = 1;
+                sustituto[i] = sustituirCaracteres(result[i].ToString());
+                if (sustituto[i].Length > 50)
+                {
+                    DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
+                    byte[] bs64 = Encoding.ASCII.GetBytes(sustituto[i]);
+                    newFila["bytes"] = bs64;
+                    newFila["contentType"] = "jpg";
+                    newFila["fileName"] = result[i] + ".jpg";
+                    dsDownload.Tables["AllDownload"].Rows.Add(newFila);
+                    total = total + 1;
+                }
+            }
+
+            if (total > 0)
+            {
+                string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
+                File.Create(folder).Close();
+
+                using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
+                {
+
+                    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                    {
+                        for (int i = 0; i < total; i++)
+                        {
+                            byte[] base64 = Convert.FromBase64String(sustituto[i]);
+                            ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
+
+                            var zipStream = readmeEntry.Open();
+                            zipStream.Write(base64, 0, base64.Length);
+
+                        }
+                    }
+                    /*------------FUNCIONA, PERO SUSTITUYE EL  ZIP POR LA FOTO
+                    using (FileStream foto = new FileStream(folder + dsDownload.Tables["AllDownload"].Rows[0]["filename"].ToString(), FileMode.Open))
+                    {
+                        using (GZipStream gz = new GZipStream(foto, CompressionMode.Compress, false))
+                        {
+                            gz.Write(base64, 0, base64.Length);
+                        }
+                    }
+                    ---------------*/
+                }
+
+                Response.ContentType = "application/zip";
+                Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
+                ret = "1";
+            }
+            else
+            {
+                ret = "2";
+            }
+            //desc = 0;
+            return ret;
+        }
+
+        protected void BtnImg_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ////AGREGA EL NOMBRE DE LAS COLUMNAS AL ARCHIVO.  
+                string id = "";
+                for (int k = 0; k < GridViewReporteCT.Rows.Count; k++)
+                {
+                    if (GridViewReporteCT.Rows[k].Cells[2].Text != "&nbsp;")
+                    {
+                        id += removeUnicode(GridViewReporteCT.Rows[k].Cells[2].Text) + ",";
+                        lblBusqueda.Text = "";
+                    }
+                }
+
+                string respuesta = DownloadAllFile(id);
+                if (respuesta == "0")
+                {
+                    lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
+                }
+                else if (respuesta == "2")
+                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
+
+
+            }
+            catch (Exception x)
+            {
+                lblBusqueda.Text = "Ha ocurido un error";
+            }
+        }
     }
 }

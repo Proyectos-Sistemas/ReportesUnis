@@ -26,7 +26,7 @@
             <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
             <asp:Button ID="BtnBuscar2" runat="server" Text="Buscar" OnClick="BtnBuscar2_Click" CssClass="btn-danger-unis"></asp:Button>
             <asp:Button ID="BtnTxt" runat="server" Text="Exportar Excel" OnClick="GenerarExcel" CssClass="btn-danger-unis"  Enabled="true" />
-            <asp:Button ID="BtnImg" runat="server" Text="Exportar Imagenes" CssClass="btn-danger-unis"  Enabled="true" />
+            <asp:Button ID="BtnImg" runat="server" Text="Exportar Imagenes" OnClick="BtnImg_Click" CssClass="btn-danger-unis"  Enabled="true" />
         </div>
         <br />
 
