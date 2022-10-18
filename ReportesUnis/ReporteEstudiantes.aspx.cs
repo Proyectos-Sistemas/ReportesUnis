@@ -340,7 +340,7 @@ namespace ReportesUnis
                         "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON AP.ACAD_PROG = APD.ACAD_PROG " +
                         "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = AP.EMPLID " +
                         where +
-                        " AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON='ENRL' AND CT.FORM_OF_STUDY='ENRL') WHERE CNT = 1";
+                        " AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON='ENRL' AND AP.PROG_ACTION = 'MATR') WHERE CNT = 1";
                     cmd.Connection = con;
                     con.Open();
 

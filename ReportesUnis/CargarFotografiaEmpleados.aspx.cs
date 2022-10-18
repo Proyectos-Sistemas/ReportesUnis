@@ -452,6 +452,7 @@ namespace ReportesUnis
                     string comIm = personId + "/child/photo/";
                     string consultaImagenes = consultaGetImagenes(comIm, NombreImagen.Length);
                     string PhotoId = getBetween(consulta, "\"PhotoId\" : ", ",\n");
+                    string ImageId = getBetween(consultaImagenes, "\"ImageId\" : ", ",\n");
 
                     using (Stream fs = uploadedFile.InputStream)
                     {
@@ -462,6 +463,10 @@ namespace ReportesUnis
                             string consultaperfil = "\"PrimaryFlag\" : ";
                             string perfil = getBetween(consulta, consultaperfil, ",\n");
                             var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
+                            if (perfil == "true")
+                                updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
+                            else
+                                createPhoto(personId, "photo", Imgn);
 
                         }
                     }
