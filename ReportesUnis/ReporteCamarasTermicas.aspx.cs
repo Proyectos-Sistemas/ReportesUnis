@@ -455,7 +455,7 @@ namespace ReportesUnis
                 {
                     for (int k = 0; k < 17; k++)
                     {
-                        for (int j = 0; j < GridViewReporteCT.Columns.Count-1; j++)
+                        for (int j = 0; j < GridViewReporteCT.Columns.Count - 1; j++)
                         {
                             for (int i = 0; i < GridViewReporteCT.Rows.Count; i++)
                             {
@@ -553,16 +553,6 @@ namespace ReportesUnis
             DataSetLocalRpt dsDownload = new DataSetLocalRpt();
             using (OracleConnection con = new OracleConnection(constr))
             {
-                using (OracleCommand cmd1 = new OracleCommand())
-                {
-                    cmd1.CommandText = "SELECT Count(*) FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + where + ") AND employee_photo IS NOT NULL ";
-                    cmd1.Connection = con;
-                    con.Open();
-                    OracleDataReader reader = cmd1.ExecuteReader();
-                    string getValue = cmd1.ExecuteScalar().ToString();
-                    total = Convert.ToInt32(getValue);
-                    con.Close();
-                }
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + where + ") AND employee_photo IS NOT NULL ";
@@ -581,30 +571,42 @@ namespace ReportesUnis
                             newFila["contentType"] = row["Extension"].ToString();
                             newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
                             dsDownload.Tables["AllDownload"].Rows.Add(newFila);
-
+                            total = total + 1;
                         }
                         con.Close();
 
-
-                        string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
-                        File.Create(folder).Close();
-
-                        using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
+                        if (total > 0)
                         {
+                            string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
+                            File.Create(folder).Close();
 
-                            using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                            using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
                             {
-                                for (int i = 0; i < total; i++)
+
+                                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
                                 {
-                                    ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["fileName"].ToString());
+                                    for (int i = 0; i < total; i++)
+                                    {
+                                        byte[] base64 = (byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"];
+                                        ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
+
+                                        var zipStream = readmeEntry.Open();
+                                        zipStream.Write(base64, 0, base64.Length);
+
+                                    }
                                 }
                             }
+
+                            Response.ContentType = "application/zip";
+                            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                            Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
+                            ret = "1";
+                        }
+                        else
+                        {
+                            ret = "2";
                         }
 
-                        Response.ContentType = "application/zip";
-                        Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-                        Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
-                        ret = "1";
                     }
                 }
             }
@@ -617,15 +619,19 @@ namespace ReportesUnis
             {
                 ////AGREGA EL NOMBRE DE LAS COLUMNAS AL ARCHIVO.  
                 string emplid = "";
-                int total = 0;
-                for (int k = 0; k < GridViewReporteCT .Rows.Count; k++)
+                for (int k = 0; k < GridViewReporteCT.Rows.Count; k++)
                 {
                     emplid += "'" + removeUnicode(GridViewReporteCT.Rows[k].Cells[17].Text) + "',";
+                    lblBusqueda.Text = "";
                 }
 
                 string respuesta = DownloadAllFile(emplid);
                 if (respuesta == "0")
-                    lblBusqueda.Text = "No se encontrarón imagenes según la busqueda realizada";
+                {
+                    lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
+                }
+                else if (respuesta == "2")
+                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los estudiantes.";
             }
             catch (Exception x)
             {

@@ -618,16 +618,6 @@ namespace ReportesUnis
             DataSetLocalRpt dsDownload = new DataSetLocalRpt();
             using (OracleConnection con = new OracleConnection(constr))
             {
-                using (OracleCommand cmd1 = new OracleCommand())
-                {
-                    cmd1.CommandText = "SELECT Count(*) FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + where + ") AND employee_photo IS NOT NULL ";
-                    cmd1.Connection = con;
-                    con.Open();
-                    OracleDataReader reader = cmd1.ExecuteReader();
-                    string getValue = cmd1.ExecuteScalar().ToString();
-                    total = Convert.ToInt32(getValue);
-                    con.Close();
-                }
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + where + ") AND employee_photo IS NOT NULL ";
@@ -646,7 +636,7 @@ namespace ReportesUnis
                             newFila["contentType"] = row["Extension"].ToString();
                             newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
                             dsDownload.Tables["AllDownload"].Rows.Add(newFila);
-
+                            total = total + 1;
                         }
                         con.Close();
 
@@ -706,7 +696,7 @@ namespace ReportesUnis
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
                 }
                 else if (respuesta == "2")
-                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
+                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los estudiantes.";
             }
             catch (Exception x)
             {
