@@ -39,6 +39,8 @@ namespace ReportesUnis
             }
         }
         int desc = 0;
+        string nombre = "ImagenesEmpleados" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("DATOS_FOTOGRAFIAS") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
@@ -1245,11 +1247,16 @@ namespace ReportesUnis
             }
             else
             {
-                sustituto = DecodeStringFromBase64(Consultar(dpi));
-                //sustituto = Regex.Replace(sustituto, "\"", "");
+                //sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('"', '\n');
+                sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('\"', '\t');
+                //sustituto = sustituto.Replace('\\', '\t');
+                sustituto = Regex.Replace(sustituto, @"\n+", " ");
+                //sustituto = Regex.Replace(sustituto, @"\", " ");
+                sustituto = Regex.Replace(sustituto, @"\t", "");
                 int largo = dpi.Length;
                 largo = largo + 52;
-                sustituto = sustituto.Remove(0, largo);
+                if (sustituto.Length > largo)
+                    sustituto = sustituto.Remove(0, largo);
             }
             return sustituto;
         }
@@ -1856,68 +1863,69 @@ namespace ReportesUnis
         protected string DownloadAllFile(string dpi)
         {
             desc = 1;
-            dpi = "2334448580101";
+            //dpi = "2334448580101";
             string[] result = dpi.Split(',');
-            string[] sustituto = new string[result.Length];
-            desc = 1;
-            string nombre = "ImagenesEmpleados" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
+            string[] sustituto = new string[result.Length - 1];//Regex.Replace(Consultar(), " \"", "");
             string constr = TxtURL.Text;
             string ret = "0";
-            int total = result.Count();
-            if (total == 0)
-            {
-                total = 1;
-            }
+            int total = 0;
             DataSetLocalRpt dsDownload = new DataSetLocalRpt();
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < result.Length - 1; i++)
             {
+                desc = 1;
                 sustituto[i] = sustituirCaracteres(result[i].ToString());
-                DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
-                byte[] bs64 = Encoding.ASCII.GetBytes(sustituto[i]);
-                newFila["bytes"] = bs64;
-                newFila["contentType"] = "jpg";
-                newFila["fileName"] = result[i] + ".jpg";
-                dsDownload.Tables["AllDownload"].Rows.Add(newFila);
+                if (sustituto[i].Length > 50)
+                {
+                    DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
+                    byte[] bs64 = Encoding.ASCII.GetBytes(sustituto[i]);
+                    newFila["bytes"] = bs64;
+                    newFila["contentType"] = "jpg";
+                    newFila["fileName"] = result[i] + ".jpg";
+                    dsDownload.Tables["AllDownload"].Rows.Add(newFila);
+                    total = total + 1;
+                }
             }
 
-            total = dsDownload.Tables["AllDownload"].Rows.Count;
-            
-
-            string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
-            File.Create(folder).Close();
-
-            using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
+            if (total > 0)
             {
+                string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
+                File.Create(folder).Close();
 
-                byte[] base64 = Convert.FromBase64String(sustituto[0]);
-                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
                 {
-                    for (int i = 0; i < total; i++)
+
+                    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
                     {
-                        ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
+                        for (int i = 0; i < total; i++)
+                        {
+                            byte[] base64 = Convert.FromBase64String(sustituto[i]);
+                            ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
 
-                        var zipStream = readmeEntry.Open();
-                        zipStream.Write(base64, 0, base64.Length);
+                            var zipStream = readmeEntry.Open();
+                            zipStream.Write(base64, 0, base64.Length);
 
+                        }
                     }
-                }
-                /*------------FUNCIONA, PERO SUSTITUYE EL  ZIP POR LA FOTO
-                using (FileStream foto = new FileStream(folder + dsDownload.Tables["AllDownload"].Rows[0]["filename"].ToString(), FileMode.Open))
-                {
-                    using (GZipStream gz = new GZipStream(foto, CompressionMode.Compress, false))
+                    /*------------FUNCIONA, PERO SUSTITUYE EL  ZIP POR LA FOTO
+                    using (FileStream foto = new FileStream(folder + dsDownload.Tables["AllDownload"].Rows[0]["filename"].ToString(), FileMode.Open))
                     {
-                        gz.Write(base64, 0, base64.Length);
+                        using (GZipStream gz = new GZipStream(foto, CompressionMode.Compress, false))
+                        {
+                            gz.Write(base64, 0, base64.Length);
+                        }
                     }
+                    ---------------*/
                 }
-                ---------------*/
 
-
+                Response.ContentType = "application/zip";
+                Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
+                ret = "1";
             }
-
-            Response.ContentType = "application/zip";
-            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-            Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
-            ret = "1";
+            else
+            {
+                ret = "2";
+            }
             //desc = 0;
             return ret;
         }
@@ -1925,41 +1933,39 @@ namespace ReportesUnis
 
         protected void ButtonFts_Click(object sender, EventArgs e)
         {
-
             try
             {
                 ////AGREGA EL NOMBRE DE LAS COLUMNAS AL ARCHIVO.  
                 string id = "";
                 for (int k = 0; k < GridViewReporte.Rows.Count; k++)
                 {
-                    id += removeUnicode(GridViewReporte.Rows[k].Cells[16].Text) + ",";
-                    lblBusqueda.Text = "";
+                    if (GridViewReporte.Rows[k].Cells[16].Text != "&nbsp;")
+                    {
+                        id += removeUnicode(GridViewReporte.Rows[k].Cells[16].Text) + ",";
+                        lblBusqueda.Text = "";
+                    }
                 }
 
                 string respuesta = DownloadAllFile(id);
                 if (respuesta == "0")
+                {
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
-                //DownloadAllFile("'00000000002','00000003980',", 2);
+                }
+                else if (respuesta == "2")
+                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
+
+
             }
             catch (Exception x)
             {
                 lblBusqueda.Text = "Ha ocurido un error";
             }
-            //DownloadAllFile("");
         }
 
-        public Image Base64ToImage(string base64String)
+        public void eliminarArchivo()
         {
-            // Convert base 64 string to byte[]
-            base64String = base64String.TrimStart('\\');
-            //base64String = base64String.TrimStart('"');
-            byte[] imageBytes = Convert.FromBase64String(base64String);
-            // Convert byte[] to Image
-            using (var ms = new MemoryStream(imageBytes, 0, imageBytes.Length))
-            {
-                Image image = Image.FromStream(ms, true);
-                return image;
-            }
+            File.Delete(AppDomain.CurrentDomain.BaseDirectory + nombre);
         }
+
     }
 }
