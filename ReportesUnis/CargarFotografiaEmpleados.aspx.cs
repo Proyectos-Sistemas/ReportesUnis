@@ -76,7 +76,7 @@ namespace ReportesUnis
                         for (int i = 0; i < count; i++)
                         {
                             DataRow newFila = dsReporte.Tables["RptCargaMasiva"].NewRow();
-                            newFila["FileName"] = (arrlist[i, 1] ?? "").ToString();
+                            newFila["File Name"] = (arrlist[i, 1] ?? "").ToString();
                             newFila["ID"] = (arrlist[i, 0] ?? "").ToString();
 
                             dsReporte.Tables["RptCargaMasiva"].Rows.Add(newFila);

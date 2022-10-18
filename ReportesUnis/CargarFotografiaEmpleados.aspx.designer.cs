@@ -42,24 +42,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Button btnUpload;
 
         /// <summary>
-        /// Control btnUpload2.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnUpload2;
-
-        /// <summary>
-        /// Control lblActualizacion.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblActualizacion;
-
-        /// <summary>
         /// Control GridView1.
         /// </summary>
         /// <remarks>

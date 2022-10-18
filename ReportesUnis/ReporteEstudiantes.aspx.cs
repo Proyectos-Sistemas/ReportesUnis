@@ -116,7 +116,7 @@ namespace ReportesUnis
                 }
                 else if (LbxBusqueda.Text.Equals("Apellido"))
                 {
-                    where = "WHERE PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%') ";
+                    where = "WHERE PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%')";
 
                 }
                 else if (LbxBusqueda.Text.Equals("DPI/Carné"))
@@ -147,7 +147,7 @@ namespace ReportesUnis
             {
                 if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido"))
                 {
-                    where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador2.Text + "%'))";
+                    where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') )";
 
                 }
                 else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI/Carné"))
@@ -255,11 +255,11 @@ namespace ReportesUnis
                 }
                 else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI/Carné"))
                 {
-                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador2.Text + "%')) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
+                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
                 }
                 else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Facultad"))
                 {
-                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador2.Text + "%')) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
+                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
                 }
                 else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Ciclo"))
                 {
@@ -273,7 +273,7 @@ namespace ReportesUnis
                     var diaF = fechaF.Substring(8, 2);
                     var inicio = diaI + "/" + mesI + "/" + anioI;
                     var fin = diaF + "/" + mesF + "/" + anioF;
-                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador2.Text + "%')) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 }
                 else if (LbxBusqueda2.Text.Equals("DPI/Carné") && LbxBusqueda.Text.Equals("Facultad"))
                 {

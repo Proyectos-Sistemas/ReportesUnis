@@ -1198,7 +1198,7 @@ namespace ReportesUnis
                             int largo = 0;
                             string texto1 = TxtBuscador.Text.TrimEnd(' ');
                             string texto2 = TxtBuscador2.Text.TrimEnd(' ');
-                            largo = texto1.Length + texto2.Length + 227;
+                            largo = texto1.Length + texto2.Length + 279;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI")))
@@ -1217,7 +1217,7 @@ namespace ReportesUnis
                             int largo = 0;
                             string texto1 = TxtBuscador.Text.TrimEnd(' ');
                             string texto2 = TxtBuscador2.Text.TrimEnd(' ');
-                            largo = texto1.Length + texto2.Length + 231;
+                            largo = texto1.Length + texto2.Length + 283;
                             sustituto = sustituto.Remove(0, largo);
 
                         }
@@ -1231,7 +1231,7 @@ namespace ReportesUnis
                             int largo = 0;
                             string texto1 = TxtBuscador.Text.TrimEnd(' ');
                             string texto2 = TxtBuscador2.Text.TrimEnd(' ');
-                            largo = texto1.Length + texto2.Length + 226;
+                            largo = texto1.Length + texto2.Length + 278;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if ((LbxBusqueda.Text.Equals("Dependencia") && LbxBusqueda2.Text.Equals("Asignación/Contrato")) || (LbxBusqueda2.Text.Equals("Dependencia") && LbxBusqueda.Text.Equals("Asignación/Contrato")))
@@ -1239,7 +1239,7 @@ namespace ReportesUnis
                             int largo = 0;
                             string texto1 = TxtBuscador.Text.TrimEnd(' ');
                             string texto2 = TxtBuscador2.Text.TrimEnd(' ');
-                            largo = texto1.Length + texto2.Length + 234;
+                            largo = texto1.Length + texto2.Length + 286;
                             sustituto = sustituto.Remove(0, largo);
                         }
                     }
@@ -1303,7 +1303,7 @@ namespace ReportesUnis
                         }
                     }
                 }
-                else if (LbxBusqueda.Text.Equals("Asignación/Contrato"))
+                else if (LbxBusqueda.Text.Equals("Asignación/Contrato") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                 {
                     //Busqueda simple por asignacion
                     registros = result.Count() / 23;
@@ -1336,6 +1336,23 @@ namespace ReportesUnis
                             datos++;
                         }
                     }
+                }
+                else if (result.Count() == 21)
+                {
+                    registros = result.Count() / 21;
+                    count = Math.Round(registros, 0);
+                    arrlist = new string[Convert.ToInt32(count), 21];
+                    if (registros == 0)
+                        count = 1;
+                    for (int i = 0; i < count; i++)
+                    {
+                        for (int k = 0; k < 21; k++)
+                        {
+                            arrlist[i, k] = result[datos];
+                            datos++;
+                        }
+                    }
+
                 }
                 else
                 {
@@ -1547,13 +1564,13 @@ namespace ReportesUnis
                                     string texto2 = TxtBuscador2.Text.TrimEnd(' ');
                                     int largo = texto1.Length + texto2.Length;
                                     DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                                    newFila["DPI"] = (arrlist[i, 3] ?? "").ToString();
-                                    newFila["Dependencia"] = (arrlist[i, 4] ?? "").ToString();
-                                    newFila["Telefono"] = (arrlist[i, 5] ?? "").ToString();
-                                    newFila["Estado Civil"] = (arrlist[i, 6] ?? "").ToString();
-                                    if (!arrlist[i, 7].ToString().Equals(""))
+                                    newFila["DPI"] = (arrlist[i, 0] ?? "").ToString();
+                                    newFila["Dependencia"] = (arrlist[i, 1] ?? "").ToString();
+                                    newFila["Telefono"] = (arrlist[i, 2] ?? "").ToString();
+                                    newFila["Estado Civil"] = (arrlist[i, 3] ?? "").ToString();
+                                    if (!arrlist[i, 4].ToString().Equals(""))
                                     {
-                                        bday = arrlist[i, 7].ToString().Substring(0, 10);
+                                        bday = arrlist[i, 4].ToString().Substring(0, 10);
                                         anio = bday.Substring(0, 4);
                                         mes = bday.Substring(5, 2);
                                         dia = bday.Substring(8, 2);
@@ -1566,18 +1583,18 @@ namespace ReportesUnis
 
                                     newFila["Cumpleaños"] = bday;
 
-                                    newFila["Direccion"] = (arrlist[i, 8] ?? "").ToString();
-                                    newFila["Municipio"] = (arrlist[i, 9] ?? "").ToString();
-                                    newFila["Departamento"] = (arrlist[i, 10] ?? "").ToString();
-                                    newFila["Nombre1"] = (arrlist[i, 13] ?? "").ToString();
-                                    newFila["Nombre2"] = (arrlist[i, 14] ?? "").ToString();
-                                    newFila["Apellido1"] = (arrlist[i, 15] ?? "").ToString();
-                                    newFila["Apellido2"] = (arrlist[i, 16] ?? "").ToString();
-                                    newFila["Apellido3"] = (arrlist[i, 17] ?? "").ToString();
-                                    newFila["NOM_IMP"] = (arrlist[i, 13] ?? "").ToString() + " " + (arrlist[i, 15] ?? "").ToString();
-                                    newFila["Sexo"] = (arrlist[i, 18] ?? "").ToString();
-                                    newFila["CARNE"] = (arrlist[i, 19] ?? "").ToString();
-                                    if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 19] ?? "").ToString())
+                                    newFila["Direccion"] = (arrlist[i, 5] ?? "").ToString();
+                                    newFila["Municipio"] = (arrlist[i, 6] ?? "").ToString();
+                                    newFila["Departamento"] = (arrlist[i, 7] ?? "").ToString();
+                                    newFila["Nombre1"] = (arrlist[i, 10] ?? "").ToString();
+                                    newFila["Nombre2"] = (arrlist[i, 11] ?? "").ToString();
+                                    newFila["Apellido1"] = (arrlist[i, 12] ?? "").ToString();
+                                    newFila["Apellido2"] = (arrlist[i, 13] ?? "").ToString();
+                                    newFila["Apellido3"] = (arrlist[i, 14] ?? "").ToString();
+                                    newFila["NOM_IMP"] = (arrlist[i, 10] ?? "").ToString() + " " + (arrlist[i, 12] ?? "").ToString();
+                                    newFila["Sexo"] = (arrlist[i, 15] ?? "").ToString();
+                                    newFila["CARNE"] = (arrlist[i, 16] ?? "").ToString();
+                                    if ((arrlist[i, 0] ?? "").ToString() == (arrlist[i, 16] ?? "").ToString())
                                     {
                                         newFila["Pasaporte"] = "";
                                         newFila["FLAG_PAS"] = "0";
@@ -1585,17 +1602,17 @@ namespace ReportesUnis
                                     }
                                     else
                                     {
-                                        newFila["Pasaporte"] = (arrlist[i, 120] ?? "").ToString();
+                                        newFila["Pasaporte"] = (arrlist[i, 17] ?? "").ToString();
                                         newFila["FLAG_PAS"] = "1";
                                         newFila["FLAG_DPI"] = "0";
                                         newFila["DPI"] = "";
                                     }
-                                    newFila["Cedula"] = (arrlist[i, 21] ?? "").ToString();
-                                    newFila["NIT"] = (arrlist[i, 22] ?? "").ToString();
+                                    newFila["Cedula"] = (arrlist[i, 18] ?? "").ToString();
+                                    newFila["NIT"] = (arrlist[i, 19] ?? "").ToString();
                                     if (result.Count() > 24)
-                                        newFila["Nacionalidad"] = StringExtensions.RemoveEnd((arrlist[i, 23] ?? "").ToString(), largo);
+                                        newFila["Nacionalidad"] = StringExtensions.RemoveEnd((arrlist[i, 20] ?? "").ToString(), largo);
                                     else
-                                        newFila["Nacionalidad"] = (arrlist[i, 23] ?? "").ToString();
+                                        newFila["Nacionalidad"] = (arrlist[i, 20] ?? "").ToString();
                                     newFila["FLAG_CED"] = "0";
                                     dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                                 }
@@ -1662,7 +1679,7 @@ namespace ReportesUnis
                     string texto = removeUnicode(GridViewReporte.Rows[j].Cells[i].Text);
                     texto = texto.TrimEnd();
                     txtFile += texto + "|";
-                    if (texto != " " && ret == 0)
+                    if (texto != "" && ret == 0)
                     {
                         aux = 0;
                     }

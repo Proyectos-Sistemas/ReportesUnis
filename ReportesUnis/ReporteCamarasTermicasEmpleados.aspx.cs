@@ -571,7 +571,7 @@ namespace ReportesUnis
                         else if (LbxBusqueda.Text.Equals("Género"))
                         {
                             int largo = 0;
-                            largo = 94;
+                            largo = 90 + TxtBuscador.Text.Length;
                             sustituto = sustituto.Remove(0, largo);
                         }
                     }
@@ -723,7 +723,7 @@ namespace ReportesUnis
             int celda = 1;
             //Letras de las columnas para la generacion de excel
             string[] LETRA = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q" };
-
+            int aux = 0;
             //Texto plano
             sl.RenameWorksheet(SLDocument.DefaultFirstSheetName, "Reporte Estudiantes " + DateTime.Now.ToString("G"));
             sl.SetCellValue("A" + celda, "Rule");
@@ -800,6 +800,11 @@ namespace ReportesUnis
                             for (int i = 0; i < GridViewReporteCT.Rows.Count; i++)
                             {
                                 string texto = removeUnicode(GridViewReporteCT.Rows[i].Cells[j].Text);
+
+                                if (texto == "")
+                                {
+                                    aux = aux + 1;
+                                }
                                 sl.SetCellValue(LETRA[k] + celda, texto);
                                 celda++;
                             }
@@ -867,6 +872,11 @@ namespace ReportesUnis
                                 string texto = removeUnicode(GridViewReporteCT.Rows[i].Cells[j].Text);
                                 if (texto.Equals("&nbsp;"))
                                     texto = " ";
+
+                                if (texto == "" || texto==" ")
+                                {
+                                    aux = aux + 1;
+                                }
                                 sl.SetCellValue(LETRA[k] + celda, texto);
                                 celda++;
                             }
@@ -876,13 +886,20 @@ namespace ReportesUnis
                     }
                 }
             }
-            //Nombre del archivo
-            string nombre = "Reporte Camara Termica Empleados " + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".xlsx";
-            //Lugar de almacenamiento
-            sl.SaveAs(CurrentDirectory + "ReportesCT/" + nombre);
-            Response.ContentType = "application/ms-excel";
-            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-            Response.TransmitFile(CurrentDirectory + "ReportesCT/" + nombre);
+            if (aux > 5)
+            {
+                //Nombre del archivo
+                string nombre = "Reporte Camara Termica Empleados " + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".xlsx";
+                //Lugar de almacenamiento
+                sl.SaveAs(CurrentDirectory + "ReportesCT/" + nombre);
+                Response.ContentType = "application/ms-excel";
+                Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                Response.TransmitFile(CurrentDirectory + "ReportesCT/" + nombre);
+            }
+            else
+            {
+                lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
+            }
             //Apertura del archivo
             //Process.Start(CurrentDirectory + "ReportesCT/" + nombre);
         }
