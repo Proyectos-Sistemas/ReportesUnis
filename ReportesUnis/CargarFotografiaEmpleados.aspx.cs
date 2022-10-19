@@ -72,16 +72,16 @@ namespace ReportesUnis
             //Crea el cuerpo que se utiliza para consultar el servicio de HCM
             CuerpoConsulta(Variables.wsUsuario, Variables.wsPassword);
 
-            //Crea un documento de respuesta Campus
-            System.Xml.XmlDocument xmlDocumentoRespuestaCampus = new System.Xml.XmlDocument();
+            //Crea un documento de respuesta HCM
+            System.Xml.XmlDocument xmlDocumentoRespuestaHCM = new System.Xml.XmlDocument();
 
             // Indica que no se mantengan los espacios y saltos de línea
-            xmlDocumentoRespuestaCampus.PreserveWhitespace = false;
+            xmlDocumentoRespuestaHCM.PreserveWhitespace = false;
 
             try
             {
-                // Carga el XML de respuesta de Campus
-                xmlDocumentoRespuestaCampus.LoadXml(LlamarWebServiceHCM(Variables.wsUrl, Variables.wsAction, Variables.soapBody));
+                // Carga el XML de respuesta de HCM
+                xmlDocumentoRespuestaHCM.LoadXml(LlamarWebServiceHCM(Variables.wsUrl, Variables.wsAction, Variables.soapBody));
             }
             catch (WebException)
             {
@@ -90,7 +90,7 @@ namespace ReportesUnis
                 return Variables.strDocumentoRespuesta;
 
             }
-            XmlNodeList elemList = xmlDocumentoRespuestaCampus.GetElementsByTagName("reportBytes");
+            XmlNodeList elemList = xmlDocumentoRespuestaHCM.GetElementsByTagName("reportBytes");
             return elemList[0].InnerText.ToString();
         }
 
@@ -196,7 +196,7 @@ namespace ReportesUnis
             Variables.wsPassword = "";
         }
 
-        //Función para obtener información de acceso al servicio de Campus
+        //Función para obtener información de acceso al servicio de HCM
         private static void credencialesEndPoint(string RutaConfiguracion, string strMetodo)
         {
             int cont = 0;
@@ -377,45 +377,114 @@ namespace ReportesUnis
 
         protected void Upload(object sender, EventArgs e)
         {
+            string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+            int ContadorArchivos = 0;
+            int ContadorArchivosCorrectos = 0;
+            int ContadorArchivosConError = 0;
+
+            bool Error = false;
+
+            //Ruta del archivo que guarda la bitácora
+            string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
+            //Nombre del archiov que guarda la bitácora
+            string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
+
+
+            //Se crea un nuevo archivo para guardar la bitacora de la ejecución
+            CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
+
+            //Guadar encabezado de la bitácora
+            GuardarBitacora(ArchivoBitacora, "                              Informe de ejecución de importación de fotografías HCM Fecha: " + FechaHoraInicioEjecución + "              ");
+            GuardarBitacora(ArchivoBitacora, "");
+            GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    DPI                         Estado                 Descripción                                    ");
+            GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
+
+
+            string constr = TxtURL.Text;
+            string mensajeValidacion = "";
+
             //ACTUALIZACION-CREACION DE IMAGEN
             if (FileUpload1.HasFile)
             {
+                string uploadFolder = Request.PhysicalApplicationPath + "CargaFotografíaCS\\";
                 foreach (HttpPostedFile uploadedFile in FileUpload1.PostedFiles)
                 {
+                    ContadorArchivos++;
+                    Error = false;
+                    string ExtensionFotografia = Path.GetExtension(uploadedFile.FileName).ToLower();
+                    string[] ExtensionesPermitidas = { ".jpeg", ".jpg" };
+
                     string NombreImagen = Path.GetFileNameWithoutExtension(uploadedFile.FileName);
-                    string expand = "legislativeInfo,phones,addresses,photos";
-                    string consulta = consultaGetworkers(expand, NombreImagen.Length);
-
-                    //Se obtienen los datos de las tablas a las cuales se les agregará información
-                    string personId = getBetween(consulta, "workers/", "/child/");
-                    string comIm = personId + "/child/photo/";
-                    string consultaImagenes = consultaGetImagenes(comIm, NombreImagen.Length);
-                    string PhotoId = getBetween(consulta, "\"PhotoId\" : ", ",\n");
-                    string ImageId = getBetween(consultaImagenes, "\"ImageId\" : ", ",\n");
-
-                    using (Stream fs = uploadedFile.InputStream)
+                    if (ExtensionesPermitidas.Contains(ExtensionFotografia))
                     {
-                        using (BinaryReader br = new BinaryReader(fs))
-                        {
-                            byte[] Imagen = br.ReadBytes((Int32)fs.Length);
-                            string b64 = Convert.ToBase64String(Imagen, 0, Imagen.Length);
-                            string consultaperfil = "\"PrimaryFlag\" : ";
-                            string perfil = getBetween(consulta, consultaperfil, ",\n");
-                            var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
-                            if (perfil == "true")
-                                updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
-                            else
-                                createPhoto(personId, "photo", Imgn);
+                        string expand = "legislativeInfo,phones,addresses,photos";
+                        string consulta = consultaGetworkers(expand, NombreImagen.Length);
 
+                        //Se obtienen los datos de las tablas a las cuales se les agregará información
+                        string personId = getBetween(consulta, "workers/", "/child/");
+                        string comIm = personId + "/child/photo/";
+                        string consultaImagenes = consultaGetImagenes(comIm, NombreImagen.Length);
+                        string PhotoId = getBetween(consulta, "\"PhotoId\" : ", ",\n");
+                        string ImageId = getBetween(consultaImagenes, "\"ImageId\" : ", ",\n");
+
+                        using (Stream fs = uploadedFile.InputStream)
+                        {
+                            using (BinaryReader br = new BinaryReader(fs))
+                            {
+                                try
+                                {
+                                    byte[] Imagen = br.ReadBytes((Int32)fs.Length);
+                                    string b64 = Convert.ToBase64String(Imagen, 0, Imagen.Length);
+                                    string consultaperfil = "\"PrimaryFlag\" : ";
+                                    string perfil = getBetween(consulta, consultaperfil, ",\n");
+                                    var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
+                                    if (perfil == "true")
+                                        updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
+                                    else
+                                        createPhoto(personId, "photo", Imgn);
+                                    mensajeValidacion = "La fotografía se actualizó correctamente en HCM.";
+                                    GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "  " + NombreImagen.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
+                                    ContadorArchivosCorrectos++;
+                                }
+                                catch (Exception ex)
+                                {
+                                    mensajeValidacion = "Error con la base de datos de HCM, no se registró la fotografía en HCM. " + ex.Message;
+                                    GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                    if (Error == false)
+                                    {
+                                        ContadorArchivosConError++;
+                                    }
+                                }
+
+
+                            }
                         }
                     }
+                    else
+                    {
+                        mensajeValidacion = "La fotografía no tiene formato .JPEG o .JPG";
+                        GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                        if (Error == false)
+                        {
+                            ContadorArchivosConError++;
+                        }
+                    }
+
                 }
             }
 
-            //if (respuestaPatch != 0 && respuestaPost != 0)
-            //lblActualizacion.Text = "Ocurrió un problema al cargar las imagenes";
-            //else
-            //lblActualizacion.Text = "Las imágenes fueron cargadoas correctamente";
+            GuardarBitacora(ArchivoBitacora, "");
+            GuardarBitacora(ArchivoBitacora, "");
+            GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
+            GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
+            GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
+            GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
+
+            Response.ContentType = "application/text";
+            Response.AddHeader("content-disposition", "attachment; filename=Reporte de Carga.txt");
+            Response.TransmitFile(ArchivoBitacora);
+            Response.Flush();
+            Response.End();
         }
 
         protected void DownloadFile(object sender, EventArgs e)
@@ -793,6 +862,17 @@ namespace ReportesUnis
                 match => ((char)int.Parse(match.Value.Substring(2),
                     NumberStyles.HexNumber)).ToString());
         }
+        //Función para guardar bitacora en el archivo .txt
+        public void GuardarBitacora(string ArchivoBitacora, string DescripcionBitacora)
+        {
+            //Guarda nueva línea para el registro de bitácora en el serividor
+            File.AppendAllText(ArchivoBitacora, DescripcionBitacora + Environment.NewLine);
+        }
 
+        //Crea un archivo .txt para guardar bitácora
+        public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
+        {
+            using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
+        }
     }
 }

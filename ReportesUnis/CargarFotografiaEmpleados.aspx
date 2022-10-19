@@ -50,7 +50,7 @@
             <asp:Button ID="btnUpload" runat="server" Text="Cargar" OnClick="Upload" CssClass="btn-primary" Enabled="false" />
             <hr />
             <asp:GridView ID="GridView1" class="table table-bordered table-condensed table-responsive table-hover" runat="server"
-                AutoGenerateColumns="false" CssClass="table" Visible="false">
+                AutoGenerateColumns="false" CssClass="table" >
                 <Columns>
                     <asp:BoundField DataField="File Name" HeaderText="File Name" />
                     <asp:BoundField DataField="ID" HeaderText="ID" />
