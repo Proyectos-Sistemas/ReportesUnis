@@ -7,6 +7,7 @@ using System.IO;
 using System.Web.UI.WebControls;
 using Oracle.ManagedDataAccess.Client;
 using System.IO.Compression;
+using NPOI.Util;
 
 namespace ReportesUnis
 {
@@ -343,7 +344,12 @@ namespace ReportesUnis
                 GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
                 GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
                 GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
-                Response.Redirect(Request.Url.AbsoluteUri);
+
+                Response.ContentType = "application/text";
+                Response.AddHeader("content-disposition", "attachment; filename=Reporte de Carga.txt");
+                Response.TransmitFile(ArchivoBitacora);
+                Response.Flush();
+                Response.End();
             }
             catch (Exception x)
             {
