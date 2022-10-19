@@ -105,42 +105,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox TxtBuscador2;
 
         /// <summary>
-        /// Control FInicio2.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label FInicio2;
-
-        /// <summary>
-        /// Control CldrCiclosInicio2.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox CldrCiclosInicio2;
-
-        /// <summary>
-        /// Control FFin2.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label FFin2;
-
-        /// <summary>
-        /// Control CldrCiclosFin2.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox CldrCiclosFin2;
-
-        /// <summary>
         /// Control BtnBuscar.
         /// </summary>
         /// <remarks>

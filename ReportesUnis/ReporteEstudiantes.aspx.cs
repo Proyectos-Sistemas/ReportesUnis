@@ -12,6 +12,7 @@ using System.Web;
 using System.IO.Compression;
 using Microsoft.Win32;
 using System.Globalization;
+using NPOI.SS.Formula.Functions;
 
 namespace ReportesUnis
 {
@@ -28,7 +29,6 @@ namespace ReportesUnis
             {
                 LeerInfoTxt();
                 LoadData();
-                //DownloadAllFile("'00000000002',", 1);
             }
         }
 
@@ -87,13 +87,9 @@ namespace ReportesUnis
             dr["EMPLID"] = String.Empty;
 
             dt.Rows.Add(dr);
-            //dt2.Rows.Add(dr2);
 
             this.GridViewReporte.DataSource = dt;
             this.GridViewReporte.DataBind();
-
-            //this.GridVieweMPLID.DataSource = dt2;
-            //this.GridVieweMPLID.DataBind();
         }
 
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -116,6 +112,17 @@ namespace ReportesUnis
         //GENERACION DE CONSULTA A BD Y ASIGNACION A GRIDVIEW SEGUN LA BUSQUEDA DESEADA
         protected void Busqueda(object sender, EventArgs e)
         {
+            var fechaI = CldrCiclosInicio.Text;
+            var anioI = fechaI.Substring(2, 2);
+            var mesI = fechaI.Substring(5, 2);
+            var diaI = fechaI.Substring(8, 2);
+            var fechaF = CldrCiclosFin.Text;
+            var anioF = fechaF.Substring(2, 2);
+            var mesF = fechaF.Substring(5, 2);
+            var diaF = fechaF.Substring(8, 2);
+            var inicio = diaI + "/" + mesI + "/" + anioI;
+            var fin = diaF + "/" + mesF + "/" + anioF;
+
             if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(lblBusqueda.Text))
             {
                 if (!String.IsNullOrEmpty(TxtBuscador.Text))
@@ -128,65 +135,35 @@ namespace ReportesUnis
                     string busqueda = LbxBusqueda.Text;
                     if (LbxBusqueda.Text.Equals("Nombre"))
                     {
-                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') ";
+                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido"))
                     {
-                        where = "WHERE PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%')";
-
+                        where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                     }
                     else if (LbxBusqueda.Text.Equals("DPI/Carné"))
                     {
-                        where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%')";
+                        where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                     }
                     else if (LbxBusqueda.Text.Equals("Facultad"))
                     {
-                        where = "WHERE AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
-                    }
-                    else if (LbxBusqueda.Text.Equals("Ciclo"))
-                    {
-                        var fechaI = CldrCiclosInicio.Text;
-                        var anioI = fechaI.Substring(2, 2);
-                        var mesI = fechaI.Substring(5, 2);
-                        var diaI = fechaI.Substring(8, 2);
-                        var fechaF = CldrCiclosFin.Text;
-                        var anioF = fechaF.Substring(2, 2);
-                        var mesF = fechaF.Substring(5, 2);
-                        var diaF = fechaF.Substring(8, 2);
-                        var inicio = diaI + "/" + mesI + "/" + anioI;
-                        var fin = diaF + "/" + mesF + "/" + anioF;
-                        where = "WHERE ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "' AND TT.TERM_END_DT >= '" + fin + "'))";
-                        //inicial dentro de las fechas inicio y fecha final || que la fecha final este dentro del rango 
+                        where = "WHERE AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                     }
                 }
                 else //CREACION DE WHERE PARA BUSQUEDA MULTIPLE CON LAS COMBINACIONES POSIBLES
                 {
                     if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido"))
                     {
-                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') )";
+                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR(TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "')) AND (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') )";
 
                     }
                     else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI/Carné"))
                     {
-                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') ";
+                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') ";
                     }
                     else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Facultad"))
                     {
-                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
-                    }
-                    else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Ciclo"))
-                    {
-                        var fechaI = CldrCiclosInicio2.Text;
-                        var anioI = fechaI.Substring(2, 2);
-                        var mesI = fechaI.Substring(5, 2);
-                        var diaI = fechaI.Substring(8, 2);
-                        var fechaF = CldrCiclosFin2.Text;
-                        var anioF = fechaF.Substring(2, 2);
-                        var mesF = fechaF.Substring(5, 2);
-                        var diaF = fechaF.Substring(8, 2);
-                        var inicio = diaI + "/" + mesI + "/" + anioI;
-                        var fin = diaF + "/" + mesF + "/" + anioF;
-                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI/Carné"))
                     {
@@ -196,132 +173,34 @@ namespace ReportesUnis
                     {
                         where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%')) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
                     }
-                    else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Ciclo"))
-                    {
-                        var fechaI = CldrCiclosInicio2.Text;
-                        var anioI = fechaI.Substring(2, 2);
-                        var mesI = fechaI.Substring(5, 2);
-                        var diaI = fechaI.Substring(8, 2);
-                        var fechaF = CldrCiclosFin2.Text;
-                        var anioF = fechaF.Substring(2, 2);
-                        var mesF = fechaF.Substring(5, 2);
-                        var diaF = fechaF.Substring(8, 2);
-                        var inicio = diaI + "/" + mesI + "/" + anioI;
-                        var fin = diaF + "/" + mesF + "/" + anioF;
-                        where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%')) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
-                    }
                     else if (LbxBusqueda.Text.Equals("DPI/Carné") && LbxBusqueda2.Text.Equals("Facultad"))
                     {
-                        where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
-                    }
-                    else if (LbxBusqueda.Text.Equals("DPI/Carné") && LbxBusqueda2.Text.Equals("Ciclo"))
-                    {
-                        var fechaI = CldrCiclosInicio2.Text;
-                        var anioI = fechaI.Substring(2, 2);
-                        var mesI = fechaI.Substring(5, 2);
-                        var diaI = fechaI.Substring(8, 2);
-                        var fechaF = CldrCiclosFin2.Text;
-                        var anioF = fechaF.Substring(2, 2);
-                        var mesF = fechaF.Substring(5, 2);
-                        var diaF = fechaF.Substring(8, 2);
-                        var inicio = diaI + "/" + mesI + "/" + anioI;
-                        var fin = diaF + "/" + mesF + "/" + anioF;
-                        where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
-                    }
-                    else if (LbxBusqueda.Text.Equals("Facultad") && LbxBusqueda2.Text.Equals("Ciclo"))
-                    {
-                        var fechaI = CldrCiclosInicio2.Text;
-                        var anioI = fechaI.Substring(2, 2);
-                        var mesI = fechaI.Substring(5, 2);
-                        var diaI = fechaI.Substring(8, 2);
-                        var fechaF = CldrCiclosFin2.Text;
-                        var anioF = fechaF.Substring(2, 2);
-                        var mesF = fechaF.Substring(5, 2);
-                        var diaF = fechaF.Substring(8, 2);
-                        var inicio = diaI + "/" + mesI + "/" + anioI;
-                        var fin = diaF + "/" + mesF + "/" + anioF;
-                        where = "WHERE AGT.DESCR LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                        where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido"))
                     {
-                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%'))  ";
+                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%'))  ";
 
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI/Carné"))
                     {
-                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
+                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Facultad"))
                     {
-                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
-                    }
-                    else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Ciclo"))
-                    {
-                        var fechaI = CldrCiclosInicio.Text;
-                        var anioI = fechaI.Substring(2, 2);
-                        var mesI = fechaI.Substring(5, 2);
-                        var diaI = fechaI.Substring(8, 2);
-                        var fechaF = CldrCiclosFin.Text;
-                        var anioF = fechaF.Substring(2, 2);
-                        var mesF = fechaF.Substring(5, 2);
-                        var diaF = fechaF.Substring(8, 2);
-                        var inicio = diaI + "/" + mesI + "/" + anioI;
-                        var fin = diaF + "/" + mesF + "/" + anioF;
-                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                        where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
                     }
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI/Carné"))
                     {
-                        where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
+                        where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
                     }
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Facultad"))
                     {
-                        where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
-                    }
-                    else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Ciclo"))
-                    {
-                        var fechaI = CldrCiclosInicio.Text;
-                        var anioI = fechaI.Substring(2, 2);
-                        var mesI = fechaI.Substring(5, 2);
-                        var diaI = fechaI.Substring(8, 2);
-                        var fechaF = CldrCiclosFin.Text;
-                        var anioF = fechaF.Substring(2, 2);
-                        var mesF = fechaF.Substring(5, 2);
-                        var diaF = fechaF.Substring(8, 2);
-                        var inicio = diaI + "/" + mesI + "/" + anioI;
-                        var fin = diaF + "/" + mesF + "/" + anioF;
-                        where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                        where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
                     }
                     else if (LbxBusqueda2.Text.Equals("DPI/Carné") && LbxBusqueda.Text.Equals("Facultad"))
                     {
                         where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%')  AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
-                    }
-                    else if (LbxBusqueda2.Text.Equals("DPI/Carné") && LbxBusqueda.Text.Equals("Ciclo"))
-                    {
-                        var fechaI = CldrCiclosInicio.Text;
-                        var anioI = fechaI.Substring(2, 2);
-                        var mesI = fechaI.Substring(5, 2);
-                        var diaI = fechaI.Substring(8, 2);
-                        var fechaF = CldrCiclosFin.Text;
-                        var anioF = fechaF.Substring(2, 2);
-                        var mesF = fechaF.Substring(5, 2);
-                        var diaF = fechaF.Substring(8, 2);
-                        var inicio = diaI + "/" + mesI + "/" + anioI;
-                        var fin = diaF + "/" + mesF + "/" + anioF;
-                        where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') AND TT.TERM_BEGIN_DT >= '" + inicio + "' AND TT.TERM_END_DT <= '" + fin + "'";
-                    }
-                    else if (LbxBusqueda2.Text.Equals("Facultad") && LbxBusqueda.Text.Equals("Ciclo"))
-                    {
-                        var fechaI = CldrCiclosInicio.Text;
-                        var anioI = fechaI.Substring(2, 2);
-                        var mesI = fechaI.Substring(5, 2);
-                        var diaI = fechaI.Substring(8, 2);
-                        var fechaF = CldrCiclosFin.Text;
-                        var anioF = fechaF.Substring(2, 2);
-                        var mesF = fechaF.Substring(5, 2);
-                        var diaF = fechaF.Substring(8, 2);
-                        var inicio = diaI + "/" + mesI + "/" + anioI;
-                        var fin = diaF + "/" + mesF + "/" + anioF;
-                        where = "WHERE AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                     }
                 }
                 string constr = TxtURL.Text;
@@ -374,10 +253,10 @@ namespace ReportesUnis
                             ChBusqueda.Checked = false;
                             LbxBusqueda2.Visible = false;
                             TxtBuscador2.Visible = false;
-                            CldrCiclosInicio2.Visible = false;
-                            CldrCiclosFin2.Visible = false;
-                            FFin2.Visible = false;
-                            FInicio2.Visible = false;
+                            //CldrCiclosInicio2.Visible = false;
+                            //CldrCiclosFin2.Visible = false;
+                            //FFin2.Visible = false;
+                            //FInicio2.Visible = false;
                             lblBusqueda.Text = " ";
                         }
                         else
@@ -553,25 +432,25 @@ namespace ReportesUnis
             if (LbxBusqueda.Text.Equals("Ciclo"))
             {
                 TxtBuscador.Visible = false;
-                CldrCiclosInicio.Visible = true;
-                CldrCiclosFin.Visible = true;
-                FFin.Visible = true;
-                FInicio.Visible = true;
+                //CldrCiclosInicio.Visible = true;
+                //CldrCiclosFin.Visible = true;
+                //FFin.Visible = true;
+                //FInicio.Visible = true;
                 TxtBuscador2.Visible = false;
                 TxtBuscador2.Text = "";
-                CldrCiclosInicio2.Visible = false;
-                CldrCiclosFin2.Visible = false;
-                FFin2.Visible = false;
-                FInicio2.Visible = false;
+                //CldrCiclosInicio2.Visible = false;
+                //CldrCiclosFin2.Visible = false;
+                //FFin2.Visible = false;
+                //FInicio2.Visible = false;
             }
             else
             {
                 TxtBuscador.Visible = true;
                 TxtBuscador2.Text = "";
-                CldrCiclosInicio.Visible = false;
-                CldrCiclosFin.Visible = false;
-                FFin.Visible = false;
-                FInicio.Visible = false;
+                //CldrCiclosInicio.Visible = false;
+                //CldrCiclosFin.Visible = false;
+                //FFin.Visible = false;
+                //FInicio.Visible = false;
             }
         }
 
@@ -595,10 +474,10 @@ namespace ReportesUnis
                 LbxBusqueda2.Visible = false;
                 TxtBuscador2.Visible = false;
                 TxtBuscador2.Text = "";
-                CldrCiclosInicio2.Visible = false;
-                CldrCiclosFin2.Visible = false;
-                FFin2.Visible = false;
-                FInicio2.Visible = false;
+                //CldrCiclosInicio2.Visible = false;
+                //CldrCiclosFin2.Visible = false;
+                //FFin2.Visible = false;
+                //FInicio2.Visible = false;
             }
         }
 
@@ -608,24 +487,24 @@ namespace ReportesUnis
             {
                 TxtBuscador2.Visible = false;
                 TxtBuscador2.Text = "";
-                CldrCiclosInicio2.Visible = true;
-                CldrCiclosFin2.Visible = true;
-                FFin2.Visible = true;
-                FInicio2.Visible = true;
-                TxtBuscador.Visible = true;
-                CldrCiclosInicio.Visible = false;
-                CldrCiclosFin.Visible = false;
-                FFin.Visible = false;
-                FInicio.Visible = false;
+                //CldrCiclosInicio2.Visible = true;
+                //CldrCiclosFin2.Visible = true;
+                //FFin2.Visible = true;
+                //FInicio2.Visible = true;
+                //TxtBuscador.Visible = true;
+                //CldrCiclosInicio.Visible = false;
+                //CldrCiclosFin.Visible = false;
+                //FFin.Visible = false;
+                //FInicio.Visible = false;
             }
             else
             {
                 TxtBuscador2.Visible = true;
                 TxtBuscador2.Text = "";
-                CldrCiclosInicio2.Visible = false;
-                CldrCiclosFin2.Visible = false;
-                FFin2.Visible = false;
-                FInicio2.Visible = false;
+                //CldrCiclosInicio2.Visible = false;
+                //CldrCiclosFin2.Visible = false;
+                //FFin2.Visible = false;
+                //FInicio2.Visible = false;
             }
         }
 
