@@ -1266,6 +1266,10 @@ namespace ReportesUnis
             {
                 {
                     GridViewReporte.DataSource = "";
+                    if (!ChBusqueda.Checked)
+                    {
+                        LbxBusqueda2.Text = "";
+                    }
                     string[] result = sustituirCaracteres(dpi).Split('|');
                     decimal registros = 0;
                     decimal count = 0;
@@ -1275,7 +1279,7 @@ namespace ReportesUnis
                     if (result.Count() > 20)
                     {
                         if (!LbxBusqueda.Text.Equals("Asignación/Contrato") && !LbxBusqueda2.Text.Equals("Asignación/Contrato") && !ChBusqueda.Checked)
-                        {
+                        {                            
                             //Busqueda simple por Nombre, Apellido, DPI o dependencia
                             registros = result.Count() / 22;
                             count = Math.Round(registros, 0);
