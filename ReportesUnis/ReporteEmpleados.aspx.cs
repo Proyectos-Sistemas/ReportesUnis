@@ -1279,7 +1279,7 @@ namespace ReportesUnis
                     if (result.Count() > 20)
                     {
                         if (!LbxBusqueda.Text.Equals("Asignación/Contrato") && !LbxBusqueda2.Text.Equals("Asignación/Contrato") && !ChBusqueda.Checked)
-                        {                            
+                        {
                             //Busqueda simple por Nombre, Apellido, DPI o dependencia
                             registros = result.Count() / 22;
                             count = Math.Round(registros, 0);
@@ -1907,12 +1907,11 @@ namespace ReportesUnis
                 sustituto[i] = sustituirCaracteres(result[i].ToString());
                 if (sustituto[i].Length > 50)
                 {
-                    DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
-                    byte[] bs64 = Encoding.ASCII.GetBytes(sustituto[i]);
-                    newFila["bytes"] = bs64;
+                    DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
+                    newFila["bytes"] = sustituto[i];
                     newFila["contentType"] = "jpg";
                     newFila["fileName"] = result[i] + ".jpg";
-                    dsDownload.Tables["AllDownload"].Rows.Add(newFila);
+                    dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
                     total = total + 1;
                 }
             }
@@ -1929,12 +1928,12 @@ namespace ReportesUnis
                     {
                         for (int i = 0; i < total; i++)
                         {
-                            byte[] base64 = Convert.FromBase64String(sustituto[i]);
-                            ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
 
-                            var zipStream = readmeEntry.Open();
-                            zipStream.Write(base64, 0, base64.Length);
+                                byte[] base64 = Convert.FromBase64String(dsDownload.Tables["AllDownloadEmp"].Rows[i]["bytes"].ToString());
+                                ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownloadEmp"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
 
+                                var zipStream = readmeEntry.Open();
+                                zipStream.Write(base64, 0, base64.Length);
                         }
                     }
                     /*------------FUNCIONA, PERO SUSTITUYE EL  ZIP POR LA FOTO
