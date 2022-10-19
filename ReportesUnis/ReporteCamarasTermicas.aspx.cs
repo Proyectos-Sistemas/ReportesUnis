@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Text;
 using NPOI.XSSF.UserModel;
 using NPOI.SS.UserModel;
+using NPOI.SS.UserModel;
 using System.Data;
 using System.Web;
 using SpreadsheetLight;
@@ -574,6 +575,10 @@ namespace ReportesUnis
                             ret = "2";
                         }
 
+                    }
+                    else
+                    {
+                        ret = "2";
                     }
                 }
             }

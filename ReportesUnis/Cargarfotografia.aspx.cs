@@ -19,6 +19,11 @@ namespace ReportesUnis
             {
                 Response.Redirect(@"~/Default.aspx");
             }
+            else
+            {
+                LeerInfoTxt();
+                BindGrid();
+            }
 
             if (!IsPostBack)
             {
@@ -27,6 +32,24 @@ namespace ReportesUnis
                 foreach (string filePath in filePaths)
                 {
                     files.Add(new ListItem(Path.GetFileName(filePath), filePath));
+                }
+            }
+        }
+
+        private void BindGrid()
+        {
+            //string constr = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;  
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM SYSADM.PS_EMPL_PHOTO";
+                    cmd.Connection = con;
+                    con.Open();
+                    GridView1.DataSource = cmd.ExecuteReader();
+                    GridView1.DataBind();
+                    con.Close();
                 }
             }
         }
@@ -367,6 +390,44 @@ namespace ReportesUnis
             Response.End();
         }
 
+
+        public void desFotos(DataSet dsDownload, int i)
+        {
+            Response.ClearHeaders();
+            Response.Buffer = true;
+            Response.Charset = "";
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.ContentType = dsDownload.Tables["AllDownload"].Rows[i]["contentType"].ToString();
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + dsDownload.Tables["AllDownload"].Rows[i]["fileName"]);
+            Response.BinaryWrite((byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"]);
+            Response.Flush();
+            Response.End();
+        }
+
+        //public void descargarZIP(DataSet dsDownload, int i)
+        //{
+        //    using (ZipFile zip = new ZipFile())
+        //    {
+        //        zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+        //        zip.AddDirectoryByName("Files");
+        //        foreach (GridViewRow row in GridView1.Rows)
+        //        {
+
+        //            byte[] fileBytes = (byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"];
+        //            string filePath2 = (row.FindControl("lblFilePath") as Label).Text;
+        //            string filePath = (row.FindControl(dsDownload.Tables["AllDownload"].Rows[i]["fileName"].ToString()) as Label).Text;
+        //            zip.AddFile(filePath, "Files");
+        //        }
+        //        Response.Clear();
+        //        Response.BufferOutput = false;
+        //        string zipName = String.Format("Zip_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+        //        Response.ContentType = "application/zip";
+        //        Response.AddHeader("content-disposition", "attachment; filename=" + zipName);
+        //        zip.Save(Response.OutputStream);
+        //        Response.End();
+        //    }
+
+        //}
         protected void btnBack_Click(object sender, System.EventArgs e)
         {
             Response.Redirect("index.html");
@@ -387,7 +448,7 @@ namespace ReportesUnis
 
         void LeerInfoTxt()
         {
-            string rutaCompleta = CurrentDirectory +"conexion.txt";
+            string rutaCompleta = CurrentDirectory + "conexion.txt";
             string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
             {

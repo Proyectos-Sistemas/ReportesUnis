@@ -694,6 +694,10 @@ namespace ReportesUnis
                         }
 
                     }
+                    else
+                    {
+                        ret = "2";
+                    }
                 }
             }
             return ret;
