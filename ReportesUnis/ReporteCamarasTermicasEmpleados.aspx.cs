@@ -543,35 +543,35 @@ namespace ReportesUnis
                         if (LbxBusqueda.Text.Equals("Nombre"))
                         {
                             int largo = 0;
-                            string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = nombre.Length + 90;
+                            //string nombre = TxtBuscador.Text.TrimEnd(' ');
+                            largo = 125;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("Apellido"))
                         {
                             int largo = 0;
-                            string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = nombre.Length + 94;
+                            //string nombre = TxtBuscador.Text.TrimEnd(' ');
+                            largo = 129;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("ID"))
                         {
                             int largo = 0;
-                            string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = nombre.Length + 88;
+                            //string nombre = TxtBuscador.Text.TrimEnd(' ');
+                            largo = 123;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("Departamento"))
                         {
                             int largo = 0;
-                            string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = nombre.Length + 98;
+                            //string nombre = TxtBuscador.Text.TrimEnd(' ');
+                            largo = 133;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("Género"))
                         {
                             int largo = 0;
-                            largo = 90 + TxtBuscador.Text.Length;
+                            largo = 125 ;
                             sustituto = sustituto.Remove(0, largo);
                         }
                     }
@@ -603,13 +603,13 @@ namespace ReportesUnis
 
                 if (result.Count() > 9)
                 {
-                    registros = result.Count() / 10;
+                    registros = result.Count() / 11;
                     count = Math.Round(registros, 0);
-                    arrlist = new string[Convert.ToInt32(count), 10];
+                    arrlist = new string[Convert.ToInt32(count), 11];
 
                     for (int i = 0; i < count; i++)
                     {
-                        for (int k = 0; k < 10; k++)
+                        for (int k = 0; k < 11; k++)
                         {
                             arrlist[i, k] = result[datos];
                             datos++;
@@ -628,31 +628,31 @@ namespace ReportesUnis
                             for (int i = 0; i < count; i++)
                             {
                                 DataRow newFila = dsReporte.Tables["RptCTEmpleados"].NewRow();
-                                newFila["FIRST_NAME"] = (arrlist[i, 0] ?? "").ToString();
-                                newFila["LAST_NAME"] = (arrlist[i, 1] ?? "").ToString();
-                                newFila["ID"] = (arrlist[i, 2] ?? "").ToString();
-                                newFila["PERSON_GROUP"] = (arrlist[i, 3] ?? "").ToString();
-                                if (!arrlist[i, 4].ToString().Equals(""))
+                                newFila["FIRST_NAME"] = (arrlist[i, 1] ?? "").ToString();
+                                newFila["LAST_NAME"] = (arrlist[i, 2] ?? "").ToString();
+                                newFila["ID"] = (arrlist[i, 3] ?? "").ToString();
+                                newFila["PERSON_GROUP"] = "UNIS/"+(arrlist[i, 4] ?? "").ToString()+"/"+ (arrlist[i, 8] ?? "").ToString();
+                                if (!arrlist[i, 5].ToString().Equals(""))
                                 {
-                                    start = arrlist[i, 4].ToString().Substring(0, 10);
+                                    start = arrlist[i, 5].ToString().Substring(0, 10);
                                     //newFila["Start_Time_of_Effective_Period"] = start;
                                     newFila["Start_Time_of_Effective_Period"] = "";
                                 }
-                                if (!arrlist[i, 5].ToString().Equals(""))
+                                if (!arrlist[i, 6].ToString().Equals(""))
                                 {
-                                    end = arrlist[i, 5].ToString().Substring(0, 10);
+                                    end = arrlist[i, 6].ToString().Substring(0, 10);
                                     //newFila["End_Time_of_Effective_Period"] = end;
                                     newFila["End_Time_of_Effective_Period"] = "";
                                 }
-                                newFila["PHONE"] = (arrlist[i, 6] ?? "").ToString();
-                                newFila["DEPARTAMENTO"] = (arrlist[i, 7] ?? "").ToString();
-                                newFila["GENDER"] = (arrlist[i, 8] ?? "").ToString();
+                                newFila["PHONE"] = (arrlist[i, 7] ?? "").ToString();
+                                newFila["DEPARTAMENTO"] = (arrlist[i, 8] ?? "").ToString();
+                                newFila["GENDER"] = (arrlist[i, 9] ?? "").ToString();
 
 
-                                if (arrlist[i, 9].ToString() != "-")
+                                if (arrlist[i, 10].ToString() != "-")
                                 {
-                                    int busqueda = TxtBuscador.Text.TrimEnd(' ').Length;
-                                    string email = arrlist[i, 9].ToString();
+                                    int busqueda = 29;
+                                    string email = arrlist[i, 10].ToString();
                                     email = StringExtensions.RemoveEnd(email, busqueda);
                                     newFila["EMAIL"] = email;
                                 }
