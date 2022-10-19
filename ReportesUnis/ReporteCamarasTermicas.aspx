@@ -29,13 +29,17 @@
             <asp:Button ID="BtnImg" runat="server" Text="Exportar Imagenes" CssClass="btn-danger-unis" OnClick="BtnImg_Click" Enabled="true" />
         </div>
         <br />
-        
+
         <div style="text-align: center">
             <br />
             <asp:Label ID="lblBusqueda" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"></asp:Label>
-        </div>
+        </div>       
+    </div>
 
-        <%-- GRIDVIEW DONDE SE MUESTRA LA INFORMACION DEL REPORTE --%>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                 <%-- GRIDVIEW DONDE SE MUESTRA LA INFORMACION DEL REPORTE --%>
         <div class="containerGV" id="GVContainer">
             <asp:GridView ID="GridViewReporteCT" runat="server"
                 AutoGenerateColumns="false" CssClass="table table-condensed table-bordered ">
@@ -61,7 +65,10 @@
                 </Columns>
             </asp:GridView>
         </div>
+            </div>
+        </div>
     </div>
+
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 

@@ -11,6 +11,7 @@ using Ionic.Zip;
 using System.Web;
 using System.IO.Compression;
 using Microsoft.Win32;
+using System.Globalization;
 
 namespace ReportesUnis
 {
@@ -103,9 +104,22 @@ namespace ReportesUnis
                     row.Cells[i].Visible = false;
         }
 
+        public string Mayuscula(string busqueda)
+        {
+            TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+            string inicial = busqueda.Substring(0, 1).ToUpper();
+            string letras = busqueda.Substring(1, busqueda.Length - 1).Trim(' ').ToLower();
+            string resultado = textInfo.ToTitleCase(inicial + letras);
+            return resultado;
+        }
+
         //GENERACION DE CONSULTA A BD Y ASIGNACION A GRIDVIEW SEGUN LA BUSQUEDA DESEADA
         protected void Busqueda(object sender, EventArgs e)
         {
+            if (!String.IsNullOrEmpty(TxtBuscador.Text))
+                TxtBuscador.Text = Mayuscula(TxtBuscador.Text);
+            if (!String.IsNullOrEmpty(TxtBuscador2.Text))
+                TxtBuscador2.Text = Mayuscula(TxtBuscador2.Text);
             var where = "";
             if (!ChBusqueda.Checked)
             {

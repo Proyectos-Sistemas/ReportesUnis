@@ -239,7 +239,7 @@
                 </asp:TableCell>
                 <%-- DIRECION LABEL 2--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Dirección 1:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
                 <asp:TableCell Width="5%">
@@ -353,7 +353,7 @@
                 </asp:TableCell>
                 <%-- TELEFONO LABEL 2--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Teléfono:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">Teléfono*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
                 <asp:TableCell>
