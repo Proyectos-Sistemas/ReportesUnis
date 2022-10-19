@@ -592,104 +592,111 @@ namespace ReportesUnis
 
         public void matrizDatos()
         {
-            GridViewReporteCT.DataSource = "";
-            string[] result = sustituirCaracteres("").Split('|');
-            decimal registros = 0;
-            decimal count = 0;
-            int datos = 0;
-            string[,] arrlist;
-
-            if (result.Count() > 9)
+            if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(lblBusqueda.Text))
             {
-                registros = result.Count() / 10;
-                count = Math.Round(registros, 0);
-                arrlist = new string[Convert.ToInt32(count), 10];
+                GridViewReporteCT.DataSource = "";
+                string[] result = sustituirCaracteres("").Split('|');
+                decimal registros = 0;
+                decimal count = 0;
+                int datos = 0;
+                string[,] arrlist;
 
-                for (int i = 0; i < count; i++)
+                if (result.Count() > 9)
                 {
-                    for (int k = 0; k < 10; k++)
+                    registros = result.Count() / 10;
+                    count = Math.Round(registros, 0);
+                    arrlist = new string[Convert.ToInt32(count), 10];
+
+                    for (int i = 0; i < count; i++)
                     {
-                        arrlist[i, k] = result[datos];
-                        datos++;
+                        for (int k = 0; k < 10; k++)
+                        {
+                            arrlist[i, k] = result[datos];
+                            datos++;
+                        }
                     }
-                }
 
-                try
-                {
-                    var start = "";
-                    var end = "";
-                    DataSetLocalRpt dsReporte = new DataSetLocalRpt();
                     try
                     {
-
-                        //Generacion de matriz para llenado de grid desde una consulta
-                        for (int i = 0; i < count; i++)
+                        var start = "";
+                        var end = "";
+                        DataSetLocalRpt dsReporte = new DataSetLocalRpt();
+                        try
                         {
-                            DataRow newFila = dsReporte.Tables["RptCTEmpleados"].NewRow();
-                            newFila["FIRST_NAME"] = (arrlist[i, 0] ?? "").ToString();
-                            newFila["LAST_NAME"] = (arrlist[i, 1] ?? "").ToString();
-                            newFila["ID"] = (arrlist[i, 2] ?? "").ToString();
-                            newFila["PERSON_GROUP"] = (arrlist[i, 3] ?? "").ToString();
-                            if (!arrlist[i, 4].ToString().Equals(""))
+
+                            //Generacion de matriz para llenado de grid desde una consulta
+                            for (int i = 0; i < count; i++)
                             {
-                                start = arrlist[i, 4].ToString().Substring(0, 10);
-                                //newFila["Start_Time_of_Effective_Period"] = start;
-                                newFila["Start_Time_of_Effective_Period"] = "";
-                            }
-                            if (!arrlist[i, 5].ToString().Equals(""))
-                            {
-                                end = arrlist[i, 5].ToString().Substring(0, 10);
-                                //newFila["End_Time_of_Effective_Period"] = end;
-                                newFila["End_Time_of_Effective_Period"] = "";
-                            }
-                            newFila["PHONE"] = (arrlist[i, 6] ?? "").ToString();
-                            newFila["DEPARTAMENTO"] = (arrlist[i, 7] ?? "").ToString();
-                            newFila["GENDER"] = (arrlist[i, 8] ?? "").ToString();
+                                DataRow newFila = dsReporte.Tables["RptCTEmpleados"].NewRow();
+                                newFila["FIRST_NAME"] = (arrlist[i, 0] ?? "").ToString();
+                                newFila["LAST_NAME"] = (arrlist[i, 1] ?? "").ToString();
+                                newFila["ID"] = (arrlist[i, 2] ?? "").ToString();
+                                newFila["PERSON_GROUP"] = (arrlist[i, 3] ?? "").ToString();
+                                if (!arrlist[i, 4].ToString().Equals(""))
+                                {
+                                    start = arrlist[i, 4].ToString().Substring(0, 10);
+                                    //newFila["Start_Time_of_Effective_Period"] = start;
+                                    newFila["Start_Time_of_Effective_Period"] = "";
+                                }
+                                if (!arrlist[i, 5].ToString().Equals(""))
+                                {
+                                    end = arrlist[i, 5].ToString().Substring(0, 10);
+                                    //newFila["End_Time_of_Effective_Period"] = end;
+                                    newFila["End_Time_of_Effective_Period"] = "";
+                                }
+                                newFila["PHONE"] = (arrlist[i, 6] ?? "").ToString();
+                                newFila["DEPARTAMENTO"] = (arrlist[i, 7] ?? "").ToString();
+                                newFila["GENDER"] = (arrlist[i, 8] ?? "").ToString();
 
 
-                            if (arrlist[i, 9].ToString() != "-")
-                            {
-                                int busqueda = TxtBuscador.Text.TrimEnd(' ').Length;
-                                string email = arrlist[i, 9].ToString();
-                                email = StringExtensions.RemoveEnd(email, busqueda);
-                                newFila["EMAIL"] = email;
+                                if (arrlist[i, 9].ToString() != "-")
+                                {
+                                    int busqueda = TxtBuscador.Text.TrimEnd(' ').Length;
+                                    string email = arrlist[i, 9].ToString();
+                                    email = StringExtensions.RemoveEnd(email, busqueda);
+                                    newFila["EMAIL"] = email;
+                                }
+                                newFila["TYPE"] = "";
+                                newFila["CARD"] = "";
+                                newFila["REMARK"] = "";
+                                newFila["DOCK_STATION_LOGIN_PASSWORD"] = "";
+                                newFila["SUPPORTISSUEDCUSTOMPROPERTIES"] = "";
+                                newFila["SKINSURFACE_TEMPERATURE"] = "";
+                                newFila["TEMPERATURE_STATUS"] = "";
+                                newFila["EMPLID"] = "";
+                                dsReporte.Tables["RptCTEmpleados"].Rows.Add(newFila);
                             }
-                            newFila["TYPE"] = "";
-                            newFila["CARD"] = "";
-                            newFila["REMARK"] = "";
-                            newFila["DOCK_STATION_LOGIN_PASSWORD"] = "";
-                            newFila["SUPPORTISSUEDCUSTOMPROPERTIES"] = "";
-                            newFila["SKINSURFACE_TEMPERATURE"] = "";
-                            newFila["TEMPERATURE_STATUS"] = "";
-                            newFila["EMPLID"] = "";
-                            dsReporte.Tables["RptCTEmpleados"].Rows.Add(newFila);
+
+                        }
+                        catch (Exception x)
+                        {
+                            Console.WriteLine(x.ToString());
                         }
 
+                        LbxBusqueda.Text = "";
+                        TxtBuscador.Text = "";
+                        GridViewReporteCT.DataSource = dsReporte.Tables["RptCTEmpleados"];
+                        GridViewReporteCT.DataBind();
+                        GridViewReporteCT.UseAccessibleHeader = true;
+                        GridViewReporteCT.HeaderRow.TableSection = TableRowSection.TableHeader;
+                        lblBusqueda.Text = "";
                     }
                     catch (Exception x)
                     {
                         Console.WriteLine(x.ToString());
                     }
-
-                    LbxBusqueda.Text = "";
-                    TxtBuscador.Text = "";
-                    GridViewReporteCT.DataSource = dsReporte.Tables["RptCTEmpleados"];
-                    GridViewReporteCT.DataBind();
-                    GridViewReporteCT.UseAccessibleHeader = true;
-                    GridViewReporteCT.HeaderRow.TableSection = TableRowSection.TableHeader;
-                    lblBusqueda.Text = "";
+                    lblBusqueda.Text = " ";
                 }
-                catch (Exception x)
+                else
                 {
-                    Console.WriteLine(x.ToString());
+                    lblBusqueda.Text = "No se encontró información con los valores ingresados";
+                    if (LbxBusqueda.Text == "Género")
+                        lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
                 }
-                lblBusqueda.Text = " ";
             }
             else
             {
-                lblBusqueda.Text = "No se encontró información con los valores ingresados";
-                if (LbxBusqueda.Text == "Género")
-                    lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
+                lblBusqueda.Text = "Ingrese un valor a buscar";
             }
         }
 

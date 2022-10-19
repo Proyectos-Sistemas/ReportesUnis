@@ -27,10 +27,6 @@ namespace ReportesUnis
             {
                 Response.Redirect(@"~/Default.aspx");
             }
-            else
-            {
-                matrizDatos();
-            }
 
             if (!IsPostBack)
             {
@@ -42,63 +38,6 @@ namespace ReportesUnis
                 }
             }
         }
-
-        public void matrizDatos()
-        {
-            GridView1.DataSource = "";
-            string[] result = sustituirCaracteres().Split('|');
-            decimal registros = 0;
-            decimal count = 0;
-            int datos = 0;
-            string[,] arrlist;
-
-            if (result.Count() > 3)
-            {
-                registros = result.Count() / 2;
-                count = Math.Round(registros, 0);
-                arrlist = new string[Convert.ToInt32(count), 2];
-
-                for (int i = 0; i < count; i++)
-                {
-                    for (int k = 0; k < 2; k++)
-                    {
-                        arrlist[i, k] = result[datos];
-                        datos++;
-                    }
-                }
-
-                try
-                {
-                    DataSetLocalRpt dsReporte = new DataSetLocalRpt();
-                    try
-                    {
-
-                        for (int i = 0; i < count; i++)
-                        {
-                            DataRow newFila = dsReporte.Tables["RptCargaMasiva"].NewRow();
-                            newFila["File Name"] = (arrlist[i, 1] ?? "").ToString();
-                            newFila["ID"] = (arrlist[i, 0] ?? "").ToString();
-
-                            dsReporte.Tables["RptCargaMasiva"].Rows.Add(newFila);
-                        }
-                    }
-                    catch (Exception x)
-                    {
-                        Console.WriteLine(x.ToString());
-                    }
-
-                    GridView1.DataSource = dsReporte.Tables["RptCargaMasiva"];
-                    GridView1.DataBind();
-                    GridView1.UseAccessibleHeader = true;
-                    GridView1.HeaderRow.TableSection = TableRowSection.TableHeader;
-                }
-                catch (Exception x)
-                {
-                    Console.WriteLine(x.ToString());
-                }
-            }
-        }
-
 
         //Crea el cuerpo que se utiliza para consultar a todos los empleados
         private static void CuerpoConsulta(string idPersona, string passwordServicio)

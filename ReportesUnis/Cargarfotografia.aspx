@@ -49,7 +49,7 @@
             </div>
             <asp:Button ID="btnUpload" runat="server" Text="Cargar" OnClick="Upload" CssClass="btn-primary" Enabled="false" />
             <hr />
-            <asp:GridView ID="GridView1" class="table table-bordered table-condensed table-responsive table-hover" runat="server"
+            <%--<asp:GridView ID="GridView1" class="table table-bordered table-condensed table-responsive table-hover" runat="server"
                 AutoGenerateColumns="false" CssClass="table">
                 <Columns>
                     <asp:BoundField DataField="EMPLID" HeaderText="File Name" />
@@ -61,7 +61,7 @@
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
-            </asp:GridView>
+            </asp:GridView>--%>
         </div>
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>  

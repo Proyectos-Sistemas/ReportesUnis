@@ -19,11 +19,6 @@ namespace ReportesUnis
             {
                 Response.Redirect(@"~/Default.aspx");
             }
-            else
-            {
-                LeerInfoTxt();
-                BindGrid();
-            }
 
             if (!IsPostBack)
             {
@@ -32,24 +27,6 @@ namespace ReportesUnis
                 foreach (string filePath in filePaths)
                 {
                     files.Add(new ListItem(Path.GetFileName(filePath), filePath));
-                }
-            }
-        }
-
-        private void BindGrid()
-        {
-            //string constr = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;  
-            string constr = TxtURL.Text;
-            using (OracleConnection con = new OracleConnection(constr))
-            {
-                using (OracleCommand cmd = new OracleCommand())
-                {
-                    cmd.CommandText = "SELECT * FROM SYSADM.PS_EMPL_PHOTO";
-                    cmd.Connection = con;
-                    con.Open();
-                    GridView1.DataSource = cmd.ExecuteReader();
-                    GridView1.DataBind();
-                    con.Close();
                 }
             }
         }

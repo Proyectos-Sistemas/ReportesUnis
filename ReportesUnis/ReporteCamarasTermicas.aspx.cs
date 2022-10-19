@@ -35,84 +35,53 @@ namespace ReportesUnis
         //GENERACION DE CONSULTA A BD Y ASIGNACION A GRIDVIEW SIN BUSQUEDA
         private void BindGrid()
         {
-            string constr = TxtURL.Text;
-            using (OracleConnection con = new OracleConnection(constr))
-            {
-                using (OracleCommand cmd = new OracleCommand())
-                {
-                    cmd.CommandText = "SELECT " +
-                    "EMPLID, FIRST_NAME, LAST_NAME, ID, TYPE, PERSON_GROUP||Departamento PERSON_GROUP, GENDER, " +
-                        "'' Start_Time_of_Effective_Period, " +
-                        "'' End_Time_of_Effective_Period, " +
-                    "CARD, EMAIL, PHONE, REMARK, DOCK_STATION_LOGIN_PASSWORD, SUPPORTISSUEDCUSTOMPROPERTIES, " +
-                    "SKINSURFACE_TEMPERATURE, TEMPERATURE_STATUS, DEPARTAMENTO " +
-                    "FROM (SELECT DISTINCT PD.EMPLID, PD.FIRST_NAME, " +
-                    "PD.LAST_NAME || CASE WHEN LTRIM(RTRIM(PD.SECOND_LAST_NAME)) IS NOT NULL THEN ' ' || LTRIM(RTRIM(SECOND_LAST_NAME)) END LAST_NAME, " +
-                    "(SELECT NID.NATIONAL_ID FROM SYSADM.PS_PERS_NID NID " +
-                    "WHERE NID.EMPLID=PD.EMPLID AND NID.NATIONAL_ID_TYPE IN ('DPI','PAS')   " +
-                    "ORDER BY CASE WHEN NID.NATIONAL_ID_TYPE='DPI' THEN 1 ELSE 2 END " +
-                    "FETCH FIRST 1 ROWS ONLY) ID, 'Basic Person' TYPE, " +
-                    "PROG_T.INSTITUTION||'/Estudiantes/' Person_Group, " +
-                    "CASE WHEN SEX = 'F' THEN 'Female' WHEN SEX = 'M' THEN 'Male' " +
-                    "ELSE 'Unknown' END Gender, " +
-                    "TERM.TERM_BEGIN_DT Start_Time_of_Effective_Period, " +
-                    "TERM.TERM_END_DT End_Time_of_Effective_Period, " +
-                    "'' Card, " +
-                    "(SELECT EMAIL.EMAIL_ADDR " +
-                    "FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL " +
-                    "WHERE EMAIL.EMPLID=PD.EMPLID " +
-                    "AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' " +
-                    "ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG='Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR " +
-                    "FETCH FIRST 1 ROWS ONLY) Email, " +
-                    "(SELECT PH.PHONE " +
-                    "FROM SYSADM.PS_PERSONAL_PHONE PH " +
-                    "WHERE PH.EMPLID=PD.EMPLID " +
-                    "AND PH.PREF_PHONE_FLAG='Y' " +
-                    "ORDER BY CASE WHEN PH.PREF_PHONE_FLAG='Y' THEN 1 ELSE 2 END, PH.PHONE " +
-                    "FETCH FIRST 1 ROWS ONLY) Phone, " +
-                    "'' Remark, " +
-                    "'' Dock_Station_Login_Password, " +
-                    "'' SupportIssuedCustomProperties, " +
-                    "'' SkinSurface_Temperature, " +
-                    "'' Temperature_Status, " +
-                    "(SELECT PROG_T1.ACAD_GROUP " +
-                    "FROM SYSADM.PS_PERS_DATA_SA_VW PD1 " +
-                    "JOIN SYSADM.PS_STDNT_ENRL ENRL1 ON PD1.EMPLID=ENRL1.EMPLID AND ENRL1.STDNT_ENRL_STATUS='E' AND ENRL1.ENRL_STATUS_REASON='ENRL' " +
-                    "JOIN SYSADM.PS_STDNT_CAR_TERM STERM1 ON STERM1.EMPLID=ENRL1.EMPLID AND STERM1.ACAD_CAREER=ENRL1.ACAD_CAREER AND STERM1.INSTITUTION=ENRL1.INSTITUTION AND STERM1.STRM=ENRL1.STRM " +
-                    "JOIN SYSADM.PS_TERM_TBL TERM1 ON STERM1.STRM=TERM1.STRM AND STERM1.ACAD_CAREER = TERM1.ACAD_CAREER AND STERM1.INSTITUTION = TERM1.INSTITUTION " +
-                    "JOIN SYSADM.PS_ACAD_PROG PROG1 ON PD1.EMPLID = PROG1.EMPLID AND STERM1.ACAD_CAREER=PROG1.ACAD_CAREER AND STERM1.INSTITUTION=PROG1.INSTITUTION AND ENRL1.ACAD_PROG=PROG1.ACAD_PROG AND PROG_ACTION='MATR' " +
-                    "JOIN SYSADM.PS_ACAD_PROG_TBL PROG_T1 ON ENRL1.ACAD_PROG = PROG_T1.ACAD_PROG AND  (PROG_T1.EFFDT = (SELECT MAX(PROG_T3.EFFDT) " +
-                    "FROM   SYSADM.PS_ACAD_PROG_TBL PROG_T3 " +
-                    "WHERE  PROG_T1.INSTITUTION = PROG_T3.INSTITUTION " +
-                    "AND PROG_T1.ACAD_PROG = PROG_T3.ACAD_PROG " +
-                    "AND PROG_T3.EFFDT <= SYSDATE)) " +
-                    "WHERE (((TO_DATE('01/01/22') BETWEEN TERM1.TERM_BEGIN_DT AND TERM1.TERM_END_DT) OR (TO_DATE('07/06/22') BETWEEN TERM1.TERM_BEGIN_DT AND TERM1.TERM_END_DT)) OR " +
-                    "((TERM1.TERM_BEGIN_DT BETWEEN TO_DATE('01/01/22') AND TO_DATE('07/06/22')) AND (TERM1.TERM_BEGIN_DT BETWEEN TO_DATE('01/01/22') AND TO_DATE('07/06/22')))) " +
-                    "AND PD1.EMPLID=PD.EMPLID " +
-                    "ORDER BY PROG1.EFFDT ASC, CASE WHEN PROG1.ACAD_CAREER='PROG1.ACAD_CAREER' THEN 1 ELSE 2 END, PROG_T1.ACAD_GROUP " +
-                    "FETCH FIRST 1 ROWS ONLY) " +
-                    "Departamento " +
-                    "FROM SYSADM.PS_PERS_DATA_SA_VW PD  " +
-                    "JOIN SYSADM.PS_STDNT_ENRL ENRL ON PD.EMPLID=ENRL.EMPLID AND ENRL.STDNT_ENRL_STATUS='E' AND ENRL.ENRL_STATUS_REASON='ENRL'  " +
-                    "JOIN SYSADM.PS_STDNT_CAR_TERM STERM ON STERM.EMPLID=ENRL.EMPLID AND STERM.ACAD_CAREER=ENRL.ACAD_CAREER AND STERM.INSTITUTION=ENRL.INSTITUTION AND STERM.STRM=ENRL.STRM  " +
-                    "JOIN SYSADM.PS_TERM_TBL TERM ON STERM.STRM=TERM.STRM AND STERM.ACAD_CAREER = TERM.ACAD_CAREER AND STERM.INSTITUTION = TERM.INSTITUTION  " +
-                    "JOIN SYSADM.PS_ACAD_PROG_TBL PROG_T ON ENRL.ACAD_PROG = PROG_T.ACAD_PROG AND  (PROG_T.EFFDT = (SELECT MAX(PROG_T2.EFFDT)  " +
-                    "FROM   SYSADM.PS_ACAD_PROG_TBL PROG_T2  " +
-                    "WHERE  PROG_T.INSTITUTION = PROG_T2.INSTITUTION  " +
-                    "AND PROG_T.ACAD_PROG = PROG_T2.ACAD_PROG  " +
-                    "AND PROG_T2.EFFDT <= SYSDATE))  " +
-                    "WHERE (((TO_DATE('01/01/22') BETWEEN TERM.TERM_BEGIN_DT AND TERM.TERM_END_DT) OR (TO_DATE('07/06/22') BETWEEN TERM.TERM_BEGIN_DT AND TERM.TERM_END_DT)) OR  " +
-                    "((TERM.TERM_BEGIN_DT BETWEEN TO_DATE('01/01/22') AND TO_DATE('07/06/22')) AND (TERM.TERM_BEGIN_DT BETWEEN TO_DATE('01/01/22') AND TO_DATE('07/06/22'))))  " +
-                    ") tblDatosAlumnos  " +
-                    "GROUP BY EMPLID, FIRST_NAME, LAST_NAME, ID, TYPE, PERSON_GROUP||Departamento, GENDER, CARD, EMAIL, PHONE, REMARK, DOCK_STATION_LOGIN_PASSWORD, SUPPORTISSUEDCUSTOMPROPERTIES, SKINSURFACE_TEMPERATURE, TEMPERATURE_STATUS, DEPARTAMENTO  " +
-                    "ORDER BY EMPLID, ID ";
-                    cmd.Connection = con;
-                    con.Open();
-                    GridViewReporteCT.DataSource = cmd.ExecuteReader();
-                    GridViewReporteCT.DataBind();
-                    con.Close();
-                }
-            }
+
+            DataTable dt = new DataTable();
+            DataRow dr = dt.NewRow();
+
+            dt.Columns.Add("FIRST_NAME");
+            dt.Columns.Add("LAST_NAME");
+            dt.Columns.Add("ID");
+            dt.Columns.Add("TYPE");
+            dt.Columns.Add("PERSON_GROUP");
+            dt.Columns.Add("GENDER");
+            dt.Columns.Add("Start_Time_of_Effective_Period");
+            dt.Columns.Add("End_Time_of_Effective_Period");
+            dt.Columns.Add("CARD");
+            dt.Columns.Add("EMAIL");
+            dt.Columns.Add("PHONE");
+            dt.Columns.Add("REMARK");
+            dt.Columns.Add("DOCK_STATION_LOGIN_PASSWORD");
+            dt.Columns.Add("SUPPORTISSUEDCUSTOMPROPERTIES");
+            dt.Columns.Add("SKINSURFACE_TEMPERATURE");
+            dt.Columns.Add("TEMPERATURE_STATUS");
+            dt.Columns.Add("DEPARTAMENTO");
+            dt.Columns.Add("EMPLID");
+
+            dr["FIRST_NAME"] = String.Empty;
+            dr["LAST_NAME"] = String.Empty;
+            dr["ID"] = String.Empty;
+            dr["TYPE"] = String.Empty;
+            dr["PERSON_GROUP"] = String.Empty;
+            dr["GENDER"] = String.Empty;
+            dr["Start_Time_of_Effective_Period"] = String.Empty;
+            dr["End_Time_of_Effective_Period"] = String.Empty;
+            dr["CARD"] = String.Empty;
+            dr["EMAIL"] = String.Empty;
+            dr["PHONE"] = String.Empty;
+            dr["REMARK"] = String.Empty;
+            dr["DOCK_STATION_LOGIN_PASSWORD"] = String.Empty;
+            dr["SUPPORTISSUEDCUSTOMPROPERTIES"] = String.Empty;
+            dr["SKINSURFACE_TEMPERATURE"] = String.Empty;
+            dr["TEMPERATURE_STATUS"] = String.Empty;
+            dr["DEPARTAMENTO"] = String.Empty;
+            dr["EMPLID"] = String.Empty;
+
+            dt.Rows.Add(dr);
+
+            this.GridViewReporteCT.DataSource = dt;
+            this.GridViewReporteCT.DataBind();
+
         }
 
         //Lectura de archivo txt para la conexion
@@ -140,8 +109,7 @@ namespace ReportesUnis
                 consultaBusqueda();
             }
             catch (Exception c)
-            {
-                BindGrid();
+            {                
                 lblBusqueda.Text = "No se encontró la información solicitada";
                 return;
             }
@@ -268,8 +236,7 @@ namespace ReportesUnis
                             TxtBuscador.Text = "";
                         }
                         else
-                        {
-                            BindGrid();
+                        {                            
                             lblBusqueda.Text = "No se encontró la información solicitada";
                             if (LbxBusqueda.Text == "Género")
                                 lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";

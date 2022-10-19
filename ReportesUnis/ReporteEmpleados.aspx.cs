@@ -1262,397 +1262,407 @@ namespace ReportesUnis
         }
         public void matrizDatos(string dpi)
         {
-            GridViewReporte.DataSource = "";
-            string[] result = sustituirCaracteres(dpi).Split('|');
-            decimal registros = 0;
-            decimal count = 0;
-            int datos = 0;
-            string[,] arrlist;
-
-            if (result.Count() > 20)
+            if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(lblBusqueda.Text))
             {
-                if (!LbxBusqueda.Text.Equals("Asignación/Contrato") && !LbxBusqueda2.Text.Equals("Asignación/Contrato") && !ChBusqueda.Checked)
                 {
-                    //Busqueda simple por Nombre, Apellido, DPI o dependencia
-                    registros = result.Count() / 22;
-                    count = Math.Round(registros, 0);
-                    if (registros == 0)
-                        count = 1;
-                    if (result.Count() > 22) //Multiples resultados
+                    GridViewReporte.DataSource = "";
+                    string[] result = sustituirCaracteres(dpi).Split('|');
+                    decimal registros = 0;
+                    decimal count = 0;
+                    int datos = 0;
+                    string[,] arrlist;
+
+                    if (result.Count() > 20)
                     {
-                        arrlist = new string[Convert.ToInt32(count), 22];
-                        for (int i = 0; i < count; i++)
+                        if (!LbxBusqueda.Text.Equals("Asignación/Contrato") && !LbxBusqueda2.Text.Equals("Asignación/Contrato") && !ChBusqueda.Checked)
                         {
-                            for (int k = 0; k < 22; k++)
+                            //Busqueda simple por Nombre, Apellido, DPI o dependencia
+                            registros = result.Count() / 22;
+                            count = Math.Round(registros, 0);
+                            if (registros == 0)
+                                count = 1;
+                            if (result.Count() > 22) //Multiples resultados
                             {
-                                arrlist[i, k] = result[datos];
-                                datos++;
+                                arrlist = new string[Convert.ToInt32(count), 22];
+                                for (int i = 0; i < count; i++)
+                                {
+                                    for (int k = 0; k < 22; k++)
+                                    {
+                                        arrlist[i, k] = result[datos];
+                                        datos++;
+                                    }
+                                }
+                            }
+                            else //Un resultado
+                            {
+                                arrlist = new string[Convert.ToInt32(count), 21];
+                                for (int i = 0; i < count; i++)
+                                {
+                                    for (int k = 0; k < 21; k++)
+                                    {
+                                        arrlist[i, k] = result[datos];
+                                        datos++;
+                                    }
+                                }
                             }
                         }
-                    }
-                    else //Un resultado
-                    {
-                        arrlist = new string[Convert.ToInt32(count), 21];
-                        for (int i = 0; i < count; i++)
+                        else if (LbxBusqueda.Text.Equals("Asignación/Contrato") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                         {
-                            for (int k = 0; k < 21; k++)
-                            {
-                                arrlist[i, k] = result[datos];
-                                datos++;
-                            }
-                        }
-                    }
-                }
-                else if (LbxBusqueda.Text.Equals("Asignación/Contrato") && String.IsNullOrEmpty(LbxBusqueda2.Text))
-                {
-                    //Busqueda simple por asignacion
-                    registros = result.Count() / 23;
-                    count = Math.Round(registros, 0);
-                    arrlist = new string[Convert.ToInt32(count), 23];
-                    if (registros == 0)
-                        count = 1;
-                    for (int i = 0; i < count; i++)
-                    {
-                        for (int k = 0; k < 23; k++)
-                        {
-                            arrlist[i, k] = result[datos];
-                            datos++;
-                        }
-                    }
-                }
-                else if (!LbxBusqueda2.Text.Equals("Asignación/Contrato") && !LbxBusqueda.Text.Equals("Asignación/Contrato"))
-                {
-                    //Busqueda multiple por Nombre, Apellido, DPI o dependencia
-                    registros = result.Count() / 23;
-                    count = Math.Round(registros, 0);
-                    arrlist = new string[Convert.ToInt32(count), 23];
-                    if (registros == 0)
-                        count = 1;
-                    for (int i = 0; i < count; i++)
-                    {
-                        for (int k = 0; k < 23; k++)
-                        {
-                            arrlist[i, k] = result[datos];
-                            datos++;
-                        }
-                    }
-                }
-                else if (result.Count() == 21)
-                {
-                    registros = result.Count() / 21;
-                    count = Math.Round(registros, 0);
-                    arrlist = new string[Convert.ToInt32(count), 21];
-                    if (registros == 0)
-                        count = 1;
-                    for (int i = 0; i < count; i++)
-                    {
-                        for (int k = 0; k < 21; k++)
-                        {
-                            arrlist[i, k] = result[datos];
-                            datos++;
-                        }
-                    }
-
-                }
-                else
-                {
-                    //Busqueda multiple por asignacion
-                    registros = result.Count() / 24;
-                    count = Math.Round(registros, 0);
-                    arrlist = new string[Convert.ToInt32(count), 24];
-                    if (registros == 0)
-                        count = 1;
-                    for (int i = 0; i < count; i++)
-                    {
-                        for (int k = 0; k < 24; k++)
-                        {
-                            arrlist[i, k] = result[datos];
-                            datos++;
-                        }
-                    }
-                }
-
-                try
-                {
-                    var estado = "";
-                    var bday = "";
-                    var add = "";
-                    var dia = "";
-                    var mes = "";
-                    var anio = "";
-                    DataSetLocalRpt dsReporte = new DataSetLocalRpt();
-                    try
-                    {
-                        //Valida si no se hace busqueda multiple
-                        if (!ChBusqueda.Checked)
-                        {
-                            //Generacion de matriz para llenado de grid desde una consulta
+                            //Busqueda simple por asignacion
+                            registros = result.Count() / 23;
+                            count = Math.Round(registros, 0);
+                            arrlist = new string[Convert.ToInt32(count), 23];
+                            if (registros == 0)
+                                count = 1;
                             for (int i = 0; i < count; i++)
                             {
-                                //Busquedas por Nombre, Apellido, DPI o dependencia
-                                if (!LbxBusqueda.Text.Equals("Asignación/Contrato") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                                for (int k = 0; k < 23; k++)
                                 {
-                                    DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                                    newFila["DPI"] = (arrlist[i, 1] ?? "").ToString();
-                                    newFila["Dependencia"] = (arrlist[i, 2] ?? "").ToString();
-                                    newFila["Telefono"] = (arrlist[i, 3] ?? "").ToString();
-                                    newFila["Estado Civil"] = (arrlist[i, 4] ?? "").ToString();
-                                    if (!arrlist[i, 5].ToString().Equals(""))
-                                    {
-                                        bday = arrlist[i, 5].ToString().Substring(0, 10);
-                                        anio = bday.Substring(0, 4);
-                                        mes = bday.Substring(5, 2);
-                                        dia = bday.Substring(8, 2);
-                                        bday = dia + "-" + mes + "-" + anio;
-                                    }
-                                    else
-                                    {
-                                        bday = "Unknown";
-                                    }
-
-                                    newFila["Cumpleaños"] = bday;
-
-                                    newFila["Direccion"] = (arrlist[i, 6] ?? "").ToString();
-                                    newFila["Municipio"] = (arrlist[i, 7] ?? "").ToString();
-                                    newFila["Departamento"] = (arrlist[i, 8] ?? "").ToString();
-                                    newFila["Nombre1"] = (arrlist[i, 9] ?? "").ToString();
-                                    newFila["Nombre2"] = (arrlist[i, 10] ?? "").ToString();
-                                    newFila["Apellido1"] = (arrlist[i, 11] ?? "").ToString();
-                                    newFila["Apellido2"] = (arrlist[i, 12] ?? "").ToString();
-                                    newFila["Apellido3"] = (arrlist[i, 13] ?? "").ToString();
-                                    newFila["NOM_IMP"] = (arrlist[i, 9] ?? "").ToString() + " " + (arrlist[i, 11] ?? "").ToString();
-                                    newFila["Sexo"] = (arrlist[i, 14] ?? "").ToString();
-                                    newFila["CARNE"] = (arrlist[i, 15] ?? "").ToString();
-                                    if ((arrlist[i, 1] ?? "").ToString() == (arrlist[i, 15] ?? "").ToString())
-                                    {
-                                        newFila["Pasaporte"] = "";
-                                        newFila["FLAG_PAS"] = "0";
-                                        newFila["FLAG_DPI"] = "1";
-                                    }
-                                    else
-                                    {
-                                        newFila["Pasaporte"] = (arrlist[i, 16] ?? "").ToString();
-                                        newFila["FLAG_PAS"] = "1";
-                                        newFila["FLAG_DPI"] = "0";
-                                        newFila["DPI"] = "";
-                                    }
-                                    newFila["Cedula"] = (arrlist[i, 17] ?? "").ToString();
-                                    newFila["NIT"] = (arrlist[i, 18] ?? "").ToString();
-                                    newFila["Nacionalidad"] = (arrlist[i, 19] ?? "").ToString();
-                                    newFila["FLAG_CED"] = "0";
-                                    dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
-                                }
-                                else //Busqueda por Asignación/Contrato
-                                {
-                                    DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                                    newFila["DPI"] = (arrlist[i, 2] ?? "").ToString();
-                                    newFila["Dependencia"] = (arrlist[i, 3] ?? "").ToString();
-                                    newFila["Telefono"] = (arrlist[i, 4] ?? "").ToString();
-                                    newFila["Estado Civil"] = (arrlist[i, 5] ?? "").ToString();
-                                    if (!arrlist[i, 6].ToString().Equals(""))
-                                    {
-                                        bday = arrlist[i, 6].ToString().Substring(0, 10);
-                                        anio = bday.Substring(0, 4);
-                                        mes = bday.Substring(5, 2);
-                                        dia = bday.Substring(8, 2);
-                                        bday = dia + "-" + mes + "-" + anio;
-                                    }
-                                    else
-                                    {
-                                        bday = "Unknown";
-                                    }
-
-                                    newFila["Cumpleaños"] = bday;
-
-                                    newFila["Direccion"] = (arrlist[i, 7] ?? "").ToString();
-                                    newFila["Municipio"] = (arrlist[i, 8] ?? "").ToString();
-                                    newFila["Departamento"] = (arrlist[i, 9] ?? "").ToString();
-                                    newFila["Nombre1"] = (arrlist[i, 12] ?? "").ToString();
-                                    newFila["Nombre2"] = (arrlist[i, 13] ?? "").ToString();
-                                    newFila["Apellido1"] = (arrlist[i, 14] ?? "").ToString();
-                                    newFila["Apellido2"] = (arrlist[i, 15] ?? "").ToString();
-                                    newFila["Apellido3"] = (arrlist[i, 16] ?? "").ToString();
-                                    newFila["NOM_IMP"] = (arrlist[i, 12] ?? "").ToString() + " " + (arrlist[i, 14] ?? "").ToString();
-                                    newFila["Sexo"] = (arrlist[i, 17] ?? "").ToString();
-                                    newFila["CARNE"] = (arrlist[i, 18] ?? "").ToString();
-
-                                    if ((arrlist[i, 2] ?? "").ToString() == (arrlist[i, 18] ?? "").ToString())
-                                    {
-                                        newFila["Pasaporte"] = "";
-                                        newFila["FLAG_PAS"] = "0";
-                                        newFila["FLAG_DPI"] = "1";
-                                    }
-                                    else
-                                    {
-                                        newFila["Pasaporte"] = (arrlist[i, 19] ?? "").ToString();
-                                        newFila["FLAG_PAS"] = "1";
-                                        newFila["FLAG_DPI"] = "0";
-                                        newFila["DPI"] = "";
-                                    }
-                                    newFila["Cedula"] = (arrlist[i, 20] ?? "").ToString();
-                                    newFila["NIT"] = (arrlist[i, 21] ?? "").ToString();
-                                    if (result.Count() > 23)
-                                        newFila["Nacionalidad"] = StringExtensions.RemoveEnd((arrlist[i, 22] ?? "").ToString(), 29);
-                                    else
-                                        newFila["Nacionalidad"] = (arrlist[i, 22] ?? "").ToString();
-                                    newFila["FLAG_CED"] = "0";
-                                    dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
+                                    arrlist[i, k] = result[datos];
+                                    datos++;
                                 }
                             }
+                        }
+                        else if (!LbxBusqueda2.Text.Equals("Asignación/Contrato") && !LbxBusqueda.Text.Equals("Asignación/Contrato"))
+                        {
+                            //Busqueda multiple por Nombre, Apellido, DPI o dependencia
+                            registros = result.Count() / 23;
+                            count = Math.Round(registros, 0);
+                            arrlist = new string[Convert.ToInt32(count), 23];
+                            if (registros == 0)
+                                count = 1;
+                            for (int i = 0; i < count; i++)
+                            {
+                                for (int k = 0; k < 23; k++)
+                                {
+                                    arrlist[i, k] = result[datos];
+                                    datos++;
+                                }
+                            }
+                        }
+                        else if (result.Count() == 21)
+                        {
+                            registros = result.Count() / 21;
+                            count = Math.Round(registros, 0);
+                            arrlist = new string[Convert.ToInt32(count), 21];
+                            if (registros == 0)
+                                count = 1;
+                            for (int i = 0; i < count; i++)
+                            {
+                                for (int k = 0; k < 21; k++)
+                                {
+                                    arrlist[i, k] = result[datos];
+                                    datos++;
+                                }
+                            }
+
                         }
                         else
                         {
-
+                            //Busqueda multiple por asignacion
+                            registros = result.Count() / 24;
+                            count = Math.Round(registros, 0);
+                            arrlist = new string[Convert.ToInt32(count), 24];
+                            if (registros == 0)
+                                count = 1;
                             for (int i = 0; i < count; i++)
                             {
-                                if (!LbxBusqueda2.Text.Equals("Asignación/Contrato") && !LbxBusqueda.Text.Equals("Asignación/Contrato"))
+                                for (int k = 0; k < 24; k++)
                                 {
-                                    DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                                    newFila["DPI"] = (arrlist[i, 3] ?? "").ToString();
-                                    newFila["Dependencia"] = (arrlist[i, 4] ?? "").ToString();
-                                    newFila["Telefono"] = (arrlist[i, 5] ?? "").ToString();
-                                    newFila["Estado Civil"] = (arrlist[i, 6] ?? "").ToString();
-                                    if (!arrlist[i, 7].ToString().Equals(""))
-                                    {
-                                        bday = arrlist[i, 7].ToString().Substring(0, 10);
-                                        anio = bday.Substring(0, 4);
-                                        mes = bday.Substring(5, 2);
-                                        dia = bday.Substring(8, 2);
-                                        bday = dia + "-" + mes + "-" + anio;
-                                    }
-                                    else
-                                    {
-                                        bday = "Unknown";
-                                    }
+                                    arrlist[i, k] = result[datos];
+                                    datos++;
+                                }
+                            }
+                        }
 
-                                    newFila["Cumpleaños"] = bday;
+                        try
+                        {
+                            var estado = "";
+                            var bday = "";
+                            var add = "";
+                            var dia = "";
+                            var mes = "";
+                            var anio = "";
+                            DataSetLocalRpt dsReporte = new DataSetLocalRpt();
+                            try
+                            {
+                                //Valida si no se hace busqueda multiple
+                                if (!ChBusqueda.Checked)
+                                {
+                                    //Generacion de matriz para llenado de grid desde una consulta
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        //Busquedas por Nombre, Apellido, DPI o dependencia
+                                        if (!LbxBusqueda.Text.Equals("Asignación/Contrato") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                                        {
+                                            DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
+                                            newFila["DPI"] = (arrlist[i, 1] ?? "").ToString();
+                                            newFila["Dependencia"] = (arrlist[i, 2] ?? "").ToString();
+                                            newFila["Telefono"] = (arrlist[i, 3] ?? "").ToString();
+                                            newFila["Estado Civil"] = (arrlist[i, 4] ?? "").ToString();
+                                            if (!arrlist[i, 5].ToString().Equals(""))
+                                            {
+                                                bday = arrlist[i, 5].ToString().Substring(0, 10);
+                                                anio = bday.Substring(0, 4);
+                                                mes = bday.Substring(5, 2);
+                                                dia = bday.Substring(8, 2);
+                                                bday = dia + "-" + mes + "-" + anio;
+                                            }
+                                            else
+                                            {
+                                                bday = "Unknown";
+                                            }
 
-                                    newFila["Direccion"] = (arrlist[i, 8] ?? "").ToString();
-                                    newFila["Municipio"] = (arrlist[i, 9] ?? "").ToString();
-                                    newFila["Departamento"] = (arrlist[i, 10] ?? "").ToString();
-                                    newFila["Nombre1"] = (arrlist[i, 11] ?? "").ToString();
-                                    newFila["Nombre2"] = (arrlist[i, 12] ?? "").ToString();
-                                    newFila["Apellido1"] = (arrlist[i, 13] ?? "").ToString();
-                                    newFila["Apellido2"] = (arrlist[i, 14] ?? "").ToString();
-                                    newFila["Apellido3"] = (arrlist[i, 15] ?? "").ToString();
-                                    newFila["NOM_IMP"] = (arrlist[i, 11] ?? "").ToString() + " " + (arrlist[i, 13] ?? "").ToString();
-                                    newFila["Sexo"] = (arrlist[i, 16] ?? "").ToString();
-                                    newFila["CARNE"] = (arrlist[i, 17] ?? "").ToString();
-                                    if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 17] ?? "").ToString())
-                                    {
-                                        newFila["Pasaporte"] = "";
-                                        newFila["FLAG_PAS"] = "0";
-                                        newFila["FLAG_DPI"] = "1";
-                                        newFila["DPI"] = "";
+                                            newFila["Cumpleaños"] = bday;
+
+                                            newFila["Direccion"] = (arrlist[i, 6] ?? "").ToString();
+                                            newFila["Municipio"] = (arrlist[i, 7] ?? "").ToString();
+                                            newFila["Departamento"] = (arrlist[i, 8] ?? "").ToString();
+                                            newFila["Nombre1"] = (arrlist[i, 9] ?? "").ToString();
+                                            newFila["Nombre2"] = (arrlist[i, 10] ?? "").ToString();
+                                            newFila["Apellido1"] = (arrlist[i, 11] ?? "").ToString();
+                                            newFila["Apellido2"] = (arrlist[i, 12] ?? "").ToString();
+                                            newFila["Apellido3"] = (arrlist[i, 13] ?? "").ToString();
+                                            newFila["NOM_IMP"] = (arrlist[i, 9] ?? "").ToString() + " " + (arrlist[i, 11] ?? "").ToString();
+                                            newFila["Sexo"] = (arrlist[i, 14] ?? "").ToString();
+                                            newFila["CARNE"] = (arrlist[i, 15] ?? "").ToString();
+                                            if ((arrlist[i, 1] ?? "").ToString() == (arrlist[i, 15] ?? "").ToString())
+                                            {
+                                                newFila["Pasaporte"] = "";
+                                                newFila["FLAG_PAS"] = "0";
+                                                newFila["FLAG_DPI"] = "1";
+                                            }
+                                            else
+                                            {
+                                                newFila["Pasaporte"] = (arrlist[i, 16] ?? "").ToString();
+                                                newFila["FLAG_PAS"] = "1";
+                                                newFila["FLAG_DPI"] = "0";
+                                                newFila["DPI"] = "";
+                                            }
+                                            newFila["Cedula"] = (arrlist[i, 17] ?? "").ToString();
+                                            newFila["NIT"] = (arrlist[i, 18] ?? "").ToString();
+                                            newFila["Nacionalidad"] = (arrlist[i, 19] ?? "").ToString();
+                                            newFila["FLAG_CED"] = "0";
+                                            dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
+                                        }
+                                        else //Busqueda por Asignación/Contrato
+                                        {
+                                            DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
+                                            newFila["DPI"] = (arrlist[i, 2] ?? "").ToString();
+                                            newFila["Dependencia"] = (arrlist[i, 3] ?? "").ToString();
+                                            newFila["Telefono"] = (arrlist[i, 4] ?? "").ToString();
+                                            newFila["Estado Civil"] = (arrlist[i, 5] ?? "").ToString();
+                                            if (!arrlist[i, 6].ToString().Equals(""))
+                                            {
+                                                bday = arrlist[i, 6].ToString().Substring(0, 10);
+                                                anio = bday.Substring(0, 4);
+                                                mes = bday.Substring(5, 2);
+                                                dia = bday.Substring(8, 2);
+                                                bday = dia + "-" + mes + "-" + anio;
+                                            }
+                                            else
+                                            {
+                                                bday = "Unknown";
+                                            }
+
+                                            newFila["Cumpleaños"] = bday;
+
+                                            newFila["Direccion"] = (arrlist[i, 7] ?? "").ToString();
+                                            newFila["Municipio"] = (arrlist[i, 8] ?? "").ToString();
+                                            newFila["Departamento"] = (arrlist[i, 9] ?? "").ToString();
+                                            newFila["Nombre1"] = (arrlist[i, 12] ?? "").ToString();
+                                            newFila["Nombre2"] = (arrlist[i, 13] ?? "").ToString();
+                                            newFila["Apellido1"] = (arrlist[i, 14] ?? "").ToString();
+                                            newFila["Apellido2"] = (arrlist[i, 15] ?? "").ToString();
+                                            newFila["Apellido3"] = (arrlist[i, 16] ?? "").ToString();
+                                            newFila["NOM_IMP"] = (arrlist[i, 12] ?? "").ToString() + " " + (arrlist[i, 14] ?? "").ToString();
+                                            newFila["Sexo"] = (arrlist[i, 17] ?? "").ToString();
+                                            newFila["CARNE"] = (arrlist[i, 18] ?? "").ToString();
+
+                                            if ((arrlist[i, 2] ?? "").ToString() == (arrlist[i, 18] ?? "").ToString())
+                                            {
+                                                newFila["Pasaporte"] = "";
+                                                newFila["FLAG_PAS"] = "0";
+                                                newFila["FLAG_DPI"] = "1";
+                                            }
+                                            else
+                                            {
+                                                newFila["Pasaporte"] = (arrlist[i, 19] ?? "").ToString();
+                                                newFila["FLAG_PAS"] = "1";
+                                                newFila["FLAG_DPI"] = "0";
+                                                newFila["DPI"] = "";
+                                            }
+                                            newFila["Cedula"] = (arrlist[i, 20] ?? "").ToString();
+                                            newFila["NIT"] = (arrlist[i, 21] ?? "").ToString();
+                                            if (result.Count() > 23)
+                                                newFila["Nacionalidad"] = StringExtensions.RemoveEnd((arrlist[i, 22] ?? "").ToString(), 29);
+                                            else
+                                                newFila["Nacionalidad"] = (arrlist[i, 22] ?? "").ToString();
+                                            newFila["FLAG_CED"] = "0";
+                                            dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
+                                        }
                                     }
-                                    else
-                                    {
-                                        newFila["Pasaporte"] = (arrlist[i, 18] ?? "").ToString();
-                                        newFila["FLAG_PAS"] = "1";
-                                        newFila["FLAG_DPI"] = "0";
-                                    }
-                                    newFila["Cedula"] = (arrlist[i, 19] ?? "").ToString();
-                                    newFila["NIT"] = (arrlist[i, 20] ?? "").ToString();
-                                    newFila["Nacionalidad"] = (arrlist[i, 21] ?? "").ToString();
-                                    newFila["FLAG_CED"] = "0";
-                                    dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                                 }
                                 else
                                 {
 
-                                    string texto1 = TxtBuscador.Text.TrimEnd(' ');
-                                    string texto2 = TxtBuscador2.Text.TrimEnd(' ');
-                                    int largo = texto1.Length + texto2.Length;
-                                    DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                                    newFila["DPI"] = (arrlist[i, 0] ?? "").ToString();
-                                    newFila["Dependencia"] = (arrlist[i, 1] ?? "").ToString();
-                                    newFila["Telefono"] = (arrlist[i, 2] ?? "").ToString();
-                                    newFila["Estado Civil"] = (arrlist[i, 3] ?? "").ToString();
-                                    if (!arrlist[i, 4].ToString().Equals(""))
+                                    for (int i = 0; i < count; i++)
                                     {
-                                        bday = arrlist[i, 4].ToString().Substring(0, 10);
-                                        anio = bday.Substring(0, 4);
-                                        mes = bday.Substring(5, 2);
-                                        dia = bday.Substring(8, 2);
-                                        bday = dia + "-" + mes + "-" + anio;
-                                    }
-                                    else
-                                    {
-                                        bday = "Unknown";
-                                    }
+                                        if (!LbxBusqueda2.Text.Equals("Asignación/Contrato") && !LbxBusqueda.Text.Equals("Asignación/Contrato"))
+                                        {
+                                            DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
+                                            newFila["DPI"] = (arrlist[i, 3] ?? "").ToString();
+                                            newFila["Dependencia"] = (arrlist[i, 4] ?? "").ToString();
+                                            newFila["Telefono"] = (arrlist[i, 5] ?? "").ToString();
+                                            newFila["Estado Civil"] = (arrlist[i, 6] ?? "").ToString();
+                                            if (!arrlist[i, 7].ToString().Equals(""))
+                                            {
+                                                bday = arrlist[i, 7].ToString().Substring(0, 10);
+                                                anio = bday.Substring(0, 4);
+                                                mes = bday.Substring(5, 2);
+                                                dia = bday.Substring(8, 2);
+                                                bday = dia + "-" + mes + "-" + anio;
+                                            }
+                                            else
+                                            {
+                                                bday = "Unknown";
+                                            }
 
-                                    newFila["Cumpleaños"] = bday;
+                                            newFila["Cumpleaños"] = bday;
 
-                                    newFila["Direccion"] = (arrlist[i, 5] ?? "").ToString();
-                                    newFila["Municipio"] = (arrlist[i, 6] ?? "").ToString();
-                                    newFila["Departamento"] = (arrlist[i, 7] ?? "").ToString();
-                                    newFila["Nombre1"] = (arrlist[i, 10] ?? "").ToString();
-                                    newFila["Nombre2"] = (arrlist[i, 11] ?? "").ToString();
-                                    newFila["Apellido1"] = (arrlist[i, 12] ?? "").ToString();
-                                    newFila["Apellido2"] = (arrlist[i, 13] ?? "").ToString();
-                                    newFila["Apellido3"] = (arrlist[i, 14] ?? "").ToString();
-                                    newFila["NOM_IMP"] = (arrlist[i, 10] ?? "").ToString() + " " + (arrlist[i, 12] ?? "").ToString();
-                                    newFila["Sexo"] = (arrlist[i, 15] ?? "").ToString();
-                                    newFila["CARNE"] = (arrlist[i, 16] ?? "").ToString();
-                                    if ((arrlist[i, 0] ?? "").ToString() == (arrlist[i, 16] ?? "").ToString())
-                                    {
-                                        newFila["Pasaporte"] = "";
-                                        newFila["FLAG_PAS"] = "0";
-                                        newFila["FLAG_DPI"] = "1";
+                                            newFila["Direccion"] = (arrlist[i, 8] ?? "").ToString();
+                                            newFila["Municipio"] = (arrlist[i, 9] ?? "").ToString();
+                                            newFila["Departamento"] = (arrlist[i, 10] ?? "").ToString();
+                                            newFila["Nombre1"] = (arrlist[i, 11] ?? "").ToString();
+                                            newFila["Nombre2"] = (arrlist[i, 12] ?? "").ToString();
+                                            newFila["Apellido1"] = (arrlist[i, 13] ?? "").ToString();
+                                            newFila["Apellido2"] = (arrlist[i, 14] ?? "").ToString();
+                                            newFila["Apellido3"] = (arrlist[i, 15] ?? "").ToString();
+                                            newFila["NOM_IMP"] = (arrlist[i, 11] ?? "").ToString() + " " + (arrlist[i, 13] ?? "").ToString();
+                                            newFila["Sexo"] = (arrlist[i, 16] ?? "").ToString();
+                                            newFila["CARNE"] = (arrlist[i, 17] ?? "").ToString();
+                                            if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 17] ?? "").ToString())
+                                            {
+                                                newFila["Pasaporte"] = "";
+                                                newFila["FLAG_PAS"] = "0";
+                                                newFila["FLAG_DPI"] = "1";
+                                                newFila["DPI"] = "";
+                                            }
+                                            else
+                                            {
+                                                newFila["Pasaporte"] = (arrlist[i, 18] ?? "").ToString();
+                                                newFila["FLAG_PAS"] = "1";
+                                                newFila["FLAG_DPI"] = "0";
+                                            }
+                                            newFila["Cedula"] = (arrlist[i, 19] ?? "").ToString();
+                                            newFila["NIT"] = (arrlist[i, 20] ?? "").ToString();
+                                            newFila["Nacionalidad"] = (arrlist[i, 21] ?? "").ToString();
+                                            newFila["FLAG_CED"] = "0";
+                                            dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
+                                        }
+                                        else
+                                        {
+
+                                            string texto1 = TxtBuscador.Text.TrimEnd(' ');
+                                            string texto2 = TxtBuscador2.Text.TrimEnd(' ');
+                                            int largo = texto1.Length + texto2.Length;
+                                            DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
+                                            newFila["DPI"] = (arrlist[i, 0] ?? "").ToString();
+                                            newFila["Dependencia"] = (arrlist[i, 1] ?? "").ToString();
+                                            newFila["Telefono"] = (arrlist[i, 2] ?? "").ToString();
+                                            newFila["Estado Civil"] = (arrlist[i, 3] ?? "").ToString();
+                                            if (!arrlist[i, 4].ToString().Equals(""))
+                                            {
+                                                bday = arrlist[i, 4].ToString().Substring(0, 10);
+                                                anio = bday.Substring(0, 4);
+                                                mes = bday.Substring(5, 2);
+                                                dia = bday.Substring(8, 2);
+                                                bday = dia + "-" + mes + "-" + anio;
+                                            }
+                                            else
+                                            {
+                                                bday = "Unknown";
+                                            }
+
+                                            newFila["Cumpleaños"] = bday;
+
+                                            newFila["Direccion"] = (arrlist[i, 5] ?? "").ToString();
+                                            newFila["Municipio"] = (arrlist[i, 6] ?? "").ToString();
+                                            newFila["Departamento"] = (arrlist[i, 7] ?? "").ToString();
+                                            newFila["Nombre1"] = (arrlist[i, 10] ?? "").ToString();
+                                            newFila["Nombre2"] = (arrlist[i, 11] ?? "").ToString();
+                                            newFila["Apellido1"] = (arrlist[i, 12] ?? "").ToString();
+                                            newFila["Apellido2"] = (arrlist[i, 13] ?? "").ToString();
+                                            newFila["Apellido3"] = (arrlist[i, 14] ?? "").ToString();
+                                            newFila["NOM_IMP"] = (arrlist[i, 10] ?? "").ToString() + " " + (arrlist[i, 12] ?? "").ToString();
+                                            newFila["Sexo"] = (arrlist[i, 15] ?? "").ToString();
+                                            newFila["CARNE"] = (arrlist[i, 16] ?? "").ToString();
+                                            if ((arrlist[i, 0] ?? "").ToString() == (arrlist[i, 16] ?? "").ToString())
+                                            {
+                                                newFila["Pasaporte"] = "";
+                                                newFila["FLAG_PAS"] = "0";
+                                                newFila["FLAG_DPI"] = "1";
+                                            }
+                                            else
+                                            {
+                                                newFila["Pasaporte"] = (arrlist[i, 17] ?? "").ToString();
+                                                newFila["FLAG_PAS"] = "1";
+                                                newFila["FLAG_DPI"] = "0";
+                                                newFila["DPI"] = "";
+                                            }
+                                            newFila["Cedula"] = (arrlist[i, 18] ?? "").ToString();
+                                            newFila["NIT"] = (arrlist[i, 19] ?? "").ToString();
+                                            if (result.Count() > 24)
+                                                newFila["Nacionalidad"] = StringExtensions.RemoveEnd((arrlist[i, 20] ?? "").ToString(), largo);
+                                            else
+                                                newFila["Nacionalidad"] = (arrlist[i, 20] ?? "").ToString();
+                                            newFila["FLAG_CED"] = "0";
+                                            dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
+                                        }
                                     }
-                                    else
-                                    {
-                                        newFila["Pasaporte"] = (arrlist[i, 17] ?? "").ToString();
-                                        newFila["FLAG_PAS"] = "1";
-                                        newFila["FLAG_DPI"] = "0";
-                                        newFila["DPI"] = "";
-                                    }
-                                    newFila["Cedula"] = (arrlist[i, 18] ?? "").ToString();
-                                    newFila["NIT"] = (arrlist[i, 19] ?? "").ToString();
-                                    if (result.Count() > 24)
-                                        newFila["Nacionalidad"] = StringExtensions.RemoveEnd((arrlist[i, 20] ?? "").ToString(), largo);
-                                    else
-                                        newFila["Nacionalidad"] = (arrlist[i, 20] ?? "").ToString();
-                                    newFila["FLAG_CED"] = "0";
-                                    dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                                 }
                             }
-                        }
-                    }
-                    catch (Exception x)
-                    {
-                        Console.WriteLine(x.ToString());
-                    }
+                            catch (Exception x)
+                            {
+                                Console.WriteLine(x.ToString());
+                            }
 
-                    LbxBusqueda.Text = "";
-                    TxtBuscador.Text = "";
-                    TxtBuscador2.Text = "";
-                    CldrCiclosFin.Text = "";
-                    CldrCiclosInicio.Text = "";
-                    CldrCiclosFin2.Text = "";
-                    CldrCiclosInicio2.Text = "";
-                    GridViewReporte.DataSource = dsReporte.Tables["RptEmpleados"];
-                    GridViewReporte.DataBind();
-                    GridViewReporte.UseAccessibleHeader = true;
-                    GridViewReporte.HeaderRow.TableSection = System.Web.UI.WebControls.TableRowSection.TableHeader;
-                    ChBusqueda.Checked = false;
-                    LbxBusqueda2.Visible = false;
-                    TxtBuscador2.Visible = false;
-                    CldrCiclosInicio2.Visible = false;
-                    CldrCiclosFin2.Visible = false;
-                    FFin2.Visible = false;
-                    FInicio2.Visible = false;
-                    lblBusqueda.Text = "";
+                            LbxBusqueda.Text = "";
+                            TxtBuscador.Text = "";
+                            TxtBuscador2.Text = "";
+                            CldrCiclosFin.Text = "";
+                            CldrCiclosInicio.Text = "";
+                            CldrCiclosFin2.Text = "";
+                            CldrCiclosInicio2.Text = "";
+                            GridViewReporte.DataSource = dsReporte.Tables["RptEmpleados"];
+                            GridViewReporte.DataBind();
+                            GridViewReporte.UseAccessibleHeader = true;
+                            GridViewReporte.HeaderRow.TableSection = System.Web.UI.WebControls.TableRowSection.TableHeader;
+                            ChBusqueda.Checked = false;
+                            LbxBusqueda2.Visible = false;
+                            TxtBuscador2.Visible = false;
+                            CldrCiclosInicio2.Visible = false;
+                            CldrCiclosFin2.Visible = false;
+                            FFin2.Visible = false;
+                            FInicio2.Visible = false;
+                            lblBusqueda.Text = "";
+                        }
+                        catch (Exception x)
+                        {
+                            Console.WriteLine(x.ToString());
+                        }
+                        lblBusqueda.Text = " ";
+                    }
+                    else
+                    {
+                        lblBusqueda.Text = "No se encontró información con los valores ingresados";
+                    }
                 }
-                catch (Exception x)
-                {
-                    Console.WriteLine(x.ToString());
-                }
-                lblBusqueda.Text = " ";
+
             }
             else
             {
-                lblBusqueda.Text = "No se encontró información con los valores ingresados";
+                lblBusqueda.Text = "Ingrese un valor a buscar";
             }
         }
 

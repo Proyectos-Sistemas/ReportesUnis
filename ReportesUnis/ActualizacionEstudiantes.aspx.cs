@@ -213,7 +213,7 @@ namespace ReportesUnis
                 con.Open();
                 using (OracleCommand cmd = new OracleCommand())
                 {
-                    if (!String.IsNullOrEmpty(CmbMunicipio.SelectedValue)) 
+                    if (!String.IsNullOrEmpty(CmbMunicipio.SelectedValue))
                     {
                         cmd.Connection = con;
                         cmd.CommandText = "SELECT STATE FROM SYSADM.PS_STATE_TBL " +
@@ -224,7 +224,8 @@ namespace ReportesUnis
                             State.Text = reader["STATE"].ToString();
                         }
                         con.Close();
-                    }else
+                    }
+                    else
                     {
                         cmd.Connection = con;
                         cmd.CommandText = "SELECT STATE FROM SYSADM.PS_STATE_TBL " +
@@ -289,8 +290,9 @@ namespace ReportesUnis
             }
             return direccion;
         }
-        private void actualizarInformacion()
+        private string actualizarInformacion()
         {
+            string mensaje = "";
             if (!String.IsNullOrEmpty(txtDireccion.Text) || !String.IsNullOrEmpty(txtTelefono.Text))
             {
                 try
@@ -341,15 +343,18 @@ namespace ReportesUnis
                         }
                     }
 
-                    lblActualizacion.Text = "Su información fue actualizada correctamente";
+                    mensaje = "Su información fue actualizada correctamente";
                 }
                 catch (Exception x)
                 {
-                    lblActualizacion.Text = "Ocurrió un problema al actualizar su información";
+                    mensaje = "Ocurrió un problema al actualizar su información";
                 }
             }
             else
-                lblActualizacion.Text = "No puede enviarse información vacía";
+            {
+                mensaje = "No puede enviarse información vacía";
+            }
+            return mensaje;
         }
 
         //Eventos       
@@ -365,12 +370,16 @@ namespace ReportesUnis
 
         protected void BtnActualizar_Click(object sender, EventArgs e)
         {
-            actualizarInformacion();
-            Upload();
+            string informacion = actualizarInformacion();
+
+            string carga = informacion + Upload();
+
+            lblActualizacion.Text = carga;
         }
 
-        protected void Upload()
+        protected string Upload()
         {
+            string mensaje = "";
             try
             {
                 HttpPostedFile ArchivoCarga = FileUpload1.PostedFile;
@@ -380,7 +389,7 @@ namespace ReportesUnis
                 if (TamañoArchivoCarga > 1048576)  // 1GB
                 {
                     //Finalziar cuando se exceda el archivo tiene un tamaño mayor a 1GB
-                    return;
+                    return "El Archivo es muy grande";
                 }
 
                 string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
@@ -583,14 +592,14 @@ namespace ReportesUnis
                                                 {
                                                     cmd.CommandText = "UPDATE SYSADM.PS_EMPL_PHOTO SET PSIMAGEVER=(TO_NUMBER((TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY-MM-DD') - TO_DATE(TO_CHAR('1999-12-31'), 'YYYY-MM-DD'))* 86400) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP,'hh24missff2'))), EMPLOYEE_PHOTO=:Fotografia WHERE EMPLID = '" + EmplidFoto + "'";
                                                     mensajeValidacion = "La fotografía se actualizó correctamente en Campus.";
-                                                    lblActualizacion.Text = lblActualizacion.Text + " y la fotografía fue almacenada correctamente.";
+                                                    mensaje = " y la fotografía fue almacenada correctamente.";
                                                 }
                                                 else //Se registra la nueva fotografía
                                                 {
                                                     cmd.CommandText = "INSERT INTO SYSADM.PS_EMPL_PHOTO VALUES ('" + EmplidFoto + "', (TO_NUMBER((TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY-MM-DD') - TO_DATE(TO_CHAR('1999-12-31'), 'YYYY-MM-DD'))* 86400) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP,'hh24missff2'))), :Fotografia)";
                                                     //query = ":Emplid, :Fotografia)";
                                                     mensajeValidacion = "La fotografía se registró correctamente en Campus.";
-                                                    lblActualizacion.Text = lblActualizacion.Text + " y la fotografía fue almacenada correctamente.";
+                                                    mensaje = " y la fotografía fue almacenada correctamente.";
                                                 }
 
                                                 cmd.Connection = con;
@@ -640,7 +649,7 @@ namespace ReportesUnis
                                 {
                                     ContadorArchivosConError++;
                                 }
-                                lblActualizacion.Text = lblActualizacion.Text + " pero la fotografía no fue almacenada correctamente.";
+                                mensaje = " pero la fotografía no fue almacenada correctamente.";
                             }
                         }
                         else
@@ -651,7 +660,7 @@ namespace ReportesUnis
                             {
                                 ContadorArchivosConError++;
                             }
-                            lblActualizacion.Text = lblActualizacion.Text + " y la fotografía fue almacenada correctamente.";
+                            mensaje = " y la fotografía fue almacenada correctamente.";
                         }
                     }
                 }
@@ -663,11 +672,14 @@ namespace ReportesUnis
                 GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
                 GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
                 Response.Redirect(Request.Url.AbsoluteUri);
+                mensaje = "Su información fue actualizada correctamente";
             }
             catch (Exception)
             {
                 Console.WriteLine("Error");
+                mensaje = ". Ocurrió un error al cargar la imagen";
             }
+            return mensaje;
         }
 
         //Función para guardar bitacora en el archivo .txt
