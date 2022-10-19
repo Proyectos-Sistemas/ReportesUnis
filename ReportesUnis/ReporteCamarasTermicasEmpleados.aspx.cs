@@ -893,7 +893,7 @@ namespace ReportesUnis
                     }
                 }
             }
-            if (aux > 5)
+            if (aux < 5)
             {
                 //Nombre del archivo
                 string nombre = "Reporte Camara Termica Empleados " + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".xlsx";
