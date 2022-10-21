@@ -623,7 +623,7 @@ namespace ReportesUnis
                             txtCumple.Text = bday;
 
                             
-                            txtDireccion.Text = arrlist[i, 7].ToString().Substring(0, dir);
+                            txtDireccion.Text = arrlist[i, 7].ToString();
                             cMBpAIS.SelectedValue = (arrlist[i, 10] ?? "").ToString();
                             aux = 1;
                             listaDepartamentos();
