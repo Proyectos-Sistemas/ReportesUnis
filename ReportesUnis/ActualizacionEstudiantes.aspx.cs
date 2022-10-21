@@ -649,7 +649,7 @@ namespace ReportesUnis
                                 {
                                     ContadorArchivosConError++;
                                 }
-                                mensaje = " pero la fotografía no fue almacenada correctamente.";
+                                mensaje = " y la fotografía no fue almacenada porque no tiene se encuentra registrado el ID de usuario";
                             }
                         }
                         else
@@ -660,9 +660,13 @@ namespace ReportesUnis
                             {
                                 ContadorArchivosConError++;
                             }
-                            mensaje = " y la fotografía fue almacenada correctamente.";
+                            mensaje = " y la fotografía no fue almacenada porque no tiene el formato correcto.";
                         }
                     }
+                }
+                else
+                {
+                    mensaje = " pero no se encontró ninguna fotografía para almacenar.";
                 }
 
                 GuardarBitacora(ArchivoBitacora, "");
@@ -671,8 +675,9 @@ namespace ReportesUnis
                 GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
                 GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
                 GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
-                Response.Redirect(Request.Url.AbsoluteUri);
-                mensaje = "Su información fue actualizada correctamente";
+                //Response.Redirect(Request.Url.AbsoluteUri);
+                
+               
             }
             catch (Exception)
             {
