@@ -489,7 +489,7 @@ namespace ReportesUnis
             {
                 int largo = 0;
                 string nombre = TextUser.Text.TrimEnd(' ');
-                largo = nombre.Length + 146;
+                largo = nombre.Length + 149;
                 sustituto = sustituto.Remove(0, largo);
             }
             else if (aux == 1)
@@ -547,7 +547,7 @@ namespace ReportesUnis
             decimal count = 0;
             int datos = 0;
             string[,] arrlist;
-            int valor = 11;
+            int valor = 12;
 
             aux = 4;
             listaPaises();
@@ -577,7 +577,7 @@ namespace ReportesUnis
                 DataSetLocalRpt dsReporte = new DataSetLocalRpt();
                 try
                 {
-                    if (valor == 11)
+                    if (valor == 12)
                     {
                         //Generacion de matriz para llenado de grid desde una consulta
                         for (int i = 0; i < count; i++)
@@ -622,16 +622,15 @@ namespace ReportesUnis
 
                             txtCumple.Text = bday;
 
-                            //Se eliminan los ultimos  caracteres de la cadena ya que trae el texto de la busqueda fue realizada
-                            int dir = (arrlist[i, 7].ToString()).Length;
-                            add = arrlist[i, 7].ToString().Substring(0, dir);
-                            txtDireccion.Text = add;
+                            
+                            txtDireccion.Text = arrlist[i, 7].ToString().Substring(0, dir);
                             cMBpAIS.SelectedValue = (arrlist[i, 10] ?? "").ToString();
                             aux = 1;
                             listaDepartamentos();
                             aux = 0;
                             CmbMunicipio.SelectedValue = (arrlist[i, 8] ?? "").ToString();
                             CmbDepartamento.SelectedValue = (arrlist[i, 9] ?? "").ToString();
+                            UserEmplid.Text= (arrlist[i, 11] ?? "").ToString();
                             //txtDireccion2.Text = (arrlist[i, 10] ?? "").ToString();
                             //txtZona.Text = (arrlist[i, 11] ?? "").ToString();
 
@@ -773,7 +772,7 @@ namespace ReportesUnis
             {
                 for (int i = 0; i < count; i++)
                 {
-                    if (i == 0)
+                    if (i == count-1)
                     {
                         resultado[i] = "-";
                     }
@@ -829,13 +828,13 @@ namespace ReportesUnis
 
         private string consultaGetworkers(string expand)
         {
-            string consulta = consultaUser("nationalIdentifiers");
+            string consulta = consultaUser("nationalIdentifiers", UserEmplid.Text);
             int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
                 consulta = consulta.Substring(0, cantidad);
             string consulta2 = consulta.Replace("\n    \"", "|");
             string[] result = consulta2.Split('|');
-            string personID = getBetween(result[result.Count() - 1], "\"NationalIdentifierId\" : ", ",");
+            string personID = UserEmplid.Text;//getBetween(result[result.Count() - 1], "\"NationalIdentifierId\" : ", ",");
             credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
@@ -846,8 +845,8 @@ namespace ReportesUnis
         }
 
         private string consultaGetImagenes(string consultar)
-        {
-            string consulta = consultaUser("nationalIdentifiers");
+        {           
+            string consulta = consultaUser("nationalIdentifiers", UserEmplid.Text);
             int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
                 consulta = consulta.Substring(0, cantidad);
@@ -863,14 +862,15 @@ namespace ReportesUnis
             return respuesta;
         }
 
-        private string consultaUser(string expand)
+        private string consultaUser(string expand, string personId)
         {
             credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
             var dtFechaBuscarPersona = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
-            string respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/workers?q=PersonId=&effectiveDate=" + dtFechaBuscarPersona + "&expand=" + expand, user, pass);
+            string respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/workers?q=PersonId="+personId+"&effectiveDate=" + dtFechaBuscarPersona + "&expand=" + expand, user, pass);
+            
             return respuesta;
         }
 

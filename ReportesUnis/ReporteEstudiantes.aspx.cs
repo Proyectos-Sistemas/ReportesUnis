@@ -13,6 +13,7 @@ using System.IO.Compression;
 using Microsoft.Win32;
 using System.Globalization;
 using NPOI.SS.Formula.Functions;
+using DocumentFormat.OpenXml.Office2010.PowerPoint;
 
 namespace ReportesUnis
 {
@@ -174,7 +175,7 @@ namespace ReportesUnis
                         else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Facultad"))
                         {
                             where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%')) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
-                        
+
                         }
                         else if (LbxBusqueda.Text.Equals("DPI/Carné") && LbxBusqueda2.Text.Equals("Facultad"))
                         {
@@ -517,52 +518,76 @@ namespace ReportesUnis
             }
         }
 
-        protected string DownloadAllFile(string where)
+        protected string DownloadAllFile()
         {
             string nombre = "ImagenesEstudiantes" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
             string constr = TxtURL.Text;
             string ret = "0";
-            where = where.TrimEnd(',');
             int total = 0;
-            DataSetLocalRpt dsDownload = new DataSetLocalRpt();
-            using (OracleConnection con = new OracleConnection(constr))
+            int contador = GridViewReporte.Rows.Count;
+            string where = "";
+
+            try
             {
-                using (OracleCommand cmd = new OracleCommand())
+                DataSetLocalRpt dsDownload = new DataSetLocalRpt();
+                using (OracleConnection con = new OracleConnection(constr))
                 {
-                    cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + where + ") AND employee_photo IS NOT NULL ";
-                    cmd.Connection = con;
-                    con.Open();
-                    OracleDataReader reader = cmd.ExecuteReader();
-                    if (reader.HasRows)
+                    using (OracleCommand cmd = new OracleCommand())
                     {
-                        DataTable dt = new DataTable();
-                        OracleDataAdapter adapter = new OracleDataAdapter(cmd);
-                        adapter.Fill(dt);
-                        foreach (DataRow row in dt.Rows)
+                        for (int i = 0; i < contador; i++)
                         {
-                            DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
-                            newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
-                            newFila["contentType"] = row["Extension"].ToString();
-                            newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
-                            dsDownload.Tables["AllDownload"].Rows.Add(newFila);
-                            total = total + 1;
+                            where = "'" + removeUnicode(GridViewReporte.Rows[i].Cells[66].Text) + "'";
+                            cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + where + ") AND employee_photo IS NOT NULL ";
+                            cmd.Connection = con;
+                            con.Open();
+                            OracleDataReader reader = cmd.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                DataTable dt = new DataTable();
+                                OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                                adapter.Fill(dt);
+                                foreach (DataRow row in dt.Rows)
+                                {
+                                    DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
+                                    string base64 = row["EMPLOYEE_PHOTO"].ToString();
+                                    newFila["bytes"] = base64;
+                                    newFila["contentType"] = row["Extension"].ToString();
+                                    newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
+                                    dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
+                                    total = total + 1;
+                                }
+                                con.Close();
+                                ret = "0";
+                            }
+                            else
+                            {
+                                if (total == 0)
+                                {
+                                    ret = "2";
+                                }
+                                con.Close();
+                            }
                         }
-                        con.Close();
 
                         if (total > 0)
                         {
                             string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
-                            File.Create(folder).Close();
+
+                            bool fileExist = File.Exists(folder);
+                            if (!fileExist)
+                            {
+                                File.Create(folder).Close();
+                            }
 
                             using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
                             {
 
                                 using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
                                 {
-                                    for (int i = 0; i < total; i++)
+                                    for (int k = 0; k < total; k++)
                                     {
-                                        byte[] base64 = (byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"];
-                                        ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
+                                        byte[] base64 = (byte[])dsDownload.Tables["AllDownloadEmp"].Rows[k]["bytes"];
+                                        ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownloadEmp"].Rows[k]["filename"].ToString(), CompressionLevel.Fastest);
 
                                         var zipStream = readmeEntry.Open();
                                         zipStream.Write(base64, 0, base64.Length);
@@ -570,11 +595,6 @@ namespace ReportesUnis
                                     }
                                 }
                             }
-
-                            Response.ContentType = "application/zip";
-                            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-                            Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
-                            ret = "1";
                         }
                         else
                         {
@@ -582,11 +602,19 @@ namespace ReportesUnis
                         }
 
                     }
-                    else
-                    {
-                        ret = "2";
-                    }
                 }
+                if (ret == "0")
+                {
+
+                    Response.ContentType = "application/zip";
+                    Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                    Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
+                    ret = "1";
+                }
+            }
+            catch (Exception x)
+            {
+                lblBusqueda.Text = "Ha ocurido un error";
             }
             return ret;
         }
@@ -595,15 +623,7 @@ namespace ReportesUnis
         {
             try
             {
-                ////AGREGA EL NOMBRE DE LAS COLUMNAS AL ARCHIVO.  
-                string emplid = "";
-                for (int k = 0; k < GridViewReporte.Rows.Count; k++)
-                {
-                    emplid += "'" + removeUnicode(GridViewReporte.Rows[k].Cells[66].Text) + "',";
-                    lblBusqueda.Text = "";
-                }
-
-                string respuesta = DownloadAllFile(emplid);
+                string respuesta = DownloadAllFile();
                 if (respuesta == "0")
                 {
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
