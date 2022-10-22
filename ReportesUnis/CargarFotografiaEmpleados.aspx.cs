@@ -435,10 +435,15 @@ namespace ReportesUnis
                                     string perfil = getBetween(consulta, consultaperfil, ",\n");
                                     var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
                                     if (perfil == "true")
+                                    {
                                         updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
+                                        mensajeValidacion = "La fotografía se actualizó correctamente en HCM.";
+                                    }
                                     else
+                                    {
                                         createPhoto(personId, "photo", Imgn);
-                                    mensajeValidacion = "La fotografía se actualizó correctamente en HCM.";
+                                        mensajeValidacion = "La fotografía se creó correctamente en HCM.";
+                                    }
                                     GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "  " + NombreImagen.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
                                     ContadorArchivosCorrectos++;
                                 }
