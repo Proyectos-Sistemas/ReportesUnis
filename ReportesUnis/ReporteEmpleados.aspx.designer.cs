@@ -177,6 +177,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label lblBusqueda;
 
         /// <summary>
+        /// Control lblDescarga.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescarga;
+
+        /// <summary>
         /// Control GridViewReporte.
         /// </summary>
         /// <remarks>

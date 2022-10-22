@@ -20,6 +20,7 @@ using File = System.IO.File;
 using System.EnterpriseServices;
 using Microsoft.Reporting.Map.WebForms.BingMaps;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System.Diagnostics;
 //using System.Windows.Controls;
 
 namespace ReportesUnis
@@ -1733,6 +1734,7 @@ namespace ReportesUnis
 
         protected void BtnBuscar_Click(object sender, EventArgs e)
         {
+            lblDescarga.Visible = false;
             matrizDatos("");
         }
 
@@ -1918,7 +1920,15 @@ namespace ReportesUnis
 
             if (total > 0)
             {
-                string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
+                //string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
+                //File.Create(folder).Close();
+                string user = Environment.UserName;
+                string path = "C:\\Users\\" + user + "\\Downloads";
+                if (!Directory.Exists(path))
+                {
+                    File.Create(path).Close();
+                }
+                string folder = path + "\\" + nombre;
                 File.Create(folder).Close();
 
                 using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
@@ -1947,9 +1957,12 @@ namespace ReportesUnis
                     ---------------*/
                 }
 
-                Response.ContentType = "application/zip";
-                Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-                Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
+                //Response.ContentType = "application/zip";
+                //Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                //Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
+                lblDescarga.Visible = true;
+                lblDescarga.Text = "Las fotografías fueron almacenadas en la carpeta de descargas.";
+                Process.Start(folder);
                 ret = "1";
             }
             else
