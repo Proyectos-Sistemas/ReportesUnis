@@ -14,6 +14,9 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.IO.Compression;
+using NPOI.Util;
+using System.Threading;
+using System.Windows;
 
 namespace ReportesUnis
 {
@@ -105,6 +108,7 @@ namespace ReportesUnis
         //LLAMADA DE LA FUNCION PARA LA GENERACION DE BUSQUEDA
         protected void Busqueda(object sender, EventArgs e)
         {
+            lblDescarga.Visible = false;
             try
             {
                 consultaBusqueda();
@@ -544,8 +548,15 @@ namespace ReportesUnis
                         con.Close();
 
                         if (total > 0)
-                        {
-                            string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
+                        {   
+                            string user = Environment.UserName; 
+                            string path = "C:\\Users\\"+user+"\\Downloads";
+                            if (!Directory.Exists(path))
+                            {
+                                File.Create(path).Close();
+                            }
+                            string folder = path+"\\" + nombre;
+                            //string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
                             File.Create(folder).Close();
 
                             using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
@@ -565,9 +576,9 @@ namespace ReportesUnis
                                 }
                             }
 
-                            Response.ContentType = "application/zip";
-                            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-                            Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
+                            lblDescarga.Visible = true;
+                            lblDescarga.Text = "Las fotografías fueron almacenadas en la carpeta de descargas.";
+                            Process.Start(folder);
                             ret = "1";
                         }
                         else
@@ -609,6 +620,13 @@ namespace ReportesUnis
             {
                 lblBusqueda.Text = "Ha ocurido un error";
             }
+        }
+
+        public void transferir(string nombre)
+        {
+            Response.ContentType = "application/zip";
+            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+            Response.TransmitFile("C:\\ImagenesReportes\\" + nombre);
         }
     }
 }
