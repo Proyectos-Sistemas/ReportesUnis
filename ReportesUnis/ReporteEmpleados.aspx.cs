@@ -134,7 +134,7 @@ namespace ReportesUnis
         [WebMethod]
         public string Consultar(string dpi)
         {
-            string busqueda = "", FI = "", FF = "", busqueda2 = "", FI2 = "", FF2 = "";
+            string busqueda = "", FI = "", FF = "", busqueda2 = "";
 
             if (!String.IsNullOrEmpty(CldrCiclosInicio.Text))
             {
@@ -147,11 +147,6 @@ namespace ReportesUnis
                 string inicial = TxtBuscador.Text.Substring(0, 1).ToUpper();
                 string letras = TxtBuscador.Text.Substring(1, TxtBuscador.Text.Length - 1).Trim(' ').ToLower();
                 busqueda = textInfo.ToTitleCase(inicial + letras);
-            }
-            if (!String.IsNullOrEmpty(CldrCiclosInicio2.Text))
-            {
-                FI2 = Convert.ToDateTime(CldrCiclosInicio2.Text).ToString("dd-MM-yyyy");
-                FF2 = Convert.ToDateTime(CldrCiclosFin2.Text).ToString("dd-MM-yyyy");
             }
             if (!String.IsNullOrEmpty(TxtBuscador2.Text))
             {
@@ -173,27 +168,22 @@ namespace ReportesUnis
                     if (LbxBusqueda.Text.Equals("Nombre"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombre(Variables.wsUsuario, Variables.wsPassword, busqueda);
+                        CuerpoConsultaPorNombre(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellido(Variables.wsUsuario, Variables.wsPassword, busqueda);
+                        CuerpoConsultaPorApellido(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDPI(Variables.wsUsuario, Variables.wsPassword, busqueda);
+                        CuerpoConsultaPorDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda);
-                    }
-                    else if (LbxBusqueda.Text.Equals("Asignación/Contrato"))
-                    {
-                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorVigencia(Variables.wsUsuario, Variables.wsPassword, FI, FF);
+                        CuerpoConsultaPorDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
                     }
                     else
                     {
@@ -206,108 +196,67 @@ namespace ReportesUnis
                     if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2);
+                        CuerpoConsultaPorNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2);
+                        CuerpoConsultaPorNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2);
-                    }
-                    else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Asignación/Contrato"))
-                    {
-                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreVigencia(Variables.wsUsuario, Variables.wsPassword, busqueda, FI2, FF2);
+                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2);
+                        CuerpoConsultaPorApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2);
-                    }
-                    else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Asignación/Contrato"))
-                    {
-                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoVigencia(Variables.wsUsuario, Variables.wsPassword, busqueda, FI2, FF2);
+                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2);
-                    }
-                    else if (LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Asignación/Contrato"))
-                    {
-                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDPIVigencia(Variables.wsUsuario, Variables.wsPassword, busqueda, FI2, FF2);
-                    }
-                    else if (LbxBusqueda.Text.Equals("Dependencia") && LbxBusqueda2.Text.Equals("Asignación/Contrato"))
-                    {
-                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDependenciaVigencia(Variables.wsUsuario, Variables.wsPassword, busqueda, FI2, FF2);
+                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda);
+                        CuerpoConsultaPorNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda);
+                        CuerpoConsultaPorNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda);
-                    }
-                    else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Asignación/Contrato"))
-                    {
-                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreVigencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, FI, FF);
+                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda);
+                        CuerpoConsultaPorApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda);
-                    }
-                    else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Asignación/Contrato"))
-                    {
-                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoVigencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, FI, FF);
+                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda);
-                    }
-                    else if (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Asignación/Contrato"))
-                    {
-                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDPIVigencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, FI, FF);
-                    }
-                    else if (LbxBusqueda2.Text.Equals("Dependencia") && LbxBusqueda.Text.Equals("Asignación/Contrato"))
-                    {
-                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDependenciaVigencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, FI, FF);
+                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
                     }
                 }
             }
             else
             {
-
                 CuerpoConsultaDescarga(Variables.wsUsuario, Variables.wsPassword, dpi);
             }
 
@@ -386,339 +335,352 @@ namespace ReportesUnis
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por nombre
-        private static void CuerpoConsultaPorNombre(string idPersona, string passwordServicio, string name)
+        private static void CuerpoConsultaPorNombre(string idPersona, string passwordServicio, string name, string fechaInicio, string fechaFin)
         {
             Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
                                 <soapenv:Header/>
-                                <soapenv:Body>
-                                  <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
-                                        <v2:flattenXML>false</v2:flattenXML>
-                                        <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>Name</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + name + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleadosBN.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
+                                    <soapenv:Body>
+                                        <v2:runReport>
+                                            <v2:reportRequest>
+                                                <v2:attributeFormat>csv</v2:attributeFormat>
+                                                <v2:flattenXML>false</v2:flattenXML>
+                                                <v2:parameterNameValues>
+                                                    <v2:listOfParamNameValues>
+                                                        <!--1st Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>Name</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + name + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                        <!--2nd Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>FechaInicio</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + fechaInicio + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                        <!--3rd Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>FechaFin</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + fechaFin + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                    </v2:listOfParamNameValues>
+                                                </v2:parameterNameValues>
+                                                <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleadosBN.xdo</v2:reportAbsolutePath>
+                                                <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                            </v2:reportRequest>
+                                            <v2:userID>" + idPersona + @"</v2:userID>
+                                            <v2:password>" + passwordServicio + @"</v2:password>
+                                        </v2:runReport>
+                                    </soapenv:Body>
                                 </soapenv:Envelope>";
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por DPI
-        private static void CuerpoConsultaPorDPI(string idPersona, string passwordServicio, string dpi)
+        private static void CuerpoConsultaPorDPI(string idPersona, string passwordServicio, string dpi, string fechaInicio, string fechaFin)
         {
             Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
                                 <soapenv:Header/>
-                                <soapenv:Body>
-                                  <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
-                                        <v2:flattenXML>false</v2:flattenXML>
-                                        <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>DPI</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + dpi + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleadosBD.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
+                                    <soapenv:Body>
+                                        <v2:runReport>
+                                            <v2:reportRequest>
+                                                <v2:attributeFormat>csv</v2:attributeFormat>
+                                                <v2:flattenXML>false</v2:flattenXML>
+                                                <v2:parameterNameValues>
+                                                    <v2:listOfParamNameValues>
+                                                        <!--1st Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>DPI</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + dpi + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                        <!--2nd Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>FechaInicio</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + fechaInicio + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                        <!--3rd Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>FechaFin</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + fechaFin + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                    </v2:listOfParamNameValues>
+                                                </v2:parameterNameValues>
+                                                <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleadosBD.xdo</v2:reportAbsolutePath>
+                                                <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                            </v2:reportRequest>
+                                            <v2:userID>" + idPersona + @"</v2:userID>
+                                            <v2:password>" + passwordServicio + @"</v2:password>
+                                        </v2:runReport>
+                                    </soapenv:Body>
                                 </soapenv:Envelope>";
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por Apellido
-        private static void CuerpoConsultaPorApellido(string idPersona, string passwordServicio, string lastname)
+        private static void CuerpoConsultaPorApellido(string idPersona, string passwordServicio, string lastname, string fechaInicio, string fechaFin)
         {
             Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
                                 <soapenv:Header/>
-                                <soapenv:Body>
-                                  <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
-                                        <v2:flattenXML>false</v2:flattenXML>
-                                        <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>LastName</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + lastname + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleadosBA.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
+                                    <soapenv:Body>
+                                        <v2:runReport>
+                                            <v2:reportRequest>
+                                                <v2:attributeFormat>csv</v2:attributeFormat>
+                                                <v2:flattenXML>false</v2:flattenXML>
+                                                <v2:parameterNameValues>
+                                                    <v2:listOfParamNameValues>
+                                                        <!--1st Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>LastName</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + lastname + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                        <!--2nd Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>FechaInicio</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + fechaInicio + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                        <!--3rd Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>FechaFin</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + fechaFin + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                    </v2:listOfParamNameValues>
+                                                </v2:parameterNameValues>
+                                                <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleadosBA.xdo</v2:reportAbsolutePath>
+                                                <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                            </v2:reportRequest>
+                                            <v2:userID>" + idPersona + @"</v2:userID>
+                                            <v2:password>" + passwordServicio + @"</v2:password>
+                                        </v2:runReport>
+                                    </soapenv:Body>
                                 </soapenv:Envelope>";
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por Dependencia
-        private static void CuerpoConsultaPorDependencia(string idPersona, string passwordServicio, string dependencia)
+        private static void CuerpoConsultaPorDependencia(string idPersona, string passwordServicio, string dependencia, string fechaInicio, string fechaFin)
         {
-            Variables.soapBody = @"<?xml version=""1.0""?>
+            Variables.soapBody = Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
                                 <soapenv:Header/>
-                                <soapenv:Body>
-                                  <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
-                                        <v2:flattenXML>false</v2:flattenXML>
-                                        <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>Dependencia</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + dependencia + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleadosBDP.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
-                                </soapenv:Envelope>";
-        }
-
-        //Crea el cuerpo que se utiliza para consultar los empleados por Vigencia
-        private static void CuerpoConsultaPorVigencia(string idPersona, string passwordServicio, string fechaInicio, string fechaFin)
-        {
-            Variables.soapBody = @"<?xml version=""1.0""?>
-                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
-                                <soapenv:Header/>
-                                <soapenv:Body>
-                                  <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
-                                        <v2:flattenXML>false</v2:flattenXML>
-                                        <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>FechaInicio</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + fechaInicio + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           <!--2nd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>FechaFin</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + fechaFin + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleadosBV.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
+                                    <soapenv:Body>
+                                        <v2:runReport>
+                                            <v2:reportRequest>
+                                                <v2:attributeFormat>csv</v2:attributeFormat>
+                                                <v2:flattenXML>false</v2:flattenXML>
+                                                <v2:parameterNameValues>
+                                                    <v2:listOfParamNameValues>
+                                                        <!--1st Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>Dependencia</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + dependencia + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                        <!--2nd Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>FechaInicio</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + fechaInicio + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                        <!--3rd Parameter of BIP Report-->
+                                                        <v2:item>
+                                                            <v2:name>FechaFin</v2:name>
+                                                            <v2:values>
+                                                                <v2:item>" + fechaFin + @"</v2:item>
+                                                            </v2:values>
+                                                        </v2:item>
+                                                    </v2:listOfParamNameValues>
+                                                </v2:parameterNameValues>
+                                                <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleadosBDP.xdo</v2:reportAbsolutePath>
+                                                <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                            </v2:reportRequest>
+                                            <v2:userID>" + idPersona + @"</v2:userID>
+                                            <v2:password>" + passwordServicio + @"</v2:password>
+                                        </v2:runReport>
+                                    </soapenv:Body>
                                 </soapenv:Envelope>";
         }
 
         /*CUERPOS DE BUSQUEDAS MULTIPLES*/
 
         //Crea el cuerpo que se utiliza para consultar los empleados por Nombre y Apellido
-        private static void CuerpoConsultaPorNombreApellido(string idPersona, string passwordServicio, string nombre, string apellido)
+        private static void CuerpoConsultaPorNombreApellido(string idPersona, string passwordServicio, string nombre, string apellido, string fechaInicio, string fechaFin)
         {
             Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
                                 <soapenv:Header/>
                                 <soapenv:Body>
-                                  <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
-                                        <v2:flattenXML>false</v2:flattenXML>
-                                        <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>Name</v2:name>
+                                    <v2:runReport>
+                                        <v2:reportRequest>
+                                            <v2:attributeFormat>csv</v2:attributeFormat>
+                                            <v2:flattenXML>false</v2:flattenXML>
+                                            <v2:parameterNameValues>
+                                                <v2:listOfParamNameValues>
+                                                    <!--1st Parameter of BIP Report-->
+                                                    <v2:item>
+                                                        <v2:name>Name</v2:name>
                                                         <v2:values>
                                                             <v2:item>" + nombre + @"</v2:item>
                                                         </v2:values>
-                                                </v2:item>
-                                           <!--2nd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>LastName</v2:name>
+                                                    </v2:item>
+                                                    <!--2nd Parameter of BIP Report-->
+                                                    <v2:item>
+                                                        <v2:name>LastName</v2:name>
                                                         <v2:values>
                                                             <v2:item>" + apellido + @"</v2:item>
                                                         </v2:values>
-                                                </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/BusquedaMultiple/ReporteEmpleadosBNA.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
+                                                    </v2:item>
+                                                    <!--2nd Parameter of BIP Report-->
+                                                    <v2:item>
+                                                        <v2:name>FechaInicio</v2:name>
+                                                        <v2:values>
+                                                            <v2:item>" + fechaInicio + @"</v2:item>
+                                                        </v2:values>
+                                                    </v2:item>
+                                                    <!--3rd Parameter of BIP Report-->
+                                                    <v2:item>
+                                                        <v2:name>FechaFin</v2:name>
+                                                        <v2:values>
+                                                            <v2:item>" + fechaFin + @"</v2:item>
+                                                        </v2:values>
+                                                    </v2:item>
+                                                </v2:listOfParamNameValues>
+                                            </v2:parameterNameValues>
+                                            <v2:reportAbsolutePath>/Reportes IS/PT/BusquedaMultiple/ReporteEmpleadosBNA.xdo</v2:reportAbsolutePath>
+                                            <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                        </v2:reportRequest>
+                                        <v2:userID>" + idPersona + @"</v2:userID>
+                                        <v2:password>" + passwordServicio + @"</v2:password>
+                                    </v2:runReport>
+                                </soapenv:Body>
                                 </soapenv:Envelope>";
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por Nombre y DPI
-        private static void CuerpoConsultaPorNombreDPI(string idPersona, string passwordServicio, string nombre, string dpi)
+        private static void CuerpoConsultaPorNombreDPI(string idPersona, string passwordServicio, string nombre, string dpi, string fechaInicio, string fechaFin)
         {
             Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
                                 <soapenv:Header/>
                                 <soapenv:Body>
-                                  <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
+                                 <v2:runReport>
+                                    <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>
                                         <v2:flattenXML>false</v2:flattenXML>
                                         <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>Name</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + nombre + @"</v2:item>
-                                                        </v2:values>
+                                            <v2:listOfParamNameValues>
+                                                <!--1st Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>Name</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + nombre + @"</v2:item>
+                                                    </v2:values>
                                                 </v2:item>
-                                           <!--2nd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>DPI</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + dpi + @"</v2:item>
-                                                        </v2:values>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>DPI</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dpi + @"</v2:item>
+                                                    </v2:values>
                                                 </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaInicio</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaFin</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                            </v2:listOfParamNameValues>
+                                        </v2:parameterNameValues>
                                         <v2:reportAbsolutePath>/Reportes IS/PT/BusquedaMultiple/ReporteEmpleadosBND.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
+                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                    </v2:reportRequest>
+                                    <v2:userID>" + idPersona + @"</v2:userID>
+                                    <v2:password>" + passwordServicio + @"</v2:password>
+                                </v2:runReport>
+                                </soapenv:Body>
                                 </soapenv:Envelope>";
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por Nombre y Dependencia
-        private static void CuerpoConsultaPorNombreDependencia(string idPersona, string passwordServicio, string nombre, string dependencia)
+        private static void CuerpoConsultaPorNombreDependencia(string idPersona, string passwordServicio, string nombre, string dependencia, string fechaInicio, string fechaFin)
         {
             Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
                                 <soapenv:Header/>
                                 <soapenv:Body>
                                   <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
+                                    <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>
                                         <v2:flattenXML>false</v2:flattenXML>
                                         <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>Name</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + nombre + @"</v2:item>
-                                                        </v2:values>
+                                            <v2:listOfParamNameValues>
+                                                <!--1st Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>Name</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + nombre + @"</v2:item>
+                                                    </v2:values>
                                                 </v2:item>
-                                           <!--2nd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>Dependencia</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + dependencia + @"</v2:item>
-                                                        </v2:values>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>Dependencia</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dependencia + @"</v2:item>
+                                                    </v2:values>
                                                 </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaInicio</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaFin</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                            </v2:listOfParamNameValues>
+                                        </v2:parameterNameValues>
                                         <v2:reportAbsolutePath>/Reportes IS/PT/BusquedaMultiple/ReporteEmpleadosBNDP.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
-                                </soapenv:Envelope>";
-        }
-
-        //Crea el cuerpo que se utiliza para consultar los empleados por Nombre y Vigencia
-        private static void CuerpoConsultaPorNombreVigencia(string idPersona, string passwordServicio, string nombre, string fechaInicio, string fechaFin)
-        {
-            Variables.soapBody = @"<?xml version=""1.0""?>
-                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
-                                <soapenv:Header/>
-                                <soapenv:Body>
-                                  <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
-                                        <v2:flattenXML>false</v2:flattenXML>
-                                        <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>Name</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + nombre + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           <!--2nd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>FechaInicio</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + fechaInicio + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           <!--3rd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>FechaFin</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + fechaFin + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/BusquedaMultiple/ReporteEmpleadosBNV.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
+                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                    </v2:reportRequest>
+                                    <v2:userID>" + idPersona + @"</v2:userID>
+                                    <v2:password>" + passwordServicio + @"</v2:password>
+                                </v2:runReport>
+                                </soapenv:Body>
                                 </soapenv:Envelope>";
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por Apellido y DPI
-        private static void CuerpoConsultaPorApellidoDPI(string idPersona, string passwordServicio, string apellido, string dpi)
+        private static void CuerpoConsultaPorApellidoDPI(string idPersona, string passwordServicio, string apellido, string dpi, string fechaInicio, string fechaFin)
         {
             Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
@@ -726,250 +688,154 @@ namespace ReportesUnis
                                 <soapenv:Body>
                                   <v2:runReport>
                                      <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
+                                        <v2:attributeFormat>csv</v2:attributeFormat>
                                         <v2:flattenXML>false</v2:flattenXML>
                                         <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>LastName</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + apellido + @"</v2:item>
-                                                        </v2:values>
+                                            <v2:listOfParamNameValues>
+                                                <!--1st Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>LastName</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + apellido + @"</v2:item>
+                                                    </v2:values>
                                                 </v2:item>
-                                           <!--2nd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>DPI</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + dpi + @"</v2:item>
-                                                        </v2:values>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>DPI</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dpi + @"</v2:item>
+                                                    </v2:values>
                                                 </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaInicio</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaFin</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                            </v2:listOfParamNameValues>
+                                        </v2:parameterNameValues>
                                         <v2:reportAbsolutePath>/Reportes IS/PT/BusquedaMultiple/ReporteEmpleadosBAD.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
-                                </soapenv:Envelope>";
+                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                    </v2:reportRequest>
+                                    <v2:userID>" + idPersona + @"</v2:userID>
+                                    <v2:password>" + passwordServicio + @"</v2:password>
+                                    </v2:runReport>
+                                    </soapenv:Body>
+                                    </soapenv:Envelope>";
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por Apellido y Dependencia
-        private static void CuerpoConsultaPorApellidoDependencia(string idPersona, string passwordServicio, string apellido, string dependencia)
+        private static void CuerpoConsultaPorApellidoDependencia(string idPersona, string passwordServicio, string apellido, string dependencia, string fechaInicio, string fechaFin)
         {
             Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
                                 <soapenv:Header/>
                                 <soapenv:Body>
                                   <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
+                                    <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>
                                         <v2:flattenXML>false</v2:flattenXML>
                                         <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>LastName</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + apellido + @"</v2:item>
-                                                        </v2:values>
+                                            <v2:listOfParamNameValues>
+                                                <!--1st Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>LastName</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + apellido + @"</v2:item>
+                                                    </v2:values>
                                                 </v2:item>
-                                           <!--2nd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>Dependencia</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + dependencia + @"</v2:item>
-                                                        </v2:values>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>Dependencia</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dependencia + @"</v2:item>
+                                                    </v2:values>
                                                 </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaInicio</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaFin</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                            </v2:listOfParamNameValues>
+                                        </v2:parameterNameValues>
                                         <v2:reportAbsolutePath>/Reportes IS/PT/BusquedaMultiple/ReporteEmpleadosBADP.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
-                                </soapenv:Envelope>";
-        }
-
-        //Crea el cuerpo que se utiliza para consultar los empleados por Apellido y Vigencia
-        private static void CuerpoConsultaPorApellidoVigencia(string idPersona, string passwordServicio, string apellido, string fechaInicio, string fechaFin)
-        {
-            Variables.soapBody = @"<?xml version=""1.0""?>
-                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
-                                <soapenv:Header/>
-                                <soapenv:Body>
-                                  <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
-                                        <v2:flattenXML>false</v2:flattenXML>
-                                        <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>LastName</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + apellido + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           <!--2nd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>FechaInicio</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + fechaInicio + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           <!--3rd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>FechaFin</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + fechaFin + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/BusquedaMultiple/ReporteEmpleadosBAV.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
-                                </soapenv:Envelope>";
+                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                    </v2:reportRequest>
+                                    <v2:userID>" + idPersona + @"</v2:userID>
+                                    <v2:password>" + passwordServicio + @"</v2:password>
+                                    </v2:runReport>
+                                    </soapenv:Body>
+                                    </soapenv:Envelope>";
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por DPI y Dependencia
-        private static void CuerpoConsultaPorDPIDependencia(string idPersona, string passwordServicio, string dpi, string dependencia)
+        private static void CuerpoConsultaPorDPIDependencia(string idPersona, string passwordServicio, string dpi, string dependencia, string fechaInicio, string fechaFin)
         {
             Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
                                 <soapenv:Header/>
                                 <soapenv:Body>
                                   <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
+                                    <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>
                                         <v2:flattenXML>false</v2:flattenXML>
                                         <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>DPI</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + dpi + @"</v2:item>
-                                                        </v2:values>
+                                            <v2:listOfParamNameValues>
+                                                <!--1st Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>DPI</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dpi + @"</v2:item>
+                                                    </v2:values>
                                                 </v2:item>
-                                           <!--2nd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>Dependencia</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + dependencia + @"</v2:item>
-                                                        </v2:values>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>Dependencia</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dependencia + @"</v2:item>
+                                                    </v2:values>
                                                 </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaInicio</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaFin</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                            </v2:listOfParamNameValues>
+                                        </v2:parameterNameValues>
                                         <v2:reportAbsolutePath>/Reportes IS/PT/BusquedaMultiple/ReporteEmpleadosBDDP.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
-                                </soapenv:Envelope>";
-        }
-
-        //Crea el cuerpo que se utiliza para consultar los empleados por DPI y Vigencia
-        private static void CuerpoConsultaPorDPIVigencia(string idPersona, string passwordServicio, string dpi, string fechaInicio, string fechaFin)
-        {
-            Variables.soapBody = @"<?xml version=""1.0""?>
-                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
-                                <soapenv:Header/>
-                                <soapenv:Body>
-                                  <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
-                                        <v2:flattenXML>false</v2:flattenXML>
-                                        <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>DPI</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + dpi + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           <!--2nd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>FechaInicio</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + fechaInicio + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           <!--3rd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>FechaFin</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + fechaFin + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/BusquedaMultiple/ReporteEmpleadosBDV.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
-                                </soapenv:Envelope>";
-        }
-
-        //Crea el cuerpo que se utiliza para consultar los empleados por Dependencia y Vigencia
-        private static void CuerpoConsultaPorDependenciaVigencia(string idPersona, string passwordServicio, string dependencia, string fechaInicio, string fechaFin)
-        {
-            Variables.soapBody = @"<?xml version=""1.0""?>
-                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
-                                <soapenv:Header/>
-                                <soapenv:Body>
-                                  <v2:runReport>
-                                     <v2:reportRequest>
-                                        <v2:attributeFormat>csv</v2:attributeFormat>            
-                                        <v2:flattenXML>false</v2:flattenXML>
-                                        <v2:parameterNameValues>
-                                        <v2:listOfParamNameValues>
-                                           <!--1st Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>Dependencia</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + dependencia + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           <!--2nd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>FechaInicio</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + fechaInicio + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           <!--3rd Parameter of BIP Report-->    
-                                            <v2:item>
-                                                <v2:name>FechaFin</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + fechaFin + @"</v2:item>
-                                                        </v2:values>
-                                                </v2:item>
-                                           </v2:listOfParamNameValues>
-                                        </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/BusquedaMultiple/ReporteEmpleadosBDPV.xdo</v2:reportAbsolutePath>
-                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                     </v2:reportRequest>
-                                     <v2:userID>" + idPersona + @"</v2:userID>
-                                     <v2:password>" + passwordServicio + @"</v2:password>
-                                  </v2:runReport>
-                               </soapenv:Body>
-                                </soapenv:Envelope>";
+                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                    </v2:reportRequest>
+                                    <v2:userID>" + idPersona + @"</v2:userID>
+                                    <v2:password>" + passwordServicio + @"</v2:password>
+                                    </v2:runReport>
+                                    </soapenv:Body>
+                                    </soapenv:Envelope>";
         }
 
         //Crea el cuerpo que se utiliza para consultar las imagenes a descargar
@@ -1149,98 +1015,59 @@ namespace ReportesUnis
                         {
                             int largo = 0;
                             string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = /*nombre.Length +*/236;
+                            largo = /*nombre.Length +*/237;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("Apellido") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                         {
                             int largo = 0;
                             string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = /*nombre.Length +*/ 240;
+                            largo = /*nombre.Length +*/ 241;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("DPI") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                         {
                             int largo = 0;
                             string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = /*nombre.Length +*/ 235;
+                            largo = /*nombre.Length +*/ 236;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("Dependencia") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                         {
                             int largo = 0;
                             string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = /*nombre.Length + */243;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if (LbxBusqueda.Text.Equals("Asignación/Contrato") && String.IsNullOrEmpty(LbxBusqueda2.Text))
-                        {
-                            int largo = 0;
-                            largo = 251;
+                            largo = /*nombre.Length + */244;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido")))
                         {
-                            int largo = 215;
+                            int largo = 246;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI")))
                         {
-                            int largo = 209;
+                            int largo = 241;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia")))
                         {
-                            int largo = 217;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Asignación/Contrato")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Asignación/Contrato")))
-                        {
-                            int largo = 0;
-                            string texto1 = TxtBuscador.Text.TrimEnd(' ');
-                            string texto2 = TxtBuscador2.Text.TrimEnd(' ');
-                            largo = texto1.Length + texto2.Length + 279;
+                            int largo = 249;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI")))
                         {
-                            int largo = 213;
+                            int largo = 245;
                             sustituto = sustituto.Remove(0, largo);
 
                         }
                         else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia")))
                         {
-                            int largo = 221;
+                            int largo = 253;
                             sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Asignación/Contrato")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Asignación/Contrato")))
-                        {
-                            int largo = 0;
-                            string texto1 = TxtBuscador.Text.TrimEnd(' ');
-                            string texto2 = TxtBuscador2.Text.TrimEnd(' ');
-                            largo = texto1.Length + texto2.Length + 283;
-                            sustituto = sustituto.Remove(0, largo);
-
                         }
                         else if ((LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia")))
                         {
-                            int largo = 216;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if ((LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Asignación/Contrato")) || (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Asignación/Contrato")))
-                        {
-                            int largo = 0;
-                            string texto1 = TxtBuscador.Text.TrimEnd(' ');
-                            string texto2 = TxtBuscador2.Text.TrimEnd(' ');
-                            largo = texto1.Length + texto2.Length + 278;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if ((LbxBusqueda.Text.Equals("Dependencia") && LbxBusqueda2.Text.Equals("Asignación/Contrato")) || (LbxBusqueda2.Text.Equals("Dependencia") && LbxBusqueda.Text.Equals("Asignación/Contrato")))
-                        {
-                            int largo = 0;
-                            string texto1 = TxtBuscador.Text.TrimEnd(' ');
-                            string texto2 = TxtBuscador2.Text.TrimEnd(' ');
-                            largo = texto1.Length + texto2.Length + 286;
+                            int largo = 248;
                             sustituto = sustituto.Remove(0, largo);
                         }
                     }
@@ -1279,100 +1106,37 @@ namespace ReportesUnis
 
                     if (result.Count() > 20)
                     {
-                        if (!LbxBusqueda.Text.Equals("Asignación/Contrato") && !LbxBusqueda2.Text.Equals("Asignación/Contrato") && !ChBusqueda.Checked)
+                        if (!ChBusqueda.Checked)
                         {
                             //Busqueda simple por Nombre, Apellido, DPI o dependencia
-                            registros = result.Count() / 22;
+                            registros = result.Count() / 24;
                             count = Math.Round(registros, 0);
                             if (registros == 0)
                                 count = 1;
-                            if (result.Count() > 22) //Multiples resultados
+                            arrlist = new string[Convert.ToInt32(count), 24];
+                            if (result.Count() > 23) //Multiples resultados
                             {
-                                arrlist = new string[Convert.ToInt32(count), 22];
                                 for (int i = 0; i < count; i++)
                                 {
-                                    for (int k = 0; k < 22; k++)
+                                    for (int k = 0; k < 24; k++)
                                     {
                                         arrlist[i, k] = result[datos];
                                         datos++;
                                     }
                                 }
                             }
-                            else //Un resultado
-                            {
-                                arrlist = new string[Convert.ToInt32(count), 21];
-                                for (int i = 0; i < count; i++)
-                                {
-                                    for (int k = 0; k < 21; k++)
-                                    {
-                                        arrlist[i, k] = result[datos];
-                                        datos++;
-                                    }
-                                }
-                            }
-                        }
-                        else if (LbxBusqueda.Text.Equals("Asignación/Contrato") && String.IsNullOrEmpty(LbxBusqueda2.Text))
-                        {
-                            //Busqueda simple por asignacion
-                            registros = result.Count() / 23;
-                            count = Math.Round(registros, 0);
-                            arrlist = new string[Convert.ToInt32(count), 23];
-                            if (registros == 0)
-                                count = 1;
-                            for (int i = 0; i < count; i++)
-                            {
-                                for (int k = 0; k < 23; k++)
-                                {
-                                    arrlist[i, k] = result[datos];
-                                    datos++;
-                                }
-                            }
-                        }
-                        else if (!LbxBusqueda2.Text.Equals("Asignación/Contrato") && !LbxBusqueda.Text.Equals("Asignación/Contrato"))
-                        {
-                            //Busqueda multiple por Nombre, Apellido, DPI o dependencia
-                            registros = result.Count() / 23;
-                            count = Math.Round(registros, 0);
-                            arrlist = new string[Convert.ToInt32(count), 23];
-                            if (registros == 0)
-                                count = 1;
-                            for (int i = 0; i < count; i++)
-                            {
-                                for (int k = 0; k < 23; k++)
-                                {
-                                    arrlist[i, k] = result[datos];
-                                    datos++;
-                                }
-                            }
-                        }
-                        else if (result.Count() == 21)
-                        {
-                            registros = result.Count() / 21;
-                            count = Math.Round(registros, 0);
-                            arrlist = new string[Convert.ToInt32(count), 21];
-                            if (registros == 0)
-                                count = 1;
-                            for (int i = 0; i < count; i++)
-                            {
-                                for (int k = 0; k < 21; k++)
-                                {
-                                    arrlist[i, k] = result[datos];
-                                    datos++;
-                                }
-                            }
-
                         }
                         else
                         {
                             //Busqueda multiple por asignacion
-                            registros = result.Count() / 24;
+                            registros = result.Count() / 25;
                             count = Math.Round(registros, 0);
-                            arrlist = new string[Convert.ToInt32(count), 24];
+                            arrlist = new string[Convert.ToInt32(count), 25];
                             if (registros == 0)
                                 count = 1;
                             for (int i = 0; i < count; i++)
                             {
-                                for (int k = 0; k < 24; k++)
+                                for (int k = 0; k < 25; k++)
                                 {
                                     arrlist[i, k] = result[datos];
                                     datos++;
@@ -1397,233 +1161,111 @@ namespace ReportesUnis
                                     //Generacion de matriz para llenado de grid desde una consulta
                                     for (int i = 0; i < count; i++)
                                     {
-                                        //Busquedas por Nombre, Apellido, DPI o dependencia
-                                        if (!LbxBusqueda.Text.Equals("Asignación/Contrato") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                                        DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
+                                        newFila["DPI"] = (arrlist[i, 3] ?? "").ToString();
+                                        newFila["Dependencia"] = (arrlist[i, 4] ?? "").ToString();
+                                        newFila["Telefono"] = (arrlist[i, 5] ?? "").ToString();
+                                        newFila["Estado Civil"] = (arrlist[i, 6] ?? "").ToString();
+                                        if (!arrlist[i, 7].ToString().Equals(""))
                                         {
-                                            DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                                            newFila["DPI"] = (arrlist[i, 1] ?? "").ToString();
-                                            newFila["Dependencia"] = (arrlist[i, 2] ?? "").ToString();
-                                            newFila["Telefono"] = (arrlist[i, 3] ?? "").ToString();
-                                            newFila["Estado Civil"] = (arrlist[i, 4] ?? "").ToString();
-                                            if (!arrlist[i, 5].ToString().Equals(""))
-                                            {
-                                                bday = arrlist[i, 5].ToString().Substring(0, 10);
-                                                anio = bday.Substring(0, 4);
-                                                mes = bday.Substring(5, 2);
-                                                dia = bday.Substring(8, 2);
-                                                bday = dia + "-" + mes + "-" + anio;
-                                            }
-                                            else
-                                            {
-                                                bday = "Unknown";
-                                            }
-
-                                            newFila["Cumpleaños"] = bday;
-
-                                            newFila["Direccion"] = (arrlist[i, 6] ?? "").ToString();
-                                            newFila["Municipio"] = (arrlist[i, 7] ?? "").ToString();
-                                            newFila["Departamento"] = (arrlist[i, 8] ?? "").ToString();
-                                            newFila["Nombre1"] = (arrlist[i, 9] ?? "").ToString();
-                                            newFila["Nombre2"] = (arrlist[i, 10] ?? "").ToString();
-                                            newFila["Apellido1"] = (arrlist[i, 11] ?? "").ToString();
-                                            newFila["Apellido2"] = (arrlist[i, 12] ?? "").ToString();
-                                            newFila["Apellido3"] = (arrlist[i, 13] ?? "").ToString();
-                                            newFila["NOM_IMP"] = (arrlist[i, 9] ?? "").ToString() + " " + (arrlist[i, 11] ?? "").ToString();
-                                            newFila["Sexo"] = (arrlist[i, 14] ?? "").ToString();
-                                            newFila["CARNE"] = (arrlist[i, 15] ?? "").ToString();
-                                            if ((arrlist[i, 1] ?? "").ToString() == (arrlist[i, 15] ?? "").ToString())
-                                            {
-                                                newFila["Pasaporte"] = "";
-                                                newFila["FLAG_PAS"] = "0";
-                                                newFila["FLAG_DPI"] = "1";
-                                            }
-                                            else
-                                            {
-                                                newFila["Pasaporte"] = (arrlist[i, 16] ?? "").ToString();
-                                                newFila["FLAG_PAS"] = "1";
-                                                newFila["FLAG_DPI"] = "0";
-                                                newFila["DPI"] = "";
-                                            }
-                                            newFila["Cedula"] = (arrlist[i, 17] ?? "").ToString();
-                                            newFila["NIT"] = (arrlist[i, 18] ?? "").ToString();
-                                            newFila["Nacionalidad"] = (arrlist[i, 19] ?? "").ToString();
-                                            newFila["FLAG_CED"] = "0";
-                                            dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
+                                            bday = arrlist[i, 7].ToString().Substring(0, 10);
+                                            anio = bday.Substring(0, 4);
+                                            mes = bday.Substring(5, 2);
+                                            dia = bday.Substring(8, 2);
+                                            bday = dia + "-" + mes + "-" + anio;
                                         }
-                                        else //Busqueda por Asignación/Contrato
+                                        else
                                         {
-                                            DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                                            newFila["DPI"] = (arrlist[i, 2] ?? "").ToString();
-                                            newFila["Dependencia"] = (arrlist[i, 3] ?? "").ToString();
-                                            newFila["Telefono"] = (arrlist[i, 4] ?? "").ToString();
-                                            newFila["Estado Civil"] = (arrlist[i, 5] ?? "").ToString();
-                                            if (!arrlist[i, 6].ToString().Equals(""))
-                                            {
-                                                bday = arrlist[i, 6].ToString().Substring(0, 10);
-                                                anio = bday.Substring(0, 4);
-                                                mes = bday.Substring(5, 2);
-                                                dia = bday.Substring(8, 2);
-                                                bday = dia + "-" + mes + "-" + anio;
-                                            }
-                                            else
-                                            {
-                                                bday = "Unknown";
-                                            }
-
-                                            newFila["Cumpleaños"] = bday;
-
-                                            newFila["Direccion"] = (arrlist[i, 7] ?? "").ToString();
-                                            newFila["Municipio"] = (arrlist[i, 8] ?? "").ToString();
-                                            newFila["Departamento"] = (arrlist[i, 9] ?? "").ToString();
-                                            newFila["Nombre1"] = (arrlist[i, 12] ?? "").ToString();
-                                            newFila["Nombre2"] = (arrlist[i, 13] ?? "").ToString();
-                                            newFila["Apellido1"] = (arrlist[i, 14] ?? "").ToString();
-                                            newFila["Apellido2"] = (arrlist[i, 15] ?? "").ToString();
-                                            newFila["Apellido3"] = (arrlist[i, 16] ?? "").ToString();
-                                            newFila["NOM_IMP"] = (arrlist[i, 12] ?? "").ToString() + " " + (arrlist[i, 14] ?? "").ToString();
-                                            newFila["Sexo"] = (arrlist[i, 17] ?? "").ToString();
-                                            newFila["CARNE"] = (arrlist[i, 18] ?? "").ToString();
-
-                                            if ((arrlist[i, 2] ?? "").ToString() == (arrlist[i, 18] ?? "").ToString())
-                                            {
-                                                newFila["Pasaporte"] = "";
-                                                newFila["FLAG_PAS"] = "0";
-                                                newFila["FLAG_DPI"] = "1";
-                                            }
-                                            else
-                                            {
-                                                newFila["Pasaporte"] = (arrlist[i, 19] ?? "").ToString();
-                                                newFila["FLAG_PAS"] = "1";
-                                                newFila["FLAG_DPI"] = "0";
-                                                newFila["DPI"] = "";
-                                            }
-                                            newFila["Cedula"] = (arrlist[i, 20] ?? "").ToString();
-                                            newFila["NIT"] = (arrlist[i, 21] ?? "").ToString();
-                                            if (result.Count() > 23)
-                                                newFila["Nacionalidad"] = StringExtensions.RemoveEnd((arrlist[i, 22] ?? "").ToString(), 29);
-                                            else
-                                                newFila["Nacionalidad"] = (arrlist[i, 22] ?? "").ToString();
-                                            newFila["FLAG_CED"] = "0";
-                                            dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
+                                            bday = "Unknown";
                                         }
+
+                                        newFila["Cumpleaños"] = bday;
+
+                                        newFila["Direccion"] = (arrlist[i, 8] ?? "").ToString();
+                                        newFila["Municipio"] = (arrlist[i, 9] ?? "").ToString();
+                                        newFila["Departamento"] = (arrlist[i, 10] ?? "").ToString();
+                                        newFila["Nombre1"] = (arrlist[i, 11] ?? "").ToString();
+                                        newFila["Nombre2"] = (arrlist[i, 12] ?? "").ToString();
+                                        newFila["Apellido1"] = (arrlist[i, 13] ?? "").ToString();
+                                        newFila["Apellido2"] = (arrlist[i, 14] ?? "").ToString();
+                                        newFila["Apellido3"] = (arrlist[i, 15] ?? "").ToString();
+                                        newFila["NOM_IMP"] = (arrlist[i, 11] ?? "").ToString() + " " + (arrlist[i, 13] ?? "").ToString();
+                                        newFila["Sexo"] = (arrlist[i, 16] ?? "").ToString();
+                                        newFila["CARNE"] = (arrlist[i, 17] ?? "").ToString();
+                                        if ((arrlist[i, 1] ?? "").ToString() == (arrlist[i, 18] ?? "").ToString())
+                                        {
+                                            newFila["Pasaporte"] = "";
+                                            newFila["FLAG_PAS"] = "0";
+                                            newFila["FLAG_DPI"] = "1";
+                                        }
+                                        else
+                                        {
+                                            newFila["Pasaporte"] = (arrlist[i, 18] ?? "").ToString();
+                                            newFila["FLAG_PAS"] = "1";
+                                            newFila["FLAG_DPI"] = "0";
+                                            newFila["DPI"] = "";
+                                        }
+                                        newFila["Cedula"] = (arrlist[i, 19] ?? "").ToString();
+                                        newFila["NIT"] = (arrlist[i, 20] ?? "").ToString();
+                                        newFila["Nacionalidad"] = (arrlist[i, 21] ?? "").ToString();
+                                        newFila["FLAG_CED"] = "0";
+                                        dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                                     }
                                 }
                                 else
                                 {
-
                                     for (int i = 0; i < count; i++)
                                     {
-                                        if (!LbxBusqueda2.Text.Equals("Asignación/Contrato") && !LbxBusqueda.Text.Equals("Asignación/Contrato"))
+
+                                        DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
+                                        newFila["DPI"] = (arrlist[i, 4] ?? "").ToString();
+                                        newFila["Dependencia"] = (arrlist[i, 5] ?? "").ToString();
+                                        newFila["Telefono"] = (arrlist[i, 6] ?? "").ToString();
+                                        newFila["Estado Civil"] = (arrlist[i, 7] ?? "").ToString();
+                                        if (!arrlist[i, 8].ToString().Equals(""))
                                         {
-                                            DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                                            newFila["DPI"] = (arrlist[i, 3] ?? "").ToString();
-                                            newFila["Dependencia"] = (arrlist[i, 4] ?? "").ToString();
-                                            newFila["Telefono"] = (arrlist[i, 5] ?? "").ToString();
-                                            newFila["Estado Civil"] = (arrlist[i, 6] ?? "").ToString();
-                                            if (!arrlist[i, 7].ToString().Equals(""))
-                                            {
-                                                bday = arrlist[i, 7].ToString().Substring(0, 10);
-                                                anio = bday.Substring(0, 4);
-                                                mes = bday.Substring(5, 2);
-                                                dia = bday.Substring(8, 2);
-                                                bday = dia + "-" + mes + "-" + anio;
-                                            }
-                                            else
-                                            {
-                                                bday = "Unknown";
-                                            }
-
-                                            newFila["Cumpleaños"] = bday;
-
-                                            newFila["Direccion"] = (arrlist[i, 8] ?? "").ToString();
-                                            newFila["Municipio"] = (arrlist[i, 9] ?? "").ToString();
-                                            newFila["Departamento"] = (arrlist[i, 10] ?? "").ToString();
-                                            newFila["Nombre1"] = (arrlist[i, 11] ?? "").ToString();
-                                            newFila["Nombre2"] = (arrlist[i, 12] ?? "").ToString();
-                                            newFila["Apellido1"] = (arrlist[i, 13] ?? "").ToString();
-                                            newFila["Apellido2"] = (arrlist[i, 14] ?? "").ToString();
-                                            newFila["Apellido3"] = (arrlist[i, 15] ?? "").ToString();
-                                            newFila["NOM_IMP"] = (arrlist[i, 11] ?? "").ToString() + " " + (arrlist[i, 13] ?? "").ToString();
-                                            newFila["Sexo"] = (arrlist[i, 16] ?? "").ToString();
-                                            newFila["CARNE"] = (arrlist[i, 17] ?? "").ToString();
-                                            if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 17] ?? "").ToString())
-                                            {
-                                                newFila["Pasaporte"] = "";
-                                                newFila["FLAG_PAS"] = "0";
-                                                newFila["FLAG_DPI"] = "1";
-                                                newFila["DPI"] = "";
-                                            }
-                                            else
-                                            {
-                                                newFila["Pasaporte"] = (arrlist[i, 18] ?? "").ToString();
-                                                newFila["FLAG_PAS"] = "1";
-                                                newFila["FLAG_DPI"] = "0";
-                                            }
-                                            newFila["Cedula"] = (arrlist[i, 19] ?? "").ToString();
-                                            newFila["NIT"] = (arrlist[i, 20] ?? "").ToString();
-                                            newFila["Nacionalidad"] = (arrlist[i, 21] ?? "").ToString();
-                                            newFila["FLAG_CED"] = "0";
-                                            dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
+                                            bday = arrlist[i, 8].ToString().Substring(0, 10);
+                                            anio = bday.Substring(0, 4);
+                                            mes = bday.Substring(5, 2);
+                                            dia = bday.Substring(8, 2);
+                                            bday = dia + "-" + mes + "-" + anio;
                                         }
                                         else
                                         {
-
-                                            string texto1 = TxtBuscador.Text.TrimEnd(' ');
-                                            string texto2 = TxtBuscador2.Text.TrimEnd(' ');
-                                            int largo = texto1.Length + texto2.Length;
-                                            DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                                            newFila["DPI"] = (arrlist[i, 0] ?? "").ToString();
-                                            newFila["Dependencia"] = (arrlist[i, 1] ?? "").ToString();
-                                            newFila["Telefono"] = (arrlist[i, 2] ?? "").ToString();
-                                            newFila["Estado Civil"] = (arrlist[i, 3] ?? "").ToString();
-                                            if (!arrlist[i, 4].ToString().Equals(""))
-                                            {
-                                                bday = arrlist[i, 4].ToString().Substring(0, 10);
-                                                anio = bday.Substring(0, 4);
-                                                mes = bday.Substring(5, 2);
-                                                dia = bday.Substring(8, 2);
-                                                bday = dia + "-" + mes + "-" + anio;
-                                            }
-                                            else
-                                            {
-                                                bday = "Unknown";
-                                            }
-
-                                            newFila["Cumpleaños"] = bday;
-
-                                            newFila["Direccion"] = (arrlist[i, 5] ?? "").ToString();
-                                            newFila["Municipio"] = (arrlist[i, 6] ?? "").ToString();
-                                            newFila["Departamento"] = (arrlist[i, 7] ?? "").ToString();
-                                            newFila["Nombre1"] = (arrlist[i, 10] ?? "").ToString();
-                                            newFila["Nombre2"] = (arrlist[i, 11] ?? "").ToString();
-                                            newFila["Apellido1"] = (arrlist[i, 12] ?? "").ToString();
-                                            newFila["Apellido2"] = (arrlist[i, 13] ?? "").ToString();
-                                            newFila["Apellido3"] = (arrlist[i, 14] ?? "").ToString();
-                                            newFila["NOM_IMP"] = (arrlist[i, 10] ?? "").ToString() + " " + (arrlist[i, 12] ?? "").ToString();
-                                            newFila["Sexo"] = (arrlist[i, 15] ?? "").ToString();
-                                            newFila["CARNE"] = (arrlist[i, 16] ?? "").ToString();
-                                            if ((arrlist[i, 0] ?? "").ToString() == (arrlist[i, 16] ?? "").ToString())
-                                            {
-                                                newFila["Pasaporte"] = "";
-                                                newFila["FLAG_PAS"] = "0";
-                                                newFila["FLAG_DPI"] = "1";
-                                            }
-                                            else
-                                            {
-                                                newFila["Pasaporte"] = (arrlist[i, 17] ?? "").ToString();
-                                                newFila["FLAG_PAS"] = "1";
-                                                newFila["FLAG_DPI"] = "0";
-                                                newFila["DPI"] = "";
-                                            }
-                                            newFila["Cedula"] = (arrlist[i, 18] ?? "").ToString();
-                                            newFila["NIT"] = (arrlist[i, 19] ?? "").ToString();
-                                            if (result.Count() > 24)
-                                                newFila["Nacionalidad"] = StringExtensions.RemoveEnd((arrlist[i, 20] ?? "").ToString(), largo);
-                                            else
-                                                newFila["Nacionalidad"] = (arrlist[i, 20] ?? "").ToString();
-                                            newFila["FLAG_CED"] = "0";
-                                            dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
+                                            bday = "Unknown";
                                         }
+
+                                        newFila["Cumpleaños"] = bday;
+
+                                        newFila["Direccion"] = (arrlist[i, 9] ?? "").ToString();
+                                        newFila["Municipio"] = (arrlist[i, 10] ?? "").ToString();
+                                        newFila["Departamento"] = (arrlist[i, 11] ?? "").ToString();
+                                        newFila["Nombre1"] = (arrlist[i, 12] ?? "").ToString();
+                                        newFila["Nombre2"] = (arrlist[i, 13] ?? "").ToString();
+                                        newFila["Apellido1"] = (arrlist[i, 14] ?? "").ToString();
+                                        newFila["Apellido2"] = (arrlist[i, 15] ?? "").ToString();
+                                        newFila["Apellido3"] = (arrlist[i, 16] ?? "").ToString();
+                                        newFila["NOM_IMP"] = (arrlist[i, 12] ?? "").ToString() + " " + (arrlist[i, 14] ?? "").ToString();
+                                        newFila["Sexo"] = (arrlist[i, 17] ?? "").ToString();
+                                        newFila["CARNE"] = (arrlist[i, 18] ?? "").ToString();
+                                        if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 19] ?? "").ToString())
+                                        {
+                                            newFila["Pasaporte"] = "";
+                                            newFila["FLAG_PAS"] = "0";
+                                            newFila["FLAG_DPI"] = "1";
+                                            newFila["DPI"] = "";
+                                        }
+                                        else
+                                        {
+                                            newFila["Pasaporte"] = (arrlist[i, 19] ?? "").ToString();
+                                            newFila["FLAG_PAS"] = "1";
+                                            newFila["FLAG_DPI"] = "0";
+                                        }
+                                        newFila["Cedula"] = (arrlist[i, 20] ?? "").ToString();
+                                        newFila["NIT"] = (arrlist[i, 21] ?? "").ToString();
+                                        newFila["Nacionalidad"] = (arrlist[i, 22] ?? "").ToString();
+                                        newFila["FLAG_CED"] = "0";
+                                        dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                                     }
                                 }
                             }
@@ -1637,8 +1279,8 @@ namespace ReportesUnis
                             TxtBuscador2.Text = "";
                             CldrCiclosFin.Text = "";
                             CldrCiclosInicio.Text = "";
-                            CldrCiclosFin2.Text = "";
-                            CldrCiclosInicio2.Text = "";
+                            //CldrCiclosFin2.Text = "";
+                            //CldrCiclosInicio2.Text = "";
                             GridViewReporte.DataSource = dsReporte.Tables["RptEmpleados"];
                             GridViewReporte.DataBind();
                             GridViewReporte.UseAccessibleHeader = true;
@@ -1646,10 +1288,10 @@ namespace ReportesUnis
                             ChBusqueda.Checked = false;
                             LbxBusqueda2.Visible = false;
                             TxtBuscador2.Visible = false;
-                            CldrCiclosInicio2.Visible = false;
-                            CldrCiclosFin2.Visible = false;
-                            FFin2.Visible = false;
-                            FInicio2.Visible = false;
+                            //CldrCiclosInicio2.Visible = false;
+                            //CldrCiclosFin2.Visible = false;
+                            //FFin2.Visible = false;
+                            //FInicio2.Visible = false;
                             lblBusqueda.Text = "";
                         }
                         catch (Exception x)
@@ -1735,7 +1377,10 @@ namespace ReportesUnis
         protected void BtnBuscar_Click(object sender, EventArgs e)
         {
             lblDescarga.Visible = false;
+            if(!String.IsNullOrEmpty(lblBusqueda.Text) && !String.IsNullOrEmpty(TxtBuscador.Text))
             matrizDatos("");
+            else
+                lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
         }
 
         protected void LbxBusqueda_SelectedIndexChanged(object sender, EventArgs e)
@@ -1746,31 +1391,30 @@ namespace ReportesUnis
             LbxBusqueda2.Items.Insert(2, "Apellido");
             LbxBusqueda2.Items.Insert(3, "DPI");
             LbxBusqueda2.Items.Insert(4, "Dependencia");
-            LbxBusqueda2.Items.Insert(5, "Asignación/Contrato");
             LbxBusqueda2.Items.Remove(LbxBusqueda2.Items.FindByValue(LbxBusqueda.Text));
             if (LbxBusqueda.Text.Equals("Asignación/Contrato"))
             {
                 TxtBuscador.Visible = false;
-                CldrCiclosInicio.Visible = true;
-                CldrCiclosFin.Visible = true;
-                FFin.Visible = true;
-                FInicio.Visible = true;
-                TxtBuscador2.Text = "";
-                CldrCiclosInicio2.Visible = false;
-                CldrCiclosFin2.Visible = false;
-                FFin2.Visible = false;
-                FInicio2.Visible = false;
+                //CldrCiclosInicio.Visible = true;
+                //CldrCiclosFin.Visible = true;
+                //FFin.Visible = true;
+                //FInicio.Visible = true;
+                //TxtBuscador2.Text = "";
+                //CldrCiclosInicio2.Visible = false;
+                //CldrCiclosFin2.Visible = false;
+                //FFin2.Visible = false;
+                //FInicio2.Visible = false;
             }
             else
             {
                 TxtBuscador.Visible = true;
                 TxtBuscador2.Text = "";
-                CldrCiclosInicio.Visible = false;
-                CldrCiclosFin.Visible = false;
-                FFin.Visible = false;
-                FInicio.Visible = false;
-                CldrCiclosFin.Text = "";
-                CldrCiclosInicio.Text = "";
+                //CldrCiclosInicio.Visible = false;
+                //CldrCiclosFin.Visible = false;
+                //FFin.Visible = false;
+                //FInicio.Visible = false;
+                //CldrCiclosFin.Text = "";
+                //CldrCiclosInicio.Text = "";
             }
         }
 
@@ -1787,7 +1431,6 @@ namespace ReportesUnis
                 LbxBusqueda2.Items.Insert(2, "Apellido");
                 LbxBusqueda2.Items.Insert(3, "DPI");
                 LbxBusqueda2.Items.Insert(4, "Dependencia");
-                LbxBusqueda2.Items.Insert(5, "Asignación/Contrato");
                 LbxBusqueda2.Items.Remove(LbxBusqueda2.Items.FindByValue(LbxBusqueda.Text));
             }
             else
@@ -1795,10 +1438,10 @@ namespace ReportesUnis
                 LbxBusqueda2.Visible = false;
                 TxtBuscador2.Visible = false;
                 TxtBuscador2.Text = "";
-                CldrCiclosInicio2.Visible = false;
-                CldrCiclosFin2.Visible = false;
-                FFin2.Visible = false;
-                FInicio2.Visible = false;
+                //CldrCiclosInicio2.Visible = false;
+                //CldrCiclosFin2.Visible = false;
+                //FFin2.Visible = false;
+                //FInicio2.Visible = false;
             }
         }
         protected void LbxBusqueda2_SelectedIndexChanged(object sender, EventArgs e)
@@ -1807,13 +1450,13 @@ namespace ReportesUnis
             {
                 TxtBuscador2.Visible = false;
                 TxtBuscador2.Text = "";
-                CldrCiclosInicio2.Visible = true;
-                CldrCiclosFin2.Visible = true;
-                FFin2.Visible = true;
-                FInicio2.Visible = true;
+                //CldrCiclosInicio2.Visible = true;
+                //CldrCiclosFin2.Visible = true;
+                //FFin2.Visible = true;
+                //FInicio2.Visible = true;
                 TxtBuscador.Visible = true;
-                CldrCiclosInicio.Visible = false;
-                CldrCiclosFin.Visible = false;
+                //CldrCiclosInicio.Visible = false;
+                //CldrCiclosFin.Visible = false;
                 FFin.Visible = false;
                 FInicio.Visible = false;
             }
@@ -1821,12 +1464,12 @@ namespace ReportesUnis
             {
                 TxtBuscador2.Visible = true;
                 TxtBuscador2.Text = "";
-                CldrCiclosInicio2.Visible = false;
-                CldrCiclosFin2.Visible = false;
-                FFin2.Visible = false;
-                FInicio2.Visible = false;
-                CldrCiclosFin2.Text = "";
-                CldrCiclosInicio2.Text = "";
+                //CldrCiclosInicio2.Visible = false;
+                //CldrCiclosFin2.Visible = false;
+                //FFin2.Visible = false;
+                //FInicio2.Visible = false;
+                //CldrCiclosFin2.Text = "";
+                //CldrCiclosInicio2.Text = "";
             }
         }
 
@@ -1939,11 +1582,11 @@ namespace ReportesUnis
                         for (int i = 0; i < total; i++)
                         {
 
-                                byte[] base64 = Convert.FromBase64String(dsDownload.Tables["AllDownloadEmp"].Rows[i]["bytes"].ToString());
-                                ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownloadEmp"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
+                            byte[] base64 = Convert.FromBase64String(dsDownload.Tables["AllDownloadEmp"].Rows[i]["bytes"].ToString());
+                            ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownloadEmp"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
 
-                                var zipStream = readmeEntry.Open();
-                                zipStream.Write(base64, 0, base64.Length);
+                            var zipStream = readmeEntry.Open();
+                            zipStream.Write(base64, 0, base64.Length);
                         }
                     }
                     /*------------FUNCIONA, PERO SUSTITUYE EL  ZIP POR LA FOTO

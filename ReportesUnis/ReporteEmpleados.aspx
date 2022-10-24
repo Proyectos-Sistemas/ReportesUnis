@@ -16,17 +16,16 @@
                 <asp:ListItem>Apellido</asp:ListItem>
                 <asp:ListItem>DPI</asp:ListItem>
                 <asp:ListItem>Dependencia</asp:ListItem>
-                <asp:ListItem>Asignación/Contrato</asp:ListItem>
             </asp:DropDownList>
 
             <%-- TXTURL DONDE SE INGRESA EL TEXTO A BUSCAR --%>
             <asp:TextBox ID="TxtBuscador" runat="server"></asp:TextBox>
 
             <%-- CALENDARIO PARA BUSQUEDA --%>
-            <asp:Label ID="FInicio" runat="server" Visible="false">Fecha inicio:</asp:Label>
-            <asp:TextBox ID="CldrCiclosInicio" runat="server" TextMode="Date" Visible="false"> </asp:TextBox>
-            <asp:Label ID="FFin" runat="server" Visible="false">Fecha inicio:</asp:Label>
-            <asp:TextBox ID="CldrCiclosFin" runat="server" TextMode="Date" Visible="false">
+            <asp:Label ID="FInicio" runat="server">Fecha inicio:</asp:Label>
+            <asp:TextBox ID="CldrCiclosInicio" runat="server" TextMode="Date" > </asp:TextBox>
+            <asp:Label ID="FFin" runat="server" >Fecha fin:</asp:Label>
+            <asp:TextBox ID="CldrCiclosFin" runat="server" TextMode="Date">
             </asp:TextBox>
 
             <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
@@ -44,11 +43,11 @@
             <asp:TextBox ID="TxtBuscador2" runat="server" Visible="false"></asp:TextBox>
 
             <%-- CALENDARIO PARA BUSQUEDA --%>
-            <asp:Label ID="FInicio2" runat="server" Visible="false">Fecha inicio:</asp:Label>
+            <%--<asp:Label ID="FInicio2" runat="server" Visible="false">Fecha inicio:</asp:Label>
             <asp:TextBox ID="CldrCiclosInicio2" runat="server" TextMode="Date" Visible="false"> </asp:TextBox>
             <asp:Label ID="FFin2" runat="server" Visible="false">Fecha inicio:</asp:Label>
-            <asp:TextBox ID="CldrCiclosFin2" runat="server" TextMode="Date" Visible="false">
-            </asp:TextBox>
+            <asp:TextBox ID="CldrCiclosFin2" runat="server" TextMode="Date" Visible="false">--%>
+            <%--</asp:TextBox>--%>
         </div>
         <br />
         <asp:Table runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
