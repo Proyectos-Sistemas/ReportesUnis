@@ -43,14 +43,11 @@ namespace ReportesUnis
             if (!IsPostBack)
             {
                 matrizDatos();
-                //aux = 1;
-                //listaDepartamentos();
                 aux = 2;
                 listadoMunicipios();
                 aux = 3;
                 listadoZonas();
                 aux = 4;
-                //listaPaises();
                 if (String.IsNullOrEmpty(txtdPI.Text))
                 {
                     BtnActualizar.Visible = false;
@@ -482,7 +479,6 @@ namespace ReportesUnis
         //Sustituye las comillas dobles y elimina los primeros caracteres que corresponden a los Headers
         public string sustituirCaracteres()
         {
-            //Consultar();
             string sustituto = DecodeStringFromBase64(Consultar()).Replace('"', '\n');
             sustituto = Regex.Replace(sustituto, @"\n+", "");
 
@@ -553,7 +549,6 @@ namespace ReportesUnis
             aux = 4;
             listaPaises();
 
-            //aux = 0;
             registros = result.Count() / valor;
             count = Math.Round(registros, 0);
             arrlist = new string[Convert.ToInt32(count), valor];
@@ -571,7 +566,6 @@ namespace ReportesUnis
             {
                 var estado = "";
                 var bday = "";
-                var add = "";
                 var dia = "";
                 var mes = "";
                 var anio = "";
@@ -632,8 +626,6 @@ namespace ReportesUnis
                             CmbMunicipio.SelectedValue = (arrlist[i, 8] ?? "").ToString();
                             CmbDepartamento.SelectedValue = (arrlist[i, 9] ?? "").ToString();
                             UserEmplid.Text = (arrlist[i, 11] ?? "").ToString();
-                            //txtDireccion2.Text = (arrlist[i, 10] ?? "").ToString();
-                            //txtZona.Text = (arrlist[i, 11] ?? "").ToString();
 
                             dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                         }
@@ -755,7 +747,6 @@ namespace ReportesUnis
                 CmbMunicipio.DataSource = "-";
                 CmbMunicipio.DataTextField = "-";
                 CmbMunicipio.DataValueField = "-";
-                //CmbMunicipio.DataBind();
             }
         }
 
@@ -835,7 +826,7 @@ namespace ReportesUnis
                 consulta = consulta.Substring(0, cantidad);
             string consulta2 = consulta.Replace("\n    \"", "|");
             string[] result = consulta2.Split('|');
-            string personID = UserEmplid.Text;//getBetween(result[result.Count() - 1], "\"NationalIdentifierId\" : ", ",");
+            string personID = UserEmplid.Text;
             credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
@@ -904,8 +895,6 @@ namespace ReportesUnis
             int ContadorArchivos = 0;
             int ContadorArchivosCorrectos = 0;
             int ContadorArchivosConError = 0;
-
-            bool Error = false;
 
             //Ruta del archivo que guarda la bitácora
             string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";

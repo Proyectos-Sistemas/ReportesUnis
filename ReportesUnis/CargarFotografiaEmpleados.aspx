@@ -1,5 +1,5 @@
-﻿
-<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CargarFotografiaEmpleados.aspx.cs" Inherits="ReportesUnis.CargarFotografiaEmpleados"  %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CargarFotografiaEmpleados.aspx.cs" Inherits="ReportesUnis.CargarFotografiaEmpleados" %>
+
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
         <br />
@@ -23,7 +23,6 @@
                 console.log(SumaTamañoDeArchivos);
                 if (SumaTamañoDeArchivos > 1073741824 /*1GB = 1073741824 Bytes*/) {
                     document.getElementById('dvMsg').style.display = "block";
-                    // document.getElementById('btnUpload').disabled = false;
 
                     var btn = document.getElementById("<%=btnUpload.ClientID%>");
                     btn.disabled = true;
@@ -31,32 +30,30 @@
                 }
                 else {
                     document.getElementById('dvMsg').style.display = "none";
-                    // document.getElementById('btnUpload').disabled = true;
                     var btn = document.getElementById("<%=btnUpload.ClientID%>");
                     btn.disabled = false;
                     return true;
                 }
-
             }
         }
     </script>
 
     <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
-        <div class="container">
-            <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="True" accept="image/jpeg" onchange="validateFileSize();" />
-            <div id="dvMsg" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
-                El tamaño máximo permitido es de 1 GB
-            </div>
-            <asp:Button ID="btnUpload" runat="server" Text="Cargar" OnClick="Upload" CssClass="btn-primary" Enabled="false" />
-            <hr />
-            <asp:GridView ID="GridView1" class="table table-bordered table-condensed table-responsive table-hover" runat="server"
-                AutoGenerateColumns="false" CssClass="table" >
-                <Columns>
-                    <asp:BoundField DataField="File Name" HeaderText="File Name" />
-                    <asp:BoundField DataField="ID" HeaderText="ID" />
-                </Columns>
-            </asp:GridView>
+    <div class="container">
+        <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="True" accept="image/jpeg" onchange="validateFileSize();" />
+        <div id="dvMsg" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
+            El tamaño máximo permitido es de 1 GB
         </div>
+        <asp:Button ID="btnUpload" runat="server" Text="Cargar" OnClick="Upload" CssClass="btn-primary" Enabled="false" />
+        <hr />
+        <asp:GridView ID="GridView1" class="table table-bordered table-condensed table-responsive table-hover" runat="server"
+            AutoGenerateColumns="false" CssClass="table">
+            <Columns>
+                <asp:BoundField DataField="File Name" HeaderText="File Name" />
+                <asp:BoundField DataField="ID" HeaderText="ID" />
+            </Columns>
+        </asp:GridView>
+    </div>
     <script src="Scripts/UNIS/Unis.js"></script>
-    <div class="preloader" id="preloader"></div>  
+    <div class="preloader" id="preloader"></div>
 </asp:Content>

@@ -261,10 +261,6 @@ namespace ReportesUnis
                                     ChBusqueda.Checked = false;
                                     LbxBusqueda2.Visible = false;
                                     TxtBuscador2.Visible = false;
-                                    //CldrCiclosInicio2.Visible = false;
-                                    //CldrCiclosFin2.Visible = false;
-                                    //FFin2.Visible = false;
-                                    //FInicio2.Visible = false;
                                     lblBusqueda.Text = " ";
                                 }
                                 else
@@ -278,7 +274,7 @@ namespace ReportesUnis
                     else
                     {
                         lblBusqueda.Text = "Ingrese un valor a buscar";
-                    } 
+                    }
                 }
                 else
                 {
@@ -353,7 +349,7 @@ namespace ReportesUnis
                 txtFile += "\r\n";
             }
 
-            
+
 
             //SE GENERA EL ARCHIVO
             if (ret == 0)
@@ -443,31 +439,10 @@ namespace ReportesUnis
             LbxBusqueda2.Items.Insert(1, "Apellido");
             LbxBusqueda2.Items.Insert(2, "DPI/Carné");
             LbxBusqueda2.Items.Insert(3, "Facultad");
-            LbxBusqueda2.Items.Insert(4, "Ciclo");
             LbxBusqueda2.Items.Remove(LbxBusqueda2.Items.FindByValue(LbxBusqueda.Text));
-            if (LbxBusqueda.Text.Equals("Ciclo"))
-            {
-                TxtBuscador.Visible = false;
-                //CldrCiclosInicio.Visible = true;
-                //CldrCiclosFin.Visible = true;
-                //FFin.Visible = true;
-                //FInicio.Visible = true;
-                TxtBuscador2.Visible = false;
-                TxtBuscador2.Text = "";
-                //CldrCiclosInicio2.Visible = false;
-                //CldrCiclosFin2.Visible = false;
-                //FFin2.Visible = false;
-                //FInicio2.Visible = false;
-            }
-            else
-            {
-                TxtBuscador.Visible = true;
-                TxtBuscador2.Text = "";
-                //CldrCiclosInicio.Visible = false;
-                //CldrCiclosFin.Visible = false;
-                //FFin.Visible = false;
-                //FInicio.Visible = false;
-            }
+
+            TxtBuscador.Visible = true;
+            TxtBuscador2.Text = "";
         }
 
         protected void ChBusqueda_CheckedChanged(object sender, EventArgs e)
@@ -482,7 +457,6 @@ namespace ReportesUnis
                 LbxBusqueda2.Items.Insert(1, "Apellido");
                 LbxBusqueda2.Items.Insert(2, "DPI/Carné");
                 LbxBusqueda2.Items.Insert(3, "Facultad");
-                LbxBusqueda2.Items.Insert(4, "Ciclo");
                 LbxBusqueda2.Items.Remove(LbxBusqueda2.Items.FindByValue(LbxBusqueda.Text));
             }
             else
@@ -490,38 +464,13 @@ namespace ReportesUnis
                 LbxBusqueda2.Visible = false;
                 TxtBuscador2.Visible = false;
                 TxtBuscador2.Text = "";
-                //CldrCiclosInicio2.Visible = false;
-                //CldrCiclosFin2.Visible = false;
-                //FFin2.Visible = false;
-                //FInicio2.Visible = false;
             }
         }
 
         protected void LbxBusqueda2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (LbxBusqueda2.Text.Equals("Ciclo"))
-            {
-                TxtBuscador2.Visible = false;
-                TxtBuscador2.Text = "";
-                //CldrCiclosInicio2.Visible = true;
-                //CldrCiclosFin2.Visible = true;
-                //FFin2.Visible = true;
-                //FInicio2.Visible = true;
-                //TxtBuscador.Visible = true;
-                //CldrCiclosInicio.Visible = false;
-                //CldrCiclosFin.Visible = false;
-                //FFin.Visible = false;
-                //FInicio.Visible = false;
-            }
-            else
-            {
-                TxtBuscador2.Visible = true;
-                TxtBuscador2.Text = "";
-                //CldrCiclosInicio2.Visible = false;
-                //CldrCiclosFin2.Visible = false;
-                //FFin2.Visible = false;
-                //FInicio2.Visible = false;
-            }
+            TxtBuscador2.Visible = true;
+            TxtBuscador2.Text = "";
         }
 
         protected string DownloadAllFile(string where)
@@ -565,7 +514,6 @@ namespace ReportesUnis
                                 File.Create(path).Close();
                             }
                             string folder = path + "\\" + nombre;
-                            //string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
                             File.Create(folder).Close();
 
                             using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
@@ -594,7 +542,6 @@ namespace ReportesUnis
                         {
                             ret = "2";
                         }
-
                     }
                     else
                     {
@@ -609,12 +556,12 @@ namespace ReportesUnis
         {
             try
             {
-                string emplid = ""; 
+                string emplid = "";
                 for (int k = 0; k < GridViewReporte.Rows.Count; k++)
                 {
                     emplid += "'" + removeUnicode(GridViewReporte.Rows[k].Cells[66].Text) + "',";
                 }
-                
+
                 string respuesta = DownloadAllFile(emplid);
                 if (respuesta == "0")
                 {

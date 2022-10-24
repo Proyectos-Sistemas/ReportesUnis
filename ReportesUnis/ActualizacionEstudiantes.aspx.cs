@@ -441,8 +441,6 @@ namespace ReportesUnis
                             EmplidFoto = "";
                             EmplidExisteFoto = "";
 
-                            //FileUpload1.SaveAs(uploadFolder + uploadedFile.FileName); //Guarda archivo en el servidor
-
                             //Se obtiene el EMPLID del usuario, busando el nombre de la fotografía en la tabla de usuario
                             using (OracleConnection conEmplid = new OracleConnection(constr))
                             {
@@ -597,13 +595,11 @@ namespace ReportesUnis
                                                 else //Se registra la nueva fotografía
                                                 {
                                                     cmd.CommandText = "INSERT INTO SYSADM.PS_EMPL_PHOTO VALUES ('" + EmplidFoto + "', (TO_NUMBER((TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY-MM-DD') - TO_DATE(TO_CHAR('1999-12-31'), 'YYYY-MM-DD'))* 86400) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP,'hh24missff2'))), :Fotografia)";
-                                                    //query = ":Emplid, :Fotografia)";
                                                     mensajeValidacion = "La fotografía se registró correctamente en Campus.";
                                                     mensaje = " y la fotografía fue almacenada correctamente.";
                                                 }
 
                                                 cmd.Connection = con;
-                                                //  cmd.Parameters.Add(new OracleParameter("Emplid", EmplidFoto));
                                                 cmd.Parameters.Add(new OracleParameter("Fotografia", bytes));
                                                 try
                                                 {
@@ -675,9 +671,7 @@ namespace ReportesUnis
                 GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
                 GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
                 GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
-                //Response.Redirect(Request.Url.AbsoluteUri);
                 
-               
             }
             catch (Exception)
             {

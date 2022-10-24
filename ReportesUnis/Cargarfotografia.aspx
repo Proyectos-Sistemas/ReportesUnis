@@ -23,7 +23,6 @@
                 console.log(SumaTamañoDeArchivos);
                 if (SumaTamañoDeArchivos > 1073741824 /*1GB = 1073741824 Bytes*/) {
                     document.getElementById('dvMsg').style.display = "block";
-                    // document.getElementById('btnUpload').disabled = false;
 
                     var btn = document.getElementById("<%=btnUpload.ClientID%>");
                     btn.disabled = true;
@@ -31,7 +30,6 @@
                 }
                 else {
                     document.getElementById('dvMsg').style.display = "none";
-                    // document.getElementById('btnUpload').disabled = true;
                     var btn = document.getElementById("<%=btnUpload.ClientID%>");
                     btn.disabled = false;
                     return true;

@@ -39,7 +39,6 @@ namespace ReportesUnis
 
         private void BindGrid()
         {
-            //string constr = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;  
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -65,7 +64,7 @@ namespace ReportesUnis
 
                 if (TamañoArchivoCarga > 1048576)  // 1GB
                 {
-                    //Finalziar cuando se exceda el archivo tiene un tamaño mayor a 1GB
+                    //Finalizar cuando se exceda el archivo tiene un tamaño mayor a 1GB
                     return;
                 }
 
@@ -117,8 +116,6 @@ namespace ReportesUnis
                         {
                             EmplidFoto = "";
                             EmplidExisteFoto = "";
-
-                            //FileUpload1.SaveAs(uploadFolder + uploadedFile.FileName); //Guarda archivo en el servidor
 
                             //Se obtiene el EMPLID del usuario, busando el nombre de la fotografía en la tabla de usuario
                             using (OracleConnection conEmplid = new OracleConnection(constr))
@@ -273,12 +270,10 @@ namespace ReportesUnis
                                                 else //Se registra la nueva fotografía
                                                 {
                                                     cmd.CommandText = "INSERT INTO SYSADM.PS_EMPL_PHOTO VALUES ('" + EmplidFoto + "', (TO_NUMBER((TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY-MM-DD') - TO_DATE(TO_CHAR('1999-12-31'), 'YYYY-MM-DD'))* 86400) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP,'hh24missff2'))), :Fotografia)";
-                                                    //query = ":Emplid, :Fotografia)";
                                                     mensajeValidacion = "La fotografía se registró correctamente en Campus.";
                                                 }
 
                                                 cmd.Connection = con;
-                                                //  cmd.Parameters.Add(new OracleParameter("Emplid", EmplidFoto));
                                                 cmd.Parameters.Add(new OracleParameter("Fotografia", bytes));
                                                 try
                                                 {
@@ -368,8 +363,6 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID=:Id";
-                    //cmd.CommandText = "select Name, Data, ContentType from tblFiles where Id=:Id";
-                    //cmd.Parameters.AddWithValue(":Id", id);
                     cmd.Parameters.Add(new OracleParameter("Id", id));
                     cmd.Connection = con;
                     con.Open();
@@ -410,30 +403,6 @@ namespace ReportesUnis
             Response.End();
         }
 
-        //public void descargarZIP(DataSet dsDownload, int i)
-        //{
-        //    using (ZipFile zip = new ZipFile())
-        //    {
-        //        zip.AlternateEncodingUsage = ZipOption.AsNecessary;
-        //        zip.AddDirectoryByName("Files");
-        //        foreach (GridViewRow row in GridView1.Rows)
-        //        {
-
-        //            byte[] fileBytes = (byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"];
-        //            string filePath2 = (row.FindControl("lblFilePath") as Label).Text;
-        //            string filePath = (row.FindControl(dsDownload.Tables["AllDownload"].Rows[i]["fileName"].ToString()) as Label).Text;
-        //            zip.AddFile(filePath, "Files");
-        //        }
-        //        Response.Clear();
-        //        Response.BufferOutput = false;
-        //        string zipName = String.Format("Zip_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
-        //        Response.ContentType = "application/zip";
-        //        Response.AddHeader("content-disposition", "attachment; filename=" + zipName);
-        //        zip.Save(Response.OutputStream);
-        //        Response.End();
-        //    }
-
-        //}
         protected void btnBack_Click(object sender, System.EventArgs e)
         {
             Response.Redirect("index.html");
@@ -451,7 +420,6 @@ namespace ReportesUnis
         {
             using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
         }
-
         void LeerInfoTxt()
         {
             string rutaCompleta = CurrentDirectory + "conexion.txt";
@@ -463,8 +431,5 @@ namespace ReportesUnis
                 file.Close();
             }
         }
-
-
     }
-
 }

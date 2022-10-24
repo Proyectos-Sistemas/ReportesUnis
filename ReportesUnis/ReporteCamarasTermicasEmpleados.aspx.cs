@@ -543,30 +543,22 @@ namespace ReportesUnis
 
                         if (LbxBusqueda.Text.Equals("Nombre"))
                         {
-                            int largo = 0;
-                            //string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = 125;
+                            int largo =  125;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("Apellido"))
                         {
-                            int largo = 0;
-                            //string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = 129;
+                            int largo = 129;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("ID"))
                         {
-                            int largo = 0;
-                            //string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = 123;
+                            int largo = 123;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("Departamento"))
                         {
-                            int largo = 0;
-                            //string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = 133;
+                            int largo = 133;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("Género"))
@@ -636,13 +628,11 @@ namespace ReportesUnis
                                 if (!arrlist[i, 5].ToString().Equals(""))
                                 {
                                     start = arrlist[i, 5].ToString().Substring(0, 10);
-                                    //newFila["Start_Time_of_Effective_Period"] = start;
                                     newFila["Start_Time_of_Effective_Period"] = "";
                                 }
                                 if (!arrlist[i, 6].ToString().Equals(""))
                                 {
                                     end = arrlist[i, 6].ToString().Substring(0, 10);
-                                    //newFila["End_Time_of_Effective_Period"] = end;
                                     newFila["End_Time_of_Effective_Period"] = "";
                                 }
                                 newFila["PHONE"] = (arrlist[i, 7] ?? "").ToString();
@@ -824,7 +814,6 @@ namespace ReportesUnis
             }
             else
             {
-                //consultaBusqueda();
                 //Cabeceras
                 if (celda == 10)
                 {
@@ -908,8 +897,6 @@ namespace ReportesUnis
             {
                 lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
             }
-            //Apertura del archivo
-            //Process.Start(CurrentDirectory + "ReportesCT/" + nombre);
         }
 
         public static string removeUnicode(string input)
@@ -977,9 +964,8 @@ namespace ReportesUnis
         protected string DownloadAllFile(string dpi)
         {
             desc = 1;
-            //dpi = "2334448580101";
             string[] result = dpi.Split(',');
-            string[] sustituto = new string[result.Length - 1];//Regex.Replace(Consultar(), " \"", "");
+            string[] sustituto = new string[result.Length - 1];
             string constr = TxtURL.Text;
             string ret = "0";
             int total = 0;
@@ -1035,9 +1021,6 @@ namespace ReportesUnis
                     ---------------*/
                 }
 
-                //Response.ContentType = "application/zip";
-                //Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-                //Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
                 lblDescarga.Visible = true;
                 lblDescarga.Text = "Las fotografías fueron almacenadas en la carpeta de descargas.";
                 Process.Start(folder);
@@ -1047,7 +1030,6 @@ namespace ReportesUnis
             {
                 ret = "2";
             }
-            //desc = 0;
             return ret;
         }
 

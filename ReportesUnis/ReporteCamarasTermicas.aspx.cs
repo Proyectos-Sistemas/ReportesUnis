@@ -374,7 +374,6 @@ namespace ReportesUnis
             }
             else
             {
-                //consultaBusqueda();
                 //Cabeceras
                 if (celda == 10)
                 {
@@ -446,8 +445,6 @@ namespace ReportesUnis
             Response.ContentType = "application/ms-excel";
             Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
             Response.TransmitFile(CurrentDirectory + "ReportesCT/" + nombre);
-            //Apertura del archivo
-            //Process.Start(CurrentDirectory + "ReportesCT/" + nombre);
         }
 
         public static string removeUnicode(string input)
@@ -616,13 +613,6 @@ namespace ReportesUnis
             {
                 lblBusqueda.Text = "Ha ocurido un error";
             }
-        }
-
-        public void transferir(string nombre)
-        {
-            Response.ContentType = "application/zip";
-            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-            Response.TransmitFile("C:\\ImagenesReportes\\" + nombre);
         }
     }
 }

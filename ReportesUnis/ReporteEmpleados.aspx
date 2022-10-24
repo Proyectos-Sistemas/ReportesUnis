@@ -42,12 +42,6 @@
             <%-- TXTBUSCADOR DONDE SE INGRESA EL TEXTO A BUSCAR --%>
             <asp:TextBox ID="TxtBuscador2" runat="server" Visible="false"></asp:TextBox>
 
-            <%-- CALENDARIO PARA BUSQUEDA --%>
-            <%--<asp:Label ID="FInicio2" runat="server" Visible="false">Fecha inicio:</asp:Label>
-            <asp:TextBox ID="CldrCiclosInicio2" runat="server" TextMode="Date" Visible="false"> </asp:TextBox>
-            <asp:Label ID="FFin2" runat="server" Visible="false">Fecha inicio:</asp:Label>
-            <asp:TextBox ID="CldrCiclosFin2" runat="server" TextMode="Date" Visible="false">--%>
-            <%--</asp:TextBox>--%>
         </div>
         <br />
         <asp:Table runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">

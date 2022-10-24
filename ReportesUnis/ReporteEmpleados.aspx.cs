@@ -21,7 +21,6 @@ using System.EnterpriseServices;
 using Microsoft.Reporting.Map.WebForms.BingMaps;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Diagnostics;
-//using System.Windows.Controls;
 
 namespace ReportesUnis
 {
@@ -1013,30 +1012,22 @@ namespace ReportesUnis
 
                         if (LbxBusqueda.Text.Equals("Nombre") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                         {
-                            int largo = 0;
-                            string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = /*nombre.Length +*/237;
+                            int largo = 237;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("Apellido") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                         {
-                            int largo = 0;
-                            string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = /*nombre.Length +*/ 241;
+                            int largo = 241;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("DPI") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                         {
-                            int largo = 0;
-                            string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = /*nombre.Length +*/ 236;
+                            int largo = 236;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("Dependencia") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                         {
-                            int largo = 0;
-                            string nombre = TxtBuscador.Text.TrimEnd(' ');
-                            largo = /*nombre.Length + */244;
+                            int largo = 244;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido")))
@@ -1075,11 +1066,8 @@ namespace ReportesUnis
             }
             else
             {
-                //sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('"', '\n');
                 sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('\"', '\t');
-                //sustituto = sustituto.Replace('\\', '\t');
                 sustituto = Regex.Replace(sustituto, @"\n+", " ");
-                //sustituto = Regex.Replace(sustituto, @"\", " ");
                 sustituto = Regex.Replace(sustituto, @"\t", "");
                 int largo = dpi.Length;
                 largo = largo + 52;
@@ -1114,7 +1102,7 @@ namespace ReportesUnis
                             if (registros == 0)
                                 count = 1;
                             arrlist = new string[Convert.ToInt32(count), 24];
-                            if (result.Count() > 23) //Multiples resultados
+                            if (result.Count() > 23)
                             {
                                 for (int i = 0; i < count; i++)
                                 {
@@ -1146,9 +1134,7 @@ namespace ReportesUnis
 
                         try
                         {
-                            var estado = "";
                             var bday = "";
-                            var add = "";
                             var dia = "";
                             var mes = "";
                             var anio = "";
@@ -1279,8 +1265,6 @@ namespace ReportesUnis
                             TxtBuscador2.Text = "";
                             CldrCiclosFin.Text = "";
                             CldrCiclosInicio.Text = "";
-                            //CldrCiclosFin2.Text = "";
-                            //CldrCiclosInicio2.Text = "";
                             GridViewReporte.DataSource = dsReporte.Tables["RptEmpleados"];
                             GridViewReporte.DataBind();
                             GridViewReporte.UseAccessibleHeader = true;
@@ -1288,10 +1272,6 @@ namespace ReportesUnis
                             ChBusqueda.Checked = false;
                             LbxBusqueda2.Visible = false;
                             TxtBuscador2.Visible = false;
-                            //CldrCiclosInicio2.Visible = false;
-                            //CldrCiclosFin2.Visible = false;
-                            //FFin2.Visible = false;
-                            //FInicio2.Visible = false;
                             lblBusqueda.Text = "";
                         }
                         catch (Exception x)
@@ -1377,8 +1357,8 @@ namespace ReportesUnis
         protected void BtnBuscar_Click(object sender, EventArgs e)
         {
             lblDescarga.Visible = false;
-            if(!String.IsNullOrEmpty(lblBusqueda.Text) && !String.IsNullOrEmpty(TxtBuscador.Text))
-            matrizDatos("");
+            if (!String.IsNullOrEmpty(lblBusqueda.Text) && !String.IsNullOrEmpty(TxtBuscador.Text))
+                matrizDatos("");
             else
                 lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
         }
@@ -1392,30 +1372,8 @@ namespace ReportesUnis
             LbxBusqueda2.Items.Insert(3, "DPI");
             LbxBusqueda2.Items.Insert(4, "Dependencia");
             LbxBusqueda2.Items.Remove(LbxBusqueda2.Items.FindByValue(LbxBusqueda.Text));
-            if (LbxBusqueda.Text.Equals("Asignación/Contrato"))
-            {
-                TxtBuscador.Visible = false;
-                //CldrCiclosInicio.Visible = true;
-                //CldrCiclosFin.Visible = true;
-                //FFin.Visible = true;
-                //FInicio.Visible = true;
-                //TxtBuscador2.Text = "";
-                //CldrCiclosInicio2.Visible = false;
-                //CldrCiclosFin2.Visible = false;
-                //FFin2.Visible = false;
-                //FInicio2.Visible = false;
-            }
-            else
-            {
-                TxtBuscador.Visible = true;
-                TxtBuscador2.Text = "";
-                //CldrCiclosInicio.Visible = false;
-                //CldrCiclosFin.Visible = false;
-                //FFin.Visible = false;
-                //FInicio.Visible = false;
-                //CldrCiclosFin.Text = "";
-                //CldrCiclosInicio.Text = "";
-            }
+            TxtBuscador.Visible = true;
+            TxtBuscador2.Text = "";
         }
 
         protected void ChBusqueda_CheckedChanged(object sender, EventArgs e)
@@ -1438,39 +1396,13 @@ namespace ReportesUnis
                 LbxBusqueda2.Visible = false;
                 TxtBuscador2.Visible = false;
                 TxtBuscador2.Text = "";
-                //CldrCiclosInicio2.Visible = false;
-                //CldrCiclosFin2.Visible = false;
-                //FFin2.Visible = false;
-                //FInicio2.Visible = false;
             }
         }
         protected void LbxBusqueda2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (LbxBusqueda2.Text.Equals("Asignación/Contrato"))
-            {
-                TxtBuscador2.Visible = false;
-                TxtBuscador2.Text = "";
-                //CldrCiclosInicio2.Visible = true;
-                //CldrCiclosFin2.Visible = true;
-                //FFin2.Visible = true;
-                //FInicio2.Visible = true;
-                TxtBuscador.Visible = true;
-                //CldrCiclosInicio.Visible = false;
-                //CldrCiclosFin.Visible = false;
-                FFin.Visible = false;
-                FInicio.Visible = false;
-            }
-            else
-            {
-                TxtBuscador2.Visible = true;
-                TxtBuscador2.Text = "";
-                //CldrCiclosInicio2.Visible = false;
-                //CldrCiclosFin2.Visible = false;
-                //FFin2.Visible = false;
-                //FInicio2.Visible = false;
-                //CldrCiclosFin2.Text = "";
-                //CldrCiclosInicio2.Text = "";
-            }
+
+            TxtBuscador2.Visible = true;
+            TxtBuscador2.Text = "";
         }
 
         //Función que sustituye caracteres unicode a las letras correspondientes
@@ -1539,9 +1471,8 @@ namespace ReportesUnis
         protected string DownloadAllFile(string dpi)
         {
             desc = 1;
-            //dpi = "2334448580101";
             string[] result = dpi.Split(',');
-            string[] sustituto = new string[result.Length - 1];//Regex.Replace(Consultar(), " \"", "");
+            string[] sustituto = new string[result.Length - 1];
             string constr = TxtURL.Text;
             string ret = "0";
             int total = 0;
@@ -1563,8 +1494,6 @@ namespace ReportesUnis
 
             if (total > 0)
             {
-                //string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
-                //File.Create(folder).Close();
                 string user = Environment.UserName;
                 string path = "C:\\Users\\" + user + "\\Downloads";
                 if (!Directory.Exists(path))
@@ -1600,9 +1529,6 @@ namespace ReportesUnis
                     ---------------*/
                 }
 
-                //Response.ContentType = "application/zip";
-                //Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-                //Response.TransmitFile(AppDomain.CurrentDomain.BaseDirectory + nombre);
                 lblDescarga.Visible = true;
                 lblDescarga.Text = "Las fotografías fueron almacenadas en la carpeta de descargas.";
                 Process.Start(folder);
