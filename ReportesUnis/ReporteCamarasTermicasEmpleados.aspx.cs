@@ -664,8 +664,8 @@ namespace ReportesUnis
                             Console.WriteLine(x.ToString());
                         }
 
-                        LbxBusqueda.Text = "";
-                        TxtBuscador.Text = "";
+                        //LbxBusqueda.Text = "";
+                       // TxtBuscador.Text = "";
                         GridViewReporteCT.DataSource = dsReporte.Tables["RptCTEmpleados"];
                         GridViewReporteCT.DataBind();
                         GridViewReporteCT.UseAccessibleHeader = true;
@@ -988,7 +988,8 @@ namespace ReportesUnis
             if (total > 0)
             {
                 string user = Environment.UserName;
-                string path = "C:\\Users\\" + user + "\\Downloads";
+                string unidad = unidadAlmacenamiento().Substring(0, 2);
+                string path = unidad + ":\\Users\\" + user + "\\Downloads";
                 if (!Directory.Exists(path))
                 {
                     File.Create(path).Close();
@@ -1062,6 +1063,20 @@ namespace ReportesUnis
             {
                 lblBusqueda.Text = "Ha ocurido un error";
             }
+        }
+
+        public string unidadAlmacenamiento()
+        {
+            DriveInfo[] drives = DriveInfo.GetDrives();
+            string name = "";
+            foreach (DriveInfo drive in drives)
+            {
+                string label = drive.IsReady ?
+                    String.Format(" - {0}", drive.VolumeLabel) : null;
+                Console.WriteLine("{0} - {1}{2}", drive.Name, drive.DriveType, label);
+                name = name + " " + drive.Name;
+            }
+            return name;
         }
     }
 }

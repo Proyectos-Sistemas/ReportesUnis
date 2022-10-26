@@ -142,31 +142,31 @@ namespace ReportesUnis
                             string busqueda = LbxBusqueda.Text;
                             if (LbxBusqueda.Text.Equals("Nombre"))
                             {
-                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                             }
                             else if (LbxBusqueda.Text.Equals("Apellido"))
                             {
-                                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') ) AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') ) AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                             }
                             else if (LbxBusqueda.Text.Equals("DPI/Carné"))
                             {
-                                where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                                where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                             }
                             else if (LbxBusqueda.Text.Equals("Facultad"))
                             {
-                                where = "WHERE AGT.DESCR LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                                where = "WHERE AGT.DESCR LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                             }
                         }
                         else //CREACION DE WHERE PARA BUSQUEDA MULTIPLE CON LAS COMBINACIONES POSIBLES
                         {
                             if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido"))
                             {
-                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR(TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "')) AND (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') )";
+                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR(TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "')) AND (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') )";
 
                             }
                             else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI/Carné"))
                             {
-                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') ";
+                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') ";
                             }
                             else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Facultad"))
                             {
@@ -174,41 +174,41 @@ namespace ReportesUnis
                             }
                             else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI/Carné"))
                             {
-                                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%')) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') ";
+                                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%')) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                             }
                             else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Facultad"))
                             {
-                                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%')) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
+                                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%')) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
 
                             }
                             else if (LbxBusqueda.Text.Equals("DPI/Carné") && LbxBusqueda2.Text.Equals("Facultad"))
                             {
-                                where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
+                                where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
                             }
                             else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido"))
                             {
-                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%'))  ";
+                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%'))  ";
 
                             }
                             else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI/Carné"))
                             {
-                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
+                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
                             }
                             else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Facultad"))
                             {
-                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
+                                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
                             }
                             else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI/Carné"))
                             {
-                                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
+                                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
                             }
                             else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Facultad"))
                             {
-                                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
+                                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
                             }
                             else if (LbxBusqueda2.Text.Equals("DPI/Carné") && LbxBusqueda.Text.Equals("Facultad"))
                             {
-                                where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%')  AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
+                                where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%')  AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                             }
                         }
                         string constr = TxtURL.Text;
@@ -216,34 +216,82 @@ namespace ReportesUnis
                         {
                             using (OracleCommand cmd = new OracleCommand())
                             {
-                                cmd.CommandText = "SELECT FLAG_DPI, FLAG_PAS, FLAG_CED, PROF, EMPLID,FIRST_NAME,SECOND_NAME,LAST_NAME, SECOND_LAST_NAME,CARNE,PHONE,DPI, " +
-                                    "CEDULA, PASAPORTE, CARRERA, FACULTAD,STATUS,BIRTHDATE,DIRECCION,MUNICIPIO,DEPARTAMENTO, SEX, BIRTHPLACE, CNT " +
-                                    "FROM ( SELECT PD.EMPLID, PN.NATIONAL_ID CARNE, REGEXP_SUBSTR(PD.FIRST_NAME,'[^ ]+') FIRST_NAME, " +
-                                    "SUBSTR(PD.FIRST_NAME,(INSTR(PD.FIRST_NAME,' ')+1)) SECOND_NAME, PD.LAST_NAME, PD.SECOND_LAST_NAME,  " +
-                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN  PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN  PN.NATIONAL_ID  ELSE '' END DPI, " +
-                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN  '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN  '1'  ELSE '0' END FLAG_DPI, " +
-                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN  PN.NATIONAL_ID  ELSE '' END CEDULA, CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN  '1'  ELSE '0' END FLAG_CED," +
-                                    " CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN  PN.NATIONAL_ID  WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN  PN.NATIONAL_ID  ELSE '' END PASAPORTE, " +
-                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN  '1'  WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN  '1'  ELSE '0' END FLAG_PAS, " +
-                                    "PPD.PHONE , TO_CHAR(PD.BIRTHDATE,'DD-MM-YYYY') BIRTHDATE, APD.DESCR CARRERA, AGT.DESCR FACULTAD,  " +
-                                    "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, PD.BIRTHPLACE , " +
-                                    "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'Sin Información' END STATUS, " +
-                                    "A.ADDRESS1 || ' ' || A.ADDRESS2 || ' ' || A.ADDRESS3 || ' ' || A.ADDRESS4 DIRECCION, REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO,  " +
-                                    "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, TT.TERM_BEGIN_DT, ROW_NUMBER() OVER(PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, " +
-                                    "'ESTUDIANTE' PROF " +
-                                    "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
-                                    "LEFT JOIN SYSADM.PS_PERS_NID PN ON  PD.EMPLID = PN.EMPLID " +
-                                    "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
-                                    "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                                    "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                    "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON PD.EMPLID = CT.EMPLID " +
-                                    "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON CT.ACAD_GROUP_ADVIS = AGT.ACAD_GROUP " +
-                                    "LEFT JOIN SYSADM.PS_STDNT_ENRL SE ON CT.ACAD_CAREER = SE.ACAD_CAREER AND CT.STRM = SE.STRM AND CT.INSTITUTION=SE.INSTITUTION AND CT.EMPLID = SE.EMPLID LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
-                                    "LEFT JOIN SYSADM.PS_ACAD_PROG AP ON PD.EMPLID = AP.EMPLID " +
-                                    "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON AP.ACAD_PROG = APD.ACAD_PROG " +
-                                    "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = AP.EMPLID " +
-                                    where +
-                                    " AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON='ENRL' AND AP.PROG_ACTION = 'MATR') WHERE CNT = 1";
+                                cmd.CommandText = "SELECT " +
+                                                    "  FLAG_DPI, " +
+                                                    "  FLAG_PAS, " +
+                                                    "  FLAG_CED, " +
+                                                    "  PROF, " +
+                                                    "  EMPLID, " +
+                                                    "  FIRST_NAME, " +
+                                                    "  SECOND_NAME, " +
+                                                    "  LAST_NAME, " +
+                                                    "  SECOND_LAST_NAME, " +
+                                                    "  CARNE, " +
+                                                    "  PHONE, " +
+                                                    "  DPI, " +
+                                                    "  CEDULA, " +
+                                                    "  PASAPORTE, " +
+                                                    "  CARRERA, " +
+                                                    "  FACULTAD, " +
+                                                    "  STATUS, " +
+                                                    "  BIRTHDATE, " +
+                                                    "  DIRECCION, " +
+                                                    "  MUNICIPIO, " +
+                                                    "  DEPARTAMENTO, " +
+                                                    "  SEX, " +
+                                                    "  BIRTHPLACE " +
+                                                    "FROM " +
+                                                    "  ( " +
+                                                    "    SELECT DISTINCT " +
+                                                    "      PD.EMPLID, " +
+                                                    "      (SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID " +
+                                                    "      ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
+                                                    "      REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
+                                                    "      SUBSTR( " +
+                                                    "        PD.FIRST_NAME, " +
+                                                    "        ( " +
+                                                    "          INSTR(PD.FIRST_NAME, ' ')+ 1 " +
+                                                    "        ) " +
+                                                    "      ) SECOND_NAME, " +
+                                                    "      PD.LAST_NAME, " +
+                                                    "      PD.SECOND_LAST_NAME, " +
+                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
+                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN '1' ELSE '0' END FLAG_DPI, " +
+                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
+                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN '1' ELSE '0' END FLAG_CED, " +
+                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE, " +
+                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN '1' ELSE '0' END FLAG_PAS, " +
+                                                    "      PPD.PHONE, " +
+                                                    "      TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
+                                                    "      APD.DESCR CARRERA, " +
+                                                    "      AGT.DESCR FACULTAD, " +
+                                                    "      CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
+                                                    "      PD.BIRTHPLACE, " +
+                                                    "      CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'Sin Información' END STATUS, " +
+                                                    "      (select A1.ADDRESS1 || ' ' || A1.ADDRESS2 || ' ' || A1.ADDRESS3 || ' ' || A1.ADDRESS4 from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID " +
+                                                    "        ORDER BY CASE WHEN A1.ADDRESS_TYPE ='HOME' THEN 1 WHEN A1.ADDRESS_TYPE='HM' THEN 2 ELSE 3 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                                                    "      REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
+                                                    "      SUBSTR( " +
+                                                    "        ST.DESCR, " +
+                                                    "        ( " +
+                                                    "          INSTR(ST.DESCR, '-') + 1 " +
+                                                    "        ) " +
+                                                    "      ) DEPARTAMENTO,  " +
+                                                    "      'ESTUDIANTE' PROF " +
+                                                    "    FROM " +
+                                                    "      SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                                    "      LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                                    "      LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID=A2.EMPLID AND A.ADDRESS_TYPE=A2.ADDRESS_TYPE) " +
+                                                    "      LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID  " +
+                                                    "      LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE     " +
+                                                    "      JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID=SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E'  AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                                                    "      LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION =CT.INSTITUTION " +
+                                                    "      LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER=APD.ACAD_CAREER AND CT.INSTITUTION=APD.INSTITUTION " +
+                                                    "      LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP  AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                                    "      LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM  AND CT.INSTITUTION = TT.INSTITUTION       " +
+                                                    "      LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                                                    where +")"+
+                                                    "  WHERE CARNE=DPI OR CARNE=PASAPORTE OR CARNE=CEDULA ORDER BY 5 ASC";
                                 cmd.Connection = con;
                                 con.Open();
 
@@ -255,9 +303,6 @@ namespace ReportesUnis
                                     GridViewReporte.DataBind();
                                     GridVieweMPLID.DataSource = reader;
                                     GridVieweMPLID.DataBind();
-                                    LbxBusqueda.Text = "";
-                                    TxtBuscador.Text = "";
-                                    TxtBuscador2.Text = "";
                                     ChBusqueda.Checked = false;
                                     LbxBusqueda2.Visible = false;
                                     TxtBuscador2.Visible = false;
@@ -314,7 +359,10 @@ namespace ReportesUnis
             for (int k = 0; k < GridViewReporte.Columns.Count - 1; k++)
             {
                 string texto = removeUnicode(GridViewReporte.Columns[k].ToString());
-                txtFile += texto + "|";
+                if (k != GridViewReporte.Columns.Count - 2)
+                    txtFile += texto + "|";
+                else
+                    txtFile += texto;
             }
 
             txtFile += "\r\n";
@@ -329,7 +377,11 @@ namespace ReportesUnis
                 {
                     string texto = removeUnicode(GridViewReporte.Rows[j].Cells[i].Text);
                     texto = texto.TrimEnd();
-                    txtFile += texto + "|";
+                    if (i != GridViewReporte.Columns.Count - 2)
+                        txtFile += texto + "|";
+                    else
+                        txtFile += texto;
+
                     if (texto != "" && ret == 0)
                     {
                         aux = 0;
@@ -473,96 +525,91 @@ namespace ReportesUnis
             TxtBuscador2.Text = "";
         }
 
-        protected string DownloadAllFile(string where)
+        protected string DownloadAllFile()
         {
             string nombre = "ImagenesEstudiantes" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
             string constr = TxtURL.Text;
             string ret = "0";
-            where = where.TrimEnd(',');
             int total = 0;
             DataSetLocalRpt dsDownload = new DataSetLocalRpt();
-            using (OracleConnection con = new OracleConnection(constr))
-            {
-                using (OracleCommand cmd = new OracleCommand())
+
+            for (int k = 0; k < GridViewReporte.Rows.Count; k++)
+            {                
+                using (OracleConnection con = new OracleConnection(constr))
                 {
-                    cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + where + ") AND employee_photo IS NOT NULL ";
-                    cmd.Connection = con;
-                    con.Open();
-                    OracleDataReader reader = cmd.ExecuteReader();
-                    if (reader.HasRows)
+                    using (OracleCommand cmd = new OracleCommand())
                     {
-                        DataTable dt = new DataTable();
-                        OracleDataAdapter adapter = new OracleDataAdapter(cmd);
-                        adapter.Fill(dt);
-                        foreach (DataRow row in dt.Rows)
+                        cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + removeUnicode(GridViewReporte.Rows[k].Cells[66].Text) + ") AND employee_photo IS NOT NULL ";
+                        cmd.Connection = con;
+                        con.Open();
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        if (reader.HasRows)
                         {
-                            DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
-                            newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
-                            newFila["contentType"] = row["Extension"].ToString();
-                            newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
-                            dsDownload.Tables["AllDownload"].Rows.Add(newFila);
-                            total = total + 1;
-                        }
-                        con.Close();
-
-                        if (total > 0)
-                        {
-                            string user = Environment.UserName;
-                            string path = "C:\\Users\\" + user + "\\Downloads";
-                            if (!Directory.Exists(path))
+                            DataTable dt = new DataTable();
+                            OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                            adapter.Fill(dt);
+                            foreach (DataRow row in dt.Rows)
                             {
-                                File.Create(path).Close();
+                                DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
+                                newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
+                                newFila["contentType"] = row["Extension"].ToString();
+                                newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
+                                dsDownload.Tables["AllDownload"].Rows.Add(newFila);
+                                total = total + 1;
                             }
-                            string folder = path + "\\" + nombre;
-                            File.Create(folder).Close();
-
-                            using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
-                            {
-
-                                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
-                                {
-                                    for (int i = 0; i < total; i++)
-                                    {
-                                        byte[] base64 = (byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"];
-                                        ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
-
-                                        var zipStream = readmeEntry.Open();
-                                        zipStream.Write(base64, 0, base64.Length);
-
-                                    }
-                                }
-                            }
-
-                            lblDescarga.Visible = true;
-                            lblDescarga.Text = "Las fotografías fueron almacenadas en la carpeta de descargas.";
-                            Process.Start(folder);
-                            ret = "1";
+                            con.Close();
                         }
-                        else
-                        {
-                            ret = "2";
-                        }
-                    }
-                    else
-                    {
-                        ret = "2";
                     }
                 }
+            }
+
+            if (total > 0)
+            {
+                string user = Environment.UserName;
+                string unidad = unidadAlmacenamiento().Substring(0,2);
+                string path = unidad+":\\Users\\" + user + "\\Downloads";
+                if (!Directory.Exists(path))
+                {
+                    File.Create(path).Close();
+                }
+                string folder = path + "\\" + nombre;
+                File.Create(folder).Close();
+
+                using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
+                {
+
+                    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                    {
+                        for (int i = 0; i < total; i++)
+                        {
+                            byte[] base64 = (byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"];
+                            ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
+
+                            var zipStream = readmeEntry.Open();
+                            zipStream.Write(base64, 0, base64.Length);
+
+                        }
+                    }
+                }
+
+                lblDescarga.Visible = true;
+                lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: "+path;
+                //Process.Start(folder);
+                ret = "1";
+            }
+            else
+            {
+                ret = "2";
             }
             return ret;
         }
 
         protected void ButtonFts_Click(object sender, EventArgs e)
         {
+            int total = 0;
             try
-            {
-                string emplid = "";
-                for (int k = 0; k < GridViewReporte.Rows.Count; k++)
-                {
-                    emplid += "'" + removeUnicode(GridViewReporte.Rows[k].Cells[66].Text) + "',";
-                }
-
-                string respuesta = DownloadAllFile(emplid);
+            {  
+                string respuesta = DownloadAllFile();
                 if (respuesta == "0")
                 {
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
@@ -574,6 +621,20 @@ namespace ReportesUnis
             {
                 lblBusqueda.Text = "Ha ocurido un error";
             }
+        }
+
+        public string unidadAlmacenamiento()
+        {
+            DriveInfo[] drives = DriveInfo.GetDrives();
+            string name="";
+            foreach (DriveInfo drive in drives)
+            {
+                string label = drive.IsReady ?
+                    String.Format(" - {0}", drive.VolumeLabel) : null;
+                Console.WriteLine("{0} - {1}{2}", drive.Name, drive.DriveType, label);
+                name = name + " "+drive.Name;
+            }
+            return name;
         }
     }
 

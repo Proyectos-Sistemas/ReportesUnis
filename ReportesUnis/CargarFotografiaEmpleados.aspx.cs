@@ -470,14 +470,15 @@ namespace ReportesUnis
                     }
                 }
             }
-
+            FileUpload1.Dispose();
+            FileUpload1.Attributes.Clear();
+            FileUpload1 = new FileUpload();
             GuardarBitacora(ArchivoBitacora, "");
             GuardarBitacora(ArchivoBitacora, "");
             GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
             GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
             GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
-            GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
-
+            GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());            
             Response.ContentType = "application/text";
             Response.AddHeader("content-disposition", "attachment; filename=Reporte de Carga.txt");
             Response.TransmitFile(ArchivoBitacora);

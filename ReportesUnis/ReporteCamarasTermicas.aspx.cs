@@ -110,7 +110,7 @@ namespace ReportesUnis
                 consultaBusqueda();
             }
             catch (Exception c)
-            {                
+            {
                 lblBusqueda.Text = "No se encontró la información solicitada";
                 return;
             }
@@ -234,10 +234,10 @@ namespace ReportesUnis
                             GridViewReporteCT.DataSource = cmd.ExecuteReader();
                             GridViewReporteCT.DataBind();
                             lblBusqueda.Text = "";
-                            TxtBuscador.Text = "";
+                            //TxtBuscador.Text = "";
                         }
                         else
-                        {                            
+                        {
                             lblBusqueda.Text = "No se encontró la información solicitada";
                             if (LbxBusqueda.Text == "Género")
                                 lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
@@ -508,100 +508,92 @@ namespace ReportesUnis
 
             return input;
         }
-        protected string DownloadAllFile(string where)
+        protected string DownloadAllFile()
         {
             string nombre = "ImagenesEstudiantes" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
             string constr = TxtURL.Text;
             string ret = "0";
-            where = where.TrimEnd(',');
             int total = 0;
             DataSetLocalRpt dsDownload = new DataSetLocalRpt();
-            using (OracleConnection con = new OracleConnection(constr))
+
+            for (int k = 0; k < GridViewReporteCT.Rows.Count; k++)
             {
-                using (OracleCommand cmd = new OracleCommand())
+                using (OracleConnection con = new OracleConnection(constr))
                 {
-                    cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + where + ") AND employee_photo IS NOT NULL ";
-                    cmd.Connection = con;
-                    con.Open();
-                    OracleDataReader reader = cmd.ExecuteReader();
-                    if (reader.HasRows)
+                    using (OracleCommand cmd = new OracleCommand())
                     {
-                        DataTable dt = new DataTable();
-                        OracleDataAdapter adapter = new OracleDataAdapter(cmd);
-                        adapter.Fill(dt);
-                        foreach (DataRow row in dt.Rows)
+                        cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + removeUnicode(GridViewReporteCT.Rows[k].Cells[66].Text) + ") AND employee_photo IS NOT NULL ";
+                        cmd.Connection = con;
+                        con.Open();
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        if (reader.HasRows)
                         {
-                            DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
-                            newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
-                            newFila["contentType"] = row["Extension"].ToString();
-                            newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
-                            dsDownload.Tables["AllDownload"].Rows.Add(newFila);
-                            total = total + 1;
-                        }
-                        con.Close();
-
-                        if (total > 0)
-                        {   
-                            string user = Environment.UserName; 
-                            string path = "C:\\Users\\"+user+"\\Downloads";
-                            if (!Directory.Exists(path))
+                            DataTable dt = new DataTable();
+                            OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                            adapter.Fill(dt);
+                            foreach (DataRow row in dt.Rows)
                             {
-                                File.Create(path).Close();
+                                DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
+                                newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
+                                newFila["contentType"] = row["Extension"].ToString();
+                                newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
+                                dsDownload.Tables["AllDownload"].Rows.Add(newFila);
+                                total = total + 1;
                             }
-                            string folder = path+"\\" + nombre;
-                            //string folder = AppDomain.CurrentDomain.BaseDirectory + nombre;
-                            File.Create(folder).Close();
-
-                            using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
-                            {
-
-                                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
-                                {
-                                    for (int i = 0; i < total; i++)
-                                    {
-                                        byte[] base64 = (byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"];
-                                        ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
-
-                                        var zipStream = readmeEntry.Open();
-                                        zipStream.Write(base64, 0, base64.Length);
-
-                                    }
-                                }
-                            }
-
-                            lblDescarga.Visible = true;
-                            lblDescarga.Text = "Las fotografías fueron almacenadas en la carpeta de descargas.";
-                            Process.Start(folder);
-                            ret = "1";
+                            con.Close();
                         }
-                        else
-                        {
-                            ret = "2";
-                        }
-
-                    }
-                    else
-                    {
-                        ret = "2";
                     }
                 }
+            }
+
+            if (total > 0)
+            {
+                string user = Environment.UserName;
+                string unidad = unidadAlmacenamiento().Substring(0, 2);
+                string path = unidad + ":\\Users\\" + user + "\\Downloads";
+                if (!Directory.Exists(path))
+                {
+                    File.Create(path).Close();
+                }
+                string folder = path + "\\" + nombre;
+                File.Create(folder).Close();
+
+                using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
+                {
+
+                    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                    {
+                        for (int i = 0; i < total; i++)
+                        {
+                            byte[] base64 = (byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"];
+                            ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
+
+                            var zipStream = readmeEntry.Open();
+                            zipStream.Write(base64, 0, base64.Length);
+
+                        }
+                    }
+                }
+
+                lblDescarga.Visible = true;
+                lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: " + path;
+                //Process.Start(folder);
+                ret = "1";
+            }
+            else
+            {
+                ret = "2";
             }
             return ret;
         }
 
         protected void BtnImg_Click(object sender, EventArgs e)
         {
+            string emplid = "";
+            int total = 0;
             try
             {
-                ////AGREGA EL NOMBRE DE LAS COLUMNAS AL ARCHIVO.  
-                string emplid = "";
-                for (int k = 0; k < GridViewReporteCT.Rows.Count; k++)
-                {
-                    emplid += "'" + removeUnicode(GridViewReporteCT.Rows[k].Cells[17].Text) + "',";
-                    lblBusqueda.Text = "";
-                }
-
-                string respuesta = DownloadAllFile(emplid);
+                string respuesta = DownloadAllFile();
                 if (respuesta == "0")
                 {
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
@@ -613,6 +605,20 @@ namespace ReportesUnis
             {
                 lblBusqueda.Text = "Ha ocurido un error";
             }
+        }
+
+        public string unidadAlmacenamiento()
+        {
+            DriveInfo[] drives = DriveInfo.GetDrives();
+            string name = "";
+            foreach (DriveInfo drive in drives)
+            {
+                string label = drive.IsReady ?
+                    String.Format(" - {0}", drive.VolumeLabel) : null;
+                Console.WriteLine("{0} - {1}{2}", drive.Name, drive.DriveType, label);
+                name = name + " " + drive.Name;
+            }
+            return name;
         }
     }
 }

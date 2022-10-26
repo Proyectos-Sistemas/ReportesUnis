@@ -1078,7 +1078,7 @@ namespace ReportesUnis
         }
         public void matrizDatos(string dpi)
         {
-            if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(lblBusqueda.Text))
+            if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(LbxBusqueda2.Text) || !String.IsNullOrEmpty(CldrCiclosFin.Text) || !String.IsNullOrEmpty(CldrCiclosFin.Text))
             {
                 {
                     GridViewReporte.DataSource = "";
@@ -1260,11 +1260,11 @@ namespace ReportesUnis
                                 Console.WriteLine(x.ToString());
                             }
 
-                            LbxBusqueda.Text = "";
-                            TxtBuscador.Text = "";
-                            TxtBuscador2.Text = "";
-                            CldrCiclosFin.Text = "";
-                            CldrCiclosInicio.Text = "";
+                            //LbxBusqueda.Text = "";
+                            //TxtBuscador.Text = "";
+                            //TxtBuscador2.Text = "";
+                            //CldrCiclosFin.Text = "";
+                            //CldrCiclosInicio.Text = "";
                             GridViewReporte.DataSource = dsReporte.Tables["RptEmpleados"];
                             GridViewReporte.DataBind();
                             GridViewReporte.UseAccessibleHeader = true;
@@ -1289,7 +1289,7 @@ namespace ReportesUnis
             }
             else
             {
-                lblBusqueda.Text = "Ingrese un valor a buscar";
+                lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
             }
         }
 
@@ -1300,7 +1300,10 @@ namespace ReportesUnis
             for (int k = 0; k < GridViewReporte.Columns.Count - 1; k++)
             {
                 string texto = removeUnicode(GridViewReporte.Columns[k].ToString());
-                txtFile += texto + "|";
+                if (k != GridViewReporte.Columns.Count - 2)
+                    txtFile += texto + "|";
+                else
+                    txtFile += texto;
             }
 
             txtFile += "\r\n";
@@ -1315,7 +1318,11 @@ namespace ReportesUnis
                 {
                     string texto = removeUnicode(GridViewReporte.Rows[j].Cells[i].Text);
                     texto = texto.TrimEnd();
-                    txtFile += texto + "|";
+                    if (i != GridViewReporte.Columns.Count - 2)
+                        txtFile += texto + "|";
+                    else
+                        txtFile += texto;
+
                     if (texto != "" && ret == 0)
                     {
                         aux = 0;
@@ -1357,7 +1364,7 @@ namespace ReportesUnis
         protected void BtnBuscar_Click(object sender, EventArgs e)
         {
             lblDescarga.Visible = false;
-            if (!String.IsNullOrEmpty(lblBusqueda.Text) && !String.IsNullOrEmpty(TxtBuscador.Text))
+            if (!String.IsNullOrEmpty(LbxBusqueda.Text) && !String.IsNullOrEmpty(TxtBuscador.Text))
                 matrizDatos("");
             else
                 lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
@@ -1495,7 +1502,8 @@ namespace ReportesUnis
             if (total > 0)
             {
                 string user = Environment.UserName;
-                string path = "C:\\Users\\" + user + "\\Downloads";
+                string unidad = unidadAlmacenamiento().Substring(0, 2);
+                string path = unidad + ":\\Users\\" + user + "\\Downloads";
                 if (!Directory.Exists(path))
                 {
                     File.Create(path).Close();
@@ -1579,5 +1587,18 @@ namespace ReportesUnis
             File.Delete(AppDomain.CurrentDomain.BaseDirectory + nombre);
         }
 
+        public string unidadAlmacenamiento()
+        {
+            DriveInfo[] drives = DriveInfo.GetDrives();
+            string name = "";
+            foreach (DriveInfo drive in drives)
+            {
+                string label = drive.IsReady ?
+                    String.Format(" - {0}", drive.VolumeLabel) : null;
+                Console.WriteLine("{0} - {1}{2}", drive.Name, drive.DriveType, label);
+                name = name + " " + drive.Name;
+            }
+            return name;
+        }
     }
 }

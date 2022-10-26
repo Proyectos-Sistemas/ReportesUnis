@@ -3,7 +3,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
         <br />
-        <h2 style="text-align: center;">CARGA DE FOTOGRAFÍAS</h2>
+        <h2 style="text-align: center;">CARGA DE FOTOGRAFÍAS ESTUDIANTES</h2>
         <hr />
     </div>
 
@@ -39,13 +39,19 @@
         }
     </script>
 
+    <script>
+        function clearFileInputField(divId) {
+            document.getElementById(divId).innerHTML = document.getElementById(tagId).innerHTML;
+        }
+    </script>
+
     <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
         <div class="container">
             <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="True" accept="image/jpeg" onchange="validateFileSize();" />
             <div id="dvMsg" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
                 El tamaño máximo permitido es de 1 GB
             </div>
-            <asp:Button ID="btnUpload" runat="server" Text="Cargar" OnClick="Upload" CssClass="btn-primary" Enabled="false" />
+            <asp:Button ID="btnUpload" runat="server" Text="Cargar" OnClick="Upload" OnClientClick="container" CssClass="btn-primary" Enabled="false" />
             <hr />
             <asp:GridView ID="GridView1" class="table table-bordered table-condensed table-responsive table-hover" runat="server"
                 AutoGenerateColumns="false" CssClass="table" Visible="false">
