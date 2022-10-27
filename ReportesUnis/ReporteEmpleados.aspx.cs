@@ -1076,7 +1076,7 @@ namespace ReportesUnis
             }
             return sustituto;
         }
-        public void matrizDatos(string dpi)
+        public void matrizDatos()
         {
             if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(LbxBusqueda2.Text) || !String.IsNullOrEmpty(CldrCiclosFin.Text) || !String.IsNullOrEmpty(CldrCiclosFin.Text))
             {
@@ -1086,7 +1086,7 @@ namespace ReportesUnis
                     {
                         LbxBusqueda2.Text = "";
                     }
-                    string[] result = sustituirCaracteres(dpi).Split('|');
+                    string[] result = sustituirCaracteres("").Split('|');
                     decimal registros = 0;
                     decimal count = 0;
                     int datos = 0;
@@ -1138,6 +1138,7 @@ namespace ReportesUnis
                             var dia = "";
                             var mes = "";
                             var anio = "";
+                            int flag_pas = 0;
                             DataSetLocalRpt dsReporte = new DataSetLocalRpt();
                             try
                             {
@@ -1148,7 +1149,6 @@ namespace ReportesUnis
                                     for (int i = 0; i < count; i++)
                                     {
                                         DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                                        newFila["DPI"] = (arrlist[i, 3] ?? "").ToString();
                                         newFila["Dependencia"] = (arrlist[i, 4] ?? "").ToString();
                                         newFila["Telefono"] = (arrlist[i, 5] ?? "").ToString();
                                         newFila["Estado Civil"] = (arrlist[i, 6] ?? "").ToString();
@@ -1178,11 +1178,12 @@ namespace ReportesUnis
                                         newFila["NOM_IMP"] = (arrlist[i, 11] ?? "").ToString() + " " + (arrlist[i, 13] ?? "").ToString();
                                         newFila["Sexo"] = (arrlist[i, 16] ?? "").ToString();
                                         newFila["CARNE"] = (arrlist[i, 17] ?? "").ToString();
-                                        if ((arrlist[i, 1] ?? "").ToString() == (arrlist[i, 18] ?? "").ToString())
+                                        if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 17] ?? "").ToString())
                                         {
                                             newFila["Pasaporte"] = "";
                                             newFila["FLAG_PAS"] = "0";
                                             newFila["FLAG_DPI"] = "1";
+                                            newFila["DPI"] = (arrlist[i, 3] ?? "").ToString();
                                         }
                                         else
                                         {
@@ -1190,10 +1191,21 @@ namespace ReportesUnis
                                             newFila["FLAG_PAS"] = "1";
                                             newFila["FLAG_DPI"] = "0";
                                             newFila["DPI"] = "";
+                                            flag_pas = 1;
                                         }
                                         newFila["Cedula"] = (arrlist[i, 19] ?? "").ToString();
                                         newFila["NIT"] = (arrlist[i, 20] ?? "").ToString();
-                                        newFila["Nacionalidad"] = (arrlist[i, 21] ?? "").ToString();
+                                        
+                                        if ((arrlist[i, 21] ?? "").ToString() == "-" && flag_pas == 1)
+                                        {
+                                            newFila["Nacionalidad"] = "Condición Migrante";
+                                        }
+                                        else
+                                        {
+                                            newFila["Nacionalidad"] = (arrlist[i, 21] ?? "").ToString();
+
+                                        }
+
                                         newFila["FLAG_CED"] = "0";
                                         dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                                     }
@@ -1365,7 +1377,7 @@ namespace ReportesUnis
         {
             lblDescarga.Visible = false;
             if (!String.IsNullOrEmpty(LbxBusqueda.Text) && !String.IsNullOrEmpty(TxtBuscador.Text))
-                matrizDatos("");
+                matrizDatos();
             else
                 lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
         }
@@ -1537,9 +1549,8 @@ namespace ReportesUnis
                     ---------------*/
                 }
 
-                lblDescarga.Visible = true;
-                lblDescarga.Text = "Las fotografías fueron almacenadas en la carpeta de descargas.";
-                Process.Start(folder);
+                lblDescarga.Visible = true;                
+                lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href="+path+">"+ path + "</a>" ;
                 ret = "1";
             }
             else
@@ -1561,7 +1572,7 @@ namespace ReportesUnis
                 {
                     if (GridViewReporte.Rows[k].Cells[16].Text != "&nbsp;")
                     {
-                        id += removeUnicode(GridViewReporte.Rows[k].Cells[16].Text) + ",";
+                        id += removeUnicode(GridViewReporte.Rows[k].Cells[33].Text) + ",";
                         lblBusqueda.Text = "";
                     }
                 }

@@ -102,7 +102,7 @@
                             <asp:BoundField DataField="BIRTHDATE" HeaderText="FE_NAC" />
                             <asp:BoundField DataField="SEX" HeaderText="SEXO" />
                             <asp:BoundField DataField="STATUS" HeaderText="EST_CIV" />
-                            <asp:BoundField DataField="BIRTHPLACE" HeaderText="NACIONAL" />
+                            <asp:BoundField DataField="PLACE" HeaderText="NACIONAL" />
                             <asp:BoundField DataField="FLAG_CED" HeaderText="FLAG_CED" />
                             <asp:BoundField DataField="CEDULA" HeaderText="CEDULA" />
                             <asp:BoundField DataField="" HeaderText="DEPCED" />

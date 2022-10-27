@@ -1023,8 +1023,8 @@ namespace ReportesUnis
                 }
 
                 lblDescarga.Visible = true;
-                lblDescarga.Text = "Las fotografías fueron almacenadas en la carpeta de descargas.";
-                Process.Start(folder);
+                lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
+                //Process.Start(folder);
                 ret = "1";
             }
             else

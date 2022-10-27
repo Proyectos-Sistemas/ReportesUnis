@@ -53,7 +53,7 @@ namespace ReportesUnis
             dt.Columns.Add("MUNICIPIO");
             dt.Columns.Add("DEPARTAMENTO");
             dt.Columns.Add("SEX");
-            dt.Columns.Add("BIRTHPLACE");
+            dt.Columns.Add("PLACE");
             dt.Columns.Add("FLAG_CED");
             dt.Columns.Add("FLAG_PAS");
             dt.Columns.Add("FLAG_DPI");
@@ -75,7 +75,7 @@ namespace ReportesUnis
             dr["MUNICIPIO"] = String.Empty;
             dr["DEPARTAMENTO"] = String.Empty;
             dr["SEX"] = String.Empty;
-            dr["BIRTHPLACE"] = String.Empty;
+            dr["PLACE"] = String.Empty;
             dr["FLAG_CED"] = String.Empty;
             dr["FLAG_DPI"] = String.Empty;
             dr["FLAG_PAS"] = String.Empty;
@@ -217,79 +217,67 @@ namespace ReportesUnis
                             using (OracleCommand cmd = new OracleCommand())
                             {
                                 cmd.CommandText = "SELECT " +
-                                                    "  FLAG_DPI, " +
-                                                    "  FLAG_PAS, " +
-                                                    "  FLAG_CED, " +
-                                                    "  PROF, " +
-                                                    "  EMPLID, " +
-                                                    "  FIRST_NAME, " +
-                                                    "  SECOND_NAME, " +
-                                                    "  LAST_NAME, " +
-                                                    "  SECOND_LAST_NAME, " +
-                                                    "  CARNE, " +
-                                                    "  PHONE, " +
-                                                    "  DPI, " +
-                                                    "  CEDULA, " +
-                                                    "  PASAPORTE, " +
-                                                    "  CARRERA, " +
-                                                    "  FACULTAD, " +
-                                                    "  STATUS, " +
-                                                    "  BIRTHDATE, " +
-                                                    "  DIRECCION, " +
-                                                    "  MUNICIPIO, " +
-                                                    "  DEPARTAMENTO, " +
-                                                    "  SEX, " +
-                                                    "  BIRTHPLACE " +
+                                                    "FLAG_DPI, " +
+                                                    "FLAG_PAS, " +
+                                                    "FLAG_CED, " +
+                                                    "PROF, " +
+                                                    "EMPLID, " +
+                                                    "FIRST_NAME, " +
+                                                    "SECOND_NAME, " +
+                                                    "LAST_NAME, " +
+                                                    "SECOND_LAST_NAME, " +
+                                                    "CARNE, " +
+                                                    "PHONE, " +
+                                                    "DPI, " +
+                                                    "CEDULA, " +
+                                                    "PASAPORTE, " +
+                                                    "CARRERA, " +
+                                                    "FACULTAD, " +
+                                                    "STATUS, " +
+                                                    "BIRTHDATE, " +
+                                                    "DIRECCION, " +
+                                                    "MUNICIPIO, " +
+                                                    "DEPARTAMENTO, " +
+                                                    "SEX, " +
+                                                    "PLACE " +
+                                                    "FROM ( " +
+                                                    "SELECT " +
+                                                    "DISTINCT PD.EMPLID, " +
+                                                    "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
+                                                    "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
+                                                    "SUBSTR(PD.FIRST_NAME, (INSTR(PD.FIRST_NAME, ' ')+ 1)) SECOND_NAME, " +
+                                                    "PD.LAST_NAME, " +
+                                                    "PD.SECOND_LAST_NAME, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN '1' ELSE '0' END FLAG_DPI, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN '1' ELSE '0' END FLAG_CED, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN '1' ELSE '0' END FLAG_PAS, " +
+                                                    "PPD.PHONE, " +
+                                                    "TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
+                                                    "APD.DESCR CARRERA, " +
+                                                    "AGT.DESCR FACULTAD, " +
+                                                    "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
+                                                    "CASE WHEN (PD.BIRTHPLACE = ' ' AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (PD.BIRTHPLACE = ' ' AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE PD.BIRTHPLACE END PLACE," +
+                                                    "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'Sin Información' END STATUS, " +
+                                                    "(select A1.ADDRESS1 || ' ' || A1.ADDRESS2 || ' ' || A1.ADDRESS3 || ' ' || A1.ADDRESS4 from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                                                    "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
+                                                    "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
+                                                    "'ESTUDIANTE' PROF " +
                                                     "FROM " +
-                                                    "  ( " +
-                                                    "    SELECT DISTINCT " +
-                                                    "      PD.EMPLID, " +
-                                                    "      (SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID " +
-                                                    "      ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
-                                                    "      REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
-                                                    "      SUBSTR( " +
-                                                    "        PD.FIRST_NAME, " +
-                                                    "        ( " +
-                                                    "          INSTR(PD.FIRST_NAME, ' ')+ 1 " +
-                                                    "        ) " +
-                                                    "      ) SECOND_NAME, " +
-                                                    "      PD.LAST_NAME, " +
-                                                    "      PD.SECOND_LAST_NAME, " +
-                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
-                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN '1' ELSE '0' END FLAG_DPI, " +
-                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
-                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN '1' ELSE '0' END FLAG_CED, " +
-                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE, " +
-                                                    "      CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN '1' ELSE '0' END FLAG_PAS, " +
-                                                    "      PPD.PHONE, " +
-                                                    "      TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
-                                                    "      APD.DESCR CARRERA, " +
-                                                    "      AGT.DESCR FACULTAD, " +
-                                                    "      CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
-                                                    "      PD.BIRTHPLACE, " +
-                                                    "      CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'Sin Información' END STATUS, " +
-                                                    "      (select A1.ADDRESS1 || ' ' || A1.ADDRESS2 || ' ' || A1.ADDRESS3 || ' ' || A1.ADDRESS4 from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID " +
-                                                    "        ORDER BY CASE WHEN A1.ADDRESS_TYPE ='HOME' THEN 1 WHEN A1.ADDRESS_TYPE='HM' THEN 2 ELSE 3 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
-                                                    "      REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
-                                                    "      SUBSTR( " +
-                                                    "        ST.DESCR, " +
-                                                    "        ( " +
-                                                    "          INSTR(ST.DESCR, '-') + 1 " +
-                                                    "        ) " +
-                                                    "      ) DEPARTAMENTO,  " +
-                                                    "      'ESTUDIANTE' PROF " +
-                                                    "    FROM " +
-                                                    "      SYSADM.PS_PERS_DATA_SA_VW PD " +
-                                                    "      LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
-                                                    "      LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID=A2.EMPLID AND A.ADDRESS_TYPE=A2.ADDRESS_TYPE) " +
-                                                    "      LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID  " +
-                                                    "      LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE     " +
-                                                    "      JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID=SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E'  AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                                                    "      LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION =CT.INSTITUTION " +
-                                                    "      LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER=APD.ACAD_CAREER AND CT.INSTITUTION=APD.INSTITUTION " +
-                                                    "      LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP  AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                                    "      LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM  AND CT.INSTITUTION = TT.INSTITUTION       " +
-                                                    "      LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                                                    "SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                                    "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                                    "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                                                    "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
+                                                    "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                                                    "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                                                    "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                                                    "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
+                                                    "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
+                                                    "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                                    "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
+                                                    "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                                     where +")"+
                                                     "  WHERE CARNE=DPI OR CARNE=PASAPORTE OR CARNE=CEDULA ORDER BY 5 ASC";
                                 cmd.Connection = con;
@@ -593,7 +581,7 @@ namespace ReportesUnis
                 }
 
                 lblDescarga.Visible = true;
-                lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: "+path;
+                lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
                 //Process.Start(folder);
                 ret = "1";
             }
