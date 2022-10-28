@@ -13,6 +13,7 @@ using System.IO.Compression;
 using NPOI.Util;
 using System.Threading;
 using System.Windows;
+using System.IO.Packaging;
 
 namespace ReportesUnis
 {
@@ -119,40 +120,9 @@ namespace ReportesUnis
         //FUNCION PARA LA GENERACION DE CONSULTA A BD Y ASIGNACION A GRIDVIEW SIN BUSQUEDA
         public void consultaBusqueda()
         {
-            var where = "";
-            string busqueda = LbxBusqueda.Text;
-            if (busqueda.Equals("Nombre"))
-            {
-                where = where = "WHERE FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') ";
-            }
-            else if (LbxBusqueda.Text.Equals("Apellido"))
-            {
-                where = "WHERE LAST_NAME LIKE('%" + TxtBuscador.Text + "%') ";
-
-            }
-            else if (LbxBusqueda.Text.Equals("ID"))
-            {
-                where = "WHERE ID LIKE('%" + TxtBuscador.Text + "%') ";
-
-            }
-            else if (LbxBusqueda.Text.Equals("Departamento"))
-            {
-                where = "WHERE DEPARTAMENTO LIKE('%" + TxtBuscador.Text + "%') ";
-
-            }
-            else if (LbxBusqueda.Text.Equals("Género"))
-            {
-                string buscar = TxtBuscador.Text;
-                string min = buscar.ToLower();
-                if (min.Equals("male"))
-                    where = "WHERE GENDER LIKE('%M%') ";
-                else if (min.Equals("female"))
-                    where = "WHERE GENDER LIKE ('%F%') ";
-                else
-                    where = "WHERE GENDER LIKE ('%Mujer%') ";
-            }
-
+            string where = stringWhere();
             string constr = TxtURL.Text;
+
             try
             {
                 using (OracleConnection con = new OracleConnection(constr))
@@ -215,9 +185,9 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
                                         "AND CT.INSTITUTION = TT.INSTITUTION " +
                                         "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
-                                        ") " +
                                         where +
-                                        "AND  " +
+                                        ") " +
+                                        "WHERE  " +
                                         "(ID = DPI " +
                                         "OR ID = PASAPORTE " +
                                         "OR ID = CEDULA )" +
@@ -505,7 +475,7 @@ namespace ReportesUnis
 
             return input;
         }
-        protected string DownloadAllFile()
+        protected string DownloadAllFile(string where)
         {
             string nombre = "ImagenesEstudiantes" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
             string constr = TxtURL.Text;
@@ -513,35 +483,59 @@ namespace ReportesUnis
             int total = 0;
             DataSetLocalRpt dsDownload = new DataSetLocalRpt();
 
-            for (int k = 0; k < GridViewReporteCT.Rows.Count; k++)
+            using (OracleConnection con = new OracleConnection(constr))
             {
-                using (OracleConnection con = new OracleConnection(constr))
+                using (OracleCommand cmd = new OracleCommand())
                 {
-                    using (OracleCommand cmd = new OracleCommand())
+                    cmd.CommandText = "SELECT * FROM ( " +
+                                        "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension, " +
+                                        "ROW_NUMBER() OVER(PARTITION BY P.EMPLID ORDER BY P.EMPLID) AS CNT " +
+                                        "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                        "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                                        "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                        "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                                        "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                                        "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                                        "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
+                                        "AND SE.STDNT_ENRL_STATUS = 'E' " +
+                                        "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                                        "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID " +
+                                        "AND CT.STRM = SE.STRM " +
+                                        "AND CT.ACAD_CAREER = SE.ACAD_CAREER " +
+                                        "AND SE.INSTITUTION = CT.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
+                                        "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
+                                        "AND CT.INSTITUTION = APD.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
+                                        "AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
+                                        "AND CT.INSTITUTION = TT.INSTITUTION " +
+                                        where +
+                                        "AND employee_photo IS NOT NULL )" +
+                                        "WHERE CNT =1";
+                    //cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + removeUnicode(GridViewReporteCT.Rows[k].Cells[17].Text) + ") AND employee_photo IS NOT NULL ";
+                    cmd.Connection = con;
+                    con.Open();
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows)
                     {
-                        cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + removeUnicode(GridViewReporteCT.Rows[k].Cells[66].Text) + ") AND employee_photo IS NOT NULL ";
-                        cmd.Connection = con;
-                        con.Open();
-                        OracleDataReader reader = cmd.ExecuteReader();
-                        if (reader.HasRows)
+                        DataTable dt = new DataTable();
+                        OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                        adapter.Fill(dt);
+                        foreach (DataRow row in dt.Rows)
                         {
-                            DataTable dt = new DataTable();
-                            OracleDataAdapter adapter = new OracleDataAdapter(cmd);
-                            adapter.Fill(dt);
-                            foreach (DataRow row in dt.Rows)
-                            {
-                                DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
-                                newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
-                                newFila["contentType"] = row["Extension"].ToString();
-                                newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
-                                dsDownload.Tables["AllDownload"].Rows.Add(newFila);
-                                total = total + 1;
-                            }
-                            con.Close();
+                            DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
+                            newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
+                            newFila["contentType"] = row["Extension"].ToString();
+                            newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
+                            dsDownload.Tables["AllDownload"].Rows.Add(newFila);
+                            total = total + 1;
                         }
+                        con.Close();
                     }
                 }
             }
+
 
             if (total > 0)
             {
@@ -571,7 +565,7 @@ namespace ReportesUnis
                         }
                     }
                 }
-
+                lblBusqueda.Text = "";
                 lblDescarga.Visible = true;
                 lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
                 //Process.Start(folder);
@@ -586,11 +580,10 @@ namespace ReportesUnis
 
         protected void BtnImg_Click(object sender, EventArgs e)
         {
-            string emplid = "";
-            int total = 0;
+            string where = stringWhere();
             try
             {
-                string respuesta = DownloadAllFile();
+                string respuesta = DownloadAllFile(where);
                 if (respuesta == "0")
                 {
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
@@ -616,6 +609,44 @@ namespace ReportesUnis
                 name = name + " " + drive.Name;
             }
             return name;
+        }
+
+        public string stringWhere()
+        {
+            var where = "";
+            string busqueda = LbxBusqueda.Text;
+
+            if (busqueda.Equals("Nombre"))
+            {
+                where = where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') ";
+            }
+            else if (LbxBusqueda.Text.Equals("Apellido"))
+            {
+                where = "WHERE PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') ";
+
+            }
+            else if (LbxBusqueda.Text.Equals("ID"))
+            {
+                where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
+
+            }
+            else if (LbxBusqueda.Text.Equals("Departamento"))
+            {
+                where = "WHERE  AGT.DESCR LIKE('%" + TxtBuscador.Text + "%') ";
+
+            }
+            else if (LbxBusqueda.Text.Equals("Género"))
+            {
+                string buscar = TxtBuscador.Text;
+                string min = buscar.ToLower();
+                if (min.Equals("male"))
+                    where = "WHERE PD.SEX LIKE('%M%') ";
+                else if (min.Equals("female"))
+                    where = "WHERE PD.SEX LIKE ('%F%') ";
+                else
+                    where = "WHERE PD.SEX LIKE ('%Mujer%') ";
+            }
+            return where;
         }
     }
 }

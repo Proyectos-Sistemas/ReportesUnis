@@ -1021,7 +1021,7 @@ namespace ReportesUnis
                     }
                     ---------------*/
                 }
-
+                lblBusqueda.Text = "";
                 lblDescarga.Visible = true;
                 lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
                 //Process.Start(folder);
