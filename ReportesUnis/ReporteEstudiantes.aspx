@@ -76,17 +76,6 @@
         <div class="row">
             <div class="col-md-12">
 
-
-                <%-- GRIDVIEW DONDE SE MUESTRA LA INFORMACION DEL REPORTE --%>
-                <div class="containerGV" id="GVContainer2">
-                    <asp:GridView ID="GridVieweMPLID" runat="server"
-                        AutoGenerateColumns="false" CssClass="table table-condensed table-bordered ">
-                        <Columns>
-                            <asp:BoundField DataField="EMPLID" HeaderText="EMPLID" />
-                        </Columns>
-                    </asp:GridView>
-                </div>
-
                 <%-- GRIDVIEW DONDE SE MUESTRA LA INFORMACION DEL REPORTE --%>
                 <div class="containerGV" id="GVContainer">
                     <asp:GridView ID="GridViewReporte" runat="server"

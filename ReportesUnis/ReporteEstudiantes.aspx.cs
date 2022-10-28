@@ -18,6 +18,12 @@ using System.Diagnostics;
 using FileHelpers;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Org.BouncyCastle.Asn1.Mozilla;
+using System.Data.SqlClient;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Org.BouncyCastle.Utilities.Encoders;
+using System.IdentityModel.Protocols.WSTrust;
 
 namespace ReportesUnis
 {
@@ -121,7 +127,7 @@ namespace ReportesUnis
             try
             {
                 if (!String.IsNullOrEmpty(TxtBuscador.Text))
-                {                   
+                {
 
                     if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(lblBusqueda.Text))
                     {
@@ -207,8 +213,6 @@ namespace ReportesUnis
                                 {
                                     GridViewReporte.DataSource = reader;
                                     GridViewReporte.DataBind();
-                                    GridVieweMPLID.DataSource = reader;
-                                    GridVieweMPLID.DataBind();
                                     ChBusqueda.Checked = false;
                                     LbxBusqueda2.Visible = false;
                                     TxtBuscador2.Visible = false;
@@ -260,74 +264,110 @@ namespace ReportesUnis
         //EXPORTACION DE INFORMACION CONTENIDA EN EL GRID A TXT
         protected void btnExport_Click(object sender, EventArgs e)
         {
-            descargaprueba();
-            //string txtFile = string.Empty;
+            try
+            {
+                if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(lblBusqueda.Text))
+                {
+                    string where = stringWhere();
+                    string constr = TxtURL.Text;
+                    string txtFile = "IDUNIV|NOM_IMP|NOM1|NOM2|APE1|APE2|APE3|FE_NAC|SEXO|EST_CIV|NACIONAL|FLAG_CED|CEDULA|DEPCED|MUNCED|FLAG_DPI|DPI|FLAG_PAS|PASS|PAIS_PAS|NIT|PAIS_NIT|PROF|DIR|CASA|APTO|ZONA|COL|MUNRES|DEPRES|TEL|CEL|EMAIL|CARNET|CARR|FACUL|COD_EMP_U|PUESTO|DEP_EMP_U|COD_BARRAS|TIP_PER|ACCION|FOTO|TIPO_CTA|NO_CTA_BI|F_U|H_U|TIP_ACC|EMP_TRAB|FEC_IN_TR|ING_TR|EGR_TR|MONE_TR|PUESTO_TR|LUG_EMP|FE_IN_EMP|TEL_TR|DIR_TR|ZONA_TR|DEP_TR|MUNI_TR|PAIS_TR|ACT_EC|OTRA_NA|CONDMIG|O_CONDMIG";
+                    txtFile += "\r\n";
+                    var dt = new DataTable();
+                    using (OracleConnection con = new OracleConnection(constr))
+                    {
+                        using (OracleCommand cmd = new OracleCommand())
+                        {
+                            cmd.CommandText =
+                            "SELECT '|' || '|' || FIRST_NAME || '|' || SECOND_NAME || '|' || LAST_NAME || '|' || '|' ||" +
+                            " SECOND_LAST_NAME || '|' || BIRTHDATE || '|' || SEX || '|' || STATUS || '|' || PLACE || '|' ||" +
+                            " FLAG_CED || '|' || CEDULA || '|' || '|' || '|' || FLAG_DPI || '|' || DPI || '|' || FLAG_PAS ||" +
+                            " '|' || PASAPORTE || '|' || '|' || '|' || '|' || PROF || '|' || DIRECCION || '|' || '|' || '|' ||" +
+                            " '|' || '|' || MUNICIPIO || '|' || DEPARTAMENTO || '|' || PHONE || '|' || '|' || '|' || CARNE || '|' ||" +
+                            " CARRERA || '|' || FACULTAD || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
+                            " '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
+                            " '|' || '|' || '|' || '|' || '|' || '|'" +
+                            "FROM ( " +
+                            "SELECT " +
+                            "DISTINCT PD.EMPLID, " +
+                            "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
+                            "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
+                            "SUBSTR(PD.FIRST_NAME,  LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))+2, LENGTH(PD.FIRST_NAME)-LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))) SECOND_NAME, " +
+                            "PD.LAST_NAME, " +
+                            "PD.SECOND_LAST_NAME, " +
+                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
+                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN '1' ELSE '0' END FLAG_DPI, " +
+                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
+                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN '1' ELSE '0' END FLAG_CED, " +
+                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE, " +
+                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN '1' ELSE '0' END FLAG_PAS, " +
+                            "PPD.PHONE, " +
+                            "TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
+                            "APD.DESCR CARRERA, " +
+                            "AGT.DESCR FACULTAD, " +
+                            "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
+                            "CASE WHEN (PD.BIRTHPLACE = ' ' AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (PD.BIRTHPLACE = ' ' AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE PD.BIRTHPLACE END PLACE," +
+                            "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'Sin Información' END STATUS, " +
+                            "(select A1.ADDRESS1 || ' ' || A1.ADDRESS2 || ' ' || A1.ADDRESS3 || ' ' || A1.ADDRESS4 from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                            "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
+                            "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
+                            "'ESTUDIANTE' PROF " +
+                            "FROM " +
+                            "SYSADM.PS_PERS_DATA_SA_VW PD " +
+                            "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                            "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                            "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
+                            "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                            "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                            "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                            "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
+                            "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
+                            "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
+                            "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
+                            "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                            where + ")" +
+                            "  WHERE CARNE=DPI OR CARNE=PASAPORTE OR CARNE=CEDULA ORDER BY 1 ASC";
+                            cmd.Connection = con;
+                            con.Open();
 
-            //for (int k = 0; k < GridViewReporte.Columns.Count - 1; k++)
-            //{
-            //    string texto = removeUnicode(GridViewReporte.Columns[k].ToString());
-            //    if (k != GridViewReporte.Columns.Count - 2)
-            //        txtFile += texto + "|";
-            //    else
-            //        txtFile += texto;
-            //}
-
-            //txtFile += "\r\n";
-
-            ////Llenado de las columnas con la informacion
-
-            //int ret = 0;
-            //for (int j = 0; j < GridViewReporte.Rows.Count; j++)
-            //{
-            //    int aux = 0;
-            //    for (int i = 0; i < GridViewReporte.Columns.Count - 1; i++)
-            //    {
-            //        string texto = removeUnicode(GridViewReporte.Rows[j].Cells[i].Text);
-            //        texto = texto.TrimEnd();
-            //        if (i != GridViewReporte.Columns.Count - 2)
-            //            txtFile += texto + "|";
-            //        else
-            //            txtFile += texto;
-
-            //        if (texto != "" && ret == 0)
-            //        {
-            //            aux = 0;
-            //        }
-            //        else if (aux < GridViewReporte.Columns.Count - 2)
-            //        {
-            //            aux = aux + 1;
-
-            //        }
-            //        else
-            //        {
-            //            ret = 1;
-            //            j = GridViewReporte.Rows.Count + 2;
-            //            i = GridViewReporte.Columns.Count + 2;
-            //        }
-            //    }
-            //    txtFile += "\r\n";
-            //}
-
-
-            ////SE GENERA EL ARCHIVO
-            //if (ret == 0)
-            //{
-            //    Response.Clear();
-            //    Response.Buffer = true;
-            //    string FileName = "Reporte Estudiantes" + DateTime.Now + ".txt";
-            //    Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-            //    Response.Charset = "";
-            //    Response.ContentType = "application/text";
-            //    Response.Output.Write(txtFile);
-            //    Response.Flush();
-            //    Response.End();
-            //}
-            //else
-            //{
-            //    lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
-            //}
-
-            //DownloadAllFile(emplid, total);
+                            OracleDataReader reader = cmd.ExecuteReader();
+                            OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                            if (reader.HasRows)
+                            {
+                                adapter.Fill(dt);
+                                int contador = dt.Rows.Count - 1;
+                                //string rows = dt.Rows[0].ToString();
+                                for (int i = 0; i < contador; i++)
+                                {
+                                    txtFile = txtFile + dt.Rows[i].ItemArray[0].ToString();
+                                    txtFile += "\r\n";
+                                }
+                            }
+                            else
+                            {
+                                lblBusqueda.Text = "No se encontró información con los valores ingresados";
+                            }
+                            con.Close();
+                        }
+                    }
+                    Response.Clear();
+                    Response.Buffer = true;
+                    string FileName = "Reporte Estudiantes" + DateTime.Now + ".txt";
+                    Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+                    Response.Charset = "";
+                    Response.ContentType = "application/text";
+                    Response.Output.Write(txtFile);
+                    Response.Flush();
+                    Response.End();
+                }
+                else
+                {
+                    lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
+                }
+            }
+            catch
+            {
+                lblBusqueda.Text = "Ha ocurido un error";
+            }
         }
         public static string removeUnicode(string input)
         {
@@ -441,10 +481,10 @@ namespace ReportesUnis
 
             //for (int k = 0; k < GridViewReporte.Rows.Count; k++)
             //{
-                using (OracleConnection con = new OracleConnection(constr))
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                using (OracleCommand cmd = new OracleCommand())
                 {
-                    using (OracleCommand cmd = new OracleCommand())
-                    {
                     cmd.CommandText = "SELECT * FROM ( " +
                                         "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension, " +
                                         "ROW_NUMBER() OVER(PARTITION BY P.EMPLID ORDER BY P.EMPLID) AS CNT " +
@@ -462,28 +502,27 @@ namespace ReportesUnis
                                         where +
                                         "AND employee_photo IS NOT NULL " +
                                         ")WHERE CNT =1";
-                        //cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + removeUnicode(GridViewReporte.Rows[k].Cells[66].Text) + ") AND employee_photo IS NOT NULL ";
-                        cmd.Connection = con;
-                        con.Open();
-                        OracleDataReader reader = cmd.ExecuteReader();
-                        if (reader.HasRows)
+                    cmd.Connection = con;
+                    con.Open();
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        DataTable dt = new DataTable();
+                        OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                        adapter.Fill(dt);
+                        foreach (DataRow row in dt.Rows)
                         {
-                            DataTable dt = new DataTable();
-                            OracleDataAdapter adapter = new OracleDataAdapter(cmd);
-                            adapter.Fill(dt);
-                            foreach (DataRow row in dt.Rows)
-                            {
-                                DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
-                                newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
-                                newFila["contentType"] = row["Extension"].ToString();
-                                newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
-                                dsDownload.Tables["AllDownload"].Rows.Add(newFila);
-                                total = total + 1;
-                            }
-                            con.Close();
+                            DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
+                            newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
+                            newFila["contentType"] = row["Extension"].ToString();
+                            newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
+                            dsDownload.Tables["AllDownload"].Rows.Add(newFila);
+                            total = total + 1;
                         }
+                        con.Close();
                     }
                 }
+            }
             //}
 
             if (total > 0)
@@ -517,7 +556,6 @@ namespace ReportesUnis
                 lblBusqueda.Text = "";
                 lblDescarga.Visible = true;
                 lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
-                //Process.Start(folder);
                 ret = "1";
             }
             else
@@ -638,7 +676,7 @@ namespace ReportesUnis
         {
             List<Item> Items = new List<Item>();
 
-            
+
             foreach (GridViewRow row in GridViewReporte.Rows)
             {
                 Item _item = new Item()
