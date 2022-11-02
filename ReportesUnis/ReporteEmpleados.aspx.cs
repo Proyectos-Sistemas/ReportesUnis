@@ -21,6 +21,7 @@ using System.EnterpriseServices;
 using Microsoft.Reporting.Map.WebForms.BingMaps;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Diagnostics;
+using NPOI.HSSF.Record;
 
 namespace ReportesUnis
 {
@@ -1195,7 +1196,7 @@ namespace ReportesUnis
                                         }
                                         newFila["Cedula"] = (arrlist[i, 19] ?? "").ToString();
                                         newFila["NIT"] = (arrlist[i, 20] ?? "").ToString();
-                                        
+
                                         if ((arrlist[i, 21] ?? "").ToString() == "-" && flag_pas == 1)
                                         {
                                             newFila["Nacionalidad"] = "Condición Migrante";
@@ -1307,52 +1308,343 @@ namespace ReportesUnis
 
         protected void btnExport_Click(object sender, EventArgs e)
         {
-            string txtFile = string.Empty;
-
-            for (int k = 0; k < GridViewReporte.Columns.Count - 1; k++)
-            {
-                string texto = removeUnicode(GridViewReporte.Columns[k].ToString());
-                if (k != GridViewReporte.Columns.Count - 2)
-                    txtFile += texto + "|";
-                else
-                    txtFile += texto;
-            }
-
+            string txtFile = "IDUNIV|NOM_IMP|NOM1|NOM2|APE1|APE2|APE3|FE_NAC|SEXO|EST_CIV|NACIONAL|FLAG_CED|CEDULA|DEPCED|MUNCED|FLAG_DPI|DPI|FLAG_PAS|PASS|PAIS_PAS|NIT|PAIS_NIT|PROF|DIR|CASA|APTO|ZONA|COL|MUNRES|DEPRES|TEL|CEL|EMAIL|CARNET|CARR|FACUL|COD_EMP_U|PUESTO|DEP_EMP_U|COD_BARRAS|TIP_PER|ACCION|FOTO|TIPO_CTA|NO_CTA_BI|F_U|H_U|TIP_ACC|EMP_TRAB|FEC_IN_TR|ING_TR|EGR_TR|MONE_TR|PUESTO_TR|LUG_EMP|FE_IN_EMP|TEL_TR|DIR_TR|ZONA_TR|DEP_TR|MUNI_TR|PAIS_TR|ACT_EC|OTRA_NA|CONDMIG|O_CONDMIG|";
             txtFile += "\r\n";
 
             //Llenado de las columnas con la informacion
 
             int ret = 0;
-            for (int j = 0; j < GridViewReporte.Rows.Count; j++)
-            {
-                int aux = 0;
-                for (int i = 0; i < GridViewReporte.Columns.Count - 1; i++)
+            
+                if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(LbxBusqueda2.Text) || !String.IsNullOrEmpty(CldrCiclosFin.Text) || !String.IsNullOrEmpty(CldrCiclosFin.Text))
                 {
-                    string texto = removeUnicode(GridViewReporte.Rows[j].Cells[i].Text);
-                    texto = texto.TrimEnd();
-                    if (i != GridViewReporte.Columns.Count - 2)
-                        txtFile += texto + "|";
-                    else
-                        txtFile += texto;
+                    {
+                        GridViewReporte.DataSource = "";
+                        if (!ChBusqueda.Checked)
+                        {
+                            LbxBusqueda2.Text = "";
+                        }
+                        string[] result = sustituirCaracteres("").Split('|');
+                        decimal registros = 0;
+                        decimal count = 0;
+                        int datos = 0;
+                        string[,] arrlist;
 
-                    if (texto != "" && ret == 0)
-                    {
-                        aux = 0;
-                    }
-                    else if (aux < GridViewReporte.Columns.Count - 2)
-                    {
-                        aux = aux + 1;
+                        if (result.Count() > 20)
+                        {
+                            if (!ChBusqueda.Checked)
+                            {
+                                //Busqueda simple por Nombre, Apellido, DPI o dependencia
+                                registros = result.Count() / 24;
+                                count = Math.Round(registros, 0);
+                                if (registros == 0)
+                                    count = 1;
+                                arrlist = new string[Convert.ToInt32(count), 24];
+                                if (result.Count() > 23)
+                                {
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        for (int k = 0; k < 24; k++)
+                                        {
+                                            arrlist[i, k] = result[datos];
+                                            datos++;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //Busqueda multiple por asignacion
+                                registros = result.Count() / 25;
+                                count = Math.Round(registros, 0);
+                                arrlist = new string[Convert.ToInt32(count), 25];
+                                if (registros == 0)
+                                    count = 1;
+                                for (int i = 0; i < count; i++)
+                                {
+                                    for (int k = 0; k < 25; k++)
+                                    {
+                                        arrlist[i, k] = result[datos];
+                                        datos++;
+                                    }
+                                }
+                            }
 
+                            try
+                            {
+                                var bday = "";
+                                var dia = "";
+                                var mes = "";
+                                var anio = "";
+                                int flag_pas = 0;
+                                var nacionalidad = "";
+                                var Pasaporte = "";
+                                var FLAG_PAS = "";
+                                var FLAG_DPI = "";
+                                var DPI = "";
+
+                                DataSetLocalRpt dsReporte = new DataSetLocalRpt();
+                                try
+                                {
+                                    string texto = "";
+                                    int aux = 100;
+                                    //Valida si no se hace busqueda multiple
+                                    if (!ChBusqueda.Checked && aux == 100)
+                                    {
+                                        //Generacion de matriz para llenado de grid desde una consulta
+                                        for (int i = 0; i < count; i++)
+                                        {
+                                            if (!arrlist[i, 7].ToString().Equals(""))
+                                            {
+                                                bday = arrlist[i, 7].ToString().Substring(0, 10);
+                                                anio = bday.Substring(0, 4);
+                                                mes = bday.Substring(5, 2);
+                                                dia = bday.Substring(8, 2);
+                                                bday = dia + "-" + mes + "-" + anio;
+                                            }
+                                            else
+                                            {
+                                                bday = "Unknown";
+                                            }
+                                            if ((arrlist[i, 21] ?? "").ToString() == "-" && flag_pas == 1)
+                                            {
+                                                nacionalidad = "Condición Migrante";
+                                            }
+                                            else
+                                            {
+                                                nacionalidad = (arrlist[i, 21] ?? "").ToString();
+
+                                            }
+
+                                            if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 17] ?? "").ToString())
+                                            {
+                                                Pasaporte = "";
+                                                FLAG_PAS = "0";
+                                                FLAG_DPI = "1";
+                                                DPI = (arrlist[i, 3] ?? "").ToString();
+                                            }
+                                            else
+                                            {
+                                                Pasaporte = (arrlist[i, 18] ?? "").ToString();
+                                                FLAG_PAS = "1";
+                                                FLAG_DPI = "0";
+                                                DPI = "";
+                                                flag_pas = 1;
+                                            }
+
+                                            texto = "|" + //IDUNIV
+                                            (arrlist[i, 11] ?? "").ToString() + " " + (arrlist[i, 13] ?? "").ToString() + "|" + //NOM_IMP
+                                            (arrlist[i, 11] ?? "").ToString() + "|" +//NOM1
+                                            (arrlist[i, 12] ?? "").ToString() + "|" +//NOM2
+                                            (arrlist[i, 13] ?? "").ToString() + "|" +//APE1
+                                            (arrlist[i, 14] ?? "").ToString() + "|" +//APE2
+                                            (arrlist[i, 15] ?? "").ToString() + "|" +//APE3
+                                            bday + "|" +//FE_NAC
+                                            (arrlist[i, 16] ?? "").ToString() + "|" +//SEXO
+                                            (arrlist[i, 6] ?? "").ToString() + "|" +//EST_CIV
+                                            nacionalidad + "|" +//NACIONALIDAD
+                                            "0|" +//FLAG_CED
+                                            (arrlist[i, 19] ?? "").ToString() + "|" +//CEDULA
+                                            "|" +//DEPCED
+                                            "|" +//MUNCED
+                                            FLAG_DPI + "|" +//FLAG_DPI
+                                            DPI + "|" +//DPI
+                                            FLAG_PAS + "|" +//FLAG_PAS
+                                            Pasaporte + "|" +//PASS
+                                            "|" +//PAIS_PAS
+                                            (arrlist[i, 20] ?? "").ToString() + "|" +//NIT
+                                            "|" +//PASI_NIT
+                                            "|" +//PROF
+                                            (arrlist[i, 8] ?? "").ToString() + "|" +//DIRECCION
+                                            "|" +//CASA
+                                            "|" +//APTO
+                                            "|" +//ZONA
+                                            "|" +//COL
+                                            (arrlist[i, 9] ?? "").ToString() + "|" +//MUNRES
+                                            (arrlist[i, 10] ?? "").ToString() + "|" +//DEPRES
+                                            "|" +//TEL
+                                            (arrlist[i, 5] ?? "").ToString() + "|" +//CEL
+                                            "|" +//EMAIL
+                                            (arrlist[i, 17] ?? "").ToString() + "|" +//CARNE
+                                            "|" +//CARR
+                                            (arrlist[i, 4] ?? "").ToString() + "|" +//FACUL                                         
+                                            "|" +//COD_EMP_U
+                                            "|" +//PUESTO
+                                            "|" +//DEP_EMP_U
+                                            "|" +//COD_BARRAS
+                                            "|" +//TIP_PER
+                                            "|" +//ACCION
+                                            "|" +//FOTO
+                                            "|" +//TIPO_CTA
+                                            "|" +//NO_CTA_BI
+                                            "|" +//F_U
+                                            "|" +//H_U
+                                            "|" +//TIP_ACC
+                                            "|" +//EMP_TRAB
+                                            "|" +//FEC_IN_TR
+                                            "|" +//ING_TR
+                                            "|" +//EGR_TR
+                                            "|" +//MONE_TR
+                                            "|" +//PUESTO_TR
+                                            "|" +//LUG_EMP
+                                            "|" +//FE_IN_EMP
+                                            "|" +//TEL_TR
+                                            "|" +//DIR_TR
+                                            "|" +//ZONA_TR
+                                            "|" +//DEP_TR
+                                            "|" +//MUNI_TR
+                                            "|" +//PAIS_TR
+                                            "|" +//ACT_EC
+                                            "|" +//OTRA_NA
+                                            "|" +//CONDMIG
+                                            "|";//O_CONDMIG
+                                            txtFile += texto;
+                                            txtFile += "\r\n";
+                                        }
+                                        aux = 500;
+                                    }
+                                    else if (ChBusqueda.Checked && aux == 100)
+                                    {
+                                        for (int i = 0; i < count; i++)
+                                        {
+                                            if (!arrlist[i, 8].ToString().Equals(""))
+                                            {
+                                                bday = arrlist[i, 8].ToString().Substring(0, 10);
+                                                anio = bday.Substring(0, 4);
+                                                mes = bday.Substring(5, 2);
+                                                dia = bday.Substring(8, 2);
+                                                bday = dia + "-" + mes + "-" + anio;
+                                            }
+                                            else
+                                            {
+                                                bday = "Unknown";
+                                            }
+                                            if ((arrlist[i, 22] ?? "").ToString() == "-" && flag_pas == 1)
+                                            {
+                                                nacionalidad = "Condición Migrante";
+                                            }
+                                            else
+                                            {
+                                                nacionalidad = (arrlist[i, 22] ?? "").ToString();
+
+                                            }
+
+                                            if ((arrlist[i, 4] ?? "").ToString() == (arrlist[i, 18] ?? "").ToString())
+                                            {
+                                                Pasaporte = "";
+                                                FLAG_PAS = "0";
+                                                FLAG_DPI = "1";
+                                                DPI = (arrlist[i, 4] ?? "").ToString();
+                                            }
+                                            else
+                                            {
+                                                Pasaporte = (arrlist[i, 19] ?? "").ToString();
+                                                FLAG_PAS = "1";
+                                                FLAG_DPI = "0";
+                                                DPI = "";
+                                                flag_pas = 1;
+                                            }
+
+                                            texto = "|" + //IDUNIV
+                                            (arrlist[i, 12] ?? "").ToString() + " " + (arrlist[i, 14] ?? "").ToString() + "|" + //NOM_IMP
+                                            (arrlist[i, 12] ?? "").ToString() + "|" +//NOM1
+                                            (arrlist[i, 13] ?? "").ToString() + "|" +//NOM2
+                                            (arrlist[i, 14] ?? "").ToString() + "|" +//APE1
+                                            (arrlist[i, 15] ?? "").ToString() + "|" +//APE2
+                                            (arrlist[i, 16] ?? "").ToString() + "|" +//APE3
+                                            bday + "|" +//FE_NAC
+                                            (arrlist[i, 17] ?? "").ToString() + "|" +//SEXO
+                                            (arrlist[i, 7] ?? "").ToString() + "|" +//EST_CIV
+                                            nacionalidad + "|" +//NACIONALIDAD
+                                            "0|" +//FLAG_CED
+                                            (arrlist[i, 20] ?? "").ToString() + "|" +//CEDULA
+                                            "|" +//DEPCED
+                                            "|" +//MUNCED
+                                            FLAG_DPI + "|" +//FLAG_DPI
+                                            DPI + "|" +//DPI
+                                            FLAG_PAS + "|" +//FLAG_PAS
+                                            Pasaporte + "|" +//PASS
+                                            "|" +//PAIS_PAS
+                                            (arrlist[i, 21] ?? "").ToString() + "|" +//NIT
+                                            "|" +//PASI_NIT
+                                            "|" +//PROF
+                                            (arrlist[i, 9] ?? "").ToString() + "|" +//DIRECCION
+                                            "|" +//CASA
+                                            "|" +//APTO
+                                            "|" +//ZONA
+                                            "|" +//COL
+                                            (arrlist[i, 10] ?? "").ToString() + "|" +//MUNRES
+                                            (arrlist[i, 11] ?? "").ToString() + "|" +//DEPRES
+                                            "|" +//TEL
+                                            (arrlist[i, 6] ?? "").ToString() + "|" +//CEL
+                                            "|" +//EMAIL
+                                            (arrlist[i, 18] ?? "").ToString() + "|" +//CARNE
+                                            "|" +//CARR
+                                            (arrlist[i, 5] ?? "").ToString() + "|" +//FACUL                                         
+                                            "|" +//COD_EMP_U
+                                            "|" +//PUESTO
+                                            "|" +//DEP_EMP_U
+                                            "|" +//COD_BARRAS
+                                            "|" +//TIP_PER
+                                            "|" +//ACCION
+                                            "|" +//FOTO
+                                            "|" +//TIPO_CTA
+                                            "|" +//NO_CTA_BI
+                                            "|" +//F_U
+                                            "|" +//H_U
+                                            "|" +//TIP_ACC
+                                            "|" +//EMP_TRAB
+                                            "|" +//FEC_IN_TR
+                                            "|" +//ING_TR
+                                            "|" +//EGR_TR
+                                            "|" +//MONE_TR
+                                            "|" +//PUESTO_TR
+                                            "|" +//LUG_EMP
+                                            "|" +//FE_IN_EMP
+                                            "|" +//TEL_TR
+                                            "|" +//DIR_TR
+                                            "|" +//ZONA_TR
+                                            "|" +//DEP_TR
+                                            "|" +//MUNI_TR
+                                            "|" +//PAIS_TR
+                                            "|" +//ACT_EC
+                                            "|" +//OTRA_NA
+                                            "|" +//CONDMIG
+                                            "|";//O_CONDMIG
+                                            txtFile += texto;
+                                            txtFile += "\r\n";
+                                            i = 11;
+                                        }
+                                        aux = 500;
+                                    }
+                                    else
+                                    {
+                                        ret = 1;
+                                    }
+                                }
+                                catch (Exception x)
+                                {
+                                    Console.WriteLine(x.ToString());
+                                }
+                            }
+                            catch (Exception x)
+                            {
+                                Console.WriteLine(x.ToString());
+                            }
+                            lblBusqueda.Text = " ";
+                        }
+                        else
+                        {
+                            lblBusqueda.Text = "No se encontró información con los valores ingresados";
+                        }
                     }
-                    else
-                    {
-                        ret = 1;
-                        j = GridViewReporte.Rows.Count + 2;
-                        i = GridViewReporte.Columns.Count + 2;
-                    }
+                    ret = 0;
+
                 }
-                txtFile += "\r\n";
-            }
+                else
+                {
+                    lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
+                    ret = 1;
+                }
 
             //SE GENERA EL ARCHIVO
             if (ret == 0)
@@ -1549,8 +1841,8 @@ namespace ReportesUnis
                     ---------------*/
                 }
                 lblBusqueda.Text = "";
-                lblDescarga.Visible = true;                
-                lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href="+path+">"+ path + "</a>" ;
+                lblDescarga.Visible = true;
+                lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
                 ret = "1";
             }
             else

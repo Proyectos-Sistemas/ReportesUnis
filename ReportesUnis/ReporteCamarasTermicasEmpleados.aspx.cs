@@ -811,32 +811,19 @@ namespace ReportesUnis
                                 datos++;
                             }
                         }
-                        //for (int k = 0; k < 17; k++)
-                        //{
                         int contador = GridViewReporteCT.Rows.Count;
                         for (int i = 0; i < contador; i++)
                         {
-                            //string rows = dt.Rows[0].ToString();
-                            //for (int j = 1; j < 18; j++)
-                            //{
-                            sl.SetCellValue("A" + celda, (arrlist[i, 1] ?? "").ToString());
-                            //k++;
-                            sl.SetCellValue("B" + celda, (arrlist[i, 2] ?? "").ToString());
-                            //k++;
-                            sl.SetCellValue("C" + celda, (arrlist[i, 3] ?? "").ToString());
-                            //k++;
-                            sl.SetCellValue("D" + celda, "");
-                            //k++;
-                            sl.SetCellValue("E" + celda, (arrlist[i, 4] ?? "").ToString());
-                            //k++;
-                            sl.SetCellValue("F" + celda, (arrlist[i, 9] ?? "").ToString());
-                            //k++;
-                            sl.SetCellValue("G" + celda, "");
-                            //k++;
-                            sl.SetCellValue("H" + celda, "");
-                            //k++;
-                            sl.SetCellValue("I" + celda, "");
-                            //k++;
+                            
+                            sl.SetCellValue("A" + celda, (arrlist[i, 1] ?? "").ToString());                            
+                            sl.SetCellValue("B" + celda, (arrlist[i, 2] ?? "").ToString());                            
+                            sl.SetCellValue("C" + celda, (arrlist[i, 3] ?? "").ToString());                            
+                            sl.SetCellValue("D" + celda, "");                            
+                            sl.SetCellValue("E" + celda, (arrlist[i, 4] ?? "").ToString());                            
+                            sl.SetCellValue("F" + celda, (arrlist[i, 9] ?? "").ToString());                            
+                            sl.SetCellValue("G" + celda, "");                            
+                            sl.SetCellValue("H" + celda, "");                            
+                            sl.SetCellValue("I" + celda, "");                            
                             if (arrlist[i, 10].ToString() != "-")
                             {
                                 int busqueda = 29;
@@ -848,24 +835,15 @@ namespace ReportesUnis
                             {
                                 sl.SetCellValue("J" + celda, "");
                             }
-                            //k++;
-                            sl.SetCellValue("K" + celda, (arrlist[i, 7] ?? "").ToString());
-                            //k++;
-                            sl.SetCellValue("L" + celda, "");
-                            //k++;
-                            sl.SetCellValue("M" + celda, "");
-                            //k++;
-                            sl.SetCellValue("N" + celda, "");
-                            //k++;
-                            sl.SetCellValue("O" + celda, "");
-                            //k++;
-                            sl.SetCellValue("P" + celda, "");
-                            //k++;
-                            sl.SetCellValue("Q" + celda, (arrlist[i, 8] ?? "").ToString());
-                            //k++;
+                            
+                            sl.SetCellValue("K" + celda, (arrlist[i, 7] ?? "").ToString());                            
+                            sl.SetCellValue("L" + celda, "");                            
+                            sl.SetCellValue("M" + celda, "");                            
+                            sl.SetCellValue("N" + celda, "");                            
+                            sl.SetCellValue("O" + celda, "");                            
+                            sl.SetCellValue("P" + celda, "");                            
+                            sl.SetCellValue("Q" + celda, (arrlist[i, 8] ?? "").ToString());                            
                             celda++;
-                            //}
-                            //}
                         }
                         if (result.Count() > 3)
                         {
