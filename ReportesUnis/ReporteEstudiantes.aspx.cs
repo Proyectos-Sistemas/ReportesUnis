@@ -335,7 +335,6 @@ namespace ReportesUnis
                             {
                                 adapter.Fill(dt);
                                 int contador = dt.Rows.Count - 1;
-                                //string rows = dt.Rows[0].ToString();
                                 for (int i = 0; i < contador; i++)
                                 {
                                     txtFile = txtFile + dt.Rows[i].ItemArray[0].ToString();
