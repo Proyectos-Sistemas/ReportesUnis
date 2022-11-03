@@ -526,6 +526,7 @@ namespace ReportesUnis
             else if (aux == 3)
             {
                 int mun = CmbMunicipio.Text.Length + 24;
+                if(sustituto.Length > mun)
                 sustituto = sustituto.Remove(0, mun);
             }
             else if (aux == 5)
@@ -949,7 +950,7 @@ namespace ReportesUnis
                             string consultaperfil = "\"PrimaryFlag\" : ";
                             string perfil = getBetween(consulta, consultaperfil, ",\n");
                             var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
-                            if (perfil == "true")
+                            if (perfil == "true" && !String.IsNullOrEmpty(ImageId))
                             {
                                 updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
                                 mensajeValidacion = "y la fotografía se actualizó correctamente en HCM.";

@@ -413,49 +413,61 @@ namespace ReportesUnis
                     string[] result = sustituirCaracteres(NombreImagen).Split('|');
                     if (ExtensionesPermitidas.Contains(ExtensionFotografia))
                     {
-                        string expand = "legislativeInfo,phones,addresses,photos";
-                        string consulta = consultaGetworkers(expand, NombreImagen.Length, result[11]);
-
-                        //Se obtienen los datos de las tablas a las cuales se les agregará información
-                        string personId = getBetween(consulta, "workers/", "/child/");
-                        string comIm = personId + "/child/photo/";
-                        string consultaImagenes = consultaGetImagenes(comIm, NombreImagen.Length, result[11]);
-                        string PhotoId = getBetween(consulta, "\"PhotoId\" : ", ",\n");
-                        string ImageId = getBetween(consultaImagenes, "\"ImageId\" : ", ",\n");
-
-                        using (Stream fs = uploadedFile.InputStream)
+                        try
                         {
-                            using (BinaryReader br = new BinaryReader(fs))
+                            string expand = "legislativeInfo,phones,addresses,photos";
+                            string consulta = consultaGetworkers(expand, NombreImagen.Length, result[11]);
+
+                            //Se obtienen los datos de las tablas a las cuales se les agregará información
+                            string personId = getBetween(consulta, "workers/", "/child/");
+                            string comIm = personId + "/child/photo/";
+                            string consultaImagenes = consultaGetImagenes(comIm, NombreImagen.Length, result[11]);
+                            string PhotoId = getBetween(consulta, "\"PhotoId\" : ", ",\n");
+                            string ImageId = getBetween(consultaImagenes, "\"ImageId\" : ", ",\n");
+
+                            using (Stream fs = uploadedFile.InputStream)
                             {
-                                try
+                                using (BinaryReader br = new BinaryReader(fs))
                                 {
-                                    byte[] Imagen = br.ReadBytes((Int32)fs.Length);
-                                    string b64 = Convert.ToBase64String(Imagen, 0, Imagen.Length);
-                                    string consultaperfil = "\"PrimaryFlag\" : ";
-                                    string perfil = getBetween(consulta, consultaperfil, ",\n");
-                                    var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
-                                    if (perfil == "true")
+                                    try
                                     {
-                                        updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
-                                        mensajeValidacion = "La fotografía se actualizó correctamente en HCM.";
+                                        byte[] Imagen = br.ReadBytes((Int32)fs.Length);
+                                        string b64 = Convert.ToBase64String(Imagen, 0, Imagen.Length);
+                                        string consultaperfil = "\"PrimaryFlag\" : ";
+                                        string perfil = getBetween(consulta, consultaperfil, ",\n");
+                                        var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
+                                        if (perfil == "true")
+                                        {
+                                            updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
+                                            mensajeValidacion = "La fotografía se actualizó correctamente en HCM.";
+                                        }
+                                        else
+                                        {
+                                            createPhoto(personId, "photo", Imgn);
+                                            mensajeValidacion = "La fotografía se creó correctamente en HCM.";
+                                        }
+                                        GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "  " + NombreImagen.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
+                                        ContadorArchivosCorrectos++;
                                     }
-                                    else
+                                    catch (Exception ex)
                                     {
-                                        createPhoto(personId, "photo", Imgn);
-                                        mensajeValidacion = "La fotografía se creó correctamente en HCM.";
+                                        mensajeValidacion = "Error con la base de datos de HCM, no se registró la fotografía en HCM. " + ex.Message;
+                                        GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                        if (Error == false)
+                                        {
+                                            ContadorArchivosConError++;
+                                        }
                                     }
-                                    GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "  " + NombreImagen.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
-                                    ContadorArchivosCorrectos++;
                                 }
-                                catch (Exception ex)
-                                {
-                                    mensajeValidacion = "Error con la base de datos de HCM, no se registró la fotografía en HCM. " + ex.Message;
-                                    GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
-                                    if (Error == false)
-                                    {
-                                        ContadorArchivosConError++;
-                                    }
-                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en HCM. " + "Es necesario tener registrado un identificador nacional con el nombre de la fotografía";
+                            GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                            if (Error == false)
+                            {
+                                ContadorArchivosConError++;
                             }
                         }
                     }
@@ -869,6 +881,7 @@ namespace ReportesUnis
 
             int largo = 0;
             largo = dpi.Length + 149;
+            if (sustituto.Length > largo)
             sustituto = sustituto.Remove(0, largo);
             return sustituto;
         }

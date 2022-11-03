@@ -131,9 +131,9 @@ namespace ReportesUnis
 
                     if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(lblBusqueda.Text))
                     {
-                        if (!String.IsNullOrEmpty(TxtBuscador.Text))
+                        if (!String.IsNullOrEmpty(TxtBuscador.Text) && !LbxBusqueda.Text.Equals("Facultad"))
                             TxtBuscador.Text = Mayuscula(TxtBuscador.Text);
-                        if (!String.IsNullOrEmpty(TxtBuscador2.Text))
+                        if (!String.IsNullOrEmpty(TxtBuscador2.Text) && !LbxBusqueda2.Text.Equals("Facultad"))
                             TxtBuscador2.Text = Mayuscula(TxtBuscador2.Text);
                         string where = stringWhere();
                         string constr = TxtURL.Text;
@@ -204,7 +204,7 @@ namespace ReportesUnis
                                                     "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                                     "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                                     where + ")" +
-                                                    "  WHERE CARNE=DPI OR CARNE=PASAPORTE OR CARNE=CEDULA ORDER BY 5 ASC";
+                                                    "  WHERE CARNE=DPI OR CARNE=PASAPORTE OR CARNE=CEDULA ORDER BY 6 ASC";
                                 cmd.Connection = con;
                                 con.Open();
 
@@ -213,9 +213,9 @@ namespace ReportesUnis
                                 {
                                     GridViewReporte.DataSource = reader;
                                     GridViewReporte.DataBind();
-                                    ChBusqueda.Checked = false;
-                                    LbxBusqueda2.Visible = false;
-                                    TxtBuscador2.Visible = false;
+                                    //ChBusqueda.Checked = false;
+                                    //LbxBusqueda2.Visible = false;
+                                    //TxtBuscador2.Visible = false;
                                     lblBusqueda.Text = " ";
                                 }
                                 else
@@ -266,7 +266,7 @@ namespace ReportesUnis
         {
             try
             {
-                if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(lblBusqueda.Text))
+                if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(LbxBusqueda.Text))
                 {
                     string where = stringWhere();
                     string constr = TxtURL.Text;
@@ -285,7 +285,7 @@ namespace ReportesUnis
                             " '|' || '|' || MUNICIPIO || '|' || DEPARTAMENTO || '|' || PHONE || '|' || '|' || '|' || CARNE || '|' ||" +
                             " CARRERA || '|' || FACULTAD || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
                             " '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
-                            " '|' || '|' || '|' || '|' || '|' || '|'" +
+                            " '|' || '|' || '|' || '|' || '|' || '|' " +
                             "FROM ( " +
                             "SELECT " +
                             "DISTINCT PD.EMPLID, " +
@@ -334,7 +334,7 @@ namespace ReportesUnis
                             if (reader.HasRows)
                             {
                                 adapter.Fill(dt);
-                                int contador = dt.Rows.Count - 1;
+                                int contador = dt.Rows.Count;
                                 for (int i = 0; i < contador; i++)
                                 {
                                     txtFile = txtFile + dt.Rows[i].ItemArray[0].ToString();
@@ -492,7 +492,7 @@ namespace ReportesUnis
                                         "JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
                                         "JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
                                         "JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                                        "JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                                        "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
                                         "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
                                         "JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
                                         "JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
@@ -706,6 +706,8 @@ namespace ReportesUnis
             var where = "";
             if (!ChBusqueda.Checked)
             {
+                TxtBuscador.Text = TxtBuscador.Text.TrimEnd(' ');
+                TxtBuscador.Text = TxtBuscador.Text.TrimStart(' ');
                 string busqueda = LbxBusqueda.Text;
                 if (LbxBusqueda.Text.Equals("Nombre"))
                 {
@@ -721,11 +723,53 @@ namespace ReportesUnis
                 }
                 else if (LbxBusqueda.Text.Equals("Facultad"))
                 {
+                    if ((TxtBuscador.Text).ToLower().Equals("facultad de comunicación"))
+                    {
+                        TxtBuscador.Text = "Facultad de Comunicación";
+                    }
+                    else if (TxtBuscador.Text.ToLower().Equals("escuela de negocios - unis bs"))
+                    {
+                        TxtBuscador.Text = "Escuela de Negocios - UNIS BS";
+                    }
+                    else if (TxtBuscador.Text.ToLower().Equals("facultad de humanidades"))
+                    {
+                        TxtBuscador.Text = "Facultad de Humanidades";
+                    }
+                    else if (TxtBuscador.Text.ToLower().Equals("f arquitectura y diseño"))
+                    {
+                        TxtBuscador.Text = "F Arquitectura y Diseño";
+                    }
+                    else if (TxtBuscador.Text.ToLower().Equals("facultad de ingeniería"))
+                    {
+                        TxtBuscador.Text = "Facultad de Ingeniería";
+                    }
+                    else if (TxtBuscador.Text.ToLower().Equals("centro de inv human y empresa"))
+                    {
+                        TxtBuscador.Text = "Centro de Inv Human y Empresa";
+                    }
+                    else if (TxtBuscador.Text.ToLower().Equals("f ciencias económicas y empre"))
+                    {
+                        TxtBuscador.Text = "F Ciencias Económicas y Empre";
+                    }
+                    else if (TxtBuscador.Text.ToLower().Equals("f ciencias de la salud"))
+                    {
+                        TxtBuscador.Text = "F Ciencias de la Salud";
+                    }
+                    else if (TxtBuscador.Text.ToLower().Equals("facultad de derecho"))
+                    {
+                        TxtBuscador.Text = "Facultad de Derecho";
+                    }
                     where = "WHERE AGT.DESCR LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 }
             }
             else //CREACION DE WHERE PARA BUSQUEDA MULTIPLE CON LAS COMBINACIONES POSIBLES
             {
+
+                TxtBuscador.Text = TxtBuscador.Text.TrimEnd(' ');
+                TxtBuscador.Text = TxtBuscador.Text.TrimStart(' ');
+
+                TxtBuscador2.Text = TxtBuscador2.Text.TrimEnd(' ');
+                TxtBuscador2.Text = TxtBuscador2.Text.TrimStart(' ');
                 if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido"))
                 {
                     where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR(TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "')) AND (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') )";
@@ -737,6 +781,42 @@ namespace ReportesUnis
                 }
                 else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Facultad"))
                 {
+                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Comunicación";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
+                    {
+                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Humanidades";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
+                    {
+                        TxtBuscador2.Text = "F Arquitectura y Diseño";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Ingeniería";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
+                    {
+                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias de la Salud";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Derecho";
+                    }
                     where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
                 }
                 else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI/Carné"))
@@ -745,11 +825,83 @@ namespace ReportesUnis
                 }
                 else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Facultad"))
                 {
+                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Comunicación";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
+                    {
+                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Humanidades";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
+                    {
+                        TxtBuscador2.Text = "F Arquitectura y Diseño";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Ingeniería";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
+                    {
+                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias de la Salud";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Derecho";
+                    }
                     where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%')) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
 
                 }
                 else if (LbxBusqueda.Text.Equals("DPI/Carné") && LbxBusqueda2.Text.Equals("Facultad"))
                 {
+                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Comunicación";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
+                    {
+                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Humanidades";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
+                    {
+                        TxtBuscador2.Text = "F Arquitectura y Diseño";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Ingeniería";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
+                    {
+                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias de la Salud";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Derecho";
+                    }
                     where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
                 }
                 else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido"))
@@ -763,6 +915,42 @@ namespace ReportesUnis
                 }
                 else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Facultad"))
                 {
+                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Comunicación";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
+                    {
+                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Humanidades";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
+                    {
+                        TxtBuscador2.Text = "F Arquitectura y Diseño";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Ingeniería";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
+                    {
+                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias de la Salud";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Derecho";
+                    }
                     where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
                 }
                 else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI/Carné"))
@@ -771,10 +959,82 @@ namespace ReportesUnis
                 }
                 else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Facultad"))
                 {
+                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Comunicación";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
+                    {
+                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Humanidades";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
+                    {
+                        TxtBuscador2.Text = "F Arquitectura y Diseño";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Ingeniería";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
+                    {
+                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias de la Salud";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Derecho";
+                    }
                     where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
                 }
                 else if (LbxBusqueda2.Text.Equals("DPI/Carné") && LbxBusqueda.Text.Equals("Facultad"))
                 {
+                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Comunicación";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
+                    {
+                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Humanidades";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
+                    {
+                        TxtBuscador2.Text = "F Arquitectura y Diseño";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Ingeniería";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
+                    {
+                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
+                    {
+                        TxtBuscador2.Text = "F Ciencias de la Salud";
+                    }
+                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
+                    {
+                        TxtBuscador2.Text = "Facultad de Derecho";
+                    }
                     where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%')  AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 }
             }

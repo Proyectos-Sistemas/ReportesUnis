@@ -341,8 +341,8 @@ namespace ReportesUnis
                                             "'' Start_Time_of_Effective_Period, " +
                                             "'' End_Time_of_Effective_Period, " +
                                             "'' CARD, " +
-                                            "PHONE, " +
                                             "EMAIL, " +
+                                            "PHONE, " +
                                             "'' Remark, " +
                                             "'' Dock_Station_Login_Password, " +
                                             "'' SupportIssuedCustomProperties, " +

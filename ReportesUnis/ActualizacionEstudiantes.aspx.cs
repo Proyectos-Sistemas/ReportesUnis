@@ -71,17 +71,17 @@ namespace ReportesUnis
                    "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, " +
                    "TT.TERM_BEGIN_DT, ROW_NUMBER() OVER (PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, C.DESCR PAIS " +
                    "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
-                   "JOIN SYSADM.PS_PERS_NID PN ON  PD.EMPLID = PN.EMPLID " +
-                   "JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
-                   "JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                   "JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                   "JOIN SYSADM.PS_STDNT_CAR_TERM CT ON PD.EMPLID = CT.EMPLID " +
-                   "JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON CT.ACAD_GROUP_ADVIS = AGT.ACAD_GROUP " +
-                   "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
-                   "JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
-                   "JOIN SYSADM.PS_ACAD_PROG AP ON PD.EMPLID = AP.EMPLID " +
-                   "JOIN SYSADM.PS_ACAD_PROG_TBL APD ON AP.ACAD_PROG = APD.ACAD_PROG " +
-                   "JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
+                   "LEFT JOIN SYSADM.PS_PERS_NID PN ON  PD.EMPLID = PN.EMPLID " +
+                   "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                   "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                   "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                   "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON PD.EMPLID = CT.EMPLID " +
+                   "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON CT.ACAD_GROUP_ADVIS = AGT.ACAD_GROUP " +
+                   "LEFT JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
+                   "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
+                   "LEFT JOIN SYSADM.PS_ACAD_PROG AP ON PD.EMPLID = AP.EMPLID " +
+                   "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON AP.ACAD_PROG = APD.ACAD_PROG " +
+                   "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                    //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
                    "WHERE PN.NATIONAL_ID ='2226708940101' " +
                    ") WHERE CNT = 1";
@@ -319,6 +319,10 @@ namespace ReportesUnis
 
                             try
                             {
+                                if (String.IsNullOrEmpty(State.Text))
+                                    State.Text=" ";
+                                if (String.IsNullOrEmpty(txtDireccion2.Text))
+                                    txtDireccion2.Text=" ";
                                 //Numero de Telefono
                                 cmd.Connection = con;
                                 cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_DATA PPD SET PPD.PHONE = '" + txtTelefono.Text + "', PPD.STATE =  '" + State.Text + "', " +
