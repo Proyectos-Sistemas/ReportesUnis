@@ -22,6 +22,13 @@
             <%-- TXTBUSCADOR DONDE SE INGRESA EL TEXTO A BUSCAR --%>
             <asp:TextBox ID="TxtBuscador" runat="server"></asp:TextBox>
 
+             <%-- CALENDARIO PARA BUSQUEDA --%>
+            <asp:Label ID="FInicio" runat="server">Fecha inicio:</asp:Label>
+            <asp:TextBox ID="CldrCiclosInicio" runat="server" TextMode="Date" > </asp:TextBox>
+            <asp:Label ID="FFin" runat="server" >Fecha fin:</asp:Label>
+            <asp:TextBox ID="CldrCiclosFin" runat="server" TextMode="Date">
+            </asp:TextBox>
+
             <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
             <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
             <asp:Button ID="BtnBuscar2" runat="server" Text="Buscar" OnClick="BtnBuscar2_Click" CssClass="btn-danger-unis"></asp:Button>
