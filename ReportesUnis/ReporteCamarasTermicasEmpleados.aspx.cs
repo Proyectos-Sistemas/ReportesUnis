@@ -819,7 +819,7 @@ namespace ReportesUnis
                             sl.SetCellValue("B" + celda, (arrlist[i, 2] ?? "").ToString());                            
                             sl.SetCellValue("C" + celda, (arrlist[i, 3] ?? "").ToString());                            
                             sl.SetCellValue("D" + celda, "");                            
-                            sl.SetCellValue("E" + celda, (arrlist[i, 4] ?? "").ToString());                            
+                            sl.SetCellValue("E" + celda, "UNIS/"+(arrlist[i, 4] ?? "").ToString()+"/"+ (arrlist[i, 8] ?? "").ToString());                            
                             sl.SetCellValue("F" + celda, (arrlist[i, 9] ?? "").ToString());                            
                             sl.SetCellValue("G" + celda, "");                            
                             sl.SetCellValue("H" + celda, "");                            

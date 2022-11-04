@@ -22,6 +22,7 @@ using Microsoft.Reporting.Map.WebForms.BingMaps;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Diagnostics;
 using NPOI.HSSF.Record;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace ReportesUnis
 {
@@ -257,7 +258,30 @@ namespace ReportesUnis
             }
             else
             {
-                CuerpoConsultaDescarga(Variables.wsUsuario, Variables.wsPassword, dpi);
+                if (!ChBusqueda.Checked)
+                {
+                    if (LbxBusqueda.Text.Equals("Nombre"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoConsultaDescargaXNombre(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    }
+                    else if (LbxBusqueda.Text.Equals("Apellido"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoConsultaDescargaXApellido(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    }
+                    else if (LbxBusqueda.Text.Equals("DPI"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoConsultaDescargaXDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    }
+                    else if (LbxBusqueda.Text.Equals("Dependencia"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoConsultaDescargaXDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    }
+
+                }
             }
 
             //Crea un documento de respuesta Campus
@@ -838,8 +862,100 @@ namespace ReportesUnis
                                     </soapenv:Envelope>";
         }
 
-        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar
-        private static void CuerpoConsultaDescarga(string idPersona, string passwordServicio, string DPI)
+        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar por busqueda Nombre
+        private static void CuerpoConsultaDescargaXNombre(string idPersona, string passwordServicio, string nombre, string fechaInicio, string fechaFin)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
+                                <soapenv:Header/>
+                                <soapenv:Body>
+                                  <v2:runReport>
+                                     <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>            
+                                        <v2:flattenXML>false</v2:flattenXML>
+                                        <v2:parameterNameValues>
+                                        <v2:listOfParamNameValues>
+                                           <!--1st Parameter of BIP Report-->    
+                                            <v2:item>
+                                                <v2:name>NOMBRE</v2:name>
+                                                        <v2:values>
+                                                            <v2:item>" + nombre + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                           <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                        <v2:name>FechaInicio</v2:name>
+                                                        <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                        <v2:name>FechaFin</v2:name>
+                                                        <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                           </v2:listOfParamNameValues>                                           
+                                        </v2:parameterNameValues>           
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/DescargaImagenes/InformeDescargaNombre.xdo</v2:reportAbsolutePath>
+                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                     </v2:reportRequest>
+                                     <v2:userID>" + idPersona + @"</v2:userID>
+                                     <v2:password>" + passwordServicio + @"</v2:password>
+                                  </v2:runReport>
+                               </soapenv:Body>
+                                </soapenv:Envelope>";
+        }
+
+        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar por busqueda Apellido
+        private static void CuerpoConsultaDescargaXApellido(string idPersona, string passwordServicio, string apellido, string fechaInicio, string fechaFin)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
+                                <soapenv:Header/>
+                                <soapenv:Body>
+                                  <v2:runReport>
+                                     <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>            
+                                        <v2:flattenXML>false</v2:flattenXML>
+                                        <v2:parameterNameValues>
+                                        <v2:listOfParamNameValues>
+                                           <!--1st Parameter of BIP Report-->    
+                                            <v2:item>
+                                                <v2:name>APELLIDO</v2:name>
+                                                        <v2:values>
+                                                            <v2:item>" + apellido + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                           <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                        <v2:name>FechaInicio</v2:name>
+                                                        <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                        <v2:name>FechaFin</v2:name>
+                                                        <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                           </v2:listOfParamNameValues>                                           
+                                        </v2:parameterNameValues>           
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/DescargaImagenes/InformeDescargaApellido.xdo</v2:reportAbsolutePath>
+                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                     </v2:reportRequest>
+                                     <v2:userID>" + idPersona + @"</v2:userID>
+                                     <v2:password>" + passwordServicio + @"</v2:password>
+                                  </v2:runReport>
+                               </soapenv:Body>
+                                </soapenv:Envelope>";
+        }
+
+        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar por busqueda DPI
+        private static void CuerpoConsultaDescargaXDPI(string idPersona, string passwordServicio, string DPI, string fechaInicio, string fechaFin)
         {
             Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
@@ -858,9 +974,23 @@ namespace ReportesUnis
                                                             <v2:item>" + DPI + @"</v2:item>
                                                         </v2:values>
                                                 </v2:item>
-                                           </v2:listOfParamNameValues>
+                                           <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                        <v2:name>FechaInicio</v2:name>
+                                                        <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                        <v2:name>FechaFin</v2:name>
+                                                        <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                           </v2:listOfParamNameValues>                                           
                                         </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/ConsultaDescargaImagen.xdo</v2:reportAbsolutePath>
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/DescargaImagenes/InformeDescargaDPI.xdo</v2:reportAbsolutePath>
                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
                                      </v2:reportRequest>
                                      <v2:userID>" + idPersona + @"</v2:userID>
@@ -870,6 +1000,51 @@ namespace ReportesUnis
                                 </soapenv:Envelope>";
         }
 
+        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar por busqueda Dependencia
+        private static void CuerpoConsultaDescargaXDependencia(string idPersona, string passwordServicio, string dependencia, string fechaInicio, string fechaFin)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
+                                <soapenv:Header/>
+                                <soapenv:Body>
+                                  <v2:runReport>
+                                     <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>            
+                                        <v2:flattenXML>false</v2:flattenXML>
+                                        <v2:parameterNameValues>
+                                        <v2:listOfParamNameValues>
+                                           <!--1st Parameter of BIP Report-->    
+                                            <v2:item>
+                                                <v2:name>DEPENDENCIA</v2:name>
+                                                        <v2:values>
+                                                            <v2:item>" + dependencia + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                           <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                        <v2:name>FechaInicio</v2:name>
+                                                        <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                        <v2:name>FechaFin</v2:name>
+                                                        <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>
+                                           </v2:listOfParamNameValues>                                           
+                                        </v2:parameterNameValues>           
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/DescargaImagenes/InformeDescargaDependencia.xdo</v2:reportAbsolutePath>
+                                       <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                     </v2:reportRequest>
+                                     <v2:userID>" + idPersona + @"</v2:userID>
+                                     <v2:password>" + passwordServicio + @"</v2:password>
+                                  </v2:runReport>
+                               </soapenv:Body>
+                                </soapenv:Envelope>";
+        }
         //Función para llamar un servicio web de HCM
         public string LlamarWebServiceHCM(string _url, string _action, string _xmlString)
         {
@@ -1070,10 +1245,28 @@ namespace ReportesUnis
                 sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('\"', '\t');
                 sustituto = Regex.Replace(sustituto, @"\n+", " ");
                 sustituto = Regex.Replace(sustituto, @"\t", "");
-                int largo = dpi.Length;
-                largo = largo + 52;
-                if (sustituto.Length > largo)
+
+
+                if (LbxBusqueda.Text.Equals("Nombre") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                {
+                    int largo = 55;
                     sustituto = sustituto.Remove(0, largo);
+                }
+                else if (LbxBusqueda.Text.Equals("Apellido") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                {
+                    int largo = 57;
+                    sustituto = sustituto.Remove(0, largo);
+                }
+                else if (LbxBusqueda.Text.Equals("DPI") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                {
+                    int largo = 52;
+                    sustituto = sustituto.Remove(0, largo);
+                }
+                else if (LbxBusqueda.Text.Equals("Dependencia") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                {
+                    int largo = 60;
+                    sustituto = sustituto.Remove(0, largo);
+                }
             }
             return sustituto;
         }
@@ -1787,77 +1980,145 @@ namespace ReportesUnis
             return input;
         }
 
-        protected string DownloadAllFile(string dpi)
+        protected string DownloadAllFile()
         {
+            lblDescarga.Text = "";
             desc = 1;
-            string[] result = dpi.Split(',');
-            string[] sustituto = new string[result.Length - 1];
-            string constr = TxtURL.Text;
+            string[] result = sustituirCaracteres("").Split('|');
+            decimal registros = 0;
+            decimal count = 0;
+            int datos = 0;
+            string[,] arrlist;
             string ret = "0";
-            int total = 0;
-            DataSetLocalRpt dsDownload = new DataSetLocalRpt();
-            for (int i = 0; i < result.Length - 1; i++)
+
+            if (result.Count() > 5)
             {
-                desc = 1;
-                sustituto[i] = sustituirCaracteres(result[i].ToString());
-                if (sustituto[i].Length > 50)
+                if (!ChBusqueda.Checked)
                 {
-                    DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
-                    newFila["bytes"] = sustituto[i];
-                    newFila["contentType"] = "jpg";
-                    newFila["fileName"] = result[i] + ".jpg";
-                    dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
-                    total = total + 1;
-                }
-            }
-
-            if (total > 0)
-            {
-                string user = Environment.UserName;
-                string unidad = unidadAlmacenamiento().Substring(0, 2);
-                string path = unidad + ":\\Users\\" + user + "\\Downloads";
-                if (!Directory.Exists(path))
-                {
-                    File.Create(path).Close();
-                }
-                string folder = path + "\\" + nombre;
-                File.Create(folder).Close();
-
-                using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
-                {
-
-                    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                    //Busqueda simple por Nombre, Apellido, DPI o dependencia
+                    registros = result.Count() / 5;
+                    count = Math.Round(registros, 0);
+                    if (registros == 0)
+                        count = 1;
+                    arrlist = new string[Convert.ToInt32(count), 6];
+                    if (result.Count() > 6)
                     {
-                        for (int i = 0; i < total; i++)
+                        datos = 1;
+                        for (int i = 0; i < count; i++)
                         {
-
-                            byte[] base64 = Convert.FromBase64String(dsDownload.Tables["AllDownloadEmp"].Rows[i]["bytes"].ToString());
-                            ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownloadEmp"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
-
-                            var zipStream = readmeEntry.Open();
-                            zipStream.Write(base64, 0, base64.Length);
+                            for (int k = 1; k < 6; k++)
+                            {
+                                if (k == 5 && i <count-1)
+                                {
+                                    string resultado = result[datos];
+                                    int removerUltimos = 10;
+                                    resultado = resultado.Remove(resultado.Length - removerUltimos);
+                                    arrlist[i, k] = result[datos].Remove(result[datos].Length - 10);
+                                    arrlist[i, 0] = "";
+                                }
+                                else
+                                {
+                                    arrlist[i, k] = result[datos];
+                                }
+                                datos++;
+                            }
                         }
                     }
-                    /*------------FUNCIONA, PERO SUSTITUYE EL  ZIP POR LA FOTO
-                    using (FileStream foto = new FileStream(folder + dsDownload.Tables["AllDownload"].Rows[0]["filename"].ToString(), FileMode.Open))
+                    else
                     {
-                        using (GZipStream gz = new GZipStream(foto, CompressionMode.Compress, false))
+                        for (int i = 0; i < count; i++)
                         {
-                            gz.Write(base64, 0, base64.Length);
+                            for (int k = 0; k < 6; k++)
+                            {
+                                arrlist[i, k] = result[datos];
+                                datos++;
+                            }
                         }
                     }
-                    ---------------*/
                 }
-                lblBusqueda.Text = "";
-                lblDescarga.Visible = true;
-                lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
-                ret = "1";
+                else
+                {
+                    //Busqueda multiple por asignacion
+                    registros = result.Count() / 6;
+                    count = Math.Round(registros, 0);
+                    arrlist = new string[Convert.ToInt32(count), 6];
+                    if (registros == 0)
+                        count = 1;
+                    for (int i = 0; i < count; i++)
+                    {
+                        for (int k = 0; k < 6; k++)
+                        {
+                            arrlist[i, k] = result[datos];
+                            datos++;
+                        }
+                    }
+                }
+
+
+                int total = 0;
+                DataSetLocalRpt dsDownload = new DataSetLocalRpt();
+                for (int i = 0; i < count; i++)
+                {
+                    desc = 1;
+                    if (arrlist.Length > 5)
+                    {
+                        DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
+                        newFila["bytes"] = arrlist[i, 5];
+                        newFila["contentType"] = "jpg";
+                        newFila["fileName"] = arrlist[i, 3] + ".jpg";
+                        dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
+                        total = total + 1;
+                    }
+                }
+
+                if (total > 0)
+                {
+                    string user = Environment.UserName;
+                    string unidad = unidadAlmacenamiento().Substring(0, 2);
+                    string path = unidad + ":\\Users\\" + user + "\\Downloads";
+                    if (!Directory.Exists(path))
+                    {
+                        File.Create(path).Close();
+                    }
+                    string folder = path + "\\" + nombre;
+                    File.Create(folder).Close();
+
+                    using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
+                    {
+
+                        using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                        {
+                            for (int i = 0; i < total; i++)
+                            {
+
+                                byte[] base64 = Convert.FromBase64String(dsDownload.Tables["AllDownloadEmp"].Rows[i]["bytes"].ToString());
+                                ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownloadEmp"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
+
+                                var zipStream = readmeEntry.Open();
+                                zipStream.Write(base64, 0, base64.Length);
+                            }
+                        }
+                        /*------------FUNCIONA, PERO SUSTITUYE EL  ZIP POR LA FOTO
+                        using (FileStream foto = new FileStream(folder + dsDownload.Tables["AllDownload"].Rows[0]["filename"].ToString(), FileMode.Open))
+                        {
+                            using (GZipStream gz = new GZipStream(foto, CompressionMode.Compress, false))
+                            {
+                                gz.Write(base64, 0, base64.Length);
+                            }
+                        }
+                        ---------------*/
+                    }
+                    lblBusqueda.Text = "";
+                    lblDescarga.Visible = true;
+                    lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
+                    ret = "1";
+                }
+                else
+                {
+                    ret = "2";
+                }
+                //desc = 0;                
             }
-            else
-            {
-                ret = "2";
-            }
-            //desc = 0;
             return ret;
         }
 
@@ -1866,106 +2127,13 @@ namespace ReportesUnis
         {
             try
             {
-                ////AGREGA EL NOMBRE DE LAS COLUMNAS AL ARCHIVO.  
-                string id = "";
-                if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(LbxBusqueda2.Text) || !String.IsNullOrEmpty(CldrCiclosFin.Text) || !String.IsNullOrEmpty(CldrCiclosFin.Text))
+                string respuesta = DownloadAllFile();
+                if (respuesta == "0")
                 {
-                    {
-                        GridViewReporte.DataSource = "";
-                        if (!ChBusqueda.Checked)
-                        {
-                            LbxBusqueda2.Text = "";
-                        }
-                        string[] result = sustituirCaracteres("").Split('|');
-                        decimal registros = 0;
-                        decimal count = 0;
-                        int datos = 0;
-                        string[,] arrlist;
-
-                        if (result.Count() > 20)
-                        {
-                            if (!ChBusqueda.Checked)
-                            {
-                                //Busqueda simple por Nombre, Apellido, DPI o dependencia
-                                registros = result.Count() / 24;
-                                count = Math.Round(registros, 0);
-                                if (registros == 0)
-                                    count = 1;
-                                arrlist = new string[Convert.ToInt32(count), 24];
-                                if (result.Count() > 23)
-                                {
-                                    for (int i = 0; i < count; i++)
-                                    {
-                                        for (int k = 0; k < 24; k++)
-                                        {
-                                            arrlist[i, k] = result[datos];
-                                            datos++;
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                //Busqueda multiple por asignacion
-                                registros = result.Count() / 25;
-                                count = Math.Round(registros, 0);
-                                arrlist = new string[Convert.ToInt32(count), 25];
-                                if (registros == 0)
-                                    count = 1;
-                                for (int i = 0; i < count; i++)
-                                {
-                                    for (int k = 0; k < 25; k++)
-                                    {
-                                        arrlist[i, k] = result[datos];
-                                        datos++;
-                                    }
-                                }
-                            }
-
-                            try
-                            {
-                                DataSetLocalRpt dsReporte = new DataSetLocalRpt();
-                                try
-                                {
-                                    //Valida si no se hace busqueda multiple
-                                    if (!ChBusqueda.Checked)
-                                    {
-                                        //Generacion de matriz para llenado de grid desde una consulta
-                                        for (int i = 0; i < count; i++)
-                                        {
-                                            id += (arrlist[i, 17] ?? "").ToString() + ",";
-                                        }
-                                    }
-                                    else
-                                    {
-                                        for (int i = 0; i < count; i++)
-                                        {
-                                            id += (arrlist[i, 18] ?? "").ToString() + ",";
-                                        }
-                                    }
-                                }
-                                catch (Exception x)
-                                {
-                                    Console.WriteLine(x.ToString());
-                                }
-
-                                string respuesta = DownloadAllFile(id);
-                                if (respuesta == "0")
-                                {
-                                    lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
-                                }
-                                else if (respuesta == "2")
-                                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
-
-
-                            }
-                            catch (Exception x)
-                            {
-                                lblBusqueda.Text = "Ha ocurido un error";
-                            }
-                        }
-                    }
+                    lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
                 }
+                else if (respuesta == "2")
+                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
             }
             catch (Exception x)
             {
