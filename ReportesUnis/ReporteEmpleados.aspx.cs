@@ -282,6 +282,69 @@ namespace ReportesUnis
                     }
 
                 }
+                else
+                {
+                    if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                    }
+                    else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                    }
+                    else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                    }
+                    else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                    }
+                    else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                    }
+                    else if (LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                    }
+                    else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                    }
+                    else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                    }
+                    else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                    }
+                    else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                    }
+                    else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                    }
+                    else if (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia"))
+                    {
+                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                        CuerpoDescargaXDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                    }
+                }
             }
 
             //Crea un documento de respuesta Campus
@@ -862,6 +925,7 @@ namespace ReportesUnis
                                     </soapenv:Envelope>";
         }
 
+        /*CUERPOS DE DESCARGA DE IMAGENES CON BUSQUEDAS SIMPLES*/
         //Crea el cuerpo que se utiliza para consultar las imagenes a descargar por busqueda Nombre
         private static void CuerpoConsultaDescargaXNombre(string idPersona, string passwordServicio, string nombre, string fechaInicio, string fechaFin)
         {
@@ -1045,6 +1109,326 @@ namespace ReportesUnis
                                </soapenv:Body>
                                 </soapenv:Envelope>";
         }
+
+        /*CUERPOS DE DESCARGAS CON BUSQUEDAS MULTIPLES*/
+        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar por busqueda  de Nombre y Apellido
+        private static void CuerpoDescargaXNombreApellido(string idPersona, string passwordServicio, string nombre, string apellido, string fechaInicio, string fechaFin)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
+                                <soapenv:Header/>
+                                <soapenv:Body>
+                                    <v2:runReport>
+                                        <v2:reportRequest>
+                                            <v2:attributeFormat>csv</v2:attributeFormat>
+                                            <v2:flattenXML>false</v2:flattenXML>
+                                            <v2:parameterNameValues>
+                                                <v2:listOfParamNameValues>
+                                                    <!--1st Parameter of BIP Report-->
+                                                    <v2:item>
+                                                        <v2:name>NOMBRE</v2:name>
+                                                        <v2:values>
+                                                            <v2:item>" + nombre + @"</v2:item>
+                                                        </v2:values>
+                                                    </v2:item>
+                                                    <!--2nd Parameter of BIP Report-->
+                                                    <v2:item>
+                                                        <v2:name>APELLIDO</v2:name>
+                                                        <v2:values>
+                                                            <v2:item>" + apellido + @"</v2:item>
+                                                        </v2:values>
+                                                    </v2:item>
+                                                    <!--2nd Parameter of BIP Report-->
+                                                    <v2:item>
+                                                        <v2:name>FechaInicio</v2:name>
+                                                        <v2:values>
+                                                            <v2:item>" + fechaInicio + @"</v2:item>
+                                                        </v2:values>
+                                                    </v2:item>
+                                                    <!--3rd Parameter of BIP Report-->
+                                                    <v2:item>
+                                                        <v2:name>FechaFin</v2:name>
+                                                        <v2:values>
+                                                            <v2:item>" + fechaFin + @"</v2:item>
+                                                        </v2:values>
+                                                    </v2:item>
+                                                </v2:listOfParamNameValues>
+                                            </v2:parameterNameValues>
+                                            <v2:reportAbsolutePath>/Reportes IS/PT/DescargaImagenes/InformeDescargaApellidoNombre.xdo</v2:reportAbsolutePath>
+                                            <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                        </v2:reportRequest>
+                                        <v2:userID>" + idPersona + @"</v2:userID>
+                                        <v2:password>" + passwordServicio + @"</v2:password>
+                                    </v2:runReport>
+                                </soapenv:Body>
+                                </soapenv:Envelope>";
+        }
+
+        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar por busqueda  de Nombre y DPI
+        private static void CuerpoDescargaXNombreDPI(string idPersona, string passwordServicio, string nombre, string dpi, string fechaInicio, string fechaFin)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
+                                <soapenv:Header/>
+                                <soapenv:Body>
+                                 <v2:runReport>
+                                    <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>
+                                        <v2:flattenXML>false</v2:flattenXML>
+                                        <v2:parameterNameValues>
+                                            <v2:listOfParamNameValues>
+                                                <!--1st Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>NOMBRE</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + nombre + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>DPI</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dpi + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaInicio</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaFin</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                            </v2:listOfParamNameValues>
+                                        </v2:parameterNameValues>
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/DescargaImagenes/InformeDescargaNombreDPI.xdo</v2:reportAbsolutePath>
+                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                    </v2:reportRequest>
+                                    <v2:userID>" + idPersona + @"</v2:userID>
+                                    <v2:password>" + passwordServicio + @"</v2:password>
+                                </v2:runReport>
+                                </soapenv:Body>
+                                </soapenv:Envelope>";
+        }
+
+        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar por busqueda  de Nombre y Dependencia
+        private static void CuerpoDescargaXNombreDependencia(string idPersona, string passwordServicio, string nombre, string dependencia, string fechaInicio, string fechaFin)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
+                                <soapenv:Header/>
+                                <soapenv:Body>
+                                  <v2:runReport>
+                                    <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>
+                                        <v2:flattenXML>false</v2:flattenXML>
+                                        <v2:parameterNameValues>
+                                            <v2:listOfParamNameValues>
+                                                <!--1st Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>NAME</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + nombre + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>DEPENDENCIA</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dependencia + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaInicio</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaFin</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                            </v2:listOfParamNameValues>
+                                        </v2:parameterNameValues>
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/DescargaImagenes/InformeDescargaNombreDependencia.xdo</v2:reportAbsolutePath>
+                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                    </v2:reportRequest>
+                                    <v2:userID>" + idPersona + @"</v2:userID>
+                                    <v2:password>" + passwordServicio + @"</v2:password>
+                                </v2:runReport>
+                                </soapenv:Body>
+                                </soapenv:Envelope>";
+        }
+
+        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar por busqueda  de Apellido y DPI
+        private static void CuerpoDescargaXApellidoDPI(string idPersona, string passwordServicio, string apellido, string dpi, string fechaInicio, string fechaFin)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
+                                <soapenv:Header/>
+                                <soapenv:Body>
+                                  <v2:runReport>
+                                     <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>
+                                        <v2:flattenXML>false</v2:flattenXML>
+                                        <v2:parameterNameValues>
+                                            <v2:listOfParamNameValues>
+                                                <!--1st Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>APELLIDO</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + apellido + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>DPI</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dpi + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaInicio</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaFin</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                            </v2:listOfParamNameValues>
+                                        </v2:parameterNameValues>
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/DescargaImagenes/InformeDescargaApellidoDPI.xdo</v2:reportAbsolutePath>
+                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                    </v2:reportRequest>
+                                    <v2:userID>" + idPersona + @"</v2:userID>
+                                    <v2:password>" + passwordServicio + @"</v2:password>
+                                    </v2:runReport>
+                                    </soapenv:Body>
+                                    </soapenv:Envelope>";
+        }
+
+        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar por busqueda  de Apellido y Dependencia
+        private static void CuerpoDescargaXApellidoDependencia(string idPersona, string passwordServicio, string apellido, string dependencia, string fechaInicio, string fechaFin)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
+                                <soapenv:Header/>
+                                <soapenv:Body>
+                                  <v2:runReport>
+                                    <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>
+                                        <v2:flattenXML>false</v2:flattenXML>
+                                        <v2:parameterNameValues>
+                                            <v2:listOfParamNameValues>
+                                                <!--1st Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>APELLIDO</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + apellido + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>DEPENDENCIA</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dependencia + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaInicio</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaFin</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                            </v2:listOfParamNameValues>
+                                        </v2:parameterNameValues>
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/DescargaImagenes/InformeDescargaApellidoDependencia.xdo</v2:reportAbsolutePath>
+                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                    </v2:reportRequest>
+                                    <v2:userID>" + idPersona + @"</v2:userID>
+                                    <v2:password>" + passwordServicio + @"</v2:password>
+                                    </v2:runReport>
+                                    </soapenv:Body>
+                                    </soapenv:Envelope>";
+        }
+
+        //Crea el cuerpo que se utiliza para consultar las imagenes a descargar por busqueda  de DPI y Dependencia
+        private static void CuerpoDescargaXDPIDependencia(string idPersona, string passwordServicio, string dpi, string dependencia, string fechaInicio, string fechaFin)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
+                                <soapenv:Header/>
+                                <soapenv:Body>
+                                  <v2:runReport>
+                                    <v2:reportRequest>
+                                        <v2:attributeFormat>csv</v2:attributeFormat>
+                                        <v2:flattenXML>false</v2:flattenXML>
+                                        <v2:parameterNameValues>
+                                            <v2:listOfParamNameValues>
+                                                <!--1st Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>DPI</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dpi + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>DEPENDENCIA</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + dependencia + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--2nd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaInicio</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaInicio + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                                <!--3rd Parameter of BIP Report-->
+                                                <v2:item>
+                                                    <v2:name>FechaFin</v2:name>
+                                                    <v2:values>
+                                                        <v2:item>" + fechaFin + @"</v2:item>
+                                                    </v2:values>
+                                                </v2:item>
+                                            </v2:listOfParamNameValues>
+                                        </v2:parameterNameValues>
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/DescargaImagenes/InformeDescargaDependenciaDPI.xdo</v2:reportAbsolutePath>
+                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
+                                    </v2:reportRequest>
+                                    <v2:userID>" + idPersona + @"</v2:userID>
+                                    <v2:password>" + passwordServicio + @"</v2:password>
+                                    </v2:runReport>
+                                    </soapenv:Body>
+                                    </soapenv:Envelope>";
+        }
+
         //Función para llamar un servicio web de HCM
         public string LlamarWebServiceHCM(string _url, string _action, string _xmlString)
         {
@@ -1265,6 +1649,37 @@ namespace ReportesUnis
                 else if (LbxBusqueda.Text.Equals("Dependencia") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                 {
                     int largo = 60;
+                    sustituto = sustituto.Remove(0, largo);
+                }
+                else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido")))
+                {
+                    int largo = 63;
+                    sustituto = sustituto.Remove(0, largo);
+                }
+                else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI")))
+                {
+                    int largo = 58;
+                    sustituto = sustituto.Remove(0, largo);
+                }
+                else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia")))
+                {
+                    int largo = 66;
+                    sustituto = sustituto.Remove(0, largo);
+                }
+                else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI")))
+                {
+                    int largo = 60;
+                    sustituto = sustituto.Remove(0, largo);
+
+                }
+                else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia")))
+                {
+                    int largo = 68;
+                    sustituto = sustituto.Remove(0, largo);
+                }
+                else if ((LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia")))
+                {
+                    int largo = 63;
                     sustituto = sustituto.Remove(0, largo);
                 }
             }
@@ -2041,15 +2456,41 @@ namespace ReportesUnis
                     //Busqueda multiple por asignacion
                     registros = result.Count() / 6;
                     count = Math.Round(registros, 0);
-                    arrlist = new string[Convert.ToInt32(count), 6];
                     if (registros == 0)
                         count = 1;
-                    for (int i = 0; i < count; i++)
+                    arrlist = new string[Convert.ToInt32(count), 7];
+                    if (result.Count() > 7)
                     {
-                        for (int k = 0; k < 6; k++)
+                        datos = 1;
+                        for (int i = 0; i < count; i++)
                         {
-                            arrlist[i, k] = result[datos];
-                            datos++;
+                            for (int k = 1; k < 7; k++)
+                            {
+                                if (k == 6 && i < count - 1)
+                                {
+                                    string resultado = result[datos];
+                                    int removerUltimos = 10;
+                                    resultado = resultado.Remove(resultado.Length - removerUltimos);
+                                    arrlist[i, k] = result[datos].Remove(result[datos].Length - 10);
+                                    arrlist[i, 0] = "";
+                                }
+                                else
+                                {
+                                    arrlist[i, k] = result[datos];
+                                }
+                                datos++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < count; i++)
+                        {
+                            for (int k = 0; k < 7; k++)
+                            {
+                                arrlist[i, k] = result[datos];
+                                datos++;
+                            }
                         }
                     }
                 }
@@ -2060,14 +2501,29 @@ namespace ReportesUnis
                 for (int i = 0; i < count; i++)
                 {
                     desc = 1;
-                    if (arrlist.Length > 5)
+                    if (!ChBusqueda.Checked)
                     {
-                        DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
-                        newFila["bytes"] = arrlist[i, 5];
-                        newFila["contentType"] = "jpg";
-                        newFila["fileName"] = arrlist[i, 3] + ".jpg";
-                        dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
-                        total = total + 1;
+                        if (arrlist.Length > 5)
+                        {
+                            DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
+                            newFila["bytes"] = arrlist[i, 5];
+                            newFila["contentType"] = "jpg";
+                            newFila["fileName"] = arrlist[i, 3] + ".jpg";
+                            dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
+                            total = total + 1;
+                        }
+                    }
+                    else
+                    {
+                        if (arrlist.Length > 6)
+                        {
+                            DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
+                            newFila["bytes"] = arrlist[i, 6];
+                            newFila["contentType"] = "jpg";
+                            newFila["fileName"] = arrlist[i, 4] + ".jpg";
+                            dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
+                            total = total + 1;
+                        }
                     }
                 }
 
