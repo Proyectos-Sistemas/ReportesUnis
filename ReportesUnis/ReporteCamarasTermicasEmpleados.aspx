@@ -22,28 +22,34 @@
             <%-- TXTBUSCADOR DONDE SE INGRESA EL TEXTO A BUSCAR --%>
             <asp:TextBox ID="TxtBuscador" runat="server"></asp:TextBox>
 
-             <%-- CALENDARIO PARA BUSQUEDA --%>
+            <%-- CALENDARIO PARA BUSQUEDA --%>
             <asp:Label ID="FInicio" runat="server">Fecha inicio:</asp:Label>
-            <asp:TextBox ID="CldrCiclosInicio" runat="server" TextMode="Date" > </asp:TextBox>
-            <asp:Label ID="FFin" runat="server" >Fecha fin:</asp:Label>
+            <asp:TextBox ID="CldrCiclosInicio" runat="server" TextMode="Date"> </asp:TextBox>
+            <asp:Label ID="FFin" runat="server">Fecha fin:</asp:Label>
             <asp:TextBox ID="CldrCiclosFin" runat="server" TextMode="Date">
             </asp:TextBox>
 
             <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
             <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
-            <asp:Button ID="BtnBuscar2" runat="server" Text="Buscar" OnClick="BtnBuscar2_Click" CssClass="btn-danger-unis"></asp:Button>
-            <asp:Button ID="BtnTxt" runat="server" Text="Exportar Excel" OnClick="GenerarExcel" CssClass="btn-danger-unis" Enabled="true" />
-            <asp:Button ID="BtnImg" runat="server" Text="Exportar Imagenes" OnClick="BtnImg_Click" CssClass="btn-danger-unis" Enabled="true" />
-        </div>
+
+        </div>        
         <br />
-
-        <div style="text-align: center">
-            <br />
-            <asp:Label ID="lblBusqueda" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"></asp:Label>
-            <asp:Label ID="lblDescarga" runat="server" Font-Bold="true" ForeColor="Blue" Text="" Font-Size="Large" Visible="false"></asp:Label>
-        </div>
-
+        <asp:Table runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
+            <asp:TableRow>
+                <asp:TableCell>
+                    <asp:Button ID="BtnBuscar2" runat="server" Text="Buscar" OnClick="BtnBuscar2_Click" CssClass="btn-danger-unis"></asp:Button>
+                </asp:TableCell>
+                <asp:TableCell>
+                    <asp:Button ID="BtnTxt" runat="server" Text="Exportar Excel" OnClick="GenerarExcel" CssClass="btn-danger-unis" Enabled="true" />
+                </asp:TableCell>
+                <asp:TableCell>
+                    <asp:Button ID="BtnImg" runat="server" Text="Exportar Imagenes" OnClick="BtnImg_Click" CssClass="btn-danger-unis" Enabled="true" />
+                </asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>
+        <br />
     </div>
+
 
     <div class="container-fluid">
         <div class="row">
@@ -77,7 +83,11 @@
             </div>
         </div>
     </div>
-
+    <div style="text-align: center">
+            <br />
+            <asp:Label ID="lblBusqueda" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"></asp:Label>
+            <asp:Label ID="lblDescarga" runat="server" Font-Bold="true" ForeColor="Blue" Text="" Font-Size="Large" Visible="false"></asp:Label>
+        </div>
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>

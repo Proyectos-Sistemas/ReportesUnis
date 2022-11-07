@@ -154,6 +154,7 @@ namespace ReportesUnis
                 }
                 else if (LbxBusqueda.Text.Equals("Género"))
                 {
+                    busqueda = busqueda.Substring(0, 1);
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
                     CuerpoConsultaPorGenero(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
                 }
@@ -182,6 +183,7 @@ namespace ReportesUnis
                 }
                 else if (LbxBusqueda.Text.Equals("Género"))
                 {
+                    busqueda = busqueda.Substring(0, 1);
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
                     CuerpoConsultaDescargaXGenero(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
                 }
@@ -782,7 +784,7 @@ namespace ReportesUnis
                                         <v2:listOfParamNameValues>
                                            <!--1st Parameter of BIP Report-->    
                                             <v2:item>
-                                                <v2:name>SEXO</v2:name>
+                                                <v2:name>SEX</v2:name>
                                                         <v2:values>
                                                             <v2:item>" + sexo + @"</v2:item>
                                                         </v2:values>
@@ -1090,15 +1092,15 @@ namespace ReportesUnis
                     int datos = 0;
                     string[,] arrlist;
 
-                    if (result.Count() > 9)
+                    if (result.Count() > 16)
                     {
-                        registros = result.Count() / 11;
+                        registros = result.Count() / 13;
                         count = Math.Round(registros, 0);
-                        arrlist = new string[Convert.ToInt32(count), 11];
+                        arrlist = new string[Convert.ToInt32(count), 13];
 
                         for (int i = 0; i < count; i++)
                         {
-                            for (int k = 0; k < 11; k++)
+                            for (int k = 0; k < 13; k++)
                             {
                                 arrlist[i, k] = result[datos];
                                 datos++;
@@ -1108,34 +1110,75 @@ namespace ReportesUnis
                         for (int i = 0; i < contador; i++)
                         {
 
-                            sl.SetCellValue("A" + celda, (arrlist[i, 1] ?? "").ToString());
-                            sl.SetCellValue("B" + celda, (arrlist[i, 2] ?? "").ToString());
-                            sl.SetCellValue("C" + celda, (arrlist[i, 3] ?? "").ToString());
-                            sl.SetCellValue("D" + celda, "");
-                            sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 4] ?? "").ToString() + "/" + (arrlist[i, 8] ?? "").ToString());
-                            sl.SetCellValue("F" + celda, (arrlist[i, 9] ?? "").ToString());
+                            sl.SetCellValue("A" + celda, (arrlist[i, 5] ?? "").ToString());
+                            sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString());
+                            sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString());
+                            sl.SetCellValue("D" + celda, "Basic Person");
+                            sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + (arrlist[i, 10] ?? "").ToString());
+                            sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString());
                             sl.SetCellValue("G" + celda, "");
                             sl.SetCellValue("H" + celda, "");
                             sl.SetCellValue("I" + celda, "");
-                            if (arrlist[i, 10].ToString() != "-")
-                            {
-                                int busqueda = 29;
-                                string email = arrlist[i, 10].ToString();
-                                email = StringExtensions.RemoveEnd(email, busqueda);
-                                sl.SetCellValue("J" + celda, email);
-                            }
-                            else
-                            {
-                                sl.SetCellValue("J" + celda, "");
-                            }
-
-                            sl.SetCellValue("K" + celda, (arrlist[i, 7] ?? "").ToString());
+                            sl.SetCellValue("J" + celda, arrlist[i, 12].ToString());
+                            sl.SetCellValue("K" + celda, (arrlist[i, 9] ?? "").ToString());
                             sl.SetCellValue("L" + celda, "");
                             sl.SetCellValue("M" + celda, "");
                             sl.SetCellValue("N" + celda, "");
                             sl.SetCellValue("O" + celda, "");
                             sl.SetCellValue("P" + celda, "");
-                            sl.SetCellValue("Q" + celda, (arrlist[i, 8] ?? "").ToString());
+                            sl.SetCellValue("Q" + celda, (arrlist[i, 10] ?? "").ToString());
+                            celda++;
+                        }
+                        if (result.Count() > 3)
+                        {
+                            //Nombre del archivo
+                            string nombre = "Reporte Camara Termica Empleados " + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".xlsx";
+                            //Lugar de almacenamiento
+                            sl.SaveAs(CurrentDirectory + "ReportesCT/" + nombre);
+                            Response.ContentType = "application/ms-excel";
+                            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                            Response.TransmitFile(CurrentDirectory + "ReportesCT/" + nombre);
+                        }
+                        else
+                        {
+                            lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
+                        }
+                    }
+                    else
+                    {
+                        registros = result.Count() / 13;
+                        count = Math.Round(registros, 0);
+                        arrlist = new string[Convert.ToInt32(count), 13];
+
+                        for (int i = 0; i < count; i++)
+                        {
+                            for (int k = 0; k < 13; k++)
+                            {
+                                arrlist[i, k] = result[datos];
+                                datos++;
+                            }
+                        }
+                        int contador = GridViewReporteCT.Rows.Count;
+                        for (int i = 0; i < contador; i++)
+                        {
+
+                            sl.SetCellValue("A" + celda, (arrlist[i, 5] ?? "").ToString());
+                            sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString());
+                            sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString());
+                            sl.SetCellValue("D" + celda, "Basic Person");
+                            sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + (arrlist[i, 10] ?? "").ToString());
+                            sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString());
+                            sl.SetCellValue("G" + celda, "");
+                            sl.SetCellValue("H" + celda, "");
+                            sl.SetCellValue("I" + celda, "");
+                            sl.SetCellValue("J" + celda, arrlist[i, 12].ToString());
+                            sl.SetCellValue("K" + celda, (arrlist[i, 9] ?? "").ToString());
+                            sl.SetCellValue("L" + celda, "");
+                            sl.SetCellValue("M" + celda, "");
+                            sl.SetCellValue("N" + celda, "");
+                            sl.SetCellValue("O" + celda, "");
+                            sl.SetCellValue("P" + celda, "");
+                            sl.SetCellValue("Q" + celda, (arrlist[i, 10] ?? "").ToString());
                             celda++;
                         }
                         if (result.Count() > 3)

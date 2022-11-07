@@ -38,6 +38,27 @@
                 ForeColor="Red"
                 Font-Size="Large" Font-Bold="true">
             </asp:RequiredFieldValidator>
+            <br />
+            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull13" runat="server"
+                ControlToValidate="cMBpAIS"
+                ErrorMessage=" Seleccione un país."
+                ForeColor="Red"
+                Font-Size="Large" Font-Bold="true">
+            </asp:RequiredFieldValidator>
+            <br />
+            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull14" runat="server"
+                ControlToValidate="CmbDepartamento"
+                ErrorMessage=" Seleccione un departamento."
+                ForeColor="Red"
+                Font-Size="Large" Font-Bold="true">
+            </asp:RequiredFieldValidator>
+            <br />
+            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull15" runat="server"
+                ControlToValidate="CmbMunicipio"
+                ErrorMessage=" Seleccione un municipio."
+                ForeColor="Red"
+                Font-Size="Large" Font-Bold="true">
+            </asp:RequiredFieldValidator>
         </div>
 
         <div>
@@ -217,7 +238,7 @@
                     </asp:TableCell>
                     <%-- PAIS2--%>
                     <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">País:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">País*:</asp:Label> 
                     </asp:TableCell>
                     <%-- ESPACIO 3--%>
                     <asp:TableCell Width="5%">
@@ -234,7 +255,7 @@
                     </asp:TableCell>                   
                     <%-- DEPARTAMENTO 6--%>
                     <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Departamento:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label> 
                     </asp:TableCell>                                       
                     <%-- ESPACIO 7--%>
                     <asp:TableCell>
@@ -251,7 +272,7 @@
                     </asp:TableCell>
                     <%-- MUNICIPIO LABEL 10--%>
                     <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Municipio:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label> 
                     </asp:TableCell>
                     <%-- ESPACIO 11--%>
                     <asp:TableCell Width="5%">

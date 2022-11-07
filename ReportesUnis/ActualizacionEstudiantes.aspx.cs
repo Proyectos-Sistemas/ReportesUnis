@@ -61,7 +61,8 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO,DEPARTAMENTO, CNT FROM (" +
+                    cmd.CommandText = "SELECT PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO," +
+                        "DEPARTAMENTO, CNT FROM (" +
                    "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, " +
                    "PD.LAST_NAME|| ' ' || PD.SECOND_LAST_NAME LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PPD.PHONE , " +
                    "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
@@ -293,7 +294,7 @@ namespace ReportesUnis
         private string actualizarInformacion()
         {
             string mensaje = "";
-            if (!String.IsNullOrEmpty(txtDireccion.Text) || !String.IsNullOrEmpty(txtTelefono.Text))
+            if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text))
             {
                 try
                 {
@@ -320,9 +321,9 @@ namespace ReportesUnis
                             try
                             {
                                 if (String.IsNullOrEmpty(State.Text))
-                                    State.Text=" ";
+                                    State.Text = " ";
                                 if (String.IsNullOrEmpty(txtDireccion2.Text))
-                                    txtDireccion2.Text=" ";
+                                    txtDireccion2.Text = " ";
                                 //Numero de Telefono
                                 cmd.Connection = con;
                                 cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_DATA PPD SET PPD.PHONE = '" + txtTelefono.Text + "', PPD.STATE =  '" + State.Text + "', " +
@@ -356,7 +357,7 @@ namespace ReportesUnis
             }
             else
             {
-                mensaje = "No puede enviarse información vacía";
+                mensaje = "No puede enviarse información vacía y es necesario seleccionar un país, departamento y muncipio";
             }
             return mensaje;
         }
@@ -376,9 +377,12 @@ namespace ReportesUnis
         {
             string informacion = actualizarInformacion();
 
-            string carga = informacion + Upload();
+            if (informacion != "No puede enviarse información vacía y es necesario seleccionar un país, departamento y muncipio")
+            {
+                informacion = informacion + Upload();
+            }
 
-            lblActualizacion.Text = carga;
+            lblActualizacion.Text = informacion;
         }
 
         protected string Upload()
@@ -675,7 +679,7 @@ namespace ReportesUnis
                 GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
                 GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
                 GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
-                
+
             }
             catch (Exception)
             {

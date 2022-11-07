@@ -294,7 +294,7 @@
                 </asp:TableCell>
                 <%-- PAIS LABEL 2 --%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">País:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">País*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
                 <asp:TableCell Width="5%">
@@ -311,7 +311,7 @@
                 </asp:TableCell>
                 <%-- DEPARTAMENTO LABEL 6--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Departamento:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 7--%>
                 <asp:TableCell Width="5%">
@@ -328,7 +328,7 @@
                 </asp:TableCell>
                 <%-- MUNICIPIO LABEL 10--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Municipio:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 11--%>
                 <asp:TableCell Width="5%">

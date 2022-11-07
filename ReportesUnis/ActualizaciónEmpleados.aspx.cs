@@ -493,7 +493,7 @@ namespace ReportesUnis
             {
                 try
                 {
-                    int pais = cMBpAIS.SelectedValue.Length + 24;
+                    int pais = cMBpAIS.SelectedValue.Length + 25;
                     sustituto = sustituto.Remove(0, pais);
                 }
                 catch (Exception)
@@ -506,7 +506,7 @@ namespace ReportesUnis
             {
                 try
                 {
-                    int mun = CmbDepartamento.SelectedValue.Length + 15;
+                    int mun = CmbDepartamento.SelectedValue.Length + 28;
                     sustituto = sustituto.Remove(0, mun);
                     sustituto = sustituto.TrimEnd('|');
                 }
@@ -667,11 +667,7 @@ namespace ReportesUnis
             {
                 for (int i = 0; i < count; i++)
                 {
-                    if (i == 0)
-                    {
-                        resultado[i] = "-";
-                    }
-                    else if (i < count - 1)
+                    if (i < count - 1)
                     {
                         string palabra = result[i];
                         resultado[i] = StringExtensions.RemoveEnd(palabra, pais);
@@ -722,16 +718,18 @@ namespace ReportesUnis
             string[] result = sustituirCaracteres().Split('|');
             count = result.Length;
             string[] resultado = new string[count];
+            //string sustituto = DecodeStringFromBase64(Consultar()).Replace('"', '\r');
+            //sustituto = Regex.Replace(sustituto, @"\n+", "");
+            //sustituto = Regex.Replace(sustituto, @"\r", "");
 
             try
             {
                 for (int i = 0; i < count; i++)
                 {
-                    if (i == 0)
+                    if (count == 1 || i == count-1)
                     {
-                        resultado[i] = "-";
-                    }
-                    else
+                        resultado[i] = result[i];
+                    }else
                     {
                         string palabra = result[i];
                         resultado[i] = StringExtensions.RemoveEnd(palabra, depto);
@@ -892,116 +890,123 @@ namespace ReportesUnis
 
         protected void BtnActualizar_Click(object sender, EventArgs e)
         {
-            string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-            int ContadorArchivos = 0;
-            int ContadorArchivosCorrectos = 0;
-            int ContadorArchivosConError = 0;
-
-            //Ruta del archivo que guarda la bitácora
-            string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
-            //Nombre del archiov que guarda la bitácora
-            string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
-
-
-            //Se crea un nuevo archivo para guardar la bitacora de la ejecución
-            CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
-
-            //Guadar encabezado de la bitácora
-            GuardarBitacora(ArchivoBitacora, "                              Informe de ejecución de importación de fotografías HCM Fecha: " + FechaHoraInicioEjecución + "              ");
-            GuardarBitacora(ArchivoBitacora, "");
-            GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    DPI                         Estado                 Descripción                                    ");
-            GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
-
-
-            string constr = TxtURL.Text;
-            string mensajeValidacion = ""; 
-            //Obtener se obtiene toda la información del empleado
-            string expand = "legislativeInfo,phones,addresses,photos";
-            string consulta = consultaGetworkers(expand);
-            aux = 5;
-            string country = CodigoPais();
-
-            //Se obtienen los id's de las tablas a las cuales se les agregará información
-            string personId = getBetween(consulta, "workers/", "/child/");
-            string PhoneId = getBetween(consulta, "\"PhoneId\" : ", ",\n");
-            string AddressId = getBetween(consulta, "child/addresses/", "\",\n");
-            string PersonLegislativeId = getBetween(consulta, "child/legislativeInfo/", "\",\n");
-            string effective = getBetween(consulta, "\"EffectiveStartDate\" : ", ",\n");
-
-            string comIm = personId + "/child/photo/";
-            string consultaImagenes = consultaGetImagenes(comIm);
-            string ImageId = getBetween(consultaImagenes, "\"ImageId\" : ", ",\n");
-            string PhotoId = getBetween(consulta, "\"PhotoId\" : ", ",\n");
-
-            //ACTUALIZACION-CREACION DE IMAGEN
-            if (FileUpload1.HasFile)
+            if ( !cMBpAIS.Text.Equals("-") && !CmbMunicipio.Text.Equals("-") && !CmbDepartamento.Text.Equals("-"))
             {
-                foreach (HttpPostedFile uploadedFile in FileUpload1.PostedFiles)
-                {
-                    //Nombre de la fotografía cargada (Sin extensión)
-                    string NombreImagen = Path.GetFileNameWithoutExtension(uploadedFile.FileName);
+                string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                int ContadorArchivos = 0;
+                int ContadorArchivosCorrectos = 0;
+                int ContadorArchivosConError = 0;
 
-                    using (Stream fs = uploadedFile.InputStream)
+                //Ruta del archivo que guarda la bitácora
+                string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
+                //Nombre del archiov que guarda la bitácora
+                string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
+
+
+                //Se crea un nuevo archivo para guardar la bitacora de la ejecución
+                CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
+
+                //Guadar encabezado de la bitácora
+                GuardarBitacora(ArchivoBitacora, "                              Informe de ejecución de importación de fotografías HCM Fecha: " + FechaHoraInicioEjecución + "              ");
+                GuardarBitacora(ArchivoBitacora, "");
+                GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    DPI                         Estado                 Descripción                                    ");
+                GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
+
+
+                string constr = TxtURL.Text;
+                string mensajeValidacion = "";
+                //Obtener se obtiene toda la información del empleado
+                string expand = "legislativeInfo,phones,addresses,photos";
+                string consulta = consultaGetworkers(expand);
+                aux = 5;
+                string country = CodigoPais();
+
+                //Se obtienen los id's de las tablas a las cuales se les agregará información
+                string personId = getBetween(consulta, "workers/", "/child/");
+                string PhoneId = getBetween(consulta, "\"PhoneId\" : ", ",\n");
+                string AddressId = getBetween(consulta, "child/addresses/", "\",\n");
+                string PersonLegislativeId = getBetween(consulta, "child/legislativeInfo/", "\",\n");
+                string effective = getBetween(consulta, "\"EffectiveStartDate\" : ", ",\n");
+
+                string comIm = personId + "/child/photo/";
+                string consultaImagenes = consultaGetImagenes(comIm);
+                string ImageId = getBetween(consultaImagenes, "\"ImageId\" : ", ",\n");
+                string PhotoId = getBetween(consulta, "\"PhotoId\" : ", ",\n");
+
+                //ACTUALIZACION-CREACION DE IMAGEN
+                if (FileUpload1.HasFile)
+                {
+                    foreach (HttpPostedFile uploadedFile in FileUpload1.PostedFiles)
                     {
-                        using (BinaryReader br = new BinaryReader(fs))
+                        //Nombre de la fotografía cargada (Sin extensión)
+                        string NombreImagen = Path.GetFileNameWithoutExtension(uploadedFile.FileName);
+
+                        using (Stream fs = uploadedFile.InputStream)
                         {
-                            byte[] Imagen = br.ReadBytes((Int32)fs.Length);
-                            string b64 = Convert.ToBase64String(Imagen, 0, Imagen.Length);
-                            string consultaperfil = "\"PrimaryFlag\" : ";
-                            string perfil = getBetween(consulta, consultaperfil, ",\n");
-                            var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
-                            if (perfil == "true" && !String.IsNullOrEmpty(ImageId))
+                            using (BinaryReader br = new BinaryReader(fs))
                             {
-                                updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
-                                mensajeValidacion = "y la fotografía se actualizó correctamente en HCM.";
+                                byte[] Imagen = br.ReadBytes((Int32)fs.Length);
+                                string b64 = Convert.ToBase64String(Imagen, 0, Imagen.Length);
+                                string consultaperfil = "\"PrimaryFlag\" : ";
+                                string perfil = getBetween(consulta, consultaperfil, ",\n");
+                                var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
+                                if (perfil == "true" && !String.IsNullOrEmpty(ImageId))
+                                {
+                                    updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
+                                    mensajeValidacion = "y la fotografía se actualizó correctamente en HCM.";
+                                }
+                                else
+                                {
+                                    createPhoto(personId, "photo", Imgn);
+                                    mensajeValidacion = "y la fotografía se creó correctamente en HCM.";
+                                }
+                                GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "  " + NombreImagen.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
+                                ContadorArchivosCorrectos++;
                             }
-                            else
-                            {
-                                createPhoto(personId, "photo", Imgn);
-                                mensajeValidacion = "y la fotografía se creó correctamente en HCM.";
-                            }
-                            GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "  " + NombreImagen.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
-                            ContadorArchivosCorrectos++;
                         }
                     }
                 }
-            }
-            else
-            {
-                mensajeValidacion = " pero no se encontró ninguna fotografía para almacenar.";
-            }
+                else
+                {
+                    mensajeValidacion = " pero no se encontró ninguna fotografía para almacenar.";
+                }
 
-            effective = effective.Replace("\"", "");
-            string departamento = CmbDepartamento.Text;
-            if (departamento.Equals("-"))
-                departamento = "";
-            //Se crea el body que se enviará a cada tabla
-            var estadoC = "{\"MaritalStatus\": \"" + estadoCivil(CmbEstado.Text) + "\"}";
-            var phoneNumber = "{\"PhoneNumber\": \"" + txtTelefono.Text + "\"}";
-            var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text /*+ "\",\"Country\": \"" + country+*/+ "\"}";
+                effective = effective.Replace("\"", "");
+                string departamento = CmbDepartamento.Text;
+                if (departamento.Equals("-"))
+                    departamento = "";
+                //Se crea el body que se enviará a cada tabla
+                var estadoC = "{\"MaritalStatus\": \"" + estadoCivil(CmbEstado.Text) + "\"}";
+                var phoneNumber = "{\"PhoneNumber\": \"" + txtTelefono.Text + "\"}";
+                var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text /*+ "\",\"Country\": \"" + country+*/+ "\"}";
 
-            //Actualiza por medio del metodo PATCH            
-            updatePatch(phoneNumber, personId, "phones", PhoneId, "phones", "", "workers/");
-            updatePatch(estadoC, personId, "legislativeInfo", PersonLegislativeId, "legislativeInfo", effective, "workers/");
-            updatePatch(Address, personId, "addresses", AddressId, "addresses", effective, "workers/");
-            int au = respuestaPost;
-            if (respuestaPatch != 0 && respuestaPost != 0)
-                lblActualizacion.Text = "Ocurrió un problema al actualizar su información" + mensajeValidacion;
-            else
-            {
+                //Actualiza por medio del metodo PATCH            
+                updatePatch(phoneNumber, personId, "phones", PhoneId, "phones", "", "workers/");
+                updatePatch(estadoC, personId, "legislativeInfo", PersonLegislativeId, "legislativeInfo", effective, "workers/");
+                updatePatch(Address, personId, "addresses", AddressId, "addresses", effective, "workers/");
+                int au = respuestaPost;
+                if (respuestaPatch != 0 && respuestaPost != 0)
+                    lblActualizacion.Text = "Ocurrió un problema al actualizar su información" + mensajeValidacion;
+                else
+                {
+                    lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
+                    if (mensajeValidacion == " pero no se encontró ninguna fotografía para almacenar.")
+                        GuardarBitacora(ArchivoBitacora, "---".PadRight(36) + "  " + Context.User.Identity.Name.Replace("@unis.edu.gt", "").PadRight(26) + "  No se ingresó ninguna imagen               ".PadRight(60));
+
+                }
                 lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
-                if(mensajeValidacion == " pero no se encontró ninguna fotografía para almacenar.")
-                GuardarBitacora(ArchivoBitacora, "---".PadRight(36) + "  " + Context.User.Identity.Name.Replace("@unis.edu.gt", "").PadRight(26) + "  No se ingresó ninguna imagen               ".PadRight(60));
 
+                GuardarBitacora(ArchivoBitacora, "");
+                GuardarBitacora(ArchivoBitacora, "");
+                GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
+                GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
+                GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
+                GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
             }
-            lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion; 
-
-            GuardarBitacora(ArchivoBitacora, "");
-            GuardarBitacora(ArchivoBitacora, "");
-            GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
-            GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
-            GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
-            GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
+            else
+            {
+                lblActualizacion.Text = "Es necesario seleccionar un país, departamento y muncipio";
+            }
 
         }
 

@@ -60,6 +60,33 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidatorNull12;
 
         /// <summary>
+        /// Control RequiredFieldValidatorNull13.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidatorNull13;
+
+        /// <summary>
+        /// Control RequiredFieldValidatorNull14.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidatorNull14;
+
+        /// <summary>
+        /// Control RequiredFieldValidatorNull15.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidatorNull15;
+
+        /// <summary>
         /// Control txtNombre.
         /// </summary>
         /// <remarks>

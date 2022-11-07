@@ -1559,6 +1559,7 @@ namespace ReportesUnis
                 sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('"', '\n');
                 sustituto = Regex.Replace(sustituto, @" \n+", "\n");
                 sustituto = Regex.Replace(sustituto, @"\n+", "");
+                sustituto = Regex.Replace(sustituto, @"--", " ");
                 if (sustituto.Length > 110)
                 {
                     if (String.IsNullOrEmpty(TxtBuscador.Text) && String.IsNullOrEmpty(CldrCiclosInicio.Text))
@@ -1629,7 +1630,6 @@ namespace ReportesUnis
                 sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('\"', '\t');
                 sustituto = Regex.Replace(sustituto, @"\n+", " ");
                 sustituto = Regex.Replace(sustituto, @"\t", "");
-
 
                 if (LbxBusqueda.Text.Equals("Nombre") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                 {
@@ -2574,6 +2574,9 @@ namespace ReportesUnis
                     ret = "2";
                 }
                 //desc = 0;                
+            }else if(result.Count() > 0)
+            {
+                ret = "2";
             }
             return ret;
         }
