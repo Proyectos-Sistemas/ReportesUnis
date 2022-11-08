@@ -64,7 +64,7 @@ namespace ReportesUnis
                     cmd.CommandText = "SELECT PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO," +
                         "DEPARTAMENTO, CNT FROM (" +
                    "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, " +
-                   "PD.LAST_NAME|| ' ' || PD.SECOND_LAST_NAME LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PPD.PHONE , " +
+                   "PD.LAST_NAME|| ' ' || PD.SECOND_LAST_NAME LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
                    "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
                    "APD.DESCR CARRERA, AGT.DESCR FACULTAD, " +
                    "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'Sin Información' END STATUS, " +
@@ -75,6 +75,7 @@ namespace ReportesUnis
                    "LEFT JOIN SYSADM.PS_PERS_NID PN ON  PD.EMPLID = PN.EMPLID " +
                    "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
                    "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                   "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                    "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
                    "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON PD.EMPLID = CT.EMPLID " +
                    "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON CT.ACAD_GROUP_ADVIS = AGT.ACAD_GROUP " +
@@ -85,7 +86,7 @@ namespace ReportesUnis
                    "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                    //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
                    "WHERE PN.NATIONAL_ID ='2226708940101' " +
-                   ") WHERE CNT = 1";
+                   "AND PP.PHONE_TYPE='HOME') WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -104,10 +105,13 @@ namespace ReportesUnis
                         txtDireccion.Text = reader["DIRECCION"].ToString();
                         txtDireccion2.Text = reader["DIRECCION2"].ToString();
                         txtDireccion3.Text = reader["DIRECCION3"].ToString();
+                        CmbPais.SelectedValue = reader["PAIS"].ToString();
+                        llenadoDepartamento();
                         CmbDepartamento.SelectedValue = reader["DEPARTAMENTO"].ToString();
                         llenadoMunicipio();
                         CmbMunicipio.SelectedValue = reader["MUNICIPIO"].ToString();
-                        CmbPais.SelectedValue = reader["PAIS"].ToString();
+                        //if (String.IsNullOrEmpty(reader["MUNICIPIO"].ToString()))
+                        //    llenadoMunicipio();
                         txtTelefono.Text = reader["PHONE"].ToString();
                         txtCarrera.Text = reader["CARRERA"].ToString();
                         txtFacultad.Text = reader["FACULTAD"].ToString();
@@ -328,6 +332,8 @@ namespace ReportesUnis
                                 cmd.Connection = con;
                                 cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_DATA PPD SET PPD.PHONE = '" + txtTelefono.Text + "', PPD.STATE =  '" + State.Text + "', " +
                                     "PPD.ADDRESS1 = '" + txtDireccion.Text + "', PPD.ADDRESS2 = '" + txtDireccion2.Text + "', PPD.ADDRESS3 = '" + txtDireccion3.Text + "', PPD.COUNTRY = '" + codPais + "' WHERE PPD.EMPLID = '" + UserEmplid.Text + "'";
+                                cmd.ExecuteNonQuery();
+                                cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PPD.EMPLID = '" + UserEmplid.Text + "'";
                                 cmd.ExecuteNonQuery();
                                 //Direccion
                                 cmd.Connection = con;

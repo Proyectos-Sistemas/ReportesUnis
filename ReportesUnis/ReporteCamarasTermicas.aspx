@@ -19,6 +19,13 @@
                 <asp:ListItem>Departamento</asp:ListItem>
             </asp:DropDownList>
 
+             <%-- CALENDARIO PARA BUSQUEDA --%>
+            <asp:Label ID="FInicio" runat="server">Fecha inicio:</asp:Label>
+            <asp:TextBox ID="CldrCiclosInicio" runat="server" TextMode="Date"> </asp:TextBox>
+            <asp:Label ID="FFin" runat="server">Fecha fin:</asp:Label>
+            <asp:TextBox ID="CldrCiclosFin" runat="server" TextMode="Date">
+            </asp:TextBox>
+
             <%-- TXTBUSCADOR DONDE SE INGRESA EL TEXTO A BUSCAR --%>
             <asp:TextBox ID="TxtBuscador" runat="server"></asp:TextBox>
 

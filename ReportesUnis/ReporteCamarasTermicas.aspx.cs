@@ -414,7 +414,7 @@ namespace ReportesUnis
                                             j++;
                                         }
                                         celda++;
-                                        auxCelda=auxCelda + 1;
+                                        auxCelda = auxCelda + 1;
                                     }
                                     celda = 10 + auxCelda;
                                 }
@@ -651,38 +651,47 @@ namespace ReportesUnis
 
         public string stringWhere()
         {
-            var where = "";
             string busqueda = LbxBusqueda.Text;
+            var fechaI = CldrCiclosInicio.Text;
+            var anioI = fechaI.Substring(2, 2);
+            var mesI = fechaI.Substring(5, 2);
+            var diaI = fechaI.Substring(8, 2);
+            var fechaF = CldrCiclosFin.Text;
+            var anioF = fechaF.Substring(2, 2);
+            var mesF = fechaF.Substring(5, 2);
+            var diaF = fechaF.Substring(8, 2);
+            var inicio = diaI + "/" + mesI + "/" + anioI;
+            var fin = diaF + "/" + mesF + "/" + anioF;
+            var where = "";
 
             if (busqueda.Equals("Nombre"))
             {
-                where = where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') ";
+                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
             }
             else if (LbxBusqueda.Text.Equals("Apellido"))
             {
-                where = "WHERE PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') ";
-
+                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') ) AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
             }
             else if (LbxBusqueda.Text.Equals("ID"))
             {
-                where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
-
+                where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
             }
             else if (LbxBusqueda.Text.Equals("Departamento"))
             {
-                where = "WHERE  AGT.DESCR LIKE('%" + TxtBuscador.Text + "%') ";
-
+                where = "WHERE AGT.DESCR LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
             }
             else if (LbxBusqueda.Text.Equals("Género"))
             {
                 string buscar = TxtBuscador.Text;
                 string min = buscar.ToLower();
                 if (min.Equals("male"))
-                    where = "WHERE PD.SEX LIKE('%M%') ";
+                    where = "WHERE PD.SEX LIKE('%M%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 else if (min.Equals("female"))
-                    where = "WHERE PD.SEX LIKE ('%F%') ";
+                    where = "WHERE PD.SEX LIKE ('%F%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                else if (buscar == "%")
+                    where = "WHERE PD.SEX LIKE ('%%%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 else
-                    where = "WHERE PD.SEX LIKE ('%Mujer%') ";
+                    where = "WHERE PD.SEX LIKE ('%Mujer%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
             }
             return where;
         }
