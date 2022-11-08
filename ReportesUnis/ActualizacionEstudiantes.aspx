@@ -21,6 +21,10 @@
     <asp:TextBox ID="UserEmplid" runat="server" Visible="false"></asp:TextBox>
     <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
     <asp:TextBox ID="State" runat="server" Visible="false"></asp:TextBox>
+    <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE TELEFONO O NO--%>
+    <asp:TextBox ID="TruePhone" runat="server" Visible="false"></asp:TextBox>
+    <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE DIRECCION O NO--%>
+    <asp:TextBox ID="TrueDir" runat="server" Visible="false"></asp:TextBox>
 
     <%-- VALIDACION CAMPOS NULOS --%>
     <div style="margin-left: auto; margin-right: auto; text-align: center;">
@@ -397,7 +401,7 @@
                         <asp:ListItem Selected="False" Value=""></asp:ListItem>
                         <asp:ListItem>Casado</asp:ListItem>
                         <asp:ListItem>Soltero</asp:ListItem>
-                        <asp:ListItem>Sin Información</asp:ListItem>
+                        <asp:ListItem>No Consta</asp:ListItem>
                     </asp:DropDownList>
                 </asp:TableCell>
                 <asp:TableCell>

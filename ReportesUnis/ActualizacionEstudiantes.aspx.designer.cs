@@ -42,6 +42,24 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox State;
 
         /// <summary>
+        /// Control TruePhone.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TruePhone;
+
+        /// <summary>
+        /// Control TrueDir.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TrueDir;
+
+        /// <summary>
         /// Control RequiredFieldValidatorNull1.
         /// </summary>
         /// <remarks>

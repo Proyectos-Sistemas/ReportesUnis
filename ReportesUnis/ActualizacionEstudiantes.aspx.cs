@@ -67,7 +67,7 @@ namespace ReportesUnis
                    "PD.LAST_NAME|| ' ' || PD.SECOND_LAST_NAME LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
                    "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
                    "APD.DESCR CARRERA, AGT.DESCR FACULTAD, " +
-                   "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'Sin Información' END STATUS, " +
+                   "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'No Consta' END STATUS, " +
                    "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, " +
                    "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, " +
                    "TT.TERM_BEGIN_DT, ROW_NUMBER() OVER (PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, C.DESCR PAIS " +
@@ -75,7 +75,7 @@ namespace ReportesUnis
                    "LEFT JOIN SYSADM.PS_PERS_NID PN ON  PD.EMPLID = PN.EMPLID " +
                    "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
                    "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                   "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
+                   "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID AND PP.PHONE_TYPE='HOME'" +
                    "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
                    "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON PD.EMPLID = CT.EMPLID " +
                    "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON CT.ACAD_GROUP_ADVIS = AGT.ACAD_GROUP " +
@@ -84,9 +84,9 @@ namespace ReportesUnis
                    "LEFT JOIN SYSADM.PS_ACAD_PROG AP ON PD.EMPLID = AP.EMPLID " +
                    "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON AP.ACAD_PROG = APD.ACAD_PROG " +
                    "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                   //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                   "WHERE PN.NATIONAL_ID ='2226708940101' " +
-                   "AND PP.PHONE_TYPE='HOME') WHERE CNT = 1";
+                   //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + ---1581737080101
+                   "WHERE PN.NATIONAL_ID ='2487414380101' " +
+                   ") WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -103,16 +103,19 @@ namespace ReportesUnis
                         txtCumple.Text = dia + "-" + mes + "-" + anio;
 
                         txtDireccion.Text = reader["DIRECCION"].ToString();
+                        TrueDir.Text = reader["DIRECCION"].ToString();
                         txtDireccion2.Text = reader["DIRECCION2"].ToString();
                         txtDireccion3.Text = reader["DIRECCION3"].ToString();
-                        CmbPais.SelectedValue = reader["PAIS"].ToString();
+                        if (!String.IsNullOrEmpty(reader["PAIS"].ToString()))
+                            CmbPais.SelectedValue = reader["PAIS"].ToString();
+                        else
+                            CmbPais.SelectedValue = "";
                         llenadoDepartamento();
                         CmbDepartamento.SelectedValue = reader["DEPARTAMENTO"].ToString();
                         llenadoMunicipio();
                         CmbMunicipio.SelectedValue = reader["MUNICIPIO"].ToString();
-                        //if (String.IsNullOrEmpty(reader["MUNICIPIO"].ToString()))
-                        //    llenadoMunicipio();
                         txtTelefono.Text = reader["PHONE"].ToString();
+                        TruePhone.Text = reader["PHONE"].ToString();
                         txtCarrera.Text = reader["CARRERA"].ToString();
                         txtFacultad.Text = reader["FACULTAD"].ToString();
                         UserEmplid.Text = reader["EMPLID"].ToString();
@@ -198,7 +201,7 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT DESCR AS PAIS, COUNTRY FROM SYSADM.PS_COUNTRY_TBL " + where + " ORDER BY PAIS";
+                    cmd.CommandText = "SELECT ' ' PAIS, ' ' COUNTRY FROM DUAL UNION SELECT * FROM (SELECT DESCR AS PAIS, COUNTRY FROM SYSADM.PS_COUNTRY_TBL " + where + ")PAIS ORDER BY 1 ASC";
                     OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                     DataSet ds = new DataSet();
                     adapter.Fill(ds);
@@ -258,42 +261,9 @@ namespace ReportesUnis
             }
             else
             {
-                VALOR = "";
+                VALOR = "U";
             }
             return VALOR;
-        }
-        private string[] direccio()
-        {
-            string[] direccion = new string[4];
-            if (txtDireccion.Text.Length <= 54)
-            {
-                direccion[0] = txtDireccion.Text.Substring(0, txtDireccion.Text.Length);
-                direccion[1] = " ";
-                direccion[2] = " ";
-                direccion[3] = " ";
-            }
-            else if (txtDireccion.Text.Length >= 55 && txtDireccion.Text.Length < 110)
-            {
-                direccion[0] = txtDireccion.Text.Substring(0, 54);
-                direccion[1] = txtDireccion.Text.Substring(55, txtDireccion.Text.Length - 55);
-                direccion[2] = " ";
-                direccion[3] = " ";
-            }
-            else if (txtDireccion.Text.Length >= 110 && txtDireccion.Text.Length < 165)
-            {
-                direccion[0] = txtDireccion.Text.Substring(0, 54);
-                direccion[1] = txtDireccion.Text.Substring(55, txtDireccion.Text.Length - 55);
-                direccion[2] = txtDireccion.Text.Substring(110, txtDireccion.Text.Length - 110);
-                direccion[3] = " ";
-            }
-            else if (txtDireccion.Text.Length >= 165)
-            {
-                direccion[0] = txtDireccion.Text.Substring(0, 54);
-                direccion[1] = txtDireccion.Text.Substring(54, 54);
-                direccion[2] = txtDireccion.Text.Substring(108, 54);
-                direccion[3] = txtDireccion.Text.Substring(162, txtDireccion.Text.Length - 165);
-            }
-            return direccion;
         }
         private string actualizarInformacion()
         {
@@ -328,33 +298,51 @@ namespace ReportesUnis
                                     State.Text = " ";
                                 if (String.IsNullOrEmpty(txtDireccion2.Text))
                                     txtDireccion2.Text = " ";
-                                //Numero de Telefono
+                                //Telefono y direccion
                                 cmd.Connection = con;
                                 cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_DATA PPD SET PPD.PHONE = '" + txtTelefono.Text + "', PPD.STATE =  '" + State.Text + "', " +
-                                    "PPD.ADDRESS1 = '" + txtDireccion.Text + "', PPD.ADDRESS2 = '" + txtDireccion2.Text + "', PPD.ADDRESS3 = '" + txtDireccion3.Text + "', PPD.COUNTRY = '" + codPais + "' WHERE PPD.EMPLID = '" + UserEmplid.Text + "'";
+                                    "PPD.ADDRESS1 = '" + txtDireccion.Text + "', PPD.ADDRESS2 = '" + txtDireccion2.Text + "', PPD.ADDRESS3 = '" + txtDireccion3.Text + "', PPD.COUNTRY = '" + codPais + "',LASTUPDDTTM ='" + TextUser.Text + "', LASTUPDOPRID ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss.fffffff t") + "' WHERE PPD.EMPLID = '" + UserEmplid.Text + "'";
                                 cmd.ExecuteNonQuery();
-                                cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PPD.EMPLID = '" + UserEmplid.Text + "'";
-                                cmd.ExecuteNonQuery();
+                                //Numero de Telefono
+                                if (!String.IsNullOrEmpty(TruePhone.Text))
+                                {
+                                    cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PP.EMPLID = '" + UserEmplid.Text + "' AND PP.PHONE_TYPE='HOME'";
+                                    cmd.ExecuteNonQuery();
+                                }
+                                else
+                                {
+                                    cmd.CommandText = "INSERT INTO SYSADM.PS_PERSONAL_PHONE (EMPLID, PHONE_TYPE,PHONE,PREF_PHONE_FLAG) VALUES ('" + UserEmplid.Text + "', 'HOME',  '" + txtTelefono.Text + "', 'Y')";
+                                    cmd.ExecuteNonQuery();
+                                }
                                 //Direccion
-                                cmd.Connection = con;
-                                cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + State.Text + "', " +
-                                    "A.ADDRESS1 = '" + txtDireccion.Text + "', A.ADDRESS2 = '" + txtDireccion2.Text + "', A.ADDRESS3 = '" + txtDireccion3.Text + "', A.COUNTRY = '" + codPais + "' WHERE A.EMPLID = '" + UserEmplid.Text + "'";
-                                cmd.ExecuteNonQuery();
+                                if (!String.IsNullOrEmpty(TrueDir.Text))
+                                {
+                                    cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + State.Text + "', A.ADDRESS1 = '" + txtDireccion.Text + "', A.ADDRESS2 = '" + txtDireccion2.Text + "', A.ADDRESS3 = '" + txtDireccion3.Text + "', A.COUNTRY = '" + codPais + "',LASTUPDDTTM ='"+ TextUser.Text + "', LASTUPDOPRID ='"+ DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss.fffffff t") + "' WHERE A.EMPLID = '" + UserEmplid.Text + "'";
+                                    cmd.ExecuteNonQuery();
+                                }
+                                else
+                                {
+                                    cmd.CommandText = "INSERT INTO SYSADM.SYSADM.PS_ADDRESSES (EMPLID, ADDRESS_TYPE,EFFDT,EFF_STATUS,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,STATE,LASTUPDDTTM,LASTUPDOPRID) " +
+                                        "VALUES('" + UserEmplid.Text + "', 'HOME', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'A', '" + codPais + "', '" + txtDireccion.Text + "', '" + txtDireccion2.Text + "', '" + txtDireccion3.Text + "', '" + State.Text + "', '" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss.fffffff t") + "','" + TextUser.Text + "')";
+                                    cmd.ExecuteNonQuery();
+                                    cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.SYSADM.PS_ADDRESSES_SA (EMPLID, ADDRESS_TYPE,EFFDT,ORG_LOCATION,MAINT_ADDR_MANUAL,MAINT_OTHER_MANUAL,ORG_CONTACT,SEASONAL_ADDR) " +
+                                        "VALUES('" + UserEmplid.Text + "', 'HOME', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 0, 'N','N',0,'N')";
+                                    cmd.ExecuteNonQuery();
+                                }
                                 //Estado Civil
-                                cmd.Connection = con;
                                 cmd.CommandText = "UPDATE SYSADM.PS_PERS_DATA_EFFDT PD SET PD.MAR_STATUS = '" + ec + "' WHERE PD.EMPLID = '" + UserEmplid.Text + "'";
                                 cmd.ExecuteNonQuery();
                                 transaction.Commit();
                                 con.Close();
+                                mensaje = "Su información fue actualizada correctamente";
                             }
                             catch (Exception)
                             {
                                 transaction.Rollback();
+                                mensaje = "Ocurrió un problema al actualizar su información";
                             }
                         }
-                    }
-
-                    mensaje = "Su información fue actualizada correctamente";
+                    }                    
                 }
                 catch (Exception x)
                 {
