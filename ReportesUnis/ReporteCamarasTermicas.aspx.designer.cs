@@ -24,6 +24,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.DropDownList LbxBusqueda;
 
         /// <summary>
+        /// Control TxtBuscador.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtBuscador;
+
+        /// <summary>
         /// Control FInicio.
         /// </summary>
         /// <remarks>
@@ -58,15 +67,6 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox CldrCiclosFin;
-
-        /// <summary>
-        /// Control TxtBuscador.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtBuscador;
 
         /// <summary>
         /// Control TxtURL.
