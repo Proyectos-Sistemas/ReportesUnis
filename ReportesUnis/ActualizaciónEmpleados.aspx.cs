@@ -154,7 +154,7 @@ namespace ReportesUnis
                                                 </v2:item>
                                            </v2:listOfParamNameValues>
                                         </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleadosBDAct.xdo</v2:reportAbsolutePath>
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/InformeActualizarEmpleados.xdo</v2:reportAbsolutePath>
                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
                                      </v2:reportRequest>
                                      <v2:userID>" + idPersona + @"</v2:userID>
@@ -486,7 +486,7 @@ namespace ReportesUnis
             {
                 int largo = 0;
                 string nombre = TextUser.Text.TrimEnd(' ');
-                largo = nombre.Length + 149;
+                largo = nombre.Length + 156;
                 sustituto = sustituto.Remove(0, largo);
             }
             else if (aux == 1)

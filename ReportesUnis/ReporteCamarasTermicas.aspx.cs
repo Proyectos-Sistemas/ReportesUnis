@@ -427,20 +427,6 @@ namespace ReportesUnis
                 {
                     lblBusqueda.Text = "No se encontró la información solicitada";
                 }
-                //for (int k = 0; k < 17; k++)
-                //{
-                //    for (int j = 0; j < GridViewReporteCT.Columns.Count; j++)
-                //    {
-                //        for (int i = 0; i < GridViewReporteCT.Rows.Count; i++)
-                //        {
-                //            string texto = removeUnicode(GridViewReporteCT.Rows[i].Cells[j].Text);
-                //            sl.SetCellValue(LETRA[k] + celda, texto);
-                //            celda++;
-                //        }
-                //        celda = celda - GridViewReporteCT.Rows.Count;
-                //        k++;
-                //    }
-                //}
             }
 
             //Nombre del archivo
@@ -551,7 +537,6 @@ namespace ReportesUnis
                                         where +
                                         "AND employee_photo IS NOT NULL )" +
                                         "WHERE CNT =1";
-                    //cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID in (" + removeUnicode(GridViewReporteCT.Rows[k].Cells[17].Text) + ") AND employee_photo IS NOT NULL ";
                     cmd.Connection = con;
                     con.Open();
                     OracleDataReader reader = cmd.ExecuteReader();
@@ -606,7 +591,6 @@ namespace ReportesUnis
                 lblBusqueda.Text = "";
                 lblDescarga.Visible = true;
                 lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
-                //Process.Start(folder);
                 ret = "1";
             }
             else

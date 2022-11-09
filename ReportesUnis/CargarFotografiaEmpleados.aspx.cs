@@ -38,27 +38,7 @@ namespace ReportesUnis
                     files.Add(new ListItem(Path.GetFileName(filePath), filePath));
                 }
             }
-        }
-        //Crea el cuerpo que se utiliza para consultar a todos los empleados
-        private static void CuerpoConsulta(string idPersona, string passwordServicio)
-        {
-            Variables.soapBody = @"<?xml version=""1.0""?>
-                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
-                                <soapenv:Header/>
-                                <soapenv:Body>                  
-                                    <v2:runReport>
-                                        <v2:reportRequest>
-                                            <v2:attributeFormat>csv</v2:attributeFormat>                                            
-                                            <v2:flattenXML>false</v2:flattenXML>                                        
-                                            <v2:reportAbsolutePath>/Reportes IS/PT/CargaMasiva.xdo</v2:reportAbsolutePath>
-                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                        </v2:reportRequest>
-                                        <v2:userID>" + idPersona + @"</v2:userID>
-                                        <v2:password>" + passwordServicio + @"</v2:password>
-                                    </v2:runReport>
-                                </soapenv:Body>
-                                </soapenv:Envelope>";
-        }
+        }        
 
         [WebMethod]
         public string Consultar(string dpi)
@@ -68,12 +48,7 @@ namespace ReportesUnis
 
             //Obtiene información del servicio (URL y credenciales)
             credencialesEndPoint(archivoConfiguraciones, "Consultar");
-            if (aux != 0)
-            {
-                //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                CuerpoConsulta(Variables.wsUsuario, Variables.wsPassword);
-            }
-            else
+            if (aux == 0)
             {
                 //Crea el cuerpo que se utiliza para consultar el servicio de HCM
                 CuerpoConsultaPorDPI(Variables.wsUsuario, Variables.wsPassword, dpi);
@@ -876,7 +851,7 @@ namespace ReportesUnis
                                                 </v2:item>
                                            </v2:listOfParamNameValues>
                                         </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleadosBDAct.xdo</v2:reportAbsolutePath>
+                                        <v2:reportAbsolutePath>/Reportes IS/PT/ReporteDPICargaMasiva.xdo</v2:reportAbsolutePath>
                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
                                      </v2:reportRequest>
                                      <v2:userID>" + idPersona + @"</v2:userID>
@@ -890,11 +865,6 @@ namespace ReportesUnis
         {
             string sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('"', '\n');
             sustituto = Regex.Replace(sustituto, @"\n+", "");
-
-            int largo = 0;
-            //largo = dpi.Length + 149;
-            //if (sustituto.Length > largo)
-            //sustituto = sustituto.Remove(0, largo);
             return sustituto;
         }
 
