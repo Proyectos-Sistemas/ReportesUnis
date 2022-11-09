@@ -53,6 +53,7 @@
             </div>
             <asp:Button ID="btnUpload" runat="server" Text="Cargar" OnClick="Upload" OnClientClick="container" CssClass="btn-primary" Enabled="false" />
             <hr />
+            <asp:Label ID="lblMensaje" runat="server" Font-Bold="true" ForeColor="Black" Text="" Font-Size="Large"></asp:Label>
             <asp:GridView ID="GridView1" class="table table-bordered table-condensed table-responsive table-hover" runat="server"
                 AutoGenerateColumns="false" CssClass="table" Visible="false">
                 <Columns>

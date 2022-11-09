@@ -32,7 +32,7 @@
             <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
             <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
 
-        </div>        
+        </div>
         <br />
         <asp:Table runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
             <asp:TableRow>
@@ -47,12 +47,13 @@
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>
-        <br />
+        <div style="text-align: center">
+            <br />
+            <asp:Label ID="lblBusqueda" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"></asp:Label>
+            <asp:Label ID="lblDescarga" runat="server" Font-Bold="true" ForeColor="Blue" Text="" Font-Size="Large" Visible="false"></asp:Label></>
+        </div>
     </div>
 
-    <br />
-            <asp:Label ID="lblBusqueda" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"></asp:Label>
-            <asp:Label ID="lblDescarga" runat="server" Font-Bold="true" ForeColor="Blue" Text="" Font-Size="Large" Visible="false"></asp:Label>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -86,8 +87,7 @@
         </div>
     </div>
     <div style="text-align: center">
-            
-        </div>
+    </div>
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>

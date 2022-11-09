@@ -23,6 +23,7 @@ namespace ReportesUnis
             else
             {
                 LeerInfoTxt();
+                lblMensaje.Text = "Al finalizar la carga se descargará un archivo con la información del estado de la carga de cada una de las imágenes.";
                 BindGrid();
             }
 
