@@ -346,7 +346,7 @@ namespace ReportesUnis
                 Response.Flush();
                 Response.End();
             }
-            catch (Exception x)
+            catch (Exception)
             {
                 Console.WriteLine("Error");
             }

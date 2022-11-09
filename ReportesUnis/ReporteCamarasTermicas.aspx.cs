@@ -93,13 +93,9 @@ namespace ReportesUnis
             using (StreamReader file = new StreamReader(rutaCompleta))
             {
                 line = file.ReadToEnd();
-
                 TxtURL.Text = line;
-
                 file.Close();
-
             }
-
         }
 
         //LLAMADA DE LA FUNCION PARA LA GENERACION DE BUSQUEDA
@@ -110,7 +106,7 @@ namespace ReportesUnis
             {
                 consultaBusqueda();
             }
-            catch (Exception c)
+            catch (Exception)
             {
                 lblBusqueda.Text = "No se encontró la información solicitada";
                 return;
@@ -405,7 +401,6 @@ namespace ReportesUnis
                                 int contador = dt.Rows.Count;
                                 for (int i = 0; i < contador; i++)
                                 {
-                                    //string rows = dt.Rows[0].ToString();
                                     for (int j = 1; j < 18; j++)
                                     {
                                         for (int k = 0; k < 17; k++)
@@ -613,7 +608,7 @@ namespace ReportesUnis
                 else if (respuesta == "2")
                     lblBusqueda.Text = "No se encontraron imágenes relacionadas a los estudiantes.";
             }
-            catch (Exception x)
+            catch (Exception)
             {
                 lblBusqueda.Text = "Ha ocurido un error";
             }

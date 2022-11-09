@@ -566,7 +566,6 @@ namespace ReportesUnis
 
         protected void ButtonFts_Click(object sender, EventArgs e)
         {
-            int total = 0;
             try
             {
                 string where = stringWhere();

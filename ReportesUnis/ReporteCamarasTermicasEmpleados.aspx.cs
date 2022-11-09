@@ -826,7 +826,7 @@ namespace ReportesUnis
         //Sustituye las comillas dobles y elimina los primeros caracteres que corresponden a los Headers
         public string sustituirCaracteres(string dpi)
         {
-            string sustituto = "";//Regex.Replace(Consultar(), " \"", "");
+            string sustituto = "";
             sustituto = DecodeStringFromBase64(ConsultaWS("")).Replace('"', '\n');
             sustituto = Regex.Replace(sustituto, @" \n+", "\n");
             sustituto = Regex.Replace(sustituto, @"\n+", "");
@@ -874,9 +874,6 @@ namespace ReportesUnis
             }
             else
             {
-                //sustituto = DecodeStringFromBase64(ConsultaWS(dpi)).Replace('\"', '\t');
-                //sustituto = Regex.Replace(sustituto, @"\n+", " ");
-                //sustituto = Regex.Replace(sustituto, @"\t", "");
                 int largo = TxtBuscador.Text.Length;
                 largo = largo + 53;
                 if (sustituto.Length > largo)
@@ -913,8 +910,6 @@ namespace ReportesUnis
 
                     try
                     {
-                        var start = "";
-                        var end = "";
                         DataSetLocalRpt dsReporte = new DataSetLocalRpt();
                         try
                         {
@@ -958,8 +953,6 @@ namespace ReportesUnis
                             Console.WriteLine(x.ToString());
                         }
 
-                        //LbxBusqueda.Text = "";
-                        // TxtBuscador.Text = "";
                         GridViewReporteCT.DataSource = dsReporte.Tables["RptCTEmpleados"];
                         GridViewReporteCT.DataBind();
                         GridViewReporteCT.UseAccessibleHeader = true;
@@ -1015,7 +1008,6 @@ namespace ReportesUnis
             int celda = 1;
             //Letras de las columnas para la generacion de excel
             string[] LETRA = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q" };
-            int aux = 0;
             //Texto plano
             sl.RenameWorksheet(SLDocument.DefaultFirstSheetName, "Reporte Estudiantes " + DateTime.Now.ToString("G"));
             sl.SetCellValue("A" + celda, "Rule");
@@ -1378,8 +1370,7 @@ namespace ReportesUnis
                 else
                 {
                     ret = "2";
-                }
-                //desc = 0;                
+                }             
             }
             return ret;
         }
@@ -1396,7 +1387,7 @@ namespace ReportesUnis
                 else if (respuesta == "2")
                     lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
             }
-            catch (Exception x)
+            catch (Exception)
             {
                 lblBusqueda.Text = "Ha ocurido un error";
             }

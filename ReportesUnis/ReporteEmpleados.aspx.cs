@@ -186,11 +186,6 @@ namespace ReportesUnis
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
                         CuerpoConsultaPorDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
                     }
-                    else
-                    {
-                        //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsulta(Variables.wsUsuario, Variables.wsPassword);
-                    }
                 }
                 else
                 {
@@ -398,27 +393,6 @@ namespace ReportesUnis
                     Variables.wsPassword = line.ToString();
                 cont++;
             }
-        }
-
-        //Crea el cuerpo que se utiliza para consultar a todos los empleados
-        private static void CuerpoConsulta(string idPersona, string passwordServicio)
-        {
-            Variables.soapBody = @"<?xml version=""1.0""?>
-                                <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
-                                <soapenv:Header/>
-                                <soapenv:Body>                  
-                                    <v2:runReport>
-                                        <v2:reportRequest>
-                                            <v2:attributeFormat>csv</v2:attributeFormat>                                            
-                                            <v2:flattenXML>false</v2:flattenXML>                                        
-                                            <v2:reportAbsolutePath>/Reportes IS/PT/ReporteEmpleados.xdo</v2:reportAbsolutePath>
-                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
-                                        </v2:reportRequest>
-                                        <v2:userID>" + idPersona + @"</v2:userID>
-                                        <v2:password>" + passwordServicio + @"</v2:password>
-                                    </v2:runReport>
-                                </soapenv:Body>
-                                </soapenv:Envelope>";
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por nombre
@@ -1552,7 +1526,7 @@ namespace ReportesUnis
         //Sustituye las comillas dobles y elimina los primeros caracteres que corresponden a los Headers
         public string sustituirCaracteres(string dpi)
         {
-            string sustituto = "";//Regex.Replace(Consultar(), " \"", "");
+            string sustituto = "";
 
             if (desc == 0)
             {
@@ -1881,18 +1855,10 @@ namespace ReportesUnis
                                 Console.WriteLine(x.ToString());
                             }
 
-                            //LbxBusqueda.Text = "";
-                            //TxtBuscador.Text = "";
-                            //TxtBuscador2.Text = "";
-                            //CldrCiclosFin.Text = "";
-                            //CldrCiclosInicio.Text = "";
                             GridViewReporte.DataSource = dsReporte.Tables["RptEmpleados"];
                             GridViewReporte.DataBind();
                             GridViewReporte.UseAccessibleHeader = true;
                             GridViewReporte.HeaderRow.TableSection = System.Web.UI.WebControls.TableRowSection.TableHeader;
-                            //ChBusqueda.Checked = false;
-                            //LbxBusqueda2.Visible = false;
-                            //TxtBuscador2.Visible = false;
                             lblBusqueda.Text = "";
                         }
                         catch (Exception x)
@@ -2594,7 +2560,7 @@ namespace ReportesUnis
                 else if (respuesta == "2")
                     lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
             }
-            catch (Exception x)
+            catch (Exception)
             {
                 lblBusqueda.Text = "Ha ocurido un error";
             }

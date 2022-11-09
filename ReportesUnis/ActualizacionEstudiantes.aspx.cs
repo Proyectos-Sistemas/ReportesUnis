@@ -149,7 +149,7 @@ namespace ReportesUnis
                         CmbDepartamento.DataBind();
                         con.Close();
                     }
-                    catch (Exception x)
+                    catch (Exception)
                     {
                         CmbDepartamento.DataTextField = "";
                         CmbDepartamento.DataValueField = "";
@@ -344,7 +344,7 @@ namespace ReportesUnis
                         }
                     }                    
                 }
-                catch (Exception x)
+                catch (Exception)
                 {
                     mensaje = "Ocurrió un problema al actualizar su información";
                 }
