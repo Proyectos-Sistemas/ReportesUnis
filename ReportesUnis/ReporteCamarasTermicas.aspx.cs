@@ -121,91 +121,100 @@ namespace ReportesUnis
 
             try
             {
-                using (OracleConnection con = new OracleConnection(constr))
+                if ((LbxBusqueda.Text == "Género") && (!TxtBuscador.Text.ToLower().Equals("mujer")))
                 {
-                    using (OracleCommand cmd = new OracleCommand())
                     {
-                        cmd.CommandText = "SELECT " +
-                                        "EMPLID, " +
-                                        "FIRST_NAME, " +
-                                        "LAST_NAME, " +
-                                        "ID, " +
-                                        "'Basic Person' TYPE, " +
-                                        "PERSON_GROUP || Departamento PERSON_GROUP, " +
-                                        "GENDER, " +
-                                        "'' Start_Time_of_Effective_Period, " +
-                                        "'' End_Time_of_Effective_Period, " +
-                                        "'' CARD, " +
-                                        "PHONE, " +
-                                        "EMAIL, " +
-                                        "'' Remark, " +
-                                        "'' Dock_Station_Login_Password, " +
-                                        "'' SupportIssuedCustomProperties, " +
-                                        "'' SkinSurface_Temperature, " +
-                                        "'' Temperature_Status, " +
-                                        "DEPARTAMENTO " +
-                                        "FROM " +
-                                        "( " +
-                                        "SELECT " +
-                                        "DISTINCT PD.EMPLID, " +
-                                        "PD.FIRST_NAME, " +
-                                        "PD.LAST_NAME || CASE WHEN LTRIM(RTRIM(PD.SECOND_LAST_NAME)) IS NOT NULL THEN ' ' || LTRIM(RTRIM(PD.SECOND_LAST_NAME)) END LAST_NAME, " +
-                                        "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) ID, " +
-                                        "CASE WHEN PD.SEX = 'F' THEN 'Female' WHEN PD.SEX = 'M' THEN 'Male' ELSE 'Unknown' END Gender, " +
-                                        "PPD.PHONE, " +
-                                        "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) Email, " +
-                                        "AGT.DESCR DEPARTAMENTO," +
-                                        "APD.INSTITUTION || '/Estudiantes/' Person_Group, " +
-                                        "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
-                                        "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
-                                        "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE " +
-                                        "FROM " +
-                                        "SYSADM.PS_PERS_DATA_SA_VW PD " +
-                                        "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
-                                        "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
-                                        "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
-                                        "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                                        "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                        "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
-                                        "AND SE.STDNT_ENRL_STATUS = 'E' " +
-                                        "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                                        "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID " +
-                                        "AND CT.STRM = SE.STRM " +
-                                        "AND CT.ACAD_CAREER = SE.ACAD_CAREER " +
-                                        "AND SE.INSTITUTION = CT.INSTITUTION " +
-                                        "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
-                                        "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
-                                        "AND CT.INSTITUTION = APD.INSTITUTION " +
-                                        "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
-                                        "AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                        "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
-                                        "AND CT.INSTITUTION = TT.INSTITUTION " +
-                                        "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
-                                        where +
-                                        ") " +
-                                        "WHERE  " +
-                                        "(ID = DPI " +
-                                        "OR ID = PASAPORTE " +
-                                        "OR ID = CEDULA )" +
-                                        "ORDER BY " +
-                                        "1 ASC ";
-                        cmd.Connection = con;
-                        con.Open();
-                        OracleDataReader reader = cmd.ExecuteReader();
-                        if (reader.HasRows)
+                        using (OracleConnection con = new OracleConnection(constr))
                         {
-                            GridViewReporteCT.DataSource = cmd.ExecuteReader();
-                            GridViewReporteCT.DataBind();
-                            lblBusqueda.Text = "";
+                            using (OracleCommand cmd = new OracleCommand())
+                            {
+                                cmd.CommandText = "SELECT " +
+                                                "EMPLID, " +
+                                                "FIRST_NAME, " +
+                                                "LAST_NAME, " +
+                                                "ID, " +
+                                                "'Basic Person' TYPE, " +
+                                                "PERSON_GROUP || Departamento PERSON_GROUP, " +
+                                                "GENDER, " +
+                                                "'' Start_Time_of_Effective_Period, " +
+                                                "'' End_Time_of_Effective_Period, " +
+                                                "'' CARD, " +
+                                                "PHONE, " +
+                                                "EMAIL, " +
+                                                "'' Remark, " +
+                                                "'' Dock_Station_Login_Password, " +
+                                                "'' SupportIssuedCustomProperties, " +
+                                                "'' SkinSurface_Temperature, " +
+                                                "'' Temperature_Status, " +
+                                                "DEPARTAMENTO " +
+                                                "FROM " +
+                                                "( " +
+                                                "SELECT " +
+                                                "DISTINCT PD.EMPLID, " +
+                                                "PD.FIRST_NAME, " +
+                                                "PD.LAST_NAME || CASE WHEN LTRIM(RTRIM(PD.SECOND_LAST_NAME)) IS NOT NULL THEN ' ' || LTRIM(RTRIM(PD.SECOND_LAST_NAME)) END LAST_NAME, " +
+                                                "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) ID, " +
+                                                "CASE WHEN PD.SEX = 'F' THEN 'Female' WHEN PD.SEX = 'M' THEN 'Male' ELSE 'Unknown' END Gender, " +
+                                                "PPD.PHONE, " +
+                                                "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) Email, " +
+                                                "AGT.DESCR DEPARTAMENTO," +
+                                                "APD.INSTITUTION || '/Estudiantes/' Person_Group, " +
+                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
+                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
+                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE " +
+                                                "FROM " +
+                                                "SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                                "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                                "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                                                "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
+                                                "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                                                "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                                                "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
+                                                "AND SE.STDNT_ENRL_STATUS = 'E' " +
+                                                "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                                                "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID " +
+                                                "AND CT.STRM = SE.STRM " +
+                                                "AND CT.ACAD_CAREER = SE.ACAD_CAREER " +
+                                                "AND SE.INSTITUTION = CT.INSTITUTION " +
+                                                "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
+                                                "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
+                                                "AND CT.INSTITUTION = APD.INSTITUTION " +
+                                                "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
+                                                "AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                                "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
+                                                "AND CT.INSTITUTION = TT.INSTITUTION " +
+                                                "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                                                where +
+                                                ") " +
+                                                "WHERE  " +
+                                                "(ID = DPI " +
+                                                "OR ID = PASAPORTE " +
+                                                "OR ID = CEDULA )" +
+                                                "ORDER BY " +
+                                                "1 ASC ";
+                                cmd.Connection = con;
+                                con.Open();
+                                OracleDataReader reader = cmd.ExecuteReader();
+                                if (reader.HasRows)
+                                {
+                                    GridViewReporteCT.DataSource = cmd.ExecuteReader();
+                                    GridViewReporteCT.DataBind();
+                                    lblBusqueda.Text = "";
+                                }
+                                else
+                                {
+                                    lblBusqueda.Text = "No se encontró la información solicitada";
+                                    if (LbxBusqueda.Text == "Género")
+                                        lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
+                                }
+                                con.Close();
+                            }
                         }
-                        else
-                        {
-                            lblBusqueda.Text = "No se encontró la información solicitada";
-                            if (LbxBusqueda.Text == "Género")
-                                lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
-                        }
-                        con.Close();
                     }
+                }
+                else
+                {
+                    lblBusqueda.Text = "Para realizar búesqueda por género intente ingresando Male o Female";
                 }
             }
             catch

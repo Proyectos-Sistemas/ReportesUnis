@@ -1760,7 +1760,8 @@ namespace ReportesUnis
                                         newFila["Apellido3"] = (arrlist[i, 15] ?? "").ToString();
                                         newFila["NOM_IMP"] = (arrlist[i, 11] ?? "").ToString() + " " + (arrlist[i, 13] ?? "").ToString();
                                         newFila["Sexo"] = (arrlist[i, 16] ?? "").ToString();
-                                        newFila["CARNE"] = (arrlist[i, 17] ?? "").ToString();
+                                        string carne = (arrlist[i, 17] ?? "").ToString();
+                                        newFila["CARNE"] = carne;
                                         if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 17] ?? "").ToString())
                                         {
                                             newFila["Pasaporte"] = "";
@@ -1768,7 +1769,7 @@ namespace ReportesUnis
                                             newFila["FLAG_DPI"] = "1";
                                             newFila["DPI"] = (arrlist[i, 3] ?? "").ToString();
                                         }
-                                        else
+                                        else if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 17] ?? "").ToString())
                                         {
                                             newFila["Pasaporte"] = (arrlist[i, 18] ?? "").ToString();
                                             newFila["FLAG_PAS"] = "1";
@@ -1776,8 +1777,15 @@ namespace ReportesUnis
                                             newFila["DPI"] = "";
                                             flag_pas = 1;
                                         }
+                                        else
+                                        {
+                                            newFila["Pasaporte"] = "";
+                                            newFila["FLAG_PAS"] = "0";
+                                            newFila["FLAG_DPI"] = "0";
+                                            newFila["DPI"] = "";
+                                        }
                                         newFila["Cedula"] = (arrlist[i, 19] ?? "").ToString();
-                                        newFila["NIT"] = (arrlist[i, 20] ?? "").ToString();
+                                        newFila["NIT"] = (arrlist[i, 19] ?? "").ToString();
 
                                         if ((arrlist[i, 21] ?? "").ToString() == "-" && flag_pas == 1)
                                         {
@@ -1785,7 +1793,7 @@ namespace ReportesUnis
                                         }
                                         else
                                         {
-                                            newFila["Nacionalidad"] = (arrlist[i, 21] ?? "").ToString();
+                                            newFila["Nacionalidad"] = (arrlist[i, 20] ?? "").ToString();
 
                                         }
 
@@ -1828,23 +1836,40 @@ namespace ReportesUnis
                                         newFila["Apellido3"] = (arrlist[i, 16] ?? "").ToString();
                                         newFila["NOM_IMP"] = (arrlist[i, 12] ?? "").ToString() + " " + (arrlist[i, 14] ?? "").ToString();
                                         newFila["Sexo"] = (arrlist[i, 17] ?? "").ToString();
-                                        newFila["CARNE"] = (arrlist[i, 18] ?? "").ToString();
-                                        if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 19] ?? "").ToString())
+                                        string carne = (arrlist[i, 18] ?? "").ToString();
+                                        newFila["CARNE"] = carne;
+                                        if ((arrlist[i, 4] ?? "").ToString() == (arrlist[i, 24] ?? "").ToString())
                                         {
                                             newFila["Pasaporte"] = "";
                                             newFila["FLAG_PAS"] = "0";
                                             newFila["FLAG_DPI"] = "1";
                                             newFila["DPI"] = "";
                                         }
-                                        else
+                                        else if ((arrlist[i, 4] ?? "").ToString() == (arrlist[i, 18] ?? "").ToString())
                                         {
-                                            newFila["Pasaporte"] = (arrlist[i, 19] ?? "").ToString();
+                                            newFila["Pasaporte"] = (arrlist[i, 18] ?? "").ToString();
                                             newFila["FLAG_PAS"] = "1";
                                             newFila["FLAG_DPI"] = "0";
+                                            flag_pas = 1;
                                         }
-                                        newFila["Cedula"] = (arrlist[i, 20] ?? "").ToString();
-                                        newFila["NIT"] = (arrlist[i, 21] ?? "").ToString();
-                                        newFila["Nacionalidad"] = (arrlist[i, 22] ?? "").ToString();
+                                        else
+                                        {
+                                            newFila["Pasaporte"] = "";
+                                            newFila["FLAG_PAS"] = "0";
+                                            newFila["FLAG_DPI"] = "0";
+                                            newFila["DPI"] = "";
+                                        }
+                                        newFila["Cedula"] = (arrlist[i, 19] ?? "").ToString();
+                                        newFila["NIT"] = (arrlist[i, 20] ?? "").ToString();
+                                        if ((arrlist[i, 21] ?? "").ToString() == "-" && flag_pas == 1)
+                                        {
+                                            newFila["Nacionalidad"] = "Condición Migrante";
+                                        }
+                                        else
+                                        {
+                                            newFila["Nacionalidad"] = (arrlist[i, 21] ?? "").ToString();
+
+                                        }
                                         newFila["FLAG_CED"] = "0";
                                         dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                                     }
@@ -2389,7 +2414,7 @@ namespace ReportesUnis
                         {
                             for (int k = 1; k < 6; k++)
                             {
-                                if (k == 5 && i <count-1)
+                                if (k == 5 && i < count - 1)
                                 {
                                     string resultado = result[datos];
                                     int removerUltimos = 10;
@@ -2540,7 +2565,8 @@ namespace ReportesUnis
                     ret = "2";
                 }
                 //desc = 0;                
-            }else if(result.Count() > 0)
+            }
+            else if (result.Count() > 0)
             {
                 ret = "2";
             }
