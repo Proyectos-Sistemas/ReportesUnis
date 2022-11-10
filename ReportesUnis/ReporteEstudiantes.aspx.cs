@@ -597,99 +597,6 @@ namespace ReportesUnis
             return name;
         }
 
-
-        [DelimitedRecord("\r\n")]
-        public class Item
-        {
-            public string Prop1 { get; set; }
-            public string Prop2 { get; set; }
-            public string Prop3 { get; set; }
-            public string Prop4 { get; set; }
-            public string Prop5 { get; set; }
-            public string Prop6 { get; set; }
-            public string Prop7 { get; set; }
-            public string Prop8 { get; set; }
-            public string Prop9 { get; set; }
-            public string Prop10 { get; set; }
-            public string Prop11 { get; set; }
-            public string Prop12 { get; set; }
-            public string Prop13 { get; set; }
-            public string Prop14 { get; set; }
-            public string Prop15 { get; set; }
-            public string Prop16 { get; set; }
-            public string Prop17 { get; set; }
-            public string Prop18 { get; set; }
-            public string Prop19 { get; set; }
-            public string Prop20 { get; set; }
-            public string Prop21 { get; set; }
-            public string Prop22 { get; set; }
-            public string Prop23 { get; set; }
-            public string Prop24 { get; set; }
-            public string Prop25 { get; set; }
-            public string Prop26 { get; set; }
-            public string Prop27 { get; set; }
-            public string Prop28 { get; set; }
-            public string Prop29 { get; set; }
-            public string Prop30 { get; set; }
-            public string Prop31 { get; set; }
-            public string Prop32 { get; set; }
-            public string Prop33 { get; set; }
-            public string Prop34 { get; set; }
-            public string Prop35 { get; set; }
-            public string Prop36 { get; set; }
-            public string Prop37 { get; set; }
-            public string Prop38 { get; set; }
-            public string Prop39 { get; set; }
-            public string Prop40 { get; set; }
-            public string Prop41 { get; set; }
-            public string Prop42 { get; set; }
-            public string Prop43 { get; set; }
-            public string Prop44 { get; set; }
-            public string Prop45 { get; set; }
-            public string Prop46 { get; set; }
-            public string Prop47 { get; set; }
-            public string Prop48 { get; set; }
-            public string Prop49 { get; set; }
-            public string Prop50 { get; set; }
-            public string Prop51 { get; set; }
-            public string Prop52 { get; set; }
-            public string Prop53 { get; set; }
-            public string Prop54 { get; set; }
-            public string Prop55 { get; set; }
-            public string Prop56 { get; set; }
-            public string Prop57 { get; set; }
-            public string Prop58 { get; set; }
-            public string Prop59 { get; set; }
-            public string Prop60 { get; set; }
-            public string Prop61 { get; set; }
-            public string Prop62 { get; set; }
-            public string Prop63 { get; set; }
-            public string Prop64 { get; set; }
-            public string Prop65 { get; set; }
-            public string Prop66 { get; set; }
-
-        }
-
-        public void descargaprueba()
-        {
-            List<Item> Items = new List<Item>();
-
-
-            foreach (GridViewRow row in GridViewReporte.Rows)
-            {
-                Item _item = new Item()
-                {
-                    Prop1 = removeUnicode(row.Cells[0].Text) + "|" + removeUnicode(row.Cells[1].Text) + "|" + removeUnicode(row.Cells[2].Text) + "|"
-                               + removeUnicode(row.Cells[3].Text) + "|" + removeUnicode(row.Cells[4].Text) + "|" + removeUnicode(row.Cells[5].Text) + "|" +
-                               removeUnicode(row.Cells[6].Text) + "|" + removeUnicode(row.Cells[7].Text) + "|" + removeUnicode(row.Cells[8].Text),
-                };
-                Items.Add(_item);
-            }
-
-            var engine = new FileHelperEngine<Item>();
-            engine.WriteFile(@"C:\Users\3217767041601\Downloads\Archivo.txt", Items);
-        }
-
         public string stringWhere()
         {
             var fechaI = CldrCiclosInicio.Text;
@@ -722,43 +629,7 @@ namespace ReportesUnis
                 }
                 else if (LbxBusqueda.Text.Equals("Facultad"))
                 {
-                    if ((TxtBuscador.Text).ToLower().Equals("facultad de comunicación"))
-                    {
-                        TxtBuscador.Text = "Facultad de Comunicación";
-                    }
-                    else if (TxtBuscador.Text.ToLower().Equals("escuela de negocios - unis bs"))
-                    {
-                        TxtBuscador.Text = "Escuela de Negocios - UNIS BS";
-                    }
-                    else if (TxtBuscador.Text.ToLower().Equals("facultad de humanidades"))
-                    {
-                        TxtBuscador.Text = "Facultad de Humanidades";
-                    }
-                    else if (TxtBuscador.Text.ToLower().Equals("f arquitectura y diseño"))
-                    {
-                        TxtBuscador.Text = "F Arquitectura y Diseño";
-                    }
-                    else if (TxtBuscador.Text.ToLower().Equals("facultad de ingeniería"))
-                    {
-                        TxtBuscador.Text = "Facultad de Ingeniería";
-                    }
-                    else if (TxtBuscador.Text.ToLower().Equals("centro de inv human y empresa"))
-                    {
-                        TxtBuscador.Text = "Centro de Inv Human y Empresa";
-                    }
-                    else if (TxtBuscador.Text.ToLower().Equals("f ciencias económicas y empre"))
-                    {
-                        TxtBuscador.Text = "F Ciencias Económicas y Empre";
-                    }
-                    else if (TxtBuscador.Text.ToLower().Equals("f ciencias de la salud"))
-                    {
-                        TxtBuscador.Text = "F Ciencias de la Salud";
-                    }
-                    else if (TxtBuscador.Text.ToLower().Equals("facultad de derecho"))
-                    {
-                        TxtBuscador.Text = "Facultad de Derecho";
-                    }
-                    where = "WHERE AGT.DESCR LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE UPPER(AGT.DESCR) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 }
             }
             else //CREACION DE WHERE PARA BUSQUEDA MULTIPLE CON LAS COMBINACIONES POSIBLES
@@ -779,43 +650,7 @@ namespace ReportesUnis
                     where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') ";
                 }
                 else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Facultad"))
-                {
-                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Comunicación";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
-                    {
-                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Humanidades";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
-                    {
-                        TxtBuscador2.Text = "F Arquitectura y Diseño";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Ingeniería";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
-                    {
-                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias de la Salud";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Derecho";
-                    }
+                {                    
                     where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
                 }
                 else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI/Carné"))
@@ -824,83 +659,11 @@ namespace ReportesUnis
                 }
                 else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Facultad"))
                 {
-                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Comunicación";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
-                    {
-                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Humanidades";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
-                    {
-                        TxtBuscador2.Text = "F Arquitectura y Diseño";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Ingeniería";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
-                    {
-                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias de la Salud";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Derecho";
-                    }
                     where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%')) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
 
                 }
                 else if (LbxBusqueda.Text.Equals("DPI/Carné") && LbxBusqueda2.Text.Equals("Facultad"))
                 {
-                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Comunicación";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
-                    {
-                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Humanidades";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
-                    {
-                        TxtBuscador2.Text = "F Arquitectura y Diseño";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Ingeniería";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
-                    {
-                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias de la Salud";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Derecho";
-                    }
                     where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
                 }
                 else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido"))
@@ -950,7 +713,7 @@ namespace ReportesUnis
                     {
                         TxtBuscador2.Text = "Facultad de Derecho";
                     }
-                    where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
+                    where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(AGT.DESCR) LIKE('%" + TxtBuscador.Text.ToUpper() + "%')";
                 }
                 else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI/Carné"))
                 {
@@ -994,7 +757,7 @@ namespace ReportesUnis
                     {
                         TxtBuscador2.Text = "Facultad de Derecho";
                     }
-                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%')";
+                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(AGT.DESCR) LIKE('%" + TxtBuscador.Text.ToUpper() + "%')";
                 }
                 else if (LbxBusqueda2.Text.Equals("DPI/Carné") && LbxBusqueda.Text.Equals("Facultad"))
                 {
@@ -1034,7 +797,7 @@ namespace ReportesUnis
                     {
                         TxtBuscador2.Text = "Facultad de Derecho";
                     }
-                    where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%')  AND AGT.DESCR LIKE('%" + TxtBuscador.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%')  AND UPPER(AGT.DESCR) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 }
             }
             return where;

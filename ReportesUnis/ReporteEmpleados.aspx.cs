@@ -184,7 +184,7 @@ namespace ReportesUnis
                     else if (LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                        CuerpoConsultaPorDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                     }
                 }
                 else
@@ -202,7 +202,7 @@ namespace ReportesUnis
                     else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI"))
                     {
@@ -212,12 +212,12 @@ namespace ReportesUnis
                     else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido"))
                     {
@@ -232,7 +232,7 @@ namespace ReportesUnis
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI"))
                     {
@@ -242,12 +242,12 @@ namespace ReportesUnis
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
                     }
                 }
             }
@@ -273,7 +273,7 @@ namespace ReportesUnis
                     else if (LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaDescargaXDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                        CuerpoConsultaDescargaXDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                     }
 
                 }
@@ -292,7 +292,7 @@ namespace ReportesUnis
                     else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoDescargaXNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI"))
                     {
@@ -302,12 +302,12 @@ namespace ReportesUnis
                     else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoDescargaXApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoDescargaXDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido"))
                     {
@@ -322,7 +322,7 @@ namespace ReportesUnis
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoDescargaXNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI"))
                     {
@@ -332,12 +332,12 @@ namespace ReportesUnis
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoDescargaXApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoDescargaXDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
                     }
                 }
             }

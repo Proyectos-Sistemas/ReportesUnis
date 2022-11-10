@@ -150,7 +150,7 @@ namespace ReportesUnis
                 else if (LbxBusqueda.Text.Equals("Departamento"))
                 {
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaPorDepartamento(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    CuerpoConsultaPorDepartamento(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                 }
                 else if (LbxBusqueda.Text.Equals("Género"))
                 {
@@ -179,7 +179,7 @@ namespace ReportesUnis
                 else if (LbxBusqueda.Text.Equals("Departamento"))
                 {
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaDescargaXDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    CuerpoConsultaDescargaXDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                 }
                 else if (LbxBusqueda.Text.Equals("Género"))
                 {
@@ -861,7 +861,7 @@ namespace ReportesUnis
                         }
                         else if (LbxBusqueda.Text.Equals("Departamento"))
                         {
-                            int largo = 107;
+                            int largo = 115;
                             sustituto = sustituto.Remove(0, largo);
                         }
                         else if (LbxBusqueda.Text.Equals("Género"))
@@ -892,8 +892,7 @@ namespace ReportesUnis
                 decimal count = 0;
                 int datos = 0;
                 string[,] arrlist;
-
-                if (result.Count() > 9)
+                if (result.Count() > 12)
                 {
                     registros = result.Count() / 13;
                     count = Math.Round(registros, 0);
@@ -1102,23 +1101,23 @@ namespace ReportesUnis
                         for (int i = 0; i < contador; i++)
                         {
 
-                            sl.SetCellValue("A" + celda, (arrlist[i, 5] ?? "").ToString());
-                            sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString());
-                            sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString());
-                            sl.SetCellValue("D" + celda, "Basic Person");
-                            sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + (arrlist[i, 10] ?? "").ToString());
-                            sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString());
-                            sl.SetCellValue("G" + celda, "");
-                            sl.SetCellValue("H" + celda, "");
-                            sl.SetCellValue("I" + celda, "");
-                            sl.SetCellValue("J" + celda, arrlist[i, 12].ToString());
-                            sl.SetCellValue("K" + celda, (arrlist[i, 9] ?? "").ToString());
-                            sl.SetCellValue("L" + celda, "");
-                            sl.SetCellValue("M" + celda, "");
-                            sl.SetCellValue("N" + celda, "");
-                            sl.SetCellValue("O" + celda, "");
-                            sl.SetCellValue("P" + celda, "");
-                            sl.SetCellValue("Q" + celda, (arrlist[i, 10] ?? "").ToString());
+                            sl.SetCellValue("A" + celda, (arrlist[i, 5] ?? "").ToString()); //First Name
+                            sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString()); //Last Name
+                            sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString()); //ID
+                            sl.SetCellValue("D" + celda, "Basic Person"); //TYPE
+                            sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + (arrlist[i, 10] ?? "").ToString()); //Person Group
+                            sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString()); //GENDER
+                            sl.SetCellValue("G" + celda, ""); //Start Time of Effective Period
+                            sl.SetCellValue("H" + celda, ""); //End Time of Effective Period
+                            sl.SetCellValue("I" + celda, ""); //CARD
+                            sl.SetCellValue("J" + celda, arrlist[i, 12].ToString()); //EMAIL
+                            sl.SetCellValue("K" + celda, (arrlist[i, 9] ?? "").ToString()); //PHONE
+                            sl.SetCellValue("L" + celda, ""); //REMARK
+                            sl.SetCellValue("M" + celda, ""); //Dock Station Login Password
+                            sl.SetCellValue("N" + celda, ""); //Support Issued Custom Properties
+                            sl.SetCellValue("O" + celda, ""); //Skin-surface Temperature
+                            sl.SetCellValue("P" + celda, ""); //Temperature Status
+                            sl.SetCellValue("Q" + celda, (arrlist[i, 10] ?? "").ToString()); //DEPARTAMENTO
                             celda++;
                         }
                         if (result.Count() > 3)
@@ -1154,23 +1153,23 @@ namespace ReportesUnis
                         for (int i = 0; i < contador; i++)
                         {
 
-                            sl.SetCellValue("A" + celda, (arrlist[i, 5] ?? "").ToString());
-                            sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString());
-                            sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString());
-                            sl.SetCellValue("D" + celda, "Basic Person");
-                            sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + (arrlist[i, 10] ?? "").ToString());
-                            sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString());
-                            sl.SetCellValue("G" + celda, "");
-                            sl.SetCellValue("H" + celda, "");
-                            sl.SetCellValue("I" + celda, "");
-                            sl.SetCellValue("J" + celda, arrlist[i, 12].ToString());
-                            sl.SetCellValue("K" + celda, (arrlist[i, 9] ?? "").ToString());
-                            sl.SetCellValue("L" + celda, "");
-                            sl.SetCellValue("M" + celda, "");
-                            sl.SetCellValue("N" + celda, "");
-                            sl.SetCellValue("O" + celda, "");
-                            sl.SetCellValue("P" + celda, "");
-                            sl.SetCellValue("Q" + celda, (arrlist[i, 10] ?? "").ToString());
+                            sl.SetCellValue("A" + celda, (arrlist[i, 5] ?? "").ToString()); //FIRS NAME
+                            sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString()); //LAST NAME
+                            sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString()); //ID
+                            sl.SetCellValue("D" + celda, "Basic Person"); //TYPE
+                            sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + (arrlist[i, 10] ?? "").ToString()); //PERSON GROUP
+                            sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString()); //GENDER
+                            sl.SetCellValue("G" + celda, ""); //Start Time of Effective Period
+                            sl.SetCellValue("H" + celda, ""); //End Time of Effective Period
+                            sl.SetCellValue("I" + celda, ""); //CARD
+                            sl.SetCellValue("J" + celda, arrlist[i, 12].ToString()); //EMAIL
+                            sl.SetCellValue("K" + celda, (arrlist[i, 9] ?? "").ToString()); //PHONE
+                            sl.SetCellValue("L" + celda, ""); //REMARK
+                            sl.SetCellValue("M" + celda, ""); //Dock Station Login Password
+                            sl.SetCellValue("N" + celda, ""); //Support Issued Custom Properties
+                            sl.SetCellValue("O" + celda, ""); //Skin-surface Temperature
+                            sl.SetCellValue("P" + celda, ""); //Temperature Status
+                            sl.SetCellValue("Q" + celda, (arrlist[i, 10] ?? "").ToString()); //DEPARTAMENTO
                             celda++;
                         }
                         if (result.Count() > 3)
@@ -1370,7 +1369,7 @@ namespace ReportesUnis
                 else
                 {
                     ret = "2";
-                }             
+                }
             }
             return ret;
         }
