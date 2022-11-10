@@ -884,7 +884,7 @@ namespace ReportesUnis
 
         public void matrizDatos()
         {
-            if ((LbxBusqueda.Text == "Género") && (!TxtBuscador.Text.ToLower().Equals("mujer")))
+            if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
             {
                 if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(lblBusqueda.Text))
                 {

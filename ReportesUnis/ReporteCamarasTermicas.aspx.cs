@@ -121,7 +121,7 @@ namespace ReportesUnis
 
             try
             {
-                if ((LbxBusqueda.Text == "Género") && (!TxtBuscador.Text.ToLower().Equals("mujer")))
+                if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
                 {
                     {
                         using (OracleConnection con = new OracleConnection(constr))
