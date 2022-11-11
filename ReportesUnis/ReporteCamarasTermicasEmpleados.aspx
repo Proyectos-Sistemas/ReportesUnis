@@ -11,7 +11,6 @@
             <a>Busqueda por: </a>
             <%-- DROPDOWLIST CON OPCIONES DE BUSQUEDA --%>
             <asp:DropDownList ID="LbxBusqueda" SelectionMode="Single" runat="server">
-                <asp:ListItem Selected="True" Value=""></asp:ListItem>
                 <asp:ListItem>Nombre</asp:ListItem>
                 <asp:ListItem>Apellido</asp:ListItem>
                 <asp:ListItem>ID</asp:ListItem>

@@ -2284,11 +2284,11 @@ namespace ReportesUnis
         protected void LbxBusqueda_SelectedIndexChanged(object sender, EventArgs e)
         {
             LbxBusqueda2.Items.Clear();
-            LbxBusqueda2.Items.Insert(0, "");
-            LbxBusqueda2.Items.Insert(1, "Nombre");
-            LbxBusqueda2.Items.Insert(2, "Apellido");
-            LbxBusqueda2.Items.Insert(3, "DPI");
-            LbxBusqueda2.Items.Insert(4, "Dependencia");
+            //LbxBusqueda2.Items.Insert(0, "");
+            LbxBusqueda2.Items.Insert(0, "Nombre");
+            LbxBusqueda2.Items.Insert(1, "Apellido");
+            LbxBusqueda2.Items.Insert(2, "DPI");
+            LbxBusqueda2.Items.Insert(3, "Dependencia");
             LbxBusqueda2.Items.Remove(LbxBusqueda2.Items.FindByValue(LbxBusqueda.Text));
             TxtBuscador.Visible = true;
             TxtBuscador2.Text = "";
@@ -2302,11 +2302,11 @@ namespace ReportesUnis
                 TxtBuscador2.Visible = true;
                 TxtBuscador2.Text = "";
                 LbxBusqueda2.Items.Clear();
-                LbxBusqueda2.Items.Insert(0, "");
-                LbxBusqueda2.Items.Insert(1, "Nombre");
-                LbxBusqueda2.Items.Insert(2, "Apellido");
-                LbxBusqueda2.Items.Insert(3, "DPI");
-                LbxBusqueda2.Items.Insert(4, "Dependencia");
+                //LbxBusqueda2.Items.Insert(0, "");
+                LbxBusqueda2.Items.Insert(0, "Nombre");
+                LbxBusqueda2.Items.Insert(1, "Apellido");
+                LbxBusqueda2.Items.Insert(2, "DPI");
+                LbxBusqueda2.Items.Insert(3, "Dependencia");
                 LbxBusqueda2.Items.Remove(LbxBusqueda2.Items.FindByValue(LbxBusqueda.Text));
             }
             else
