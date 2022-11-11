@@ -654,15 +654,15 @@ namespace ReportesUnis
 
             if (busqueda.Equals("Nombre"))
             {
-                where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
             }
             else if (LbxBusqueda.Text.Equals("Apellido"))
             {
-                where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') ) AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                where = "WHERE (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') ) AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
             }
             else if (LbxBusqueda.Text.Equals("ID"))
             {
-                where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                where = "WHERE UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
             }
             else if (LbxBusqueda.Text.Equals("Departamento"))
             {

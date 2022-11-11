@@ -617,15 +617,15 @@ namespace ReportesUnis
                 string busqueda = LbxBusqueda.Text;
                 if (LbxBusqueda.Text.Equals("Nombre"))
                 {
-                    where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 }
                 else if (LbxBusqueda.Text.Equals("Apellido"))
                 {
-                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') ) AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') ) AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 }
                 else if (LbxBusqueda.Text.Equals("DPI/Carné"))
                 {
-                    where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 }
                 else if (LbxBusqueda.Text.Equals("Facultad"))
                 {
@@ -642,162 +642,54 @@ namespace ReportesUnis
                 TxtBuscador2.Text = TxtBuscador2.Text.TrimStart(' ');
                 if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido"))
                 {
-                    where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR(TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "')) AND (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') )";
+                    where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR(TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "')) AND (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%') )";
 
                 }
                 else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI/Carné"))
                 {
-                    where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') ";
+                    where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%') ";
                 }
                 else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Facultad"))
                 {                    
-                    where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
+                    where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(AGT.DESCR) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%')";
                 }
                 else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI/Carné"))
                 {
-                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%')) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text.ToUpper() + "%')) AND UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + fin + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 }
                 else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Facultad"))
                 {
-                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%')) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
+                    where = "WHERE (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text.ToUpper() + "%')) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(AGT.DESCR) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%')";
 
                 }
                 else if (LbxBusqueda.Text.Equals("DPI/Carné") && LbxBusqueda2.Text.Equals("Facultad"))
                 {
-                    where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND AGT.DESCR LIKE('%" + TxtBuscador2.Text + "%')";
+                    where = "WHERE UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(AGT.DESCR) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%')";
                 }
                 else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido"))
                 {
-                    where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND (PD.LAST_NAME LIKE('%" + TxtBuscador.Text + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text + "%'))  ";
+                    where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') OR PD.SECOND_LAST_NAME LIKE('%" + TxtBuscador.Text.ToUpper() + "%'))  ";
 
                 }
                 else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI/Carné"))
                 {
-                    where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
+                    where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') ";
                 }
                 else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Facultad"))
                 {
-                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Comunicación";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
-                    {
-                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Humanidades";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
-                    {
-                        TxtBuscador2.Text = "F Arquitectura y Diseño";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Ingeniería";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
-                    {
-                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias de la Salud";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Derecho";
-                    }
-                    where = "WHERE PD.FIRST_NAME LIKE('%" + TxtBuscador2.Text + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(AGT.DESCR) LIKE('%" + TxtBuscador.Text.ToUpper() + "%')";
+                    where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(UPPER(AGT.DESCR)) LIKE('%" + TxtBuscador.Text.ToUpper().ToUpper() + "%')";
                 }
                 else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI/Carné"))
                 {
-                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND PN.NATIONAL_ID LIKE('%" + TxtBuscador.Text + "%') ";
+                    where = "WHERE (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') ";
                 }
                 else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Facultad"))
                 {
-                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Comunicación";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
-                    {
-                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Humanidades";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
-                    {
-                        TxtBuscador2.Text = "F Arquitectura y Diseño";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Ingeniería";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
-                    {
-                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias de la Salud";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Derecho";
-                    }
-                    where = "WHERE (PD.LAST_NAME LIKE('%" + TxtBuscador2.Text + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(AGT.DESCR) LIKE('%" + TxtBuscador.Text.ToUpper() + "%')";
+                    where = "WHERE (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%') ) AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' )) AND UPPER(UPPER(AGT.DESCR)) LIKE('%" + TxtBuscador.Text.ToUpper() + "%')";
                 }
                 else if (LbxBusqueda2.Text.Equals("DPI/Carné") && LbxBusqueda.Text.Equals("Facultad"))
                 {
-                    if (TxtBuscador2.Text.ToLower().Equals("facultad de comunicación"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Comunicación";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("escuela de negocios - unis bs"))
-                    {
-                        TxtBuscador2.Text = "Escuela de Negocios - UNIS BS";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de humanidades"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Humanidades";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f arquitectura y diseño"))
-                    {
-                        TxtBuscador2.Text = "F Arquitectura y Diseño";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de ingeniería"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Ingeniería";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("centro de inv human y empresa"))
-                    {
-                        TxtBuscador2.Text = "Centro de Inv Human y Empresa";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias económicas y empre"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias Económicas y Empre";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("f ciencias de la salud"))
-                    {
-                        TxtBuscador2.Text = "F Ciencias de la Salud";
-                    }
-                    else if (TxtBuscador2.Text.ToLower().Equals("facultad de derecho"))
-                    {
-                        TxtBuscador2.Text = "Facultad de Derecho";
-                    }
-                    where = "WHERE PN.NATIONAL_ID LIKE('%" + TxtBuscador2.Text + "%')  AND UPPER(AGT.DESCR) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador2.Text.ToUpper() + "%')  AND UPPER(UPPER(AGT.DESCR)) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND  ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 }
             }
             return where;

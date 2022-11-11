@@ -169,17 +169,17 @@ namespace ReportesUnis
                     if (LbxBusqueda.Text.Equals("Nombre"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombre(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                        CuerpoConsultaPorNombre(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellido(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                        CuerpoConsultaPorApellido(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                        CuerpoConsultaPorDPI(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Dependencia"))
                     {
@@ -192,62 +192,62 @@ namespace ReportesUnis
                     if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoConsultaPorNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoConsultaPorNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
+                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoConsultaPorApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
+                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper().ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
+                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper().ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoConsultaPorNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda, FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoConsultaPorNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
+                        CuerpoConsultaPorNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoConsultaPorApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
+                        CuerpoConsultaPorApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
+                        CuerpoConsultaPorDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda.ToUpper(), FI, FF);
                     }
                 }
             }
@@ -258,17 +258,17 @@ namespace ReportesUnis
                     if (LbxBusqueda.Text.Equals("Nombre"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaDescargaXNombre(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                        CuerpoConsultaDescargaXNombre(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaDescargaXApellido(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                        CuerpoConsultaDescargaXApellido(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoConsultaDescargaXDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                        CuerpoConsultaDescargaXDPI(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Dependencia"))
                     {
@@ -282,62 +282,62 @@ namespace ReportesUnis
                     if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoDescargaXNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoDescargaXNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
+                        CuerpoDescargaXNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper().ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2, FI, FF);
+                        CuerpoDescargaXApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
+                        CuerpoDescargaXApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda, busqueda2.ToUpper(), FI, FF);
+                        CuerpoDescargaXDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), busqueda2.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoDescargaXNombreApellido(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoDescargaXNombreDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
+                        CuerpoDescargaXNombreDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda, FI, FF);
+                        CuerpoDescargaXApellidoDPI(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
+                        CuerpoDescargaXApellidoDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda.ToUpper(), FI, FF);
                     }
                     else if (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia"))
                     {
                         //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                        CuerpoDescargaXDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2, busqueda.ToUpper(), FI, FF);
+                        CuerpoDescargaXDPIDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda2.ToUpper(), busqueda.ToUpper(), FI, FF);
                     }
                 }
             }
@@ -1665,10 +1665,10 @@ namespace ReportesUnis
             {
                 {
                     GridViewReporte.DataSource = "";
-                    if (!ChBusqueda.Checked)
-                    {
-                        LbxBusqueda2.Text = "";
-                    }
+                    //if (!ChBusqueda.Checked)
+                    //{
+                    //    LbxBusqueda2.Text = "";
+                    //}
                     string[] result = sustituirCaracteres("").Split('|');
                     decimal registros = 0;
                     decimal count = 0;
@@ -1762,30 +1762,42 @@ namespace ReportesUnis
                                         newFila["Sexo"] = (arrlist[i, 16] ?? "").ToString();
                                         string carne = (arrlist[i, 17] ?? "").ToString();
                                         newFila["CARNE"] = carne;
-                                        if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 17] ?? "").ToString())
+                                        if ((arrlist[i, 3] ?? "").ToString() == carne)
                                         {
                                             newFila["Pasaporte"] = "";
                                             newFila["FLAG_PAS"] = "0";
                                             newFila["FLAG_DPI"] = "1";
-                                            newFila["DPI"] = (arrlist[i, 3] ?? "").ToString();
+                                            newFila["DPI"] = carne;
+                                            newFila["FLAG_CED"] = "0";
                                         }
-                                        else if ((arrlist[i, 3] ?? "").ToString() == (arrlist[i, 17] ?? "").ToString())
+                                        else if ((arrlist[i, 18] ?? "").ToString() == carne)
                                         {
-                                            newFila["Pasaporte"] = (arrlist[i, 18] ?? "").ToString();
+                                            newFila["Pasaporte"] = carne;
                                             newFila["FLAG_PAS"] = "1";
                                             newFila["FLAG_DPI"] = "0";
-                                            newFila["DPI"] = "";
+                                            newFila["FLAG_CED"] = "0";
+                                            newFila["Cedula"] = "";
                                             flag_pas = 1;
                                         }
-                                        else
+                                        else if ((arrlist[i, 19] ?? "").ToString() == carne)
                                         {
                                             newFila["Pasaporte"] = "";
                                             newFila["FLAG_PAS"] = "0";
                                             newFila["FLAG_DPI"] = "0";
+                                            newFila["Cedula"] = carne;
+                                            newFila["FLAG_CED"] = "1";
+                                        }
+                                        else 
+                                        {
+                                            newFila["Pasaporte"] = "";
+                                            newFila["FLAG_PAS"] = "0";
+                                            newFila["FLAG_DPI"] = "0";
+                                            newFila["FLAG_CED"] = "0";
+                                            newFila["Cedula"] = "";
                                             newFila["DPI"] = "";
                                         }
-                                        newFila["Cedula"] = (arrlist[i, 19] ?? "").ToString();
-                                        newFila["NIT"] = (arrlist[i, 19] ?? "").ToString();
+                                        
+                                        newFila["NIT"] = (arrlist[i, 20] ?? "").ToString();
 
                                         if ((arrlist[i, 21] ?? "").ToString() == "-" && flag_pas == 1)
                                         {
@@ -1797,7 +1809,6 @@ namespace ReportesUnis
 
                                         }
 
-                                        newFila["FLAG_CED"] = "0";
                                         dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                                     }
                                 }
@@ -1807,7 +1818,7 @@ namespace ReportesUnis
                                     {
 
                                         DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                                        newFila["DPI"] = (arrlist[i, 4] ?? "").ToString();
+                                        //newFila["DPI"] = (arrlist[i, 4] ?? "").ToString();
                                         newFila["Dependencia"] = (arrlist[i, 5] ?? "").ToString();
                                         newFila["Telefono"] = (arrlist[i, 6] ?? "").ToString();
                                         newFila["Estado Civil"] = (arrlist[i, 7] ?? "").ToString();
@@ -1838,28 +1849,41 @@ namespace ReportesUnis
                                         newFila["Sexo"] = (arrlist[i, 17] ?? "").ToString();
                                         string carne = (arrlist[i, 18] ?? "").ToString();
                                         newFila["CARNE"] = carne;
-                                        if ((arrlist[i, 4] ?? "").ToString() == (arrlist[i, 24] ?? "").ToString())
+                                        if ((arrlist[i, 4] ?? "").ToString() == carne)
                                         {
                                             newFila["Pasaporte"] = "";
                                             newFila["FLAG_PAS"] = "0";
                                             newFila["FLAG_DPI"] = "1";
-                                            newFila["DPI"] = "";
+                                            newFila["DPI"] = carne;
+                                            newFila["FLAG_CED"] = "0";
+                                            newFila["Cedula"] = "";
                                         }
-                                        else if ((arrlist[i, 4] ?? "").ToString() == (arrlist[i, 18] ?? "").ToString())
+                                        else if ((arrlist[i, 19] ?? "").ToString() == carne)
                                         {
-                                            newFila["Pasaporte"] = (arrlist[i, 18] ?? "").ToString();
+                                            newFila["Pasaporte"] = carne;
                                             newFila["FLAG_PAS"] = "1";
                                             newFila["FLAG_DPI"] = "0";
+                                            newFila["FLAG_CED"] = "0";
+                                            newFila["Cedula"] = "";
                                             flag_pas = 1;
+                                        }
+                                        else if ((arrlist[i, 20] ?? "").ToString() == carne)
+                                        {
+                                            newFila["Pasaporte"] = "";
+                                            newFila["FLAG_PAS"] = "1";
+                                            newFila["FLAG_DPI"] = "0";
+                                            newFila["FLAG_CED"] = "1";
+                                            newFila["Cedula"] = carne;
                                         }
                                         else
                                         {
                                             newFila["Pasaporte"] = "";
                                             newFila["FLAG_PAS"] = "0";
-                                            newFila["FLAG_DPI"] = "0";
+                                            newFila["FLAG_DPI"] = "0"; 
+                                            newFila["FLAG_CED"] = "0";
                                             newFila["DPI"] = "";
                                         }
-                                        newFila["Cedula"] = (arrlist[i, 19] ?? "").ToString();
+                                        
                                         newFila["NIT"] = (arrlist[i, 20] ?? "").ToString();
                                         if ((arrlist[i, 22] ?? "").ToString() == "-" && flag_pas == 1)
                                         {
@@ -1870,7 +1894,7 @@ namespace ReportesUnis
                                             newFila["Nacionalidad"] = (arrlist[i, 22] ?? "").ToString();
 
                                         }
-                                        newFila["FLAG_CED"] = "0";
+
                                         dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                                     }
                                 }
@@ -1918,10 +1942,10 @@ namespace ReportesUnis
             {
                 {
                     GridViewReporte.DataSource = "";
-                    if (!ChBusqueda.Checked)
-                    {
-                        LbxBusqueda2.Text = "";
-                    }
+                    //if (!ChBusqueda.Checked)
+                    //{
+                    //    LbxBusqueda2.Text = "";
+                    //}
                     string[] result = sustituirCaracteres("").Split('|');
                     decimal registros = 0;
                     decimal count = 0;

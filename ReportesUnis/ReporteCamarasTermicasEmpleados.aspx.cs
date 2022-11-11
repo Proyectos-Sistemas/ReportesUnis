@@ -135,17 +135,17 @@ namespace ReportesUnis
                 if (LbxBusqueda.Text.Equals("Nombre"))
                 {
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaPorNombre(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    CuerpoConsultaPorNombre(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                 }
                 else if (LbxBusqueda.Text.Equals("Apellido"))
                 {
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaPorApellido(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    CuerpoConsultaPorApellido(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                 }
                 else if (LbxBusqueda.Text.Equals("ID"))
                 {
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaPorID(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    CuerpoConsultaPorID(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                 }
                 else if (LbxBusqueda.Text.Equals("Departamento"))
                 {
@@ -156,7 +156,7 @@ namespace ReportesUnis
                 {
                     busqueda = busqueda.Substring(0, 1);
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaPorGenero(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    CuerpoConsultaPorGenero(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                 }
             }
             else
@@ -164,17 +164,17 @@ namespace ReportesUnis
                 if (LbxBusqueda.Text.Equals("Nombre"))
                 {
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaDescargaXNombre(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    CuerpoConsultaDescargaXNombre(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                 }
                 else if (LbxBusqueda.Text.Equals("Apellido"))
                 {
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaDescargaXApellido(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    CuerpoConsultaDescargaXApellido(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                 }
                 else if (LbxBusqueda.Text.Equals("ID"))
                 {
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaDescargaXDPI(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    CuerpoConsultaDescargaXDPI(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                 }
                 else if (LbxBusqueda.Text.Equals("Departamento"))
                 {
@@ -185,7 +185,7 @@ namespace ReportesUnis
                 {
                     busqueda = busqueda.Substring(0, 1);
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaDescargaXGenero(Variables.wsUsuario, Variables.wsPassword, busqueda, FI, FF);
+                    CuerpoConsultaDescargaXGenero(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
                 }
             }
 

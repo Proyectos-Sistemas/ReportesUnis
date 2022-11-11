@@ -4,8 +4,8 @@
     <div class="container">
         <br />
         <h2 style="text-align: center;">ACTUALIZACIÓN DE INFORMACIÓN DE ESTUDIANTES</h2>
-        <hr />
     </div>
+        <hr />
 
     <div class="container">
         <asp:Label runat="server" Font-Bold="true">Fotografía:</asp:Label>
@@ -13,8 +13,8 @@
         <div id="dvMsg" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
             El tamaño máximo permitido es de 1 GB
         </div>
-        <hr />
     </div>
+        <hr />
 
 
     <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
@@ -48,7 +48,7 @@
 
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
-                <asp:TableCell>
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
 
@@ -58,8 +58,8 @@
                 </asp:TableCell>
 
                 <%-- ESPACIO 3--%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- CARNE  4--%>
@@ -68,28 +68,28 @@
                 </asp:TableCell>
 
                 <%-- ESPACIO 5--%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- ESPACIO 6--%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- ESPACIO 7--%>
                 <asp:TableCell Width="2%">
-                        <br />
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- ESPACIO 8--%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- ESPACIO 9--%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- DPI LABEL 10--%>
@@ -98,8 +98,8 @@
                 </asp:TableCell>
 
                 <%-- ESPACIO 11--%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- DPI  12--%>
@@ -108,64 +108,64 @@
                 </asp:TableCell>
 
                 <%-- ESPACIO 13--%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
             </asp:TableRow>
 
             <asp:TableRow HorizontalAlign="Center">
-                <%-- ESPACIO --%>
+                <%-- ESPACIO 1--%>
                 <asp:TableCell>
                         <br />
                 </asp:TableCell>
-                <%-- NOMBRE LABEL --%>
+                <%-- NOMBRE LABEL 2--%>
                 <asp:TableCell>
                         <asp:Label runat="server" Font-Bold="true">Nombres:</asp:Label> 
                 </asp:TableCell>
-                <%-- ESPACIO --%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <%-- ESPACIO 3--%>
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
                 <%-- NOMBRE  --%>
                 <asp:TableCell>
                     <asp:Label ID="txtNombre" runat="server" Enabled="false" TextMode="MultiLine" Rows="2"></asp:Label>
                 </asp:TableCell>
                 <%-- ESPACIO --%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
                 <%-- APELLIDO LABEL --%>
                 <asp:TableCell>
                         <asp:Label runat="server" Font-Bold="true">Apellidos:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO --%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                       <%--<br />--%>
                 </asp:TableCell>
                 <%-- APELLIDO   --%>
                 <asp:TableCell>
                     <asp:Label ID="txtApellido" runat="server" Enabled="false" TextMode="MultiLine" Rows="2"></asp:Label>
                 </asp:TableCell>
                 <%-- ESPACIO --%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
                 <%-- FECHA DE NACIMIENTO LABEL --%>
                 <asp:TableCell>
                         <asp:Label runat="server" Font-Bold="true">Fecha de Nacimiento:</asp:Label>
                 </asp:TableCell>
                 <%-- ESPACIO --%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                       <%--<br />--%>
                 </asp:TableCell>
                 <%-- FECHA DE NACIMIENTO  --%>
                 <asp:TableCell>
                     <asp:Label ID="txtCumple" runat="server" Enabled="false"></asp:Label>
                 </asp:TableCell>
                 <%-- ESPACIO --%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
             </asp:TableRow>
 
@@ -181,8 +181,8 @@
                 </asp:TableCell>
 
                 <%-- ESPACIO 3--%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- CARRERA 4--%>
@@ -191,28 +191,28 @@
                 </asp:TableCell>
 
                 <%-- ESPACIO 5--%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- ESPACIO 6--%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- ESPACIO 7--%>
                 <asp:TableCell Width="2%">
-                        <br />
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- ESPACIO 8--%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- ESPACIO 9--%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- FACULTAD LABEL 10--%>
@@ -221,8 +221,8 @@
                 </asp:TableCell>
 
                 <%-- ESPACIO 11--%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
 
                 <%-- FACULTAD  12--%>
@@ -231,8 +231,8 @@
                 </asp:TableCell>
 
                 <%-- ESPACIO 13--%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                       <%--<br />--%>
                 </asp:TableCell>
             </asp:TableRow>
 
@@ -242,52 +242,52 @@
                         <br />
                 </asp:TableCell>
                 <%-- DIRECION LABEL 2--%>
-                <asp:TableCell>
+                <asp:TableCell >
                         <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
                 <%-- DIRECCION TEXTBOX 4--%>
-                <asp:TableCell>
-                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="3" MaxLength="55"></asp:TextBox>
+                <asp:TableCell >
+                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="3" MaxLength="55" Width="365px"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                       <%--<br />--%>
                 </asp:TableCell>
                 <%-- DIRECION2 LABEL 6--%>
                 <asp:TableCell>
                         <asp:Label runat="server" Font-Bold="true">Dirección 2:</asp:Label> 
-                </asp:TableCell>
+                </asp:TableCell >
                 <%-- ESPACIO 7--%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                       <%--<br />--%>
                 </asp:TableCell>
                 <%-- DIRECCION2 TEXTBOX 8--%>
                 <asp:TableCell>
-                    <asp:TextBox ID="txtDireccion2" runat="server" TextMode="MultiLine" Rows="3" MaxLength="55"></asp:TextBox>
+                    <asp:TextBox ID="txtDireccion2" runat="server" TextMode="MultiLine" Rows="3" MaxLength="55" Width="220px"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO 9--%>
-                <asp:TableCell>
-                        <br />
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
                 </asp:TableCell>
                 <%-- DIRECION3 LABEL 10--%>
                 <asp:TableCell>
                         <asp:Label runat="server" Font-Bold="true">Dirección 3:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 11--%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                       <%--<br />--%>
                 </asp:TableCell>
                 <%-- DIRECCION3 TEXTBOX 12--%>
                 <asp:TableCell>
-                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="3" MaxLength="55"></asp:TextBox>
+                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="3" MaxLength="55" Width="220px"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO 13--%>
-                <asp:TableCell Width="5%">
-                        <br />
+                <asp:TableCell Width="2%">
+                       <%--<br />--%>
                 </asp:TableCell>
             </asp:TableRow>
 
@@ -301,16 +301,16 @@
                         <asp:Label runat="server" Font-Bold="true">País*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
-                <asp:TableCell Width="5%">
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
                 <%-- PAIS DROPDOWNLIST 4--%>
                 <asp:TableCell>
-                    <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true">
+                    <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true" Width="365px">
                     </asp:DropDownList>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
-                <asp:TableCell>
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
                 <%-- DEPARTAMENTO LABEL 6--%>
@@ -318,16 +318,16 @@
                         <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 7--%>
-                <asp:TableCell Width="5%">
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
                 <%-- DEPARTAMENTO DROPDOWNLIST 8--%>
                 <asp:TableCell>
-                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged">
+                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" Width="220px">
                     </asp:DropDownList>
                 </asp:TableCell>
                 <%-- ESPACIO 9--%>
-                <asp:TableCell>
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
                 <%-- MUNICIPIO LABEL 10--%>
@@ -335,17 +335,17 @@
                         <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 11--%>
-                <asp:TableCell Width="5%">
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
                 <%-- MUNICIPIO DROPDOWN 12--%>
                 <asp:TableCell>
-                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged">
+                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="220px">
                     </asp:DropDownList>
                 </asp:TableCell>
 
                 <%-- ESPACIO 13--%>
-                <asp:TableCell Width="5%">
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
             </asp:TableRow>
@@ -360,44 +360,44 @@
                         <asp:Label runat="server" Font-Bold="true">Teléfono*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
-                <asp:TableCell>
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
                 <%-- ESPACIO 4--%>
                 <asp:TableCell>
-                        <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24"></asp:TextBox>
+                        <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" Width="365px"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
-                <asp:TableCell Width="5%">
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
                 <%-- ESPACIO 6--%>
-                <asp:TableCell>
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
                 <%-- ESPACIO 7--%>
-                <asp:TableCell Width="5%">
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
                 <%-- ESPACIO 8--%>
-                <asp:TableCell>
+                <asp:TableCell Width="2%">
                     <br />
                 </asp:TableCell>
                 <%-- ESPACIO 9--%>
-                <asp:TableCell Width="5%">
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
                 <%-- ESTADO CIVIL LABEL 10--%>
-                <asp:TableCell Width="5%">
+                <asp:TableCell>
                         <asp:Label runat="server" Font-Bold="true">Estado Civil:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 11--%>
-                <asp:TableCell Width="5%">
+                <asp:TableCell Width="2%">
                         <br />
                 </asp:TableCell>
                 <%-- ESTADO CIVIL DROPDOWN 12--%>
-                <asp:TableCell Width="5%">
-                        <asp:DropDownList ID="CmbEstado" runat="server">
+                <asp:TableCell>
+                        <asp:DropDownList ID="CmbEstado" runat="server" Width="220px">
                         <asp:ListItem Selected="False" Value=""></asp:ListItem>
                         <asp:ListItem>Casado</asp:ListItem>
                         <asp:ListItem>Soltero</asp:ListItem>
