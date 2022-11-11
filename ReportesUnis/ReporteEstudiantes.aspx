@@ -10,7 +10,7 @@
         <div>
             <a>Busqueda por: </a>
             <%-- DROPDOWLIST CON OPCIONES DE BUSQUEDA --%>
-            <asp:DropDownList ID="LbxBusqueda" SelectionMode="Single" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="LbxBusqueda_SelectedIndexChanged">
+            <asp:DropDownList ID="LbxBusqueda" Width=120px SelectionMode="Single" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="LbxBusqueda_SelectedIndexChanged">
                 <asp:ListItem Selected="True" Value=""></asp:ListItem>
                 <asp:ListItem>Nombre</asp:ListItem>
                 <asp:ListItem>Apellido</asp:ListItem>
@@ -19,17 +19,23 @@
             </asp:DropDownList>
 
             <%-- TXTBUSCADOR DONDE SE INGRESA EL TEXTO A BUSCAR --%>
-            <asp:TextBox ID="TxtBuscador" runat="server"></asp:TextBox>
+            <asp:TextBox ID="TxtBuscador" runat="server" Width=245px></asp:TextBox>
+
+            <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
+            <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
+
+        </div>
+
+        <br />
+        <div style="text-align: center">
 
             <%-- CALENDARIO PARA BUSQUEDA --%>
             <asp:Label ID="FInicio" runat="server">Fecha inicio:</asp:Label>
             <asp:TextBox ID="CldrCiclosInicio" runat="server" TextMode="Date"> </asp:TextBox>
+            &nbsp;&nbsp;&nbsp;&nbsp;
             <asp:Label ID="FFin" runat="server">Fecha fin:</asp:Label>
             <asp:TextBox ID="CldrCiclosFin" runat="server" TextMode="Date">
             </asp:TextBox>
-
-            <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
-            <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
 
         </div>
         <br />
@@ -37,30 +43,24 @@
             <asp:CheckBox runat="server" ID="ChBusqueda" Checked="false" AutoPostBack="true" OnCheckedChanged="ChBusqueda_CheckedChanged" />
             <a>Busqueda multiple </a>
             <%-- DROPDOWLIST CON OPCIONES DE BUSQUEDA --%>
-            <asp:DropDownList ID="LbxBusqueda2" SelectionMode="Single" runat="server" AutoPostBack="true" EnableViewState="true" Visible="false" OnSelectedIndexChanged="LbxBusqueda2_SelectedIndexChanged">
+            <asp:DropDownList ID="LbxBusqueda2" Width=120px SelectionMode="Single" runat="server" AutoPostBack="true" EnableViewState="true" Visible="false" OnSelectedIndexChanged="LbxBusqueda2_SelectedIndexChanged">
             </asp:DropDownList>
 
             <%-- TXTBUSCADOR DONDE SE INGRESA EL TEXTO A BUSCAR --%>
-            <asp:TextBox ID="TxtBuscador2" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="TxtBuscador2" runat="server" Visible="false" Width=195px></asp:TextBox>
 
-            <%-- CALENDARIO PARA BUSQUEDA --%>
-            <%--<asp:Label ID="FInicio2" runat="server" Visible="false">Fecha inicio:</asp:Label>
-                    <asp:TextBox ID="CldrCiclosInicio2" runat="server" TextMode="Date" Visible="false"> </asp:TextBox>
-                    <asp:Label ID="FFin2" runat="server" Visible="false">Fecha fin:</asp:Label>
-                    <asp:TextBox ID="CldrCiclosFin2" runat="server" TextMode="Date" Visible="false">
-                    </asp:TextBox>--%>
         </div>
         <br />
-        <asp:Table runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
+        <asp:Table ID="TBotones" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
             <asp:TableRow>
                 <asp:TableCell>
-                    <asp:Button ID="BtnBuscar" runat="server" Text="Buscar" CssClass="btn-danger-unis" OnClick="Busqueda"></asp:Button>
+                    <asp:Button ID="BtnBuscar" runat="server" Text="Buscar" CssClass="btn-danger-unis" OnClick="Busqueda" Width="130px"></asp:Button>
                 </asp:TableCell>
                 <asp:TableCell>
-                    <asp:Button ID="Button1" runat="server" Text="Exportar TXT" OnClick="btnExport_Click" CssClass="btn-danger-unis" Enabled="true" />
+                    <asp:Button ID="Button1" runat="server" Text="Exportar TXT" OnClick="btnExport_Click" CssClass="btn-danger-unis" Enabled="true" Width="130px" />
                 </asp:TableCell>
                 <asp:TableCell>
-                    <asp:Button ID="ButtonFts" runat="server" Text="Exportar Fotos" OnClick="ButtonFts_Click" CssClass="btn-danger-unis" Enabled="true" />
+                    <asp:Button ID="ButtonFts" runat="server" Text="Exportar Fotos" OnClick="ButtonFts_Click" CssClass="btn-danger-unis" Enabled="true" Width="130px" />
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>

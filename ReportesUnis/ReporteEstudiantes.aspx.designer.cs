@@ -33,6 +33,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox TxtBuscador;
 
         /// <summary>
+        /// Control TxtURL.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtURL;
+
+        /// <summary>
         /// Control FInicio.
         /// </summary>
         /// <remarks>
@@ -69,15 +78,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox CldrCiclosFin;
 
         /// <summary>
-        /// Control TxtURL.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtURL;
-
-        /// <summary>
         /// Control ChBusqueda.
         /// </summary>
         /// <remarks>
@@ -103,6 +103,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxtBuscador2;
+
+        /// <summary>
+        /// Control TBotones.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Table TBotones;
 
         /// <summary>
         /// Control BtnBuscar.
