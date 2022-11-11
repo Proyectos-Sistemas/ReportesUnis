@@ -1793,7 +1793,7 @@ namespace ReportesUnis
                                         }
                                         else
                                         {
-                                            newFila["Nacionalidad"] = (arrlist[i, 20] ?? "").ToString();
+                                            newFila["Nacionalidad"] = (arrlist[i, 21] ?? "").ToString();
 
                                         }
 
@@ -1861,13 +1861,13 @@ namespace ReportesUnis
                                         }
                                         newFila["Cedula"] = (arrlist[i, 19] ?? "").ToString();
                                         newFila["NIT"] = (arrlist[i, 20] ?? "").ToString();
-                                        if ((arrlist[i, 21] ?? "").ToString() == "-" && flag_pas == 1)
+                                        if ((arrlist[i, 22] ?? "").ToString() == "-" && flag_pas == 1)
                                         {
                                             newFila["Nacionalidad"] = "Condición Migrante";
                                         }
                                         else
                                         {
-                                            newFila["Nacionalidad"] = (arrlist[i, 21] ?? "").ToString();
+                                            newFila["Nacionalidad"] = (arrlist[i, 22] ?? "").ToString();
 
                                         }
                                         newFila["FLAG_CED"] = "0";
