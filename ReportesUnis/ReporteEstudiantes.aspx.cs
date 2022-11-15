@@ -478,8 +478,6 @@ namespace ReportesUnis
             int total = 0;
             DataSetLocalRpt dsDownload = new DataSetLocalRpt();
 
-            //for (int k = 0; k < GridViewReporte.Rows.Count; k++)
-            //{
             using (OracleConnection con = new OracleConnection(constr))
             {
                 using (OracleCommand cmd = new OracleCommand())
@@ -522,7 +520,6 @@ namespace ReportesUnis
                     }
                 }
             }
-            //}
 
             if (total > 0)
             {
