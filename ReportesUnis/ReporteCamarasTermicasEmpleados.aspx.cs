@@ -17,6 +17,7 @@ using System.IO.Compression;
 using System.Diagnostics;
 using DocumentFormat.OpenXml.Bibliography;
 using System.Web.UI.WebControls.WebParts;
+using Newtonsoft.Json;
 
 namespace ReportesUnis
 {
@@ -109,7 +110,7 @@ namespace ReportesUnis
         [WebMethod]
         public string ConsultaWS(string dpi)
         {
-            string busqueda = "", FI = "", FF = "";
+            string busqueda = "", FI = "", FF = "", departamentos = "";
 
             if (!String.IsNullOrEmpty(CldrCiclosInicio.Text))
             {
@@ -150,7 +151,14 @@ namespace ReportesUnis
                 else if (LbxBusqueda.Text.Equals("Departamento"))
                 {
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaPorDepartamento(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
+                    departamentos = getBetween(departamentosAPEX(busqueda.ToUpper()), "\"items\": [", "],");
+                    departamentos = departamentos.Replace("\r\n    {\r\n      \"departamento\": \"", "<v2:item>");
+                    departamentos = departamentos.Replace("\"", "");
+                    departamentos = departamentos.Replace("\r\n      ", " ");
+                    departamentos = departamentos.Replace("\r\n    },", "</v2:item> \r\n");
+                    departamentos = departamentos.Replace("\r\n    }\r\n  ", "</v2:item> \r\n").TrimStart(' ');                    
+
+                    CuerpoConsultaPorDepartamento(Variables.wsUsuario, Variables.wsPassword, departamentos, FI, FF);
                 }
                 else if (LbxBusqueda.Text.Equals("Género"))
                 {
@@ -463,9 +471,10 @@ namespace ReportesUnis
                                            <!--1st Parameter of BIP Report-->    
                                             <v2:item>
                                                 <v2:name>Departamento</v2:name>
-                                                        <v2:values>
-                                                            <v2:item>" + dpto + @"</v2:item>
-                                                        </v2:values>
+                                                        <v2:values>"+ 
+                                                        dpto
+                                                            //<v2:item>" + dpto + @"</v2:item>
+                                                        +@"</v2:values>
                                                 </v2:item>
                                             <!--2nd Parameter of BIP Report-->
                                             <v2:item>
@@ -889,11 +898,13 @@ namespace ReportesUnis
                 if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(lblBusqueda.Text))
                 {
                     GridViewReporteCT.DataSource = "";
+
                     string[] result = sustituirCaracteres("").Split('|');
                     decimal registros = 0;
                     decimal count = 0;
                     int datos = 0;
                     string[,] arrlist;
+                    string jerarquiaPerson;
                     if (result.Count() > 12)
                     {
                         registros = result.Count() / 13;
@@ -922,7 +933,9 @@ namespace ReportesUnis
                                     newFila["FIRST_NAME"] = (arrlist[i, 5] ?? "").ToString();
                                     newFila["LAST_NAME"] = (arrlist[i, 6] ?? "").ToString();
                                     newFila["ID"] = (arrlist[i, 7] ?? "").ToString();
-                                    newFila["PERSON_GROUP"] = "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + (arrlist[i, 10] ?? "").ToString();
+                                    jerarquiaPerson = jerarquia((arrlist[i, 10] ?? "").ToString());
+                                    jerarquiaPerson = getBetween(jerarquiaPerson, "\"jerarquia\": \"", "\"");
+                                    newFila["PERSON_GROUP"] = "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + jerarquiaPerson;//(arrlist[i, 10] ?? "").ToString();
                                     newFila["Start_Time_of_Effective_Period"] = "";
                                     newFila["End_Time_of_Effective_Period"] = "";
                                     newFila["PHONE"] = (arrlist[i, 9] ?? "").ToString();
@@ -1089,7 +1102,7 @@ namespace ReportesUnis
                     decimal count = 0;
                     int datos = 0;
                     string[,] arrlist;
-
+                    string jerarquiaPerson;
                     if (result.Count() > 16)
                     {
                         registros = result.Count() / 13;
@@ -1112,7 +1125,9 @@ namespace ReportesUnis
                             sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString()); //Last Name
                             sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString()); //ID
                             sl.SetCellValue("D" + celda, "Basic Person"); //TYPE
-                            sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + (arrlist[i, 10] ?? "").ToString()); //Person Group
+                            jerarquiaPerson = jerarquia((arrlist[i, 10] ?? "").ToString());
+                            jerarquiaPerson = getBetween(jerarquiaPerson, "\"jerarquia\": \"", "\"");
+                            sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + jerarquiaPerson);//+ (arrlist[i, 10] ?? "").ToString()); //Person Group
                             sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString()); //GENDER
                             sl.SetCellValue("G" + celda, ""); //Start Time of Effective Period
                             sl.SetCellValue("H" + celda, ""); //End Time of Effective Period
@@ -1164,7 +1179,9 @@ namespace ReportesUnis
                             sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString()); //LAST NAME
                             sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString()); //ID
                             sl.SetCellValue("D" + celda, "Basic Person"); //TYPE
-                            sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + (arrlist[i, 10] ?? "").ToString()); //PERSON GROUP
+                            jerarquiaPerson = jerarquia((arrlist[i, 10] ?? "").ToString());
+                            jerarquiaPerson = getBetween(jerarquiaPerson, "\"jerarquia\": \"", "\"");
+                            sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + jerarquiaPerson);//(arrlist[i, 10] ?? "").ToString()); //PERSON GROUP
                             sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString()); //GENDER
                             sl.SetCellValue("G" + celda, ""); //Start Time of Effective Period
                             sl.SetCellValue("H" + celda, ""); //End Time of Effective Period
@@ -1411,6 +1428,57 @@ namespace ReportesUnis
                 name = name + " " + drive.Name;
             }
             return name;
+        }
+
+        public string jerarquia(string departamento)
+        {
+            WebClient _clientW = new WebClient();
+            _clientW.Headers.Add(HttpRequestHeader.ContentType, "application/json; charset=utf-8");
+            _clientW.Headers.Add("departamento", departamento);
+            string json = _clientW.DownloadString("https://apexdes.unis.edu.gt:8443/ords/unis_interfaces/Centralizador/JerarquiaDepartamentos");
+            dynamic respuesta = JsonConvert.DeserializeObject(json).ToString();
+
+            return respuesta;
+        }
+        public string departamentosAPEX(string jerarquia)
+        {
+            WebClient _clientW = new WebClient();
+            _clientW.Headers.Add(HttpRequestHeader.ContentType, "application/json; charset=utf-8");
+            _clientW.Headers.Add("jerarquia", jerarquia);
+            string json = _clientW.DownloadString("https://apexdes.unis.edu.gt:8443/ords/unis_interfaces/Centralizador/BusquedaXDepartamento");
+            dynamic respuesta = JsonConvert.DeserializeObject(json).ToString();
+
+            return respuesta;
+        }
+
+        public static string getBetween(string strSource, string strStart, string strEnd)
+        {
+            int Start, End;
+            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+            {
+                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+                End = strSource.IndexOf(strEnd, Start);
+                return strSource.Substring(Start, End - Start);
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+
+        public static int contarPalabras(string cadena)
+        {
+            string[] palabras = cadena.Split(' ');
+            int contador = 0;
+            foreach (string palabra in palabras)
+            {
+                if (palabra.Equals("\"departamento\":"))
+                {
+                    contador = contador + 1;
+                }
+            }
+            return contador;
         }
     }
 }
