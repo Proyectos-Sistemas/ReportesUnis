@@ -111,9 +111,9 @@
                             <asp:BoundField DataField="" HeaderText="COL" />
                             <asp:BoundField DataField="MUNICIPIO" HeaderText="MUNRES" />
                             <asp:BoundField DataField="DEPARTAMENTO" HeaderText="DEPRES" />
-                            <asp:BoundField DataField="" HeaderText="TEL" />
-                            <asp:BoundField DataField="PHONE" HeaderText="CEL" />
-                            <asp:BoundField DataField="" HeaderText="EMAIL" />
+                            <asp:BoundField DataField="PHONE" HeaderText="TEL" />
+                            <asp:BoundField DataField="" HeaderText="CEL" />
+                            <asp:BoundField DataField="EMAIL" HeaderText="EMAIL" />
                             <asp:BoundField DataField="CARNE" HeaderText="CARNET" />
                             <asp:BoundField DataField="CARRERA" HeaderText="CARR" />
                             <asp:BoundField DataField="FACULTAD" HeaderText="FACUL" />

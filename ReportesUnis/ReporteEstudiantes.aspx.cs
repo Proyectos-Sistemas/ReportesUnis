@@ -69,6 +69,7 @@ namespace ReportesUnis
             dt.Columns.Add("PASAPORTE");
             dt.Columns.Add("CEDULA");
             dt.Columns.Add("PROF");
+            dt.Columns.Add("EMAIL");
 
             dr["FIRST_NAME"] = String.Empty;
             dr["SECOND_NAME"] = String.Empty;
@@ -91,6 +92,7 @@ namespace ReportesUnis
             dr["PASAPORTE"] = String.Empty;
             dr["CEDULA"] = String.Empty;
             dr["PROF"] = String.Empty;
+            dr["EMAIL"] = String.Empty;
 
 
             dt.Columns.Add("EMPLID");
@@ -164,7 +166,8 @@ namespace ReportesUnis
                                                     "MUNICIPIO, " +
                                                     "DEPARTAMENTO, " +
                                                     "SEX, " +
-                                                    "PLACE " +
+                                                    "PLACE, " +
+                                                    "EMAIL " +
                                                     "FROM ( " +
                                                     "SELECT " +
                                                     "DISTINCT PD.EMPLID, " +
@@ -174,25 +177,27 @@ namespace ReportesUnis
                                                     "PD.LAST_NAME, " +
                                                     "PD.SECOND_LAST_NAME, " +
                                                     "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
-                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN '1' ELSE '0' END FLAG_DPI, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_DPI, " +
                                                     "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
-                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN '1' ELSE '0' END FLAG_CED, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_CED, " +
                                                     "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE, " +
-                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN '1' ELSE '0' END FLAG_PAS, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_PAS, " +
                                                     "PPD.PHONE, " +
                                                     "TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
                                                     "APD.DESCR CARRERA, " +
                                                     "AGT.DESCR FACULTAD, " +
                                                     "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
-                                                    "CASE WHEN (PD.BIRTHPLACE = ' ' AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (PD.BIRTHPLACE = ' ' AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE PD.BIRTHPLACE END PLACE," +
-                                                    "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'Sin Información' END STATUS, " +
-                                                    "(select A1.ADDRESS1 || ' ' || A1.ADDRESS2 || ' ' || A1.ADDRESS3 || ' ' || A1.ADDRESS4 from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                                                    "CASE WHEN (C.DESCR = ' ' AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
+                                                    "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '' END STATUS, " +
+                                                    "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS3,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS4,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
                                                     "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
                                                     "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
-                                                    "'ESTUDIANTE' PROF " +
+                                                    "'ESTUDIANTE' PROF, " +
+                                                    "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAIL " +
                                                     "FROM " +
                                                     "SYSADM.PS_PERS_DATA_SA_VW PD " +
                                                     "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                                    "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON C.COUNTRY = PD.BIRTHCOUNTRY " +
                                                     "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
                                                     "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
                                                     "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
@@ -282,7 +287,7 @@ namespace ReportesUnis
                             " SECOND_LAST_NAME || '|' || BIRTHDATE || '|' || SEX || '|' || STATUS || '|' || PLACE || '|' ||" +
                             " FLAG_CED || '|' || CEDULA || '|' || '|' || '|' || FLAG_DPI || '|' || DPI || '|' || FLAG_PAS ||" +
                             " '|' || PASAPORTE || '|' || '|' || '|' || '|' || PROF || '|' || DIRECCION || '|' || '|' || '|' ||" +
-                            " '|' || '|' || MUNICIPIO || '|' || DEPARTAMENTO || '|' || PHONE || '|' || '|' || '|' || CARNE || '|' ||" +
+                            " '|' || '|' || MUNICIPIO || '|' || DEPARTAMENTO || '|' || PHONE || '|' || '|' ||EMAIL|| '|' || CARNE || '|' ||" +
                             " CARRERA || '|' || FACULTAD || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
                             " '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
                             " '|' || '|' || '|' || '|' || '|' || '|' " +
@@ -295,25 +300,27 @@ namespace ReportesUnis
                             "PD.LAST_NAME, " +
                             "PD.SECOND_LAST_NAME, " +
                             "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
-                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN '1' ELSE '0' END FLAG_DPI, " +
+                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_DPI, " +
                             "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
-                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN '1' ELSE '0' END FLAG_CED, " +
+                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_CED, " +
                             "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE, " +
-                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN '1' ELSE '0' END FLAG_PAS, " +
+                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_PAS, " +
                             "PPD.PHONE, " +
                             "TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
                             "APD.DESCR CARRERA, " +
                             "AGT.DESCR FACULTAD, " +
                             "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
-                            "CASE WHEN (PD.BIRTHPLACE = ' ' AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (PD.BIRTHPLACE = ' ' AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE PD.BIRTHPLACE END PLACE," +
-                            "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'Sin Información' END STATUS, " +
-                            "(select A1.ADDRESS1 || ' ' || A1.ADDRESS2 || ' ' || A1.ADDRESS3 || ' ' || A1.ADDRESS4 from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                            "CASE WHEN (C.DESCR = ' ' AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
+                            "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '' END STATUS, " +
+                            "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS3,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS4,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
                             "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
                             "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
-                            "'ESTUDIANTE' PROF " +
+                            "'ESTUDIANTE' PROF, " +
+                            "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAIL " +
                             "FROM " +
                             "SYSADM.PS_PERS_DATA_SA_VW PD " +
                             "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                            "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON C.COUNTRY = PD.BIRTHCOUNTRY " +
                             "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
                             "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
                             "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
