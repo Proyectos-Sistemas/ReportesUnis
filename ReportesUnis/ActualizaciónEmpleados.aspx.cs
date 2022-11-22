@@ -482,57 +482,65 @@ namespace ReportesUnis
             string sustituto = DecodeStringFromBase64(Consultar()).Replace('"', '\n');
             sustituto = Regex.Replace(sustituto, @"\n+", "");
 
-            if (aux == 0)
+            try
             {
-                int largo = 0;
-                string nombre = TextUser.Text.TrimEnd(' ');
-                largo = nombre.Length + 156;
-                sustituto = sustituto.Remove(0, largo);
-            }
-            else if (aux == 1)
-            {
-                try
+                if (aux == 0)
                 {
-                    int pais = cMBpAIS.SelectedValue.Length + 25;
+                    int largo = 0;
+                    string nombre = TextUser.Text.TrimEnd(' ');
+                    largo = nombre.Length + 156;
+                    sustituto = sustituto.Remove(0, largo);
+                }
+                else if (aux == 1)
+                {
+                    try
+                    {
+                        int pais = cMBpAIS.SelectedValue.Length + 25;
+                        sustituto = sustituto.Remove(0, pais);
+                    }
+                    catch (Exception)
+                    {
+
+                        sustituto = "";
+                    }
+                }
+                else if (aux == 2)
+                {
+                    try
+                    {
+                        int mun = CmbDepartamento.SelectedValue.Length + 28;
+                        sustituto = sustituto.Remove(0, mun);
+                        sustituto = sustituto.TrimEnd('|');
+                    }
+                    catch (Exception)
+                    {
+
+                        sustituto = ("");
+                    }
+                }
+                else if (aux == 4)
+                {
+                    int largo = 0;
+                    string nombre = TextUser.Text.TrimEnd(' ');
+                    largo = nombre.Length + 141;
+                    sustituto = sustituto.Remove(0, largo);
+                }
+                else if (aux == 3)
+                {
+                    int mun = CmbMunicipio.Text.Length + 24;
+                    if (sustituto.Length > mun)
+                        sustituto = sustituto.Remove(0, mun);
+                }
+                else if (aux == 5)
+                {
+                    int pais = cMBpAIS.Text.Length + 25;
                     sustituto = sustituto.Remove(0, pais);
                 }
-                catch (Exception)
-                {
+            }
+            catch (Exception)
+            {
 
-                    sustituto = "";
-                }
-            }
-            else if (aux == 2)
-            {
-                try
-                {
-                    int mun = CmbDepartamento.SelectedValue.Length + 28;
-                    sustituto = sustituto.Remove(0, mun);
-                    sustituto = sustituto.TrimEnd('|');
-                }
-                catch (Exception)
-                {
-
-                    sustituto = ("");
-                }
-            }
-            else if (aux == 4)
-            {
-                int largo = 0;
-                string nombre = TextUser.Text.TrimEnd(' ');
-                largo = nombre.Length + 141;
-                sustituto = sustituto.Remove(0, largo);
-            }
-            else if (aux == 3)
-            {
-                int mun = CmbMunicipio.Text.Length + 24;
-                if(sustituto.Length > mun)
-                sustituto = sustituto.Remove(0, mun);
-            }
-            else if (aux == 5)
-            {
-                int pais = cMBpAIS.Text.Length + 25;
-                sustituto = sustituto.Remove(0, pais);
+                sustituto = sustituto;
             }
 
             return sustituto;

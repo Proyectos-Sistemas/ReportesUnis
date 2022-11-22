@@ -63,29 +63,47 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO," +
                         "DEPARTAMENTO, CNT FROM (" +
-                   "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, " +
-                   "PD.LAST_NAME|| ' ' || PD.SECOND_LAST_NAME LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
-                   "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
-                   "APD.DESCR CARRERA, AGT.DESCR FACULTAD, " +
-                   "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'No Consta' END STATUS, " +
-                   "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, " +
-                   "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, " +
-                   "TT.TERM_BEGIN_DT, ROW_NUMBER() OVER (PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, C.DESCR PAIS " +
-                   "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
-                   "LEFT JOIN SYSADM.PS_PERS_NID PN ON  PD.EMPLID = PN.EMPLID " +
-                   "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
-                   "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                   "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID AND PP.PHONE_TYPE='HOME'" +
-                   "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                   "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON PD.EMPLID = CT.EMPLID " +
-                   "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON CT.ACAD_GROUP_ADVIS = AGT.ACAD_GROUP " +
-                   "LEFT JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
-                   "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
-                   "LEFT JOIN SYSADM.PS_ACAD_PROG AP ON PD.EMPLID = AP.EMPLID " +
-                   "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON AP.ACAD_PROG = APD.ACAD_PROG " +
-                   "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                   //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + ---1581737080101
-                   "WHERE PN.NATIONAL_ID ='3193948161508' " +
+                    "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, " +
+                    "PD.LAST_NAME|| ' ' || PD.SECOND_LAST_NAME LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
+                    "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
+                    "APD.DESCR CARRERA, AGT.DESCR FACULTAD, " +
+                    "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'No Consta' END STATUS, " +
+                    "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, " +
+                    "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, " +
+                    "TT.TERM_BEGIN_DT, ROW_NUMBER() OVER (PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, C.DESCR PAIS " +
+                    "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
+                    "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                    "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                    "AND A.EFFDT =( " +
+                    "    SELECT " +
+                    "        MAX(EFFDT) " +
+                    "    FROM " +
+                    "        SYSADM.PS_ADDRESSES A2 " +
+                    "    WHERE " +
+                    "        A.EMPLID = A2.EMPLID " +
+                    "        AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE " +
+                    ") " +
+                    "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                    "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                    "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
+                    "AND SE.STDNT_ENRL_STATUS = 'E' " +
+                    "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                    "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID " +
+                    "AND CT.STRM = SE.STRM " +
+                    "AND CT.ACAD_CAREER = SE.ACAD_CAREER " +
+                    "AND SE.INSTITUTION = CT.INSTITUTION " +
+                    "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
+                    "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
+                    "AND CT.INSTITUTION = APD.INSTITUTION " +
+                    "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
+                    "AND APD.INSTITUTION = AGT.INSTITUTION " +
+                    "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
+                    "AND CT.INSTITUTION = TT.INSTITUTION " +
+                    "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
+                    "AND PP.PHONE_TYPE = 'HOME' " +
+                    "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
+                   "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
+                   //"WHERE PN.NATIONAL_ID ='2372118661301' " +
                    ") WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -447,7 +465,8 @@ namespace ReportesUnis
                         string[] ExtensionesPermitidas = { ".jpeg", ".jpg" };
 
                         //Nombre de la fotografía cargada (Sin extensión)
-                        string NombreFoto = "2226708940101";//Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
+                        //string NombreFoto = "2372118661301";//Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
+                        string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
 
                         if (ExtensionesPermitidas.Contains(ExtensionFotografia))
                         {
