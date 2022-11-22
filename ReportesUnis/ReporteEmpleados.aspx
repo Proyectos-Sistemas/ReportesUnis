@@ -105,13 +105,13 @@
                             <asp:BoundField DataField="Direccion" HeaderText="DIR" />
                             <asp:BoundField DataField="" HeaderText="CASA" />
                             <asp:BoundField DataField="" HeaderText="APTO" />
-                            <asp:BoundField DataField="" HeaderText="ZONA" />
+                            <asp:BoundField DataField="ZONA" HeaderText="ZONA" />
                             <asp:BoundField DataField="" HeaderText="COL" />
                             <asp:BoundField DataField="Municipio" HeaderText="MUNRES" />
                             <asp:BoundField DataField="Departamento" HeaderText="DEPRES" />
-                            <asp:BoundField DataField="" HeaderText="TEL" />
-                            <asp:BoundField DataField="Telefono" HeaderText="CEL" />
-                            <asp:BoundField DataField="" HeaderText="EMAIL" />
+                            <asp:BoundField DataField="Telefono" HeaderText="TEL" />
+                            <asp:BoundField DataField="" HeaderText="CEL" />
+                            <asp:BoundField DataField="EMAIL" HeaderText="EMAIL" />
                             <asp:BoundField DataField="CARNE" HeaderText="CARNET" />
                             <asp:BoundField DataField="" HeaderText="CARR" />
                             <asp:BoundField DataField="Dependencia" HeaderText="FACUL" />

@@ -4769,6 +4769,10 @@ namespace ReportesUnis {
             
             private global::System.Data.DataColumn columnNOM_IMP;
             
+            private global::System.Data.DataColumn columnZONA;
+            
+            private global::System.Data.DataColumn columnEMAIL;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public RptEmpleadosDataTable() {
@@ -4988,6 +4992,22 @@ namespace ReportesUnis {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ZONAColumn {
+                get {
+                    return this.columnZONA;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn EMAILColumn {
+                get {
+                    return this.columnEMAIL;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -5046,7 +5066,9 @@ namespace ReportesUnis {
                         string FLAG_CED, 
                         string FLAG_DPI, 
                         string FLAG_PAS, 
-                        string NOM_IMP) {
+                        string NOM_IMP, 
+                        string ZONA, 
+                        string EMAIL) {
                 RptEmpleadosRow rowRptEmpleadosRow = ((RptEmpleadosRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         DPI,
@@ -5071,7 +5093,9 @@ namespace ReportesUnis {
                         FLAG_CED,
                         FLAG_DPI,
                         FLAG_PAS,
-                        NOM_IMP};
+                        NOM_IMP,
+                        ZONA,
+                        EMAIL};
                 rowRptEmpleadosRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowRptEmpleadosRow);
                 return rowRptEmpleadosRow;
@@ -5117,6 +5141,8 @@ namespace ReportesUnis {
                 this.columnFLAG_DPI = base.Columns["FLAG_DPI"];
                 this.columnFLAG_PAS = base.Columns["FLAG_PAS"];
                 this.columnNOM_IMP = base.Columns["NOM_IMP"];
+                this.columnZONA = base.Columns["ZONA"];
+                this.columnEMAIL = base.Columns["EMAIL"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -5168,6 +5194,10 @@ namespace ReportesUnis {
                 base.Columns.Add(this.columnFLAG_PAS);
                 this.columnNOM_IMP = new global::System.Data.DataColumn("NOM_IMP", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnNOM_IMP);
+                this.columnZONA = new global::System.Data.DataColumn("ZONA", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnZONA);
+                this.columnEMAIL = new global::System.Data.DataColumn("EMAIL", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnEMAIL);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -11446,6 +11476,38 @@ namespace ReportesUnis {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ZONA {
+                get {
+                    try {
+                        return ((string)(this[this.tableRptEmpleados.ZONAColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'ZONA\' de la tabla \'RptEmpleados\' es DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableRptEmpleados.ZONAColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string EMAIL {
+                get {
+                    try {
+                        return ((string)(this[this.tableRptEmpleados.EMAILColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'EMAIL\' de la tabla \'RptEmpleados\' es DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableRptEmpleados.EMAILColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsDPINull() {
                 return this.IsNull(this.tableRptEmpleados.DPIColumn);
             }
@@ -11718,6 +11780,30 @@ namespace ReportesUnis {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetNOM_IMPNull() {
                 this[this.tableRptEmpleados.NOM_IMPColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsZONANull() {
+                return this.IsNull(this.tableRptEmpleados.ZONAColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetZONANull() {
+                this[this.tableRptEmpleados.ZONAColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsEMAILNull() {
+                return this.IsNull(this.tableRptEmpleados.EMAILColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetEMAILNull() {
+                this[this.tableRptEmpleados.EMAILColumn] = global::System.Convert.DBNull;
             }
         }
         

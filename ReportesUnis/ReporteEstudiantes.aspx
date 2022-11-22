@@ -148,7 +148,7 @@
                             <asp:BoundField DataField="" HeaderText="CONDMIG" />
                             <asp:BoundField DataField="" HeaderText="O_CONDMIG" />
 
-                            <asp:BoundField DataField="EMPLID" HeaderText="EMPLID" />
+                           <%-- <asp:BoundField DataField="EMPLID" HeaderText="EMPLID" />--%>
                         </Columns>
                     </asp:GridView>
                 </div>
