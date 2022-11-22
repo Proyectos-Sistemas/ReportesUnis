@@ -223,9 +223,18 @@ namespace ReportesUnis
                 {
                     if (!String.IsNullOrEmpty(CmbMunicipio.SelectedValue))
                     {
+                        string descrip = "";
+                        if (CmbPais.SelectedValue == "Guatemala")
+                        {
+                             descrip = CmbMunicipio.SelectedValue + "-" + CmbDepartamento.SelectedValue;
+                        }
+                        else
+                        {
+                             descrip = CmbDepartamento.SelectedValue;
+                        }
                         cmd.Connection = con;
                         cmd.CommandText = "SELECT STATE FROM SYSADM.PS_STATE_TBL " +
-                            "WHERE DESCR ='" + CmbMunicipio.SelectedValue + "-" + CmbDepartamento.SelectedValue + "'";
+                            "WHERE DESCR ='" + descrip.TrimEnd('-')+ "'";
                         OracleDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
