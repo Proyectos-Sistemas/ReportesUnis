@@ -853,7 +853,7 @@ namespace ReportesUnis
                                                 </v2:item>
                                            </v2:listOfParamNameValues>
                                         </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/ReporteDPICargaMasiva.xdo</v2:reportAbsolutePath>
+                                        <v2:reportAbsolutePath>/Custom/UNIS/ Web Services/Carga Masiva/ReporteDPICargaMasiva.xdo</v2:reportAbsolutePath>
                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
                                      </v2:reportRequest>
                                      <v2:userID>" + idPersona + @"</v2:userID>

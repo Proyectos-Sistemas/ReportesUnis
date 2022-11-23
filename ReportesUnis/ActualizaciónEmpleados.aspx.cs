@@ -154,7 +154,7 @@ namespace ReportesUnis
                                                 </v2:item>
                                            </v2:listOfParamNameValues>
                                         </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/InformeActualizarEmpleados.xdo</v2:reportAbsolutePath>
+                                        <v2:reportAbsolutePath>/Custom/UNIS/ Web Services/Actualización/InformeActualizarEmpleados.xdo</v2:reportAbsolutePath>
                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
                                      </v2:reportRequest>
                                      <v2:userID>" + idPersona + @"</v2:userID>
@@ -185,7 +185,7 @@ namespace ReportesUnis
                                                 </v2:item>
                                            </v2:listOfParamNameValues>
                                         </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/InformacionCodigoPais.xdo</v2:reportAbsolutePath>
+                                        <v2:reportAbsolutePath>/Custom/UNIS/ Web Services/Catalogos/InformacionCodigoPais.xdo</v2:reportAbsolutePath>
                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
                                      </v2:reportRequest>
                                      <v2:userID>" + idPersona + @"</v2:userID>
@@ -217,7 +217,7 @@ namespace ReportesUnis
                                                 </v2:item>
                                            </v2:listOfParamNameValues>
                                         </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/RInformacionMunicipios.xdo</v2:reportAbsolutePath>
+                                        <v2:reportAbsolutePath>/Custom/UNIS/ Web Services/Catalogos/RInformacionMunicipios.xdo</v2:reportAbsolutePath>
                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
                                      </v2:reportRequest>
                                      <v2:userID>" + idPersona + @"</v2:userID>
@@ -237,7 +237,7 @@ namespace ReportesUnis
                                         <v2:reportRequest>
                                             <v2:attributeFormat>csv</v2:attributeFormat>                                            
                                             <v2:flattenXML>false</v2:flattenXML>                                        
-                                            <v2:reportAbsolutePath>/Reportes IS/PT/RInformacionPaises.xdo</v2:reportAbsolutePath>
+                                            <v2:reportAbsolutePath>/Custom/UNIS/ Web Services/Catalogos/RInformacionPaises.xdo</v2:reportAbsolutePath>
                                         <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
                                         </v2:reportRequest>
                                         <v2:userID>" + idPersona + @"</v2:userID>
@@ -268,7 +268,7 @@ namespace ReportesUnis
                                                 </v2:item>
                                            </v2:listOfParamNameValues>
                                         </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/InformacionZonasGT.xdo</v2:reportAbsolutePath>
+                                        <v2:reportAbsolutePath>/Custom/UNIS/ Web Services/Catalogos/InformacionZonasGT.xdo</v2:reportAbsolutePath>
                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
                                      </v2:reportRequest>
                                      <v2:userID>" + idPersona + @"</v2:userID>
@@ -300,7 +300,7 @@ namespace ReportesUnis
                                                 </v2:item>
                                            </v2:listOfParamNameValues>
                                         </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Reportes IS/PT/RInformacionDepartamentos.xdo</v2:reportAbsolutePath>
+                                        <v2:reportAbsolutePath>/Custom/UNIS/ Web Services/Catalogos/RInformacionDepartamentos.xdo</v2:reportAbsolutePath>
                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
                                      </v2:reportRequest>
                                      <v2:userID>" + idPersona + @"</v2:userID>
