@@ -29,12 +29,11 @@ namespace ReportesUnis
              _struser = Util.LeerArchivoRecursos(3, Server.MapPath(@"conf.dat"));
              _strdPass = Util.LeerArchivoRecursos(4, Server.MapPath(@"conf.dat"));
 
-
         }
 
         void Session_Start(object sender, EventArgs e)
         {
-            
+           
         }
         
 
