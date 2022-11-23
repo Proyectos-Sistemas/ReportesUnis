@@ -83,7 +83,7 @@
                             <asp:BoundField DataField="SKINSURFACE_TEMPERATURE" HeaderText="Skin-surface Temperature" />
                             <asp:BoundField DataField="TEMPERATURE_STATUS" HeaderText="Temperature Status" />
                             <asp:BoundField DataField="DEPARTAMENTO" HeaderText="Departamento" />
-                            <asp:BoundField DataField="EMPLID" HeaderText="Emplid" />
+                            <asp:BoundField DataField="EMPLID" HeaderText="Emplid" Visible="false" />
                         </Columns>
                     </asp:GridView>
                 </div>

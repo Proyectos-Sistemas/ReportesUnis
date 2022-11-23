@@ -114,7 +114,10 @@ namespace ReportesUnis
 
             if (!String.IsNullOrEmpty(CldrCiclosInicio.Text))
             {
-                FI = Convert.ToDateTime(CldrCiclosInicio.Text).ToString("dd-MM-yyyy");
+                FF = Convert.ToDateTime(CldrCiclosFin.Text).ToString("dd-MM-yyyy");
+            }
+            if (!String.IsNullOrEmpty(CldrCiclosFin.Text))
+            {
                 FF = Convert.ToDateTime(CldrCiclosFin.Text).ToString("dd-MM-yyyy");
             }
 
@@ -156,7 +159,7 @@ namespace ReportesUnis
                     departamentos = departamentos.Replace("\"", "");
                     departamentos = departamentos.Replace("\r\n      ", " ");
                     departamentos = departamentos.Replace("\r\n    },", "</v2:item> \r\n");
-                    departamentos = departamentos.Replace("\r\n    }\r\n  ", "</v2:item> \r\n").TrimStart(' ');                    
+                    departamentos = departamentos.Replace("\r\n    }\r\n  ", "</v2:item> \r\n").TrimStart(' ');
 
                     CuerpoConsultaPorDepartamento(Variables.wsUsuario, Variables.wsPassword, departamentos, FI, FF);
                 }
@@ -471,10 +474,10 @@ namespace ReportesUnis
                                            <!--1st Parameter of BIP Report-->    
                                             <v2:item>
                                                 <v2:name>Departamento</v2:name>
-                                                        <v2:values>"+ 
+                                                        <v2:values>" +
                                                         dpto
-                                                            //<v2:item>" + dpto + @"</v2:item>
-                                                        +@"</v2:values>
+                                                        //<v2:item>" + dpto + @"</v2:item>
+                                                        + @"</v2:values>
                                                 </v2:item>
                                             <!--2nd Parameter of BIP Report-->
                                             <v2:item>
@@ -895,7 +898,7 @@ namespace ReportesUnis
         {
             if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
             {
-                if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(lblBusqueda.Text))
+                if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
                 {
                     GridViewReporteCT.DataSource = "";
 
@@ -941,15 +944,7 @@ namespace ReportesUnis
                                     newFila["PHONE"] = (arrlist[i, 9] ?? "").ToString();
                                     newFila["DEPARTAMENTO"] = (arrlist[i, 10] ?? "").ToString();
                                     newFila["GENDER"] = (arrlist[i, 11] ?? "").ToString();
-
-
-                                    if (arrlist[i, 12].ToString() != "-")
-                                    {
-                                        int busqueda = 29;
-                                        string email = arrlist[i, 12].ToString();
-                                        email = StringExtensions.RemoveEnd(email, busqueda);
-                                        newFila["EMAIL"] = email;
-                                    }
+                                    newFila["EMAIL"] = arrlist[i, 12].ToString();
                                     newFila["TYPE"] = "";
                                     newFila["CARD"] = "";
                                     newFila["REMARK"] = "";
