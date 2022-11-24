@@ -20,7 +20,7 @@
     <asp:TextBox ID="UserEmplid" runat="server" Visible="false"></asp:TextBox>
     <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
     <asp:TextBox ID="State" runat="server" Visible="false"></asp:TextBox>
-    
+
     <div>
         <br />
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
@@ -332,6 +332,61 @@
         <div style="margin-left: auto; margin-right: auto; text-align: center;">
             <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
             </asp:Label>
+            <br />
+            <%-- VALIDACION CAMPOS NULOS --%>
+            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull1" runat="server"
+                ControlToValidate="txtDireccion"
+                ErrorMessage="Ingresa una dirección."
+                ForeColor="Red"
+                Font-Size="Large" Font-Bold="true">
+            </asp:RequiredFieldValidator>
+            <br />
+            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull12" runat="server"
+                ControlToValidate="txtTelefono"
+                ErrorMessage=" Ingresa un número de teléfono."
+                ForeColor="Red"
+                Font-Size="Large" Font-Bold="true">
+            </asp:RequiredFieldValidator>
+            <br />
+            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull13" runat="server"
+                ControlToValidate="cMBpAIS"
+                ErrorMessage=" Seleccione un país."
+                ForeColor="Red"
+                Font-Size="Large" Font-Bold="true">
+            </asp:RequiredFieldValidator>
+            <br />
+            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull14" runat="server"
+                ControlToValidate="CmbDepartamento"
+                ErrorMessage=" Seleccione un departamento."
+                ForeColor="Red"
+                Font-Size="Large" Font-Bold="true">
+            </asp:RequiredFieldValidator>
+            <br />
+            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull15" runat="server"
+                ControlToValidate="CmbMunicipio"
+                ErrorMessage=" Seleccione un municipio."
+                ForeColor="Red"
+                Font-Size="Large" Font-Bold="true">
+            </asp:RequiredFieldValidator>
+            <%-- VALIDACION MINIMO DE CARACTERES --%>
+            <br />
+            <asp:CustomValidator ID="validarTelefono" runat="server" ControlToValidate="txtTelefono"
+                ErrorMessage="El número de teléfono debe de tener al menos 8 caracteres" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red" Font-Size="Large" Font-Bold="true"></asp:CustomValidator>
+            <br />
+            <asp:CustomValidator ID="validarDireccion" runat="server" ControlToValidate="txtDireccion"
+                ErrorMessage="La dirección debe de tener al menos 10 caracteres" ClientValidationFunction="VerificarCantidadDireccion" ForeColor="Red" Font-Size="Large" Font-Bold="true"></asp:CustomValidator>
+            <br />
+            <script type="text/javascript">
+                function VerificarCantidadDireccion(sender, args) {
+                    args.IsValid = (args.Value.length >= 9);
+                }
+            </script>
+            <script type="text/javascript">
+                function VerificarCantidadTelefono(sender, args) {
+                    args.IsValid = (args.Value.length >= 7);
+                }
+            </script>
+
         </div>
         <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
         <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
@@ -341,51 +396,6 @@
     </div>
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
-    <asp:CustomValidator ID="validarDireccion" runat="server" ControlToValidate="txtDireccion"
-        ErrorMessage="La dirección debe de tener al menos 10 caracteres" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red" Font-Size="Large" Font-Bold="true"></asp:CustomValidator>
-    <script type="text/javascript">
-        function VerificarCantidadDireccion(sender, args) {
-            args.IsValid = (args.Value.length >= 9);
-        }
-    </script>
 
-    <%-- VALIDACION CAMPOS NULOS --%>
-    <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull1" runat="server"
-        ControlToValidate="txtDireccion"
-        ErrorMessage="Ingresa una dirección."
-        ForeColor="Red"
-        Font-Size="Large" Font-Bold="true">
-    </asp:RequiredFieldValidator>
-    <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull12" runat="server"
-        ControlToValidate="txtTelefono"
-        ErrorMessage=" Ingresa un número de teléfono."
-        ForeColor="Red"
-        Font-Size="Large" Font-Bold="true">
-    </asp:RequiredFieldValidator>
-    <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull13" runat="server"
-        ControlToValidate="cMBpAIS"
-        ErrorMessage=" Seleccione un país."
-        ForeColor="Red"
-        Font-Size="Large" Font-Bold="true">
-    </asp:RequiredFieldValidator>
-    <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull14" runat="server"
-        ControlToValidate="CmbDepartamento"
-        ErrorMessage=" Seleccione un departamento."
-        ForeColor="Red"
-        Font-Size="Large" Font-Bold="true">
-    </asp:RequiredFieldValidator>
-    <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull15" runat="server"
-        ControlToValidate="CmbMunicipio"
-        ErrorMessage=" Seleccione un municipio."
-        ForeColor="Red"
-        Font-Size="Large" Font-Bold="true">
-    </asp:RequiredFieldValidator>
-    <%-- VALIDACION MINIMO DE CARACTERES --%>
-    <asp:CustomValidator ID="validarTelefono" runat="server" ControlToValidate="txtTelefono"
-        ErrorMessage="El número de teléfono debe de tener al menos 8 caracteres" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red" Font-Size="Large" Font-Bold="true"></asp:CustomValidator>
-    <script type="text/javascript">
-        function VerificarCantidadTelefono(sender, args) {
-            args.IsValid = (args.Value.length >= 7);
-        }
-    </script>
+
 </asp:Content>

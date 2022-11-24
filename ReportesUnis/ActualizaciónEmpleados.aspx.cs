@@ -553,7 +553,7 @@ namespace ReportesUnis
             decimal count = 0;
             int datos = 0;
             string[,] arrlist;
-            int valor = 12;
+            int valor = 15;
 
             aux = 4;
             listaPaises();
@@ -581,24 +581,24 @@ namespace ReportesUnis
                 DataSetLocalRpt dsReporte = new DataSetLocalRpt();
                 try
                 {
-                    if (valor == 12)
+                    if (valor == 15)
                     {
                         //Generacion de matriz para llenado de grid desde una consulta
                         for (int i = 0; i < count; i++)
                         {
-                            DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                            txtNombre.Text = (arrlist[i, 0] ?? "").ToString();
-                            txtApellido.Text = (arrlist[i, 1] ?? "").ToString();
-                            txtdPI.Text = (arrlist[i, 2] ?? "").ToString();
-                            txtFacultad.Text = (arrlist[i, 3] ?? "").ToString();
-                            txtTelefono.Text = (arrlist[i, 4] ?? "").ToString();
-                            if (!arrlist[i, 5].ToString().Equals(""))
+                            //DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
+                            txtNombre.Text = (arrlist[i, 1] ?? "").ToString();
+                            txtApellido.Text = (arrlist[i, 2] ?? "").ToString();
+                            txtdPI.Text = (arrlist[i, 3] ?? "").ToString();
+                            txtFacultad.Text = (arrlist[i, 4] ?? "").ToString();
+                            txtTelefono.Text = (arrlist[i, 5] ?? "").ToString();
+                            if (!arrlist[i, 6].ToString().Equals(""))
                             {
-                                if (arrlist[i, 5].ToString().Equals("1"))
+                                if (arrlist[i, 6].ToString().Equals("1"))
                                 {
                                     estado = "Soltero";
                                 }
-                                else if (arrlist[i, 5].ToString().Equals("2"))
+                                else if (arrlist[i, 6].ToString().Equals("2"))
                                 {
                                     estado = "Casado";
                                 }
@@ -610,9 +610,9 @@ namespace ReportesUnis
 
                             CmbEstado.SelectedValue = estado.ToString();
 
-                            if (!arrlist[i, 6].ToString().Equals(""))
+                            if (!arrlist[i, 7].ToString().Equals(""))
                             {
-                                bday = arrlist[i, 6].ToString().Substring(0, 10);
+                                bday = arrlist[i, 7].ToString().Substring(0, 10);
                                 anio = bday.Substring(0, 4);
                                 mes = bday.Substring(5, 2);
                                 dia = bday.Substring(8, 2);
@@ -627,16 +627,18 @@ namespace ReportesUnis
                             txtCumple.Text = bday;
 
 
-                            txtDireccion.Text = arrlist[i, 7].ToString();
-                            cMBpAIS.SelectedValue = (arrlist[i, 10] ?? "").ToString();
+                            txtDireccion.Text = arrlist[i, 8].ToString();
+                            txtDireccion2.Text = arrlist[i, 12].ToString();
+                            cMBpAIS.SelectedValue = (arrlist[i, 11] ?? "").ToString();
                             aux = 1;
                             listaDepartamentos();
                             aux = 0;
-                            CmbMunicipio.SelectedValue = (arrlist[i, 8] ?? "").ToString();
-                            CmbDepartamento.SelectedValue = (arrlist[i, 9] ?? "").ToString();
-                            UserEmplid.Text = (arrlist[i, 11] ?? "").ToString();
+                            CmbMunicipio.SelectedValue = (arrlist[i, 9] ?? "").ToString();
+                            CmbDepartamento.SelectedValue = (arrlist[i, 10] ?? "").ToString();
+                            UserEmplid.Text = (arrlist[i, 14] ?? "").ToString();
+                            txtZona.Text= (arrlist[i, 13] ?? "").ToString();
 
-                            dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
+                            //dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                         }
                     }
                 }
