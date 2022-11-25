@@ -958,7 +958,8 @@ namespace ReportesUnis
                 string PhoneId = getBetween(consulta, "\"PhoneId\" : ", ",\n");
                 string AddressId = getBetween(consulta, "child/addresses/", "\",\n");
                 string PersonLegislativeId = getBetween(consulta, "child/legislativeInfo/", "\",\n");
-                string effective = getBetween(consulta, "\"EffectiveStartDate\" : ", ",\n");
+                string pli = getBetween(consulta, "\"PersonLegislativeId\" : ", ",");
+                string effective = getBetween(consulta, "\"PersonLegislativeId\" : "+pli+",\n      \"EffectiveStartDate\" : \"", "\",\n");
 
                 string comIm = personId + "/child/photo/";
                 string consultaImagenes = consultaGetImagenes(comIm);
