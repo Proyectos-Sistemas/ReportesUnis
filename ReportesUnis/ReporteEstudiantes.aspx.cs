@@ -70,6 +70,7 @@ namespace ReportesUnis
             dt.Columns.Add("CEDULA");
             dt.Columns.Add("PROF");
             dt.Columns.Add("EMAIL");
+            dt.Columns.Add("ZONA");
 
             dr["FIRST_NAME"] = String.Empty;
             dr["SECOND_NAME"] = String.Empty;
@@ -93,6 +94,7 @@ namespace ReportesUnis
             dr["CEDULA"] = String.Empty;
             dr["PROF"] = String.Empty;
             dr["EMAIL"] = String.Empty;
+            dr["ZONA"] = String.Empty;
 
 
             dt.Columns.Add("EMPLID");
@@ -167,7 +169,8 @@ namespace ReportesUnis
                                                     "DEPARTAMENTO, " +
                                                     "SEX, " +
                                                     "PLACE, " +
-                                                    "EMAIL " +
+                                                    "EMAIL," +
+                                                    "ZONA " +
                                                     "FROM ( " +
                                                     "SELECT " +
                                                     "DISTINCT PD.EMPLID, " +
@@ -189,7 +192,8 @@ namespace ReportesUnis
                                                     "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
                                                     "CASE WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
                                                     "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '' END STATUS, " +
-                                                    "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS3,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS4,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                                                    "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                                                    " (select REPLACE(A1.ADDRESS3,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) ZONA, "+
                                                     "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
                                                     "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
                                                     "'ESTUDIANTE' PROF, " +
@@ -286,7 +290,7 @@ namespace ReportesUnis
                             " SELECT REPLACE(  '|' || '|' || FIRST_NAME || '|' || SECOND_NAME || '|' || LAST_NAME || '|' || '|' ||" +
                             " SECOND_LAST_NAME || '|' || BIRTHDATE || '|' || SEX || '|' || STATUS || '|' || PLACE || '|' ||" +
                             " FLAG_CED || '|' || CEDULA || '|' || '|' || '|' || FLAG_DPI || '|' || DPI || '|' || FLAG_PAS ||" +
-                            " '|' || PASAPORTE || '|' || '|' || '|' || '|' || PROF || '|' || DIRECCION || '|' || '|' || '|' ||" +
+                            " '|' || PASAPORTE || '|' || '|' || '|' || '|' || PROF || '|' || DIRECCION || '|' || '|' || '|' || ZONA||" +
                             " '|' || '|' || MUNICIPIO || '|' || DEPARTAMENTO || '|' || PHONE || '|' || '|' ||EMAIL|| '|' || CARNE || '|' ||" +
                             " CARRERA || '|' || FACULTAD || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
                             " '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
@@ -312,7 +316,8 @@ namespace ReportesUnis
                             "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
                             "CASE WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
                             "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '' END STATUS, " +
-                            "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS3,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS4,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                            "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ')) from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                            " (select REPLACE(A1.ADDRESS3,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) ZONA, " +
                             "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
                             "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
                             "'ESTUDIANTE' PROF, " +

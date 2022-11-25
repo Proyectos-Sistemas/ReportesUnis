@@ -107,7 +107,7 @@
                             <asp:BoundField DataField="DIRECCION" HeaderText="DIR" />
                             <asp:BoundField DataField="" HeaderText="CASA" />
                             <asp:BoundField DataField="" HeaderText="APTO" />
-                            <asp:BoundField DataField="" HeaderText="ZONA" />
+                            <asp:BoundField DataField="ZONA" HeaderText="ZONA" />
                             <asp:BoundField DataField="" HeaderText="COL" />
                             <asp:BoundField DataField="MUNICIPIO" HeaderText="MUNRES" />
                             <asp:BoundField DataField="DEPARTAMENTO" HeaderText="DEPRES" />

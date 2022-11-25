@@ -2117,27 +2117,29 @@ namespace ReportesUnis
                                                 FLAG_DPI = "1";
                                                 DPI = carne;
                                                 FLAG_CED = "0";
-                                                Cedula = "";
                                                 arrlist[i, 19] = "";
-                                                arrlist[i, 18] = "";
+                                                arrlist[i, 20] = "";
                                                 flag_pas = 0;
                                             }
-                                            else if ((arrlist[i, 19] ?? "").ToString() == carne) //PASAPORTE
+                                            else if ((arrlist[i, 19] ?? "").ToString() == carne)
                                             {
                                                 Pasaporte = carne;
                                                 FLAG_PAS = "1";
                                                 FLAG_DPI = "0";
                                                 FLAG_CED = "0";
                                                 Cedula = "";
+                                                arrlist[i, 4] = "";
+                                                arrlist[i, 20] = "";
                                                 flag_pas = 1;
+                                                DPI = "";
                                             }
-                                            else if ((arrlist[i, 20] ?? "").ToString() == carne) //CEDULA
+                                            else if ((arrlist[i, 20] ?? "").ToString() == carne)
                                             {
                                                 Pasaporte = "";
-                                                FLAG_PAS = "1";
+                                                FLAG_PAS = "0";
                                                 FLAG_DPI = "0";
-                                                FLAG_CED = "1";
                                                 Cedula = carne;
+                                                FLAG_CED = "1";
                                             }
                                             else
                                             {
@@ -2145,8 +2147,8 @@ namespace ReportesUnis
                                                 FLAG_PAS = "0";
                                                 FLAG_DPI = "0";
                                                 FLAG_CED = "0";
+                                                Cedula = "";
                                                 DPI = "";
-                                                flag_pas = 2;
                                             }
                                         }
                                         else
@@ -2205,8 +2207,8 @@ namespace ReportesUnis
                                         (arrlist[i, 11] ?? "").ToString() + "|" +//DEPRES
                                         (arrlist[i, 6] ?? "").ToString() + "|" +//TEL
                                         "|" +//CEL
-                                        (arrlist[i, 24] ?? "").ToString() + "|" +//EMAIL
-                                        (arrlist[i, 18] ?? "").ToString() + "|" +//CARNE
+                                        (arrlist[i, 24] ?? "").ToString().Replace("\t  ", "") + "|" +//EMAIL
+                                        carne + "|" +//CARNE
                                         "|" +//CARR
                                         (arrlist[i, 5] ?? "").ToString() + "|" +//FACUL                                         
                                         "|" +//COD_EMP_U
@@ -2278,7 +2280,6 @@ namespace ReportesUnis
                                                 FLAG_DPI = "1";
                                                 DPI = carne;
                                                 FLAG_CED = "0";
-                                                Cedula = "";
                                                 arrlist[i, 21] = "";
                                                 arrlist[i, 20] = "";
                                                 flag_pas = 0;
@@ -2289,16 +2290,20 @@ namespace ReportesUnis
                                                 FLAG_PAS = "1";
                                                 FLAG_DPI = "0";
                                                 FLAG_CED = "0";
+                                                arrlist[i, 5] = "";
+                                                arrlist[i, 21] = "";
                                                 Cedula = "";
                                                 flag_pas = 1;
+                                                DPI = "";
                                             }
                                             else if ((arrlist[i, 21] ?? "").ToString() == carne) //CEDULA
                                             {
-                                                Pasaporte = "";
+                                                Pasaporte = carne;
                                                 FLAG_PAS = "1";
                                                 FLAG_DPI = "0";
-                                                FLAG_CED = "1";
-                                                Cedula = carne;
+                                                FLAG_CED = "0";
+                                                Cedula = "";
+                                                flag_pas = 1;
                                             }
                                             else
                                             {
@@ -2364,7 +2369,7 @@ namespace ReportesUnis
                                         "|" +//COL
                                         (arrlist[i, 11] ?? "").ToString() + "|" +//MUNRES
                                         (arrlist[i, 12] ?? "").ToString() + "|" +//DEPRES
-                                        (arrlist[i, 7] ?? "").ToString()  + "|" +//TEL
+                                        (arrlist[i, 7] ?? "").ToString() + "|" +//TEL
                                         "|" +//CEL
                                         (arrlist[i, 25] ?? "").ToString() + "|" +//EMAIL
                                         (arrlist[i, 19] ?? "").ToString() + "|" +//CARNE
@@ -2458,10 +2463,19 @@ namespace ReportesUnis
         protected void BtnBuscar_Click(object sender, EventArgs e)
         {
             lblDescarga.Visible = false;
-            if (!String.IsNullOrEmpty(LbxBusqueda.Text) && !String.IsNullOrEmpty(TxtBuscador.Text))
-                matrizDatos();
-            else
-                lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
+            if (!ChBusqueda.Checked)
+            {
+                if (!String.IsNullOrEmpty(LbxBusqueda.Text) && !String.IsNullOrEmpty(TxtBuscador.Text))
+                    matrizDatos();
+                else
+                    lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
+            }else
+            {
+                if (!String.IsNullOrEmpty(LbxBusqueda.Text) && (!String.IsNullOrEmpty(TxtBuscador.Text)|| !String.IsNullOrEmpty(TxtBuscador2.Text)))
+                    matrizDatos();
+                else
+                    lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
+            }
         }
 
         protected void LbxBusqueda_SelectedIndexChanged(object sender, EventArgs e)
