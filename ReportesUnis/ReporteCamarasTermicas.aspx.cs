@@ -121,8 +121,225 @@ namespace ReportesUnis
 
             try
             {
-                if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
+                if (!String.IsNullOrWhiteSpace(where))
                 {
+                    if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
+                    {
+                        {
+                            using (OracleConnection con = new OracleConnection(constr))
+                            {
+                                using (OracleCommand cmd = new OracleCommand())
+                                {
+                                    cmd.CommandText = "SELECT " +
+                                                    "EMPLID, " +
+                                                    "FIRST_NAME, " +
+                                                    "LAST_NAME, " +
+                                                    "ID, " +
+                                                    "'Basic Person' TYPE, " +
+                                                    "PERSON_GROUP || Departamento PERSON_GROUP, " +
+                                                    "GENDER, " +
+                                                    "'' Start_Time_of_Effective_Period, " +
+                                                    "'' End_Time_of_Effective_Period, " +
+                                                    "'' CARD, " +
+                                                    "PHONE, " +
+                                                    "EMAIL, " +
+                                                    "'' Remark, " +
+                                                    "'' Dock_Station_Login_Password, " +
+                                                    "'' SupportIssuedCustomProperties, " +
+                                                    "'' SkinSurface_Temperature, " +
+                                                    "'' Temperature_Status, " +
+                                                    "DEPARTAMENTO " +
+                                                    "FROM " +
+                                                    "( " +
+                                                    "SELECT " +
+                                                    "DISTINCT PD.EMPLID, " +
+                                                    "PD.FIRST_NAME, " +
+                                                    "PD.LAST_NAME || CASE WHEN LTRIM(RTRIM(PD.SECOND_LAST_NAME)) IS NOT NULL THEN ' ' || LTRIM(RTRIM(PD.SECOND_LAST_NAME)) END LAST_NAME, " +
+                                                    "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) ID, " +
+                                                    "CASE WHEN PD.SEX = 'F' THEN 'Female' WHEN PD.SEX = 'M' THEN 'Male' ELSE 'Unknown' END Gender, " +
+                                                    "PPD.PHONE, " +
+                                                    "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) Email, " +
+                                                    "AGT.DESCR DEPARTAMENTO," +
+                                                    "APD.INSTITUTION || '/Estudiantes/' Person_Group, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
+                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE " +
+                                                    "FROM " +
+                                                    "SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                                    "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                                    "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                                                    "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
+                                                    "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                                                    "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                                                    "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
+                                                    "AND SE.STDNT_ENRL_STATUS = 'E' " +
+                                                    "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                                                    "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID " +
+                                                    "AND CT.STRM = SE.STRM " +
+                                                    "AND CT.ACAD_CAREER = SE.ACAD_CAREER " +
+                                                    "AND SE.INSTITUTION = CT.INSTITUTION " +
+                                                    "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
+                                                    "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
+                                                    "AND CT.INSTITUTION = APD.INSTITUTION " +
+                                                    "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
+                                                    "AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                                    "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
+                                                    "AND CT.INSTITUTION = TT.INSTITUTION " +
+                                                    "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                                                    where +
+                                                    ") " +
+                                                    "WHERE  " +
+                                                    "(ID = DPI " +
+                                                    "OR ID = PASAPORTE " +
+                                                    "OR ID = CEDULA )" +
+                                                    "ORDER BY " +
+                                                    "1 ASC ";
+                                    cmd.Connection = con;
+                                    con.Open();
+                                    OracleDataReader reader = cmd.ExecuteReader();
+                                    if (reader.HasRows)
+                                    {
+                                        GridViewReporteCT.DataSource = cmd.ExecuteReader();
+                                        GridViewReporteCT.DataBind();
+                                        lblBusqueda.Text = "";
+                                    }
+                                    else
+                                    {
+                                        lblBusqueda.Text = "No se encontró la información solicitada";
+                                        if (LbxBusqueda.Text == "Género")
+                                            lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
+                                    }
+                                    con.Close();
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        lblBusqueda.Text = "Para realizar búesqueda por género intente ingresando Male o Female";
+                    }
+                }
+                else
+                {
+                    lblBusqueda.Text = "Ingrese un valor a buscar";
+                }
+            }
+            catch
+            {
+                lblBusqueda.Text = "No se encontró la información solicitada";
+            }
+        }
+
+        //GENERACION DEL DOCUMENTO DE EXCEL
+        protected void ExportGridToExcel(object sender, EventArgs e)
+        {
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.Charset = "";
+            string FileName = "Reporte Estudiantes " + DateTime.Now.ToString("G") + ".xls";
+            StringWriter strwritter = new StringWriter();
+            HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.ContentType = "application/ms-excel";
+            Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+            GridViewReporteCT.GridLines = GridLines.Both;
+            GridViewReporteCT.HeaderStyle.Font.Bold = true;
+            GridViewReporteCT.RenderControl(htmltextwrtter);
+            Response.Write(strwritter.ToString());
+            Response.End();
+        }
+
+        public override void VerifyRenderingInServerForm(Control control)
+        {
+            //required to avoid the run time error "  
+            //Control 'GridViewReporteCT' of type 'Grid View' must be placed inside a form tag with runat=server."  
+        }
+
+        //Llenado de informacion a las columnas correspondientes del excel
+        protected void GenerarExcel(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
+
+            {
+                SLDocument sl = new SLDocument();
+                int celda = 1;
+                //Letras de las columnas para la generacion de excel
+                string[] LETRA = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q" };
+
+                //Texto plano
+                sl.RenameWorksheet(SLDocument.DefaultFirstSheetName, "Reporte Estudiantes " + DateTime.Now.ToString("G"));
+                sl.SetCellValue("A" + celda, "Rule");
+                celda++;
+                sl.SetCellValue("A" + celda, "The items with asterisk are required.At least one of family name and given name is required.");
+                celda++;
+                sl.SetCellValue("A" + celda, "Do NOT change the layout and column title in this template file. The importing may fail if changed.");
+                celda++;
+                sl.SetCellValue("A" + celda, "Supports adding persons to the existing person group whose name is separated by slash. For example, the name format of Group A under All Persons is All Persons/Group A.");
+                celda++;
+                sl.SetCellValue("A" + celda, "Start/End Time of Effective Period: The effective period of the person for access control and time & attendance. Format: yyyy/mm/dd HH:MM:SS.");
+                celda++;
+                sl.SetCellValue("A" + celda, "Domain Person and Domain Group Person don't support adding and editing person's basic information and additional information by importing.");
+                celda++;
+                sl.SetCellValue("A" + celda, "No more than five cards can be issued to one person. Each two card numbers should be separated by semicolon, e.g., 01;02;03;04;05.");
+                celda++;
+                sl.SetCellValue("A" + celda, "It supports editing the persons' additional information in a batch, the fields of which are already created in the system. Please enter the additional information according to the type. For single selection type, select one from the drop-down list.");
+                celda++;
+                sl.SetCellValue("A" + celda, "Supports custom attribute input formats separated by commas, for example: attribute name 1, attribute name 2");
+                celda++;
+
+                //Cabeceras
+                if (celda == 10)
+                {
+                    for (int k = 0; k < GridViewReporteCT.Columns.Count; k++)
+                    {
+                        sl.SetCellValue("A" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("B" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("C" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("D" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("E" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("F" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("G" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("H" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("I" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("J" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("K" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("L" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("M" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("N" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("O" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("P" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        sl.SetCellValue("Q" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                        k++;
+                        celda++;
+                    }
+                }
+
+                //Llenado de las columnas con la informacion
+                if (celda > 10)
+                {
+                    var dt = new DataTable();
+                    string where = stringWhere();
+                    string constr = TxtURL.Text;
+
+                    try
                     {
                         using (OracleConnection con = new OracleConnection(constr))
                         {
@@ -139,8 +356,8 @@ namespace ReportesUnis
                                                 "'' Start_Time_of_Effective_Period, " +
                                                 "'' End_Time_of_Effective_Period, " +
                                                 "'' CARD, " +
-                                                "PHONE, " +
                                                 "EMAIL, " +
+                                                "PHONE, " +
                                                 "'' Remark, " +
                                                 "'' Dock_Station_Login_Password, " +
                                                 "'' SupportIssuedCustomProperties, " +
@@ -195,251 +412,49 @@ namespace ReportesUnis
                                 cmd.Connection = con;
                                 con.Open();
                                 OracleDataReader reader = cmd.ExecuteReader();
+                                OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                                 if (reader.HasRows)
                                 {
-                                    GridViewReporteCT.DataSource = cmd.ExecuteReader();
-                                    GridViewReporteCT.DataBind();
-                                    lblBusqueda.Text = "";
-                                }
-                                else
-                                {
-                                    lblBusqueda.Text = "No se encontró la información solicitada";
-                                    if (LbxBusqueda.Text == "Género")
-                                        lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
+                                    int auxCelda = 1;
+                                    adapter.Fill(dt);
+                                    int contador = dt.Rows.Count;
+                                    for (int i = 0; i < contador; i++)
+                                    {
+                                        for (int j = 1; j < 18; j++)
+                                        {
+                                            for (int k = 0; k < 17; k++)
+                                            {
+                                                sl.SetCellValue(LETRA[k] + celda, dt.Rows[i].ItemArray[j].ToString());
+                                                j++;
+                                            }
+                                            celda++;
+                                            auxCelda = auxCelda + 1;
+                                        }
+                                        celda = 10 + auxCelda;
+                                    }
                                 }
                                 con.Close();
                             }
                         }
                     }
-                }
-                else
-                {
-                    lblBusqueda.Text = "Para realizar búesqueda por género intente ingresando Male o Female";
-                }
-            }
-            catch
-            {
-                lblBusqueda.Text = "No se encontró la información solicitada";
-            }
-        }
-
-        //GENERACION DEL DOCUMENTO DE EXCEL
-        protected void ExportGridToExcel(object sender, EventArgs e)
-        {
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ClearContent();
-            Response.ClearHeaders();
-            Response.Charset = "";
-            string FileName = "Reporte Estudiantes " + DateTime.Now.ToString("G") + ".xls";
-            StringWriter strwritter = new StringWriter();
-            HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.ContentType = "application/ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-            GridViewReporteCT.GridLines = GridLines.Both;
-            GridViewReporteCT.HeaderStyle.Font.Bold = true;
-            GridViewReporteCT.RenderControl(htmltextwrtter);
-            Response.Write(strwritter.ToString());
-            Response.End();
-        }
-
-        public override void VerifyRenderingInServerForm(Control control)
-        {
-            //required to avoid the run time error "  
-            //Control 'GridViewReporteCT' of type 'Grid View' must be placed inside a form tag with runat=server."  
-        }
-
-        //Llenado de informacion a las columnas correspondientes del excel
-        protected void GenerarExcel(object sender, EventArgs e)
-        {
-            SLDocument sl = new SLDocument();
-            int celda = 1;
-            //Letras de las columnas para la generacion de excel
-            string[] LETRA = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q" };
-
-            //Texto plano
-            sl.RenameWorksheet(SLDocument.DefaultFirstSheetName, "Reporte Estudiantes " + DateTime.Now.ToString("G"));
-            sl.SetCellValue("A" + celda, "Rule");
-            celda++;
-            sl.SetCellValue("A" + celda, "The items with asterisk are required.At least one of family name and given name is required.");
-            celda++;
-            sl.SetCellValue("A" + celda, "Do NOT change the layout and column title in this template file. The importing may fail if changed.");
-            celda++;
-            sl.SetCellValue("A" + celda, "Supports adding persons to the existing person group whose name is separated by slash. For example, the name format of Group A under All Persons is All Persons/Group A.");
-            celda++;
-            sl.SetCellValue("A" + celda, "Start/End Time of Effective Period: The effective period of the person for access control and time & attendance. Format: yyyy/mm/dd HH:MM:SS.");
-            celda++;
-            sl.SetCellValue("A" + celda, "Domain Person and Domain Group Person don't support adding and editing person's basic information and additional information by importing.");
-            celda++;
-            sl.SetCellValue("A" + celda, "No more than five cards can be issued to one person. Each two card numbers should be separated by semicolon, e.g., 01;02;03;04;05.");
-            celda++;
-            sl.SetCellValue("A" + celda, "It supports editing the persons' additional information in a batch, the fields of which are already created in the system. Please enter the additional information according to the type. For single selection type, select one from the drop-down list.");
-            celda++;
-            sl.SetCellValue("A" + celda, "Supports custom attribute input formats separated by commas, for example: attribute name 1, attribute name 2");
-            celda++;
-
-            //Cabeceras
-            if (celda == 10)
-            {
-                for (int k = 0; k < GridViewReporteCT.Columns.Count; k++)
-                {
-                    sl.SetCellValue("A" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("B" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("C" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("D" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("E" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("F" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("G" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("H" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("I" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("J" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("K" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("L" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("M" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("N" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("O" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("P" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    sl.SetCellValue("Q" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                    k++;
-                    celda++;
-                }
-            }
-
-            //Llenado de las columnas con la informacion
-            if (celda > 10)
-            {
-                var dt = new DataTable();
-                string where = stringWhere();
-                string constr = TxtURL.Text;
-
-                try
-                {
-                    using (OracleConnection con = new OracleConnection(constr))
+                    catch
                     {
-                        using (OracleCommand cmd = new OracleCommand())
-                        {
-                            cmd.CommandText = "SELECT " +
-                                            "EMPLID, " +
-                                            "FIRST_NAME, " +
-                                            "LAST_NAME, " +
-                                            "ID, " +
-                                            "'Basic Person' TYPE, " +
-                                            "PERSON_GROUP || Departamento PERSON_GROUP, " +
-                                            "GENDER, " +
-                                            "'' Start_Time_of_Effective_Period, " +
-                                            "'' End_Time_of_Effective_Period, " +
-                                            "'' CARD, " +
-                                            "EMAIL, " +
-                                            "PHONE, " +
-                                            "'' Remark, " +
-                                            "'' Dock_Station_Login_Password, " +
-                                            "'' SupportIssuedCustomProperties, " +
-                                            "'' SkinSurface_Temperature, " +
-                                            "'' Temperature_Status, " +
-                                            "DEPARTAMENTO " +
-                                            "FROM " +
-                                            "( " +
-                                            "SELECT " +
-                                            "DISTINCT PD.EMPLID, " +
-                                            "PD.FIRST_NAME, " +
-                                            "PD.LAST_NAME || CASE WHEN LTRIM(RTRIM(PD.SECOND_LAST_NAME)) IS NOT NULL THEN ' ' || LTRIM(RTRIM(PD.SECOND_LAST_NAME)) END LAST_NAME, " +
-                                            "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) ID, " +
-                                            "CASE WHEN PD.SEX = 'F' THEN 'Female' WHEN PD.SEX = 'M' THEN 'Male' ELSE 'Unknown' END Gender, " +
-                                            "PPD.PHONE, " +
-                                            "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) Email, " +
-                                            "AGT.DESCR DEPARTAMENTO," +
-                                            "APD.INSTITUTION || '/Estudiantes/' Person_Group, " +
-                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
-                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
-                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE " +
-                                            "FROM " +
-                                            "SYSADM.PS_PERS_DATA_SA_VW PD " +
-                                            "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
-                                            "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
-                                            "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
-                                            "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                                            "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                            "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
-                                            "AND SE.STDNT_ENRL_STATUS = 'E' " +
-                                            "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                                            "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID " +
-                                            "AND CT.STRM = SE.STRM " +
-                                            "AND CT.ACAD_CAREER = SE.ACAD_CAREER " +
-                                            "AND SE.INSTITUTION = CT.INSTITUTION " +
-                                            "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
-                                            "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
-                                            "AND CT.INSTITUTION = APD.INSTITUTION " +
-                                            "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
-                                            "AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                            "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
-                                            "AND CT.INSTITUTION = TT.INSTITUTION " +
-                                            "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
-                                            where +
-                                            ") " +
-                                            "WHERE  " +
-                                            "(ID = DPI " +
-                                            "OR ID = PASAPORTE " +
-                                            "OR ID = CEDULA )" +
-                                            "ORDER BY " +
-                                            "1 ASC ";
-                            cmd.Connection = con;
-                            con.Open();
-                            OracleDataReader reader = cmd.ExecuteReader();
-                            OracleDataAdapter adapter = new OracleDataAdapter(cmd);
-                            if (reader.HasRows)
-                            {
-                                int auxCelda = 1;
-                                adapter.Fill(dt);
-                                int contador = dt.Rows.Count;
-                                for (int i = 0; i < contador; i++)
-                                {
-                                    for (int j = 1; j < 18; j++)
-                                    {
-                                        for (int k = 0; k < 17; k++)
-                                        {
-                                            sl.SetCellValue(LETRA[k] + celda, dt.Rows[i].ItemArray[j].ToString());
-                                            j++;
-                                        }
-                                        celda++;
-                                        auxCelda = auxCelda + 1;
-                                    }
-                                    celda = 10 + auxCelda;
-                                }
-                            }
-                            con.Close();
-                        }
+                        lblBusqueda.Text = "No se encontró la información solicitada";
                     }
                 }
-                catch
-                {
-                    lblBusqueda.Text = "No se encontró la información solicitada";
-                }
-            }
 
-            //Nombre del archivo
-            string nombre = "Reporte Camara Termica Estudiantes" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".xlsx";
-            //Lugar de almacenamiento
-            sl.SaveAs(CurrentDirectory + "ReportesCT/" + nombre);
-            Response.ContentType = "application/ms-excel";
-            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-            Response.TransmitFile(CurrentDirectory + "ReportesCT/" + nombre);
+                //Nombre del archivo
+                string nombre = "Reporte Camara Termica Estudiantes" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".xlsx";
+                //Lugar de almacenamiento
+                sl.SaveAs(CurrentDirectory + "ReportesCT/" + nombre);
+                Response.ContentType = "application/ms-excel";
+                Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                Response.TransmitFile(CurrentDirectory + "ReportesCT/" + nombre);
+            }
+            else
+            {
+                lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
+            }
         }
 
         public static string removeUnicode(string input)
@@ -505,101 +520,108 @@ namespace ReportesUnis
         }
         protected string DownloadAllFile(string where)
         {
-            string nombre = "ImagenesEstudiantes" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
-            string constr = TxtURL.Text;
             string ret = "0";
-            int total = 0;
-            DataSetLocalRpt dsDownload = new DataSetLocalRpt();
-
-            using (OracleConnection con = new OracleConnection(constr))
+            if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
             {
-                using (OracleCommand cmd = new OracleCommand())
+                string nombre = "ImagenesEstudiantes" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
+                string constr = TxtURL.Text;
+                int total = 0;
+                DataSetLocalRpt dsDownload = new DataSetLocalRpt();
+
+                using (OracleConnection con = new OracleConnection(constr))
                 {
-                    cmd.CommandText = "SELECT * FROM ( " +
-                                        "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension, " +
-                                        "ROW_NUMBER() OVER(PARTITION BY P.EMPLID ORDER BY P.EMPLID) AS CNT " +
-                                        "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
-                                        "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
-                                        "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
-                                        "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
-                                        "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                                        "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                        "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
-                                        "AND SE.STDNT_ENRL_STATUS = 'E' " +
-                                        "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                                        "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID " +
-                                        "AND CT.STRM = SE.STRM " +
-                                        "AND CT.ACAD_CAREER = SE.ACAD_CAREER " +
-                                        "AND SE.INSTITUTION = CT.INSTITUTION " +
-                                        "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
-                                        "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
-                                        "AND CT.INSTITUTION = APD.INSTITUTION " +
-                                        "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
-                                        "AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                        "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
-                                        "AND CT.INSTITUTION = TT.INSTITUTION " +
-                                        where +
-                                        "AND employee_photo IS NOT NULL )" +
-                                        "WHERE CNT =1";
-                    cmd.Connection = con;
-                    con.Open();
-                    OracleDataReader reader = cmd.ExecuteReader();
-                    if (reader.HasRows)
+                    using (OracleCommand cmd = new OracleCommand())
                     {
-                        DataTable dt = new DataTable();
-                        OracleDataAdapter adapter = new OracleDataAdapter(cmd);
-                        adapter.Fill(dt);
-                        foreach (DataRow row in dt.Rows)
+                        cmd.CommandText = "SELECT * FROM ( " +
+                                            "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension, " +
+                                            "ROW_NUMBER() OVER(PARTITION BY P.EMPLID ORDER BY P.EMPLID) AS CNT " +
+                                            "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                            "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                                            "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                            "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                                            "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                                            "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                                            "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
+                                            "AND SE.STDNT_ENRL_STATUS = 'E' " +
+                                            "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                                            "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID " +
+                                            "AND CT.STRM = SE.STRM " +
+                                            "AND CT.ACAD_CAREER = SE.ACAD_CAREER " +
+                                            "AND SE.INSTITUTION = CT.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
+                                            "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
+                                            "AND CT.INSTITUTION = APD.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
+                                            "AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
+                                            "AND CT.INSTITUTION = TT.INSTITUTION " +
+                                            where +
+                                            "AND employee_photo IS NOT NULL )" +
+                                            "WHERE CNT =1";
+                        cmd.Connection = con;
+                        con.Open();
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        if (reader.HasRows)
                         {
-                            DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
-                            newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
-                            newFila["contentType"] = row["Extension"].ToString();
-                            newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
-                            dsDownload.Tables["AllDownload"].Rows.Add(newFila);
-                            total = total + 1;
-                        }
-                        con.Close();
-                    }
-                }
-            }
-
-
-            if (total > 0)
-            {
-                string user = Environment.UserName;
-                string unidad = unidadAlmacenamiento().Substring(0, 2);
-                string path = unidad + ":\\Users\\" + user + "\\Downloads";
-                if (!Directory.Exists(path))
-                {
-                    File.Create(path).Close();
-                }
-                string folder = path + "\\" + nombre;
-                File.Create(folder).Close();
-
-                using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
-                {
-
-                    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
-                    {
-                        for (int i = 0; i < total; i++)
-                        {
-                            byte[] base64 = (byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"];
-                            ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
-
-                            var zipStream = readmeEntry.Open();
-                            zipStream.Write(base64, 0, base64.Length);
-
+                            DataTable dt = new DataTable();
+                            OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                            adapter.Fill(dt);
+                            foreach (DataRow row in dt.Rows)
+                            {
+                                DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
+                                newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
+                                newFila["contentType"] = row["Extension"].ToString();
+                                newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
+                                dsDownload.Tables["AllDownload"].Rows.Add(newFila);
+                                total = total + 1;
+                            }
+                            con.Close();
                         }
                     }
                 }
-                lblBusqueda.Text = "";
-                lblDescarga.Visible = true;
-                lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
-                ret = "1";
+
+
+                if (total > 0)
+                {
+                    string user = Environment.UserName;
+                    string unidad = unidadAlmacenamiento().Substring(0, 2);
+                    string path = unidad + ":\\Users\\" + user + "\\Downloads";
+                    if (!Directory.Exists(path))
+                    {
+                        File.Create(path).Close();
+                    }
+                    string folder = path + "\\" + nombre;
+                    File.Create(folder).Close();
+
+                    using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
+                    {
+
+                        using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                        {
+                            for (int i = 0; i < total; i++)
+                            {
+                                byte[] base64 = (byte[])dsDownload.Tables["AllDownload"].Rows[i]["bytes"];
+                                ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownload"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
+
+                                var zipStream = readmeEntry.Open();
+                                zipStream.Write(base64, 0, base64.Length);
+
+                            }
+                        }
+                    }
+                    lblBusqueda.Text = "";
+                    lblDescarga.Visible = true;
+                    lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
+                    ret = "1";
+                }
+                else
+                {
+                    ret = "2";
+                }
             }
             else
             {
-                ret = "2";
+                lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
             }
             return ret;
         }
@@ -639,47 +661,51 @@ namespace ReportesUnis
 
         public string stringWhere()
         {
-            string busqueda = LbxBusqueda.Text;
-            var fechaI = CldrCiclosInicio.Text;
-            var anioI = fechaI.Substring(2, 2);
-            var mesI = fechaI.Substring(5, 2);
-            var diaI = fechaI.Substring(8, 2);
-            var fechaF = CldrCiclosFin.Text;
-            var anioF = fechaF.Substring(2, 2);
-            var mesF = fechaF.Substring(5, 2);
-            var diaF = fechaF.Substring(8, 2);
-            var inicio = diaI + "/" + mesI + "/" + anioI;
-            var fin = diaF + "/" + mesF + "/" + anioF;
             var where = "";
+            if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
 
-            if (busqueda.Equals("Nombre"))
             {
-                where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
-            }
-            else if (LbxBusqueda.Text.Equals("Apellido"))
-            {
-                where = "WHERE (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') ) AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
-            }
-            else if (LbxBusqueda.Text.Equals("ID"))
-            {
-                where = "WHERE UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
-            }
-            else if (LbxBusqueda.Text.Equals("Departamento"))
-            {
-                where = "WHERE UPPER(AGT.DESCR) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
-            }
-            else if (LbxBusqueda.Text.Equals("Género"))
-            {
-                string buscar = TxtBuscador.Text;
-                string min = buscar.ToLower();
-                if (min.Equals("male"))
-                    where = "WHERE PD.SEX LIKE('%M%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
-                else if (min.Equals("female"))
-                    where = "WHERE PD.SEX LIKE ('%F%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
-                else if (buscar == "%")
-                    where = "WHERE PD.SEX LIKE ('%%%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
-                else
-                    where = "WHERE PD.SEX LIKE ('%Mujer%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                string busqueda = LbxBusqueda.Text;
+                var fechaI = CldrCiclosInicio.Text;
+                var anioI = fechaI.Substring(2, 2);
+                var mesI = fechaI.Substring(5, 2);
+                var diaI = fechaI.Substring(8, 2);
+                var fechaF = CldrCiclosFin.Text;
+                var anioF = fechaF.Substring(2, 2);
+                var mesF = fechaF.Substring(5, 2);
+                var diaF = fechaF.Substring(8, 2);
+                var inicio = diaI + "/" + mesI + "/" + anioI;
+                var fin = diaF + "/" + mesF + "/" + anioF;
+
+                if (busqueda.Equals("Nombre"))
+                {
+                    where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                }
+                else if (LbxBusqueda.Text.Equals("Apellido"))
+                {
+                    where = "WHERE (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') ) AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                }
+                else if (LbxBusqueda.Text.Equals("ID"))
+                {
+                    where = "WHERE UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                }
+                else if (LbxBusqueda.Text.Equals("Departamento"))
+                {
+                    where = "WHERE UPPER(AGT.DESCR) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                }
+                else if (LbxBusqueda.Text.Equals("Género"))
+                {
+                    string buscar = TxtBuscador.Text;
+                    string min = buscar.ToLower();
+                    if (min.Equals("male"))
+                        where = "WHERE PD.SEX LIKE('%M%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    else if (min.Equals("female"))
+                        where = "WHERE PD.SEX LIKE ('%F%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    else if (buscar == "%")
+                        where = "WHERE PD.SEX LIKE ('%%%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    else
+                        where = "WHERE PD.SEX LIKE ('%Mujer%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                }
             }
             return where;
         }
