@@ -2000,7 +2000,7 @@ namespace ReportesUnis
 
             int ret = 0;
 
-            if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrEmpty(LbxBusqueda2.Text) || !String.IsNullOrEmpty(CldrCiclosFin.Text) || !String.IsNullOrEmpty(CldrCiclosFin.Text))
+            if ((!ChBusqueda.Checked && !String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))|| (!ChBusqueda.Checked && !String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(TxtBuscador2.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)))
             {
                 {
                     GridViewReporte.DataSource = "";
@@ -2465,13 +2465,13 @@ namespace ReportesUnis
             lblDescarga.Visible = false;
             if (!ChBusqueda.Checked)
             {
-                if (!String.IsNullOrEmpty(LbxBusqueda.Text) && !String.IsNullOrEmpty(TxtBuscador.Text))
+                if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
                     matrizDatos();
                 else
                     lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
             }else
             {
-                if (!String.IsNullOrEmpty(LbxBusqueda.Text) && (!String.IsNullOrEmpty(TxtBuscador.Text)|| !String.IsNullOrEmpty(TxtBuscador2.Text)))
+                if (!String.IsNullOrEmpty(TxtBuscador2.Text) && !String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
                     matrizDatos();
                 else
                     lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
@@ -2585,188 +2585,195 @@ namespace ReportesUnis
 
         protected string DownloadAllFile()
         {
-            lblDescarga.Text = "";
-            desc = 1;
-            string[] result = sustituirCaracteres("").Split('|');
-            decimal registros = 0;
-            decimal count = 0;
-            int datos = 0;
-            string[,] arrlist;
             string ret = "0";
+            if ((!ChBusqueda.Checked && !String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)) || (!ChBusqueda.Checked && !String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(TxtBuscador2.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)))
 
-            if (result.Count() > 5)
             {
-                if (!ChBusqueda.Checked)
-                {
-                    //Busqueda simple por Nombre, Apellido, DPI o dependencia
-                    registros = result.Count() / 5;
-                    count = Math.Round(registros, 0);
-                    if (registros == 0)
-                        count = 1;
-                    arrlist = new string[Convert.ToInt32(count), 6];
-                    if (result.Count() > 6)
-                    {
-                        datos = 1;
-                        for (int i = 0; i < count; i++)
-                        {
-                            for (int k = 1; k < 6; k++)
-                            {
-                                if (k == 5 && i < count - 1)
-                                {
-                                    string resultado = result[datos];
-                                    int removerUltimos = 10;
-                                    resultado = resultado.Remove(resultado.Length - removerUltimos);
-                                    arrlist[i, k] = result[datos].Remove(result[datos].Length - 10);
-                                    arrlist[i, 0] = "";
-                                }
-                                else
-                                {
-                                    arrlist[i, k] = result[datos];
-                                }
-                                datos++;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < count; i++)
-                        {
-                            for (int k = 0; k < 6; k++)
-                            {
-                                arrlist[i, k] = result[datos];
-                                datos++;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    //Busqueda multiple por asignacion
-                    registros = result.Count() / 6;
-                    count = Math.Round(registros, 0);
-                    if (registros == 0)
-                        count = 1;
-                    arrlist = new string[Convert.ToInt32(count), 7];
-                    if (result.Count() > 7)
-                    {
-                        datos = 1;
-                        for (int i = 0; i < count; i++)
-                        {
-                            for (int k = 1; k < 7; k++)
-                            {
-                                if (k == 6 && i < count - 1)
-                                {
-                                    string resultado = result[datos];
-                                    int removerUltimos = 10;
-                                    resultado = resultado.Remove(resultado.Length - removerUltimos);
-                                    arrlist[i, k] = result[datos].Remove(result[datos].Length - 10);
-                                    arrlist[i, 0] = "";
-                                }
-                                else
-                                {
-                                    arrlist[i, k] = result[datos];
-                                }
-                                datos++;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < count; i++)
-                        {
-                            for (int k = 0; k < 7; k++)
-                            {
-                                arrlist[i, k] = result[datos];
-                                datos++;
-                            }
-                        }
-                    }
-                }
+                lblDescarga.Text = "";
+                desc = 1;
+                string[] result = sustituirCaracteres("").Split('|');
+                decimal registros = 0;
+                decimal count = 0;
+                int datos = 0;
+                string[,] arrlist;
+                
 
-
-                int total = 0;
-                DataSetLocalRpt dsDownload = new DataSetLocalRpt();
-                for (int i = 0; i < count; i++)
+                if (result.Count() > 5)
                 {
-                    desc = 1;
                     if (!ChBusqueda.Checked)
                     {
-                        if (arrlist.Length > 5)
+                        //Busqueda simple por Nombre, Apellido, DPI o dependencia
+                        registros = result.Count() / 5;
+                        count = Math.Round(registros, 0);
+                        if (registros == 0)
+                            count = 1;
+                        arrlist = new string[Convert.ToInt32(count), 6];
+                        if (result.Count() > 6)
                         {
-                            DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
-                            newFila["bytes"] = arrlist[i, 5];
-                            newFila["contentType"] = "jpg";
-                            newFila["fileName"] = arrlist[i, 3] + ".jpg";
-                            dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
-                            total = total + 1;
+                            datos = 1;
+                            for (int i = 0; i < count; i++)
+                            {
+                                for (int k = 1; k < 6; k++)
+                                {
+                                    if (k == 5 && i < count - 1)
+                                    {
+                                        string resultado = result[datos];
+                                        int removerUltimos = 10;
+                                        resultado = resultado.Remove(resultado.Length - removerUltimos);
+                                        arrlist[i, k] = result[datos].Remove(result[datos].Length - 10);
+                                        arrlist[i, 0] = "";
+                                    }
+                                    else
+                                    {
+                                        arrlist[i, k] = result[datos];
+                                    }
+                                    datos++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < count; i++)
+                            {
+                                for (int k = 0; k < 6; k++)
+                                {
+                                    arrlist[i, k] = result[datos];
+                                    datos++;
+                                }
+                            }
                         }
                     }
                     else
                     {
-                        if (arrlist.Length > 6)
+                        //Busqueda multiple por asignacion
+                        registros = result.Count() / 6;
+                        count = Math.Round(registros, 0);
+                        if (registros == 0)
+                            count = 1;
+                        arrlist = new string[Convert.ToInt32(count), 7];
+                        if (result.Count() > 7)
                         {
-                            DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
-                            newFila["bytes"] = arrlist[i, 6];
-                            newFila["contentType"] = "jpg";
-                            newFila["fileName"] = arrlist[i, 4] + ".jpg";
-                            dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
-                            total = total + 1;
-                        }
-                    }
-                }
-
-                if (total > 0)
-                {
-                    string user = Environment.UserName;
-                    string unidad = unidadAlmacenamiento().Substring(0, 2);
-                    string path = unidad + ":\\Users\\" + user + "\\Downloads";
-                    if (!Directory.Exists(path))
-                    {
-                        File.Create(path).Close();
-                    }
-                    string folder = path + "\\" + nombre;
-                    File.Create(folder).Close();
-
-                    using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
-                    {
-
-                        using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
-                        {
-                            for (int i = 0; i < total; i++)
+                            datos = 1;
+                            for (int i = 0; i < count; i++)
                             {
-
-                                byte[] base64 = Convert.FromBase64String(dsDownload.Tables["AllDownloadEmp"].Rows[i]["bytes"].ToString());
-                                ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownloadEmp"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
-
-                                var zipStream = readmeEntry.Open();
-                                zipStream.Write(base64, 0, base64.Length);
+                                for (int k = 1; k < 7; k++)
+                                {
+                                    if (k == 6 && i < count - 1)
+                                    {
+                                        string resultado = result[datos];
+                                        int removerUltimos = 10;
+                                        resultado = resultado.Remove(resultado.Length - removerUltimos);
+                                        arrlist[i, k] = result[datos].Remove(result[datos].Length - 10);
+                                        arrlist[i, 0] = "";
+                                    }
+                                    else
+                                    {
+                                        arrlist[i, k] = result[datos];
+                                    }
+                                    datos++;
+                                }
                             }
                         }
-                        /*------------FUNCIONA, PERO SUSTITUYE EL  ZIP POR LA FOTO
-                        using (FileStream foto = new FileStream(folder + dsDownload.Tables["AllDownload"].Rows[0]["filename"].ToString(), FileMode.Open))
+                        else
                         {
-                            using (GZipStream gz = new GZipStream(foto, CompressionMode.Compress, false))
+                            for (int i = 0; i < count; i++)
                             {
-                                gz.Write(base64, 0, base64.Length);
+                                for (int k = 0; k < 7; k++)
+                                {
+                                    arrlist[i, k] = result[datos];
+                                    datos++;
+                                }
                             }
                         }
-                        ---------------*/
                     }
-                    lblBusqueda.Text = "";
-                    lblDescarga.Visible = true;
-                    lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
-                    ret = "1";
+
+
+                    int total = 0;
+                    DataSetLocalRpt dsDownload = new DataSetLocalRpt();
+                    for (int i = 0; i < count; i++)
+                    {
+                        desc = 1;
+                        if (!ChBusqueda.Checked)
+                        {
+                            if (arrlist.Length > 5)
+                            {
+                                DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
+                                newFila["bytes"] = arrlist[i, 5];
+                                newFila["contentType"] = "jpg";
+                                newFila["fileName"] = arrlist[i, 3] + ".jpg";
+                                dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
+                                total = total + 1;
+                            }
+                        }
+                        else
+                        {
+                            if (arrlist.Length > 6)
+                            {
+                                DataRow newFila = dsDownload.Tables["AllDownloadEmp"].NewRow();
+                                newFila["bytes"] = arrlist[i, 6];
+                                newFila["contentType"] = "jpg";
+                                newFila["fileName"] = arrlist[i, 4] + ".jpg";
+                                dsDownload.Tables["AllDownloadEmp"].Rows.Add(newFila);
+                                total = total + 1;
+                            }
+                        }
+                    }
+
+                    if (total > 0)
+                    {
+                        string user = Environment.UserName;
+                        string unidad = unidadAlmacenamiento().Substring(0, 2);
+                        string path = unidad + ":\\Users\\" + user + "\\Downloads";
+                        if (!Directory.Exists(path))
+                        {
+                            File.Create(path).Close();
+                        }
+                        string folder = path + "\\" + nombre;
+                        File.Create(folder).Close();
+
+                        using (FileStream zipToOpen = new FileStream(folder, FileMode.Open))
+                        {
+
+                            using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                            {
+                                for (int i = 0; i < total; i++)
+                                {
+
+                                    byte[] base64 = Convert.FromBase64String(dsDownload.Tables["AllDownloadEmp"].Rows[i]["bytes"].ToString());
+                                    ZipArchiveEntry readmeEntry = archive.CreateEntry(dsDownload.Tables["AllDownloadEmp"].Rows[i]["filename"].ToString(), CompressionLevel.Fastest);
+
+                                    var zipStream = readmeEntry.Open();
+                                    zipStream.Write(base64, 0, base64.Length);
+                                }
+                            }
+                            /*------------FUNCIONA, PERO SUSTITUYE EL  ZIP POR LA FOTO
+                            using (FileStream foto = new FileStream(folder + dsDownload.Tables["AllDownload"].Rows[0]["filename"].ToString(), FileMode.Open))
+                            {
+                                using (GZipStream gz = new GZipStream(foto, CompressionMode.Compress, false))
+                                {
+                                    gz.Write(base64, 0, base64.Length);
+                                }
+                            }
+                            ---------------*/
+                        }
+                        lblBusqueda.Text = "";
+                        lblDescarga.Visible = true;
+                        lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
+                        ret = "1";
+                    }
+                    else
+                    {
+                        ret = "2";
+                    }
+                    //desc = 0;                
                 }
-                else
+                else if (result.Count() > 0)
                 {
                     ret = "2";
                 }
-                //desc = 0;                
             }
-            else if (result.Count() > 0)
-            {
-                ret = "2";
-            }
+            else
+                ret = "3";
             return ret;
         }
 
@@ -2776,12 +2783,13 @@ namespace ReportesUnis
             try
             {
                 string respuesta = DownloadAllFile();
-                if (respuesta == "0")
+                if (respuesta == "0" || respuesta=="3")
                 {
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
                 }
                 else if (respuesta == "2")
                     lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
+
             }
             catch (Exception)
             {

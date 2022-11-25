@@ -908,13 +908,13 @@ namespace ReportesUnis
             respuestaPatch = respuestaPatch + respuesta;
         }
 
-        private void createPhoto(string personId, string tables, string datos)
+        private void create(string personId, string tables, string datos, string EXTEN)
         {
             credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
-            int respuesta = api.Post(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/emps/" + personId + "/child/" + tables, datos, user, pass);
+            int respuesta = api.Post(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/"+EXTEN+ personId + "/child/" + tables, datos, user, pass);
             respuestaPost = respuestaPost + respuesta;
         }
 
@@ -989,7 +989,7 @@ namespace ReportesUnis
                                 }
                                 else
                                 {
-                                    createPhoto(personId, "photo", Imgn);
+                                    create(personId, "photo", Imgn, "emps/");
                                     mensajeValidacion = "y la fotografía se creó correctamente en HCM.";
                                 }
                                 GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "  " + NombreImagen.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
@@ -1000,7 +1000,7 @@ namespace ReportesUnis
                 }
                 else
                 {
-                    mensajeValidacion = " pero no se encontró ninguna fotografía para almacenar.";
+                    mensajeValidacion = " , no se encontró ninguna fotografía para almacenar.";
                 }
 
                 effective = effective.Replace("\"", "");
@@ -1008,16 +1008,17 @@ namespace ReportesUnis
                 if (departamento.Equals("-"))
                     departamento = "";
                 //Se crea el body que se enviará a cada tabla
-                var estadoC = "{\"MaritalStatus\": \"" + estadoCivil(CmbEstado.Text) + "\"}";
+                var estadoC = "{\"MaritalStatus\": " + estadoCivil(CmbEstado.Text) + "}";
                 var phoneNumber = "{\"PhoneNumber\": \"" + txtTelefono.Text + "\"}";
-                var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\",\"Country\": \"" + country+ "\"}";
+                var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"AddressType\" :\"HOME\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\",\"Country\": \"" + country+ "\"}";
                 //Actualiza por medio del metodo PATCH            
                 updatePatch(phoneNumber, personId, "phones", PhoneId, "phones", "", "workers/");
                 updatePatch(estadoC, personId, "legislativeInfo", PersonLegislativeId, "legislativeInfo", effective, "workers/");
-                updatePatch(Address, personId, "addresses", AddressId, "addresses", effective, "workers/");
+                //updatePatch(Address, personId, "addresses", AddressId, "addresses", effective, "workers/");
+                create(personId, "addresses", Address, "workers/");
                 int au = respuestaPost;
-                if (respuestaPatch != 0 && respuestaPost != 0)
-                    lblActualizacion.Text = "Ocurrió un problema al actualizar su información" + mensajeValidacion;
+                if (respuestaPatch != 0 || respuestaPost != 0)
+                    lblActualizacion.Text = "Ocurrió un problema al actualizar su información";
                 else
                 {
                     lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
@@ -1025,7 +1026,7 @@ namespace ReportesUnis
                         GuardarBitacora(ArchivoBitacora, "---".PadRight(36) + "  " + Context.User.Identity.Name.Replace("@unis.edu.gt", "").PadRight(26) + "  No se ingresó ninguna imagen               ".PadRight(60));
 
                 }
-                lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
+               // lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
 
                 GuardarBitacora(ArchivoBitacora, "");
                 GuardarBitacora(ArchivoBitacora, "");

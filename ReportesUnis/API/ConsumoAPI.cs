@@ -33,7 +33,10 @@ namespace ReportesUnis.API
 
                 dynamic datos = JsonConvert.DeserializeObject(response.Content).ToString();
 
-                return 0;
+                if (response.StatusCode.ToString() == "OK" || response.StatusCode.ToString() == "Created")
+                    return 0;
+                else
+                    return 1;
             }
             catch (Exception ex)
             {
@@ -91,7 +94,10 @@ namespace ReportesUnis.API
                 IRestResponse response = client.Execute(request);
 
                 dynamic datos = JsonConvert.DeserializeObject(response.Content).ToString();
-                return 0;
+                if (response.StatusCode.ToString() == "OK")
+                    return 0;
+                else
+                    return 1;
             }
             catch (Exception )
             {
