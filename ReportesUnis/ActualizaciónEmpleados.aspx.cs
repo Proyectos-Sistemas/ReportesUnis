@@ -13,6 +13,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using ReportesUnis.API;
 using System.Web.Services.Description;
+using Microsoft.Win32;
+using NPOI.SS.Formula.Functions;
 
 namespace ReportesUnis
 {
@@ -51,7 +53,10 @@ namespace ReportesUnis
                 if (String.IsNullOrEmpty(txtdPI.Text))
                 {
                     BtnActualizar.Visible = false;
-                    lblActualizacion.Text = "No se encontró información";
+                    lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como empleados";
+                    tabla.Visible = false;
+                    FileUpload1.Visible = false;
+                    lblfoto.Visible = false;
                 }
             }
             else
@@ -91,7 +96,7 @@ namespace ReportesUnis
             }
             else if (aux == 5)
             {
-                CuerpoConsultaCodigoPais(Variables.wsUsuario, Variables.wsPassword, cMBpAIS.Text);
+                CuerpoConsultaCodigoPais(Variables.wsUsuario, Variables.wsPassword, Pais.Text);
             }
 
             //Crea un documento de respuesta Campus
@@ -495,7 +500,7 @@ namespace ReportesUnis
                 {
                     try
                     {
-                        int pais = cMBpAIS.SelectedValue.Length + 25;
+                        int pais = cMBpAIS.SelectedValue.Length + 44;
                         sustituto = sustituto.Remove(0, pais);
                     }
                     catch (Exception)
@@ -666,29 +671,45 @@ namespace ReportesUnis
             }
             else
             {
-                result = new string[2];
+                result = new string[3];
             }
 
             result = sustituirCaracteres().Split('|');
-            count = result.Length;
+            count = result.Length/2;
             string[] resultado = new string[count];
+            string[,] arrlist;
+            int datos = 0;
+            arrlist = new string[Convert.ToInt32(count), 2];
 
             try
             {
+
                 for (int i = 0; i < count; i++)
                 {
-                    if (i < count - 1)
+                    for (int k = 0; k < 2; k++)
                     {
-                        string palabra = result[i];
-                        resultado[i] = StringExtensions.RemoveEnd(palabra, pais);
-                    }
-                    else
-                    {
-                        resultado[i] = result[i];
+                        arrlist[i, k] = result[datos];
+                        if (k == 0)
+                        {
+                            resultado[i] = arrlist[i, k];
+                        }
+                        datos++;
                     }
                 }
+                if (cMBpAIS.Text.Equals("Guatemala"))
+                {
+                    Pais.Text = StringExtensions.RemoveEnd(arrlist[0, 1], pais);
+                    CmbDepartamento.DataSource = resultado;
+                }
+                else
+                {
+                    Pais.Text = arrlist[0, 1];
+                    resultado[0] = arrlist[0, 0];
+                    CmbDepartamento.DataSource = resultado;
+                }
+                
 
-                CmbDepartamento.DataSource = resultado;
+                
                 CmbDepartamento.DataTextField = "";
                 CmbDepartamento.DataValueField = "";
                 CmbDepartamento.DataBind();
@@ -805,11 +826,12 @@ namespace ReportesUnis
 
         public string CodigoPais()
         {
-            int depto = cMBpAIS.SelectedValue.ToString().Length;
-            string[] result = sustituirCaracteres().Split('|');
+            string cadena = DecodeStringFromBase64(Consultar()).Replace('"', '\n');
+            cadena = Regex.Replace(cadena, @"\n+", "");
+            string[] result = cadena.Split('|');
             try
             {
-                return result[0].ToString();
+                return result[2].ToString();
             }
             catch (Exception)
             {
@@ -988,8 +1010,7 @@ namespace ReportesUnis
                 //Se crea el body que se enviará a cada tabla
                 var estadoC = "{\"MaritalStatus\": \"" + estadoCivil(CmbEstado.Text) + "\"}";
                 var phoneNumber = "{\"PhoneNumber\": \"" + txtTelefono.Text + "\"}";
-                var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text /*+ "\",\"Country\": \"" + country+*/+ "\"}";
-
+                var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\",\"Country\": \"" + country+ "\"}";
                 //Actualiza por medio del metodo PATCH            
                 updatePatch(phoneNumber, personId, "phones", PhoneId, "phones", "", "workers/");
                 updatePatch(estadoC, personId, "legislativeInfo", PersonLegislativeId, "legislativeInfo", effective, "workers/");

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Windows.Interop;
 using Oracle.ManagedDataAccess.Client;
 
 namespace ReportesUnis
@@ -30,8 +31,11 @@ namespace ReportesUnis
                 if (String.IsNullOrEmpty(txtCarne.Text))
                 {
                     BtnActualizar.Visible = false;
-                    lblActualizacion.Text = "No se encontró información";
+                    lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
                     CmbPais.SelectedValue = "Guatemala";
+                    tabla.Visible = false;
+                    FileUpload1.Visible = false;
+                    lblfoto.Visible = false;
                 }
             }
         }
@@ -103,7 +107,7 @@ namespace ReportesUnis
                     "AND PP.PHONE_TYPE = 'HOME' " +
                     "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                    "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                   //"WHERE PN.NATIONAL_ID ='2372118661301' " +
+                                                                      //"WHERE PN.NATIONAL_ID ='2372118661301' " +
                    ") WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -244,15 +248,15 @@ namespace ReportesUnis
                         string descrip = "";
                         if (CmbPais.SelectedValue == "Guatemala")
                         {
-                             descrip = CmbMunicipio.SelectedValue + "-" + CmbDepartamento.SelectedValue;
+                            descrip = CmbMunicipio.SelectedValue + "-" + CmbDepartamento.SelectedValue;
                         }
                         else
                         {
-                             descrip = CmbDepartamento.SelectedValue;
+                            descrip = CmbDepartamento.SelectedValue;
                         }
                         cmd.Connection = con;
                         cmd.CommandText = "SELECT STATE FROM SYSADM.PS_STATE_TBL " +
-                            "WHERE DESCR ='" + descrip.TrimEnd('-')+ "'";
+                            "WHERE DESCR ='" + descrip.TrimEnd('-') + "'";
                         OracleDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
@@ -371,7 +375,7 @@ namespace ReportesUnis
                                 mensaje = "Ocurrió un problema al actualizar su información";
                             }
                         }
-                    }                    
+                    }
                 }
                 catch (Exception)
                 {
@@ -466,7 +470,7 @@ namespace ReportesUnis
 
                         //Nombre de la fotografía cargada (Sin extensión)
                         //string NombreFoto = "2372118661301";//Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
-                        string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
+                        string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                         if (ExtensionesPermitidas.Contains(ExtensionFotografia))
                         {

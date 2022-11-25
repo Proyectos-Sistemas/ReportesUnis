@@ -8,7 +8,7 @@
         <hr />
 
     <div class="container">
-        <asp:Label runat="server" Font-Bold="true">Fotografía:</asp:Label>
+        <asp:Label ID="lblfoto" runat="server" Font-Bold="true">Fotografía:</asp:Label>
         <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="False" accept="image/jpeg" onchange="validateFileSize();" />
         <div id="dvMsg" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
             El tamaño máximo permitido es de 1 GB
@@ -44,7 +44,7 @@
     </div>
     <div>
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
-        <asp:Table runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
+        <asp:Table id="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
 
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
