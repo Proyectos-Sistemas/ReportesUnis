@@ -219,6 +219,7 @@ namespace ReportesUnis
                             BtnTxt.Enabled = true;
                             BtnNBusqueda.Enabled = true;
                             BtnBuscar2.Enabled = false;
+                            LbxBusqueda.Enabled = false;
                         }
                     }
                     else
@@ -729,7 +730,8 @@ namespace ReportesUnis
             CldrCiclosFin.Enabled = true;
             CldrCiclosInicio.Enabled = true;
             lblBusqueda.Text = "";
-            lblDescarga.Text = "";    
+            lblDescarga.Text = "";
+            LbxBusqueda.Enabled = true;
         }
     }
 }

@@ -60,6 +60,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox Pais;
 
         /// <summary>
+        /// Control PaisInicial.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox PaisInicial;
+
+        /// <summary>
         /// Control tabla.
         /// </summary>
         /// <remarks>

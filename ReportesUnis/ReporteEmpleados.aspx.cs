@@ -1670,10 +1670,6 @@ namespace ReportesUnis
             {
 
                 GridViewReporte.DataSource = "";
-                //if (!ChBusqueda.Checked)
-                //{
-                //    LbxBusqueda2.Text = "";
-                //}
                 string[] result = sustituirCaracteres("").Split('|');
                 decimal registros = 0;
                 decimal count = 0;
@@ -2612,7 +2608,6 @@ namespace ReportesUnis
                 decimal count = 0;
                 int datos = 0;
                 string[,] arrlist;
-
 
                 if (result.Count() > 5)
                 {

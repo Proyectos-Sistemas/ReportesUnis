@@ -157,9 +157,13 @@ element.style {
 	padding-right: 20px;
 }
 
-.container {
+.container2 {
 	justify-content: center;
 	text-align:center;
+}
+
+.container {
+	justify-content: center;
 }
 
 .containerGV {

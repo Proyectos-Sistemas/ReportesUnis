@@ -5,7 +5,7 @@
         <br />
         <h2 style="text-align: center;">REPORTE CÁMARAS TÉRMICAS EMPLEADOS</h2>
     </div>
-    <div class="container">
+    <div class="container2">
         <hr />
         <div>
             <a>Busqueda por: </a>

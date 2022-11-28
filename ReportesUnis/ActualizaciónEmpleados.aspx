@@ -7,7 +7,7 @@
     </div>
     <hr />
 
-    <div class="container">
+    <div class="container2">
         <asp:Label id="lblfoto" runat="server" Font-Bold="true">Fotografía:</asp:Label>
         <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="False" accept="image/jpeg" onchange="validateFileSize();" />
         <div id="dvMsg" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
@@ -20,7 +20,8 @@
     <asp:TextBox ID="UserEmplid" runat="server" Visible="false"></asp:TextBox>
     <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
     <asp:TextBox ID="State" runat="server" Visible="false"></asp:TextBox>
-    <asp:TextBox ID="Pais" runat="server" Visible="false"></asp:TextBox>
+    <asp:TextBox ID="Pais" runat="server" Visible=""></asp:TextBox>
+    <asp:TextBox ID="PaisInicial" runat="server" Visible=""></asp:TextBox>
 
     <div>
         <br />

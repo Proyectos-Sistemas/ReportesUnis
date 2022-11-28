@@ -50,6 +50,7 @@ namespace ReportesUnis
                 aux = 3;
                 listadoZonas();
                 aux = 4;
+                PaisInicial.Text = Pais.Text;
                 if (String.IsNullOrEmpty(txtdPI.Text))
                 {
                     BtnActualizar.Visible = false;
@@ -641,7 +642,7 @@ namespace ReportesUnis
                             CmbMunicipio.SelectedValue = (arrlist[i, 9] ?? "").ToString();
                             CmbDepartamento.SelectedValue = (arrlist[i, 10] ?? "").ToString();
                             UserEmplid.Text = (arrlist[i, 14] ?? "").ToString();
-                            txtZona.Text= (arrlist[i, 13] ?? "").ToString();
+                            txtZona.Text = (arrlist[i, 13] ?? "").ToString();
 
                             //dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                         }
@@ -675,7 +676,7 @@ namespace ReportesUnis
             }
 
             result = sustituirCaracteres().Split('|');
-            count = result.Length/2;
+            count = result.Length / 2;
             string[] resultado = new string[count];
             string[,] arrlist;
             int datos = 0;
@@ -707,9 +708,9 @@ namespace ReportesUnis
                     resultado[0] = arrlist[0, 0];
                     CmbDepartamento.DataSource = resultado;
                 }
-                
 
-                
+
+
                 CmbDepartamento.DataTextField = "";
                 CmbDepartamento.DataValueField = "";
                 CmbDepartamento.DataBind();
@@ -757,10 +758,11 @@ namespace ReportesUnis
             {
                 for (int i = 0; i < count; i++)
                 {
-                    if (count == 1 || i == count-1)
+                    if (count == 1 || i == count - 1)
                     {
                         resultado[i] = result[i];
-                    }else
+                    }
+                    else
                     {
                         string palabra = result[i];
                         resultado[i] = StringExtensions.RemoveEnd(palabra, depto);
@@ -914,7 +916,7 @@ namespace ReportesUnis
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
-            int respuesta = api.Post(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/"+EXTEN+ personId + "/child/" + tables, datos, user, pass);
+            int respuesta = api.Post(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/" + EXTEN + personId + "/child/" + tables, datos, user, pass);
             respuestaPost = respuestaPost + respuesta;
         }
 
@@ -922,7 +924,7 @@ namespace ReportesUnis
 
         protected void BtnActualizar_Click(object sender, EventArgs e)
         {
-            if ( !cMBpAIS.Text.Equals("-") && !CmbMunicipio.Text.Equals("-") && !CmbDepartamento.Text.Equals("-"))
+            if (!cMBpAIS.Text.Equals("-") && !CmbMunicipio.Text.Equals("-") && !CmbDepartamento.Text.Equals("-"))
             {
                 string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
                 int ContadorArchivos = 0;
@@ -959,7 +961,7 @@ namespace ReportesUnis
                 string AddressId = getBetween(consulta, "child/addresses/", "\",\n");
                 string PersonLegislativeId = getBetween(consulta, "child/legislativeInfo/", "\",\n");
                 string pli = getBetween(consulta, "\"PersonLegislativeId\" : ", ",");
-                string effective = getBetween(consulta, "\"PersonLegislativeId\" : "+pli+",\n      \"EffectiveStartDate\" : \"", "\",\n");
+                string effective = getBetween(consulta, "\"PersonLegislativeId\" : " + pli + ",\n      \"EffectiveStartDate\" : \"", "\",\n");
 
                 string comIm = personId + "/child/photo/";
                 string consultaImagenes = consultaGetImagenes(comIm);
@@ -1011,12 +1013,16 @@ namespace ReportesUnis
                 //Se crea el body que se enviará a cada tabla
                 var estadoC = "{\"MaritalStatus\": " + estadoCivil(CmbEstado.Text) + "}";
                 var phoneNumber = "{\"PhoneNumber\": \"" + txtTelefono.Text + "\"}";
-                var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"AddressType\" :\"HOME\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\",\"Country\": \"" + country+ "\"}";
+                var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"AddressType\" :\"HOME\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\",\"Country\": \"" + country + "\"}";
                 //Actualiza por medio del metodo PATCH            
                 updatePatch(phoneNumber, personId, "phones", PhoneId, "phones", "", "workers/");
                 updatePatch(estadoC, personId, "legislativeInfo", PersonLegislativeId, "legislativeInfo", effective, "workers/");
-                //updatePatch(Address, personId, "addresses", AddressId, "addresses", effective, "workers/");
-                create(personId, "addresses", Address, "workers/");
+                if (PaisInicial.Text == cMBpAIS.Text)
+                {
+                    updatePatch(Address, personId, "addresses", AddressId, "addresses", effective, "workers/");
+                }
+                else
+                    create(personId, "addresses", Address, "workers/");
                 int au = respuestaPost;
                 if (respuestaPatch != 0 || respuestaPost != 0)
                     lblActualizacion.Text = "Ocurrió un problema al actualizar su información";
@@ -1027,7 +1033,7 @@ namespace ReportesUnis
                         GuardarBitacora(ArchivoBitacora, "---".PadRight(36) + "  " + Context.User.Identity.Name.Replace("@unis.edu.gt", "").PadRight(26) + "  No se ingresó ninguna imagen               ".PadRight(60));
 
                 }
-               // lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
+                // lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
 
                 GuardarBitacora(ArchivoBitacora, "");
                 GuardarBitacora(ArchivoBitacora, "");
