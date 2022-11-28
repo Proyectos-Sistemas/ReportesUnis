@@ -224,10 +224,18 @@ namespace ReportesUnis
                                     {
                                         GridViewReporte.DataSource = reader;
                                         GridViewReporte.DataBind();
-                                        //ChBusqueda.Checked = false;
-                                        //LbxBusqueda2.Visible = false;
-                                        //TxtBuscador2.Visible = false;
-                                        lblBusqueda.Text = " ";
+                                        lblBusqueda.Text = "";
+                                        TxtBuscador.Enabled = false;
+                                        TxtBuscador2.Enabled = false;
+                                        CldrCiclosInicio.Enabled = false;
+                                        CldrCiclosFin.Enabled = false;
+                                        Button1.Enabled = true;
+                                        ButtonFts.Enabled = true;
+                                        BtnNBusqueda.Enabled = true;
+                                        BtnBuscar.Enabled = false;
+                                        ChBusqueda.Enabled = false;
+                                        LbxBusqueda.Enabled = false;    
+                                        LbxBusqueda2.Enabled = false;
                                     }
                                     else
                                     {
@@ -746,6 +754,24 @@ namespace ReportesUnis
                 }
             }
             return where;
+        }
+
+        protected void BtnNBusqueda_Click(object sender, EventArgs e)
+        {
+            LoadData();
+            BtnBuscar.Enabled = true;
+            Button1.Enabled = false;
+            ButtonFts.Enabled = false;
+            BtnNBusqueda.Enabled = false;
+            TxtBuscador.Enabled = true;
+            CldrCiclosFin.Enabled = true;
+            CldrCiclosInicio.Enabled = true;
+            lblBusqueda.Text = "";
+            lblDescarga.Text = "";
+            TxtBuscador2.Enabled = true;
+            ChBusqueda.Enabled = true;
+            LbxBusqueda.Enabled = true;
+            LbxBusqueda2.Enabled = true;
         }
     }
 

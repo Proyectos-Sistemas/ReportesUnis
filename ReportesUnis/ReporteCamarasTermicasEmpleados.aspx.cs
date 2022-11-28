@@ -980,6 +980,14 @@ namespace ReportesUnis
                         if (LbxBusqueda.Text == "Género")
                             lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
                     }
+                    TxtBuscador.Enabled = false;
+                    CldrCiclosInicio.Enabled = false;
+                    CldrCiclosFin.Enabled = false;
+                    BtnImg.Enabled = true;
+                    BtnTxt.Enabled = true;
+                    BtnNBusqueda.Enabled = true;
+                    BtnBuscar2.Enabled = false;
+                    LbxBusqueda.Enabled = false;
                 }
                 else
                 {
@@ -1484,6 +1492,21 @@ namespace ReportesUnis
                 }
             }
             return contador;
+        }
+
+        protected void BtnNBusqueda_Click(object sender, EventArgs e)
+        {
+            LoadData();
+            BtnBuscar2.Enabled = true;
+            BtnTxt.Enabled = false;
+            BtnImg.Enabled = false;
+            BtnNBusqueda.Enabled = false;
+            TxtBuscador.Enabled = true;
+            CldrCiclosFin.Enabled = true;
+            CldrCiclosInicio.Enabled = true;
+            lblBusqueda.Text = "";
+            lblDescarga.Text = "";
+            LbxBusqueda.Enabled = true;
         }
     }
 }

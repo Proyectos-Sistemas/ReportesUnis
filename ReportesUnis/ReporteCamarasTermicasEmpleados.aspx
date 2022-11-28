@@ -44,10 +44,13 @@
                     <asp:Button ID="BtnBuscar2" runat="server" Text="Buscar" OnClick="BtnBuscar2_Click" CssClass="btn-danger-unis" Width="145px"></asp:Button>
                 </asp:TableCell>
                 <asp:TableCell>
-                    <asp:Button ID="BtnTxt" runat="server" Text="Exportar Excel" OnClick="GenerarExcel" CssClass="btn-danger-unis" Enabled="true" Width="145px"/>
+                    <asp:Button ID="BtnTxt" runat="server" Text="Exportar Excel" OnClick="GenerarExcel" CssClass="btn-danger-unis" Enabled="false" Width="145px"/>
                 </asp:TableCell>
                 <asp:TableCell>
-                    <asp:Button ID="BtnImg" runat="server" Text="Exportar Imagenes" OnClick="BtnImg_Click" CssClass="btn-danger-unis" Enabled="true" Width="145px"/>
+                    <asp:Button ID="BtnImg" runat="server" Text="Exportar Imagenes" OnClick="BtnImg_Click" CssClass="btn-danger-unis" Enabled="false" Width="145px"/>
+                </asp:TableCell>
+                <asp:TableCell>
+                    <asp:Button ID="BtnNBusqueda" runat="server" Text="Limpiar" OnClick="BtnNBusqueda_Click" CssClass="btn-danger-unis" Enabled="false" Width="145px"/>
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>
