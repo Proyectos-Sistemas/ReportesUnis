@@ -12,6 +12,7 @@ using System.Linq;
 using System.Web.UI.WebControls;
 using SpreadsheetLight;
 using System.Web.UI;
+using Ionic.Zip;
 using NPOI.Util;
 using System.IO.Compression;
 using System.Diagnostics;
@@ -1289,7 +1290,7 @@ namespace ReportesUnis
 
         protected string DownloadAllFile()
         {
-                string ret = "0";
+            string ret = "0";
             if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
             {
                 lblDescarga.Text = "";
@@ -1363,13 +1364,7 @@ namespace ReportesUnis
 
                         if (total > 0)
                         {
-                            string user = Environment.UserName;
-                            string unidad = unidadAlmacenamiento().Substring(0, 2);
-                            string path = unidad + ":\\Users\\" + user + "\\Downloads";
-                            if (!Directory.Exists(path))
-                            {
-                                File.Create(path).Close();
-                            }
+                            string path = Server.MapPath("~/Zips");//txtGuardar.Text;
                             string folder = path + "\\" + nombre;
                             File.Create(folder).Close();
 
@@ -1398,6 +1393,10 @@ namespace ReportesUnis
                                 }
                                 ---------------*/
                             }
+                            Response.ContentType = "application/zip";
+                            Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                            Response.TransmitFile(Server.MapPath("~/Zips/") + nombre);
+                            Response.End();
                             lblBusqueda.Text = "";
                             lblDescarga.Visible = true;
                             lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
@@ -1432,7 +1431,7 @@ namespace ReportesUnis
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
                 }
                 else if (respuesta == "2")
-                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
+                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los estudiantes.";
             }
             catch (Exception)
             {
@@ -1519,5 +1518,6 @@ namespace ReportesUnis
             lblDescarga.Text = "";
             LbxBusqueda.Enabled = true;
         }
+
     }
 }

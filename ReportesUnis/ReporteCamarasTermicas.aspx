@@ -19,13 +19,13 @@
             </asp:DropDownList>
 
             <%-- TXTBUSCADOR DONDE SE INGRESA EL TEXTO A BUSCAR --%>
-            <asp:TextBox ID="TxtBuscador" runat="server" Width=235px></asp:TextBox>
+            <asp:TextBox ID="TxtBuscador" runat="server" Width="235px"></asp:TextBox>
 
             <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
             <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
         </div>
         <br />
-        <div style="text-align:center">
+        <div style="text-align: center">
 
             <%-- CALENDARIO PARA BUSQUEDA --%>
             <asp:Label ID="FInicio" runat="server">Fecha inicio:</asp:Label>
@@ -48,10 +48,10 @@
                     <asp:Button ID="BtnImg" runat="server" Text="Exportar Imagenes" OnClick="BtnImg_Click" CssClass="btn-danger-unis" Enabled="false" Width="145px"></asp:Button>
                 </asp:TableCell>
                 <asp:TableCell>
-                    <asp:Button ID="BtnNBusqueda" runat="server" Text="Limpiar" OnClick="BtnNBusqueda_Click" CssClass="btn-danger-unis" Enabled="false" Width="145px"/>
+                    <asp:Button ID="BtnNBusqueda" runat="server" Text="Limpiar" OnClick="BtnNBusqueda_Click" CssClass="btn-danger-unis" Enabled="false" Width="145px" />
                 </asp:TableCell>
             </asp:TableRow>
-        </asp:Table>
+        </asp:Table>       
         <div style="text-align: center">
             <br />
             <asp:Label ID="lblBusqueda" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"></asp:Label>

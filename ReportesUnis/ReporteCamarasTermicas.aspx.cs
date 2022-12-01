@@ -10,10 +10,13 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.IO.Compression;
+using Ionic.Zip;
 using NPOI.Util;
 using System.Threading;
 using System.Windows;
 using System.IO.Packaging;
+using ICSharpCode.SharpZipLib.GZip;
+using Microsoft.Win32;
 
 namespace ReportesUnis
 {
@@ -528,6 +531,7 @@ namespace ReportesUnis
         }
         protected string DownloadAllFile(string where)
         {
+
             string ret = "0";
             if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
             {
@@ -591,13 +595,7 @@ namespace ReportesUnis
 
                 if (total > 0)
                 {
-                    string user = Environment.UserName;
-                    string unidad = unidadAlmacenamiento().Substring(0, 2);
-                    string path = unidad + ":\\Users\\" + user + "\\Downloads";
-                    if (!Directory.Exists(path))
-                    {
-                        File.Create(path).Close();
-                    }
+                    string path = Server.MapPath("~/Zips");
                     string folder = path + "\\" + nombre;
                     File.Create(folder).Close();
 
@@ -617,6 +615,11 @@ namespace ReportesUnis
                             }
                         }
                     }
+
+                    Response.ContentType = "application/zip";
+                    Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                    Response.TransmitFile(Server.MapPath("~/Zips/") + nombre);
+                    Response.End();
                     lblBusqueda.Text = "";
                     lblDescarga.Visible = true;
                     lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
@@ -732,6 +735,7 @@ namespace ReportesUnis
             lblBusqueda.Text = "";
             lblDescarga.Text = "";
             LbxBusqueda.Enabled = true;
-        }
+        }        
+
     }
 }

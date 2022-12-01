@@ -2732,13 +2732,7 @@ namespace ReportesUnis
 
                     if (total > 0)
                     {
-                        string user = Environment.UserName;
-                        string unidad = unidadAlmacenamiento().Substring(0, 2);
-                        string path = unidad + ":\\Users\\" + user + "\\Downloads";
-                        if (!Directory.Exists(path))
-                        {
-                            File.Create(path).Close();
-                        }
+                        string path = Server.MapPath("~/Zips");//txtGuardar.Text;
                         string folder = path + "\\" + nombre;
                         File.Create(folder).Close();
 
@@ -2767,6 +2761,10 @@ namespace ReportesUnis
                             }
                             ---------------*/
                         }
+                        Response.ContentType = "application/zip";
+                        Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                        Response.TransmitFile(Server.MapPath("~/Zips/") + nombre);
+                        Response.End();
                         lblBusqueda.Text = "";
                         lblDescarga.Visible = true;
                         lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
@@ -2794,13 +2792,12 @@ namespace ReportesUnis
             try
             {
                 string respuesta = DownloadAllFile();
-                if (respuesta == "0" || respuesta == "3")
+                if (respuesta == "0")
                 {
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
                 }
                 else if (respuesta == "2")
-                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
-
+                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los estudiantes.";
             }
             catch (Exception)
             {
@@ -2843,6 +2840,6 @@ namespace ReportesUnis
             ChBusqueda.Enabled = true;
             LbxBusqueda.Enabled = true;
             LbxBusqueda2.Enabled = true;
-        }
+        }        
     }
 }

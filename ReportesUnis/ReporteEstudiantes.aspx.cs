@@ -24,6 +24,8 @@ using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Org.BouncyCastle.Utilities.Encoders;
 using System.IdentityModel.Protocols.WSTrust;
+using System.Windows.Forms;
+using System.Threading;
 
 namespace ReportesUnis
 {
@@ -234,7 +236,7 @@ namespace ReportesUnis
                                         BtnNBusqueda.Enabled = true;
                                         BtnBuscar.Enabled = false;
                                         ChBusqueda.Enabled = false;
-                                        LbxBusqueda.Enabled = false;    
+                                        LbxBusqueda.Enabled = false;
                                         LbxBusqueda2.Enabled = false;
                                     }
                                     else
@@ -500,7 +502,7 @@ namespace ReportesUnis
         protected string DownloadAllFile(string where)
         {
 
-            string nombre = "ImagenesEstudiantes" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
+            string nombre = "ImagenesEstudiantes_" + DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss_t") + ".zip";
             string constr = TxtURL.Text;
             string ret = "0";
             int total = 0;
@@ -553,13 +555,7 @@ namespace ReportesUnis
 
                 if (total > 0)
                 {
-                    string user = Environment.UserName;
-                    string unidad = unidadAlmacenamiento().Substring(0, 2);
-                    string path = unidad + ":\\Users\\" + user + "\\Downloads";
-                    if (!Directory.Exists(path))
-                    {
-                        File.Create(path).Close();
-                    }
+                    string path = Server.MapPath("~/Zips");//txtGuardar.Text;
                     string folder = path + "\\" + nombre;
                     File.Create(folder).Close();
 
@@ -579,6 +575,11 @@ namespace ReportesUnis
                             }
                         }
                     }
+
+                    Response.ContentType = "application/zip";
+                    Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                    Response.TransmitFile(Server.MapPath("~/Zips/") + nombre);
+                    Response.End();
                     lblBusqueda.Text = "";
                     lblDescarga.Visible = true;
                     lblDescarga.Text = "Las fotografías fueron almacenadas en la ubicación: <a href=" + path + ">" + path + "</a>";
@@ -599,33 +600,27 @@ namespace ReportesUnis
 
         }
 
+
         protected void ButtonFts_Click(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(TxtBuscador.Text))
+            string where = stringWhere();
+
+            try
             {
-                try
+                string respuesta = DownloadAllFile(where);
+                if (respuesta == "0")
                 {
-                    string where = stringWhere();
-                    string respuesta = DownloadAllFile(where);
-                    if (respuesta == "0")
-                    {
-                        lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
-                    }
-                    else if (respuesta == "2")
-                        lblBusqueda.Text = "No se encontraron imágenes relacionadas a los estudiantes.";
-                    else if (respuesta == "3")
-                        lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
+                    lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
                 }
-                catch (Exception x)
-                {
-                    lblBusqueda.Text = "Ha ocurido un error";
-                }
+                else if (respuesta == "2")
+                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los estudiantes.";
             }
-            else
+            catch (Exception)
             {
-                lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
+                lblBusqueda.Text = "Ha ocurido un error";
             }
         }
+
 
         public string unidadAlmacenamiento()
         {
@@ -773,6 +768,7 @@ namespace ReportesUnis
             LbxBusqueda.Enabled = true;
             LbxBusqueda2.Enabled = true;
         }
+                
     }
 
 }

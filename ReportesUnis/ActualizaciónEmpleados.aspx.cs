@@ -1017,8 +1017,10 @@ namespace ReportesUnis
                 //Actualiza por medio del metodo PATCH            
                 updatePatch(phoneNumber, personId, "phones", PhoneId, "phones", "", "workers/");
                 updatePatch(estadoC, personId, "legislativeInfo", PersonLegislativeId, "legislativeInfo", effective, "workers/");
-                if (PaisInicial.Text == cMBpAIS.Text)
+                if (PaisInicial.Text == Pais.Text)
                 {
+                    Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"AddressType\" :\"HOME\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\"}";
+
                     updatePatch(Address, personId, "addresses", AddressId, "addresses", effective, "workers/");
                 }
                 else

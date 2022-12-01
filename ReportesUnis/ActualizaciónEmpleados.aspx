@@ -20,8 +20,8 @@
     <asp:TextBox ID="UserEmplid" runat="server" Visible="false"></asp:TextBox>
     <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
     <asp:TextBox ID="State" runat="server" Visible="false"></asp:TextBox>
-    <asp:TextBox ID="Pais" runat="server" Visible=""></asp:TextBox>
-    <asp:TextBox ID="PaisInicial" runat="server" Visible=""></asp:TextBox>
+    <asp:TextBox ID="Pais" runat="server" Visible="false"></asp:TextBox>
+    <asp:TextBox ID="PaisInicial" runat="server" Visible="false"></asp:TextBox>
 
     <div>
         <br />
