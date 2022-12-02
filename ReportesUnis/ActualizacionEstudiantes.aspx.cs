@@ -77,7 +77,7 @@ namespace ReportesUnis
                     "TT.TERM_BEGIN_DT, ROW_NUMBER() OVER (PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, C.DESCR PAIS " +
                     "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
                     "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
-                    "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                    "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID AND ADDRESS_TYPE= 'HOME'" +
                     "AND A.EFFDT =( " +
                     "    SELECT " +
                     "        MAX(EFFDT) " +

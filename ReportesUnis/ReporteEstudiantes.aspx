@@ -89,7 +89,7 @@
                             <asp:BoundField DataField="SECOND_NAME" HeaderText="NOM2" />
                             <asp:BoundField DataField="LAST_NAME" HeaderText="APE1" />
                             <asp:BoundField DataField="" HeaderText="APE2" />
-                            <asp:BoundField DataField="" HeaderText="APE3" />
+                            <asp:BoundField DataField="SECOND_LAST_NAME" HeaderText="APE3" />
                             <asp:BoundField DataField="BIRTHDATE" HeaderText="FE_NAC" />
                             <asp:BoundField DataField="SEX" HeaderText="SEXO" />
                             <asp:BoundField DataField="STATUS" HeaderText="EST_CIV" />

@@ -53,6 +53,7 @@ namespace ReportesUnis
             dt.Columns.Add("FIRST_NAME");
             dt.Columns.Add("SECOND_NAME");
             dt.Columns.Add("LAST_NAME");
+            dt.Columns.Add("SECOND_LAST_NAME");
             dt.Columns.Add("PHONE");
             dt.Columns.Add("CARNE");
             dt.Columns.Add("DPI");
@@ -77,6 +78,7 @@ namespace ReportesUnis
             dr["FIRST_NAME"] = String.Empty;
             dr["SECOND_NAME"] = String.Empty;
             dr["LAST_NAME"] = String.Empty;
+            dr["SECOND_LAST_NAME"] = String.Empty;
             dr["PHONE"] = String.Empty;
             dr["CARNE"] = String.Empty;
             dr["DPI"] = String.Empty;

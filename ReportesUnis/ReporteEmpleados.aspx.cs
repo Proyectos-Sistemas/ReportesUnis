@@ -2202,7 +2202,7 @@ namespace ReportesUnis
                                         FLAG_PAS + "|" +//FLAG_PAS
                                         Pasaporte + "|" +//PASS
                                         "|" +//PAIS_PAS
-                                        (arrlist[i, 20] ?? "").ToString() + "|" +//NIT
+                                        (arrlist[i, 21] ?? "").ToString() + "|" +//NIT
                                         "|" +//PASI_NIT
                                         "|" +//PROF
                                         (arrlist[i, 9] ?? "").ToString() + "|" +//DIRECCION

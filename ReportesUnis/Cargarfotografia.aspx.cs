@@ -125,7 +125,7 @@ namespace ReportesUnis
                                 try
                                 {
                                     OracleCommand cmdEmplid = new OracleCommand();
-                                    cmdEmplid.CommandText = "SELECT DISTINCT EMPLID FROM SYSADM.PS_OPRDEFN2 WHERE OPRID = '" + NombreFoto + "'";
+                                    cmdEmplid.CommandText = "SELECT DISTINCT P.EMPLID FROM SYSADM.PS_OPRDEFN2 P JOIN SYSADM.PS_STDNT_ENRL SE ON P.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' WHERE P.OPRID = '" + NombreFoto + "'";
                                     cmdEmplid.Connection = conEmplid;
                                     conEmplid.Open();
                                     OracleDataReader reader = cmdEmplid.ExecuteReader();
@@ -175,7 +175,7 @@ namespace ReportesUnis
                                     try
                                     {
                                         OracleCommand cmdEmplid = new OracleCommand();
-                                        cmdEmplid.CommandText = "SELECT DISTINCT EMPLID FROM SYSADM.PS_PERS_NID WHERE NATIONAL_ID = '" + NombreFoto + "'";
+                                        cmdEmplid.CommandText = "SELECT DISTINCT PN.EMPLID FROM SYSADM.PS_PERS_NID PN JOIN SYSADM.PS_STDNT_ENRL SE ON PN.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' WHERE PN.EMPLID = '" + NombreFoto + "'";
                                         cmdEmplid.Connection = conEmplid;
                                         conEmplid.Open();
                                         OracleDataReader reader = cmdEmplid.ExecuteReader();
@@ -218,6 +218,7 @@ namespace ReportesUnis
                                 }
                             }
 
+                            //int estudiante = 0;
                             //No existe error en validación y existe un EMPLID, guarda imagen
                             if (mensajeValidacion == "" && EmplidFoto != "")
                             {
@@ -227,7 +228,7 @@ namespace ReportesUnis
                                     try
                                     {
                                         OracleCommand cmdEmplid = new OracleCommand();
-                                        cmdEmplid.CommandText = "SELECT DISTINCT EMPLID FROM SYSADM.PS_EMPL_PHOTO WHERE EMPLID = '" + EmplidFoto + "'";
+                                        cmdEmplid.CommandText = "SELECT DISTINCT P.EMPLID FROM SYSADM.PS_EMPL_PHOTO P JOIN SYSADM.PS_STDNT_ENRL SE ON P.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' WHERE P.EMPLID = '" + EmplidFoto + "'";
                                         cmdEmplid.Connection = conEmplid;
                                         conEmplid.Open();
                                         OracleDataReader reader = cmdEmplid.ExecuteReader();
@@ -263,16 +264,22 @@ namespace ReportesUnis
                                             using (OracleCommand cmd = new OracleCommand(query))
                                             {
 
+
                                                 if (EmplidExisteFoto != "") //Se actualiza la fotografía
                                                 {
                                                     cmd.CommandText = "UPDATE SYSADM.PS_EMPL_PHOTO SET PSIMAGEVER=(TO_NUMBER((TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY-MM-DD') - TO_DATE(TO_CHAR('1999-12-31'), 'YYYY-MM-DD'))* 86400) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP,'hh24missff2'))), EMPLOYEE_PHOTO=:Fotografia WHERE EMPLID = '" + EmplidFoto + "'";
                                                     mensajeValidacion = "La fotografía se actualizó correctamente en Campus.";
                                                 }
-                                                else //Se registra la nueva fotografía
+                                                else //if (estudiante == 0)  //Se registra la nueva fotografía
                                                 {
                                                     cmd.CommandText = "INSERT INTO SYSADM.PS_EMPL_PHOTO VALUES ('" + EmplidFoto + "', (TO_NUMBER((TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY-MM-DD') - TO_DATE(TO_CHAR('1999-12-31'), 'YYYY-MM-DD'))* 86400) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP,'hh24missff2'))), :Fotografia)";
                                                     mensajeValidacion = "La fotografía se registró correctamente en Campus.";
                                                 }
+                                                /*else
+                                                {
+                                                    mensajeValidacion = "No se encuentra registrado como estudiante en campus.";
+                                                    GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                                }*/
 
                                                 cmd.Connection = con;
                                                 cmd.Parameters.Add(new OracleParameter("Fotografia", bytes));
@@ -314,7 +321,7 @@ namespace ReportesUnis
                             }
                             else
                             {
-                                mensajeValidacion = "La fotografía no se registró en Campus, es necesario tener registrado un ID de usuario o un identificador nacional con el nombre de la fotografía.";
+                                mensajeValidacion = "La fotografía no se registró en Campus, es necesario tener registrado un ID de usuario como estudiante en Campus o un identificador nacional con el nombre de la fotografía.";
                                 GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
                                 if (Error == false)
                                 {
