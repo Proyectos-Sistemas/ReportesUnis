@@ -176,7 +176,7 @@
                             <a id="RepCamarasEmp" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicasEmpleados">Reportes Cámaras Térmicas de Empleados</a>
                             <a id="CargaCTEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/Cargarfotografia">Carga Masiva de Fotografías Estudiantes</a>
                             <a id="CargaCTEmp" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/CargarFotografiaEmpleados">Carga Masiva de Fotografías Empleados</a>
-                            <a id="ActEstudiantes" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ActualizacionEstudiantes">Actualización de información de Estudiantes</a>
+                            <a id="ActEstudiantes" runat="server" validationgroup="RLI_VistaAlumnos" class="dropdown-item" href="~/ActualizacionEstudiantes">Actualización de información de Estudiantes</a>
                             <a id="ActEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ActualizaciónEmpleados">Actualización de información de Empleados</a>
                         </div>
                     </li>

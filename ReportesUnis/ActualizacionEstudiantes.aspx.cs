@@ -17,7 +17,7 @@ namespace ReportesUnis
         protected void Page_Load(object sender, EventArgs e)
         {
             TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
-            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("DATOS_FOTOGRAFIAS") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
+            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
             {
                 Response.Redirect(@"~/Default.aspx");
             }

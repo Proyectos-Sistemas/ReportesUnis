@@ -44,6 +44,7 @@ namespace ReportesUnis
             }
             if (!IsPostBack)
             {
+                
                 matrizDatos();
                 aux = 2;
                 listadoMunicipios();

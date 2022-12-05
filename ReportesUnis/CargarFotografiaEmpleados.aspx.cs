@@ -88,26 +88,27 @@ namespace ReportesUnis
             string consulta = consultaUser("nationalIdentifiers", personId);
             if (cantidad >= 0)
                 consulta = consulta.Substring(0, cantidad);
-            string consulta2 = consulta.Replace("\n    \"", "|");
-            string[] result = consulta2.Split('|');
-            string personID = getBetween(result[result.Count() - 1], "\"NationalIdentifierId\" : ", ",");
+            //string consulta2 = consulta.Replace("\n    \"", "|");
+            //string[] result = consulta2.Split('|');
+            //string personID = getBetween(consulta, "\"PersonId\" : ", ",");
             credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
             var dtFechaBuscarPersona = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
-            string respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/workers?q=PersonId=" + personID + "&effectiveDate=" + dtFechaBuscarPersona + "&expand=" + expand, user, pass);
+            string respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/workers?q=PersonId=" + personId + "&effectiveDate=" + dtFechaBuscarPersona + "&expand=" + expand, user, pass);
             return respuesta;
         }
 
         private string consultaGetImagenes(string consultar, int cantidad, string personId)
         {
             string consulta = consultaUser("nationalIdentifiers", personId);
-            if (cantidad >= 0)
-                consulta = consulta.Substring(0, cantidad);
+            /*if (cantidad >= 0)
+                consulta = consulta.Substring(0, cantidad);*/
             string consulta2 = consulta.Replace("\n    \"", "|");
             string[] result = consulta2.Split('|');
-            string personID = getBetween(result[result.Count() - 1], "\"NationalIdentifierId\" : ", ",");
+            string personID = getBetween(consulta, ", {\n      \"NationalIdentifierId\" ", ",\n      \"LegislationCode\" : \"GT\",\n      \"NationalIdentifierType\" : \"CUI\"");
+            personID = getBetween(consulta, ", {\n      \"NationalIdentifierId\" : ", ",\n      \"");
             credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
@@ -415,7 +416,7 @@ namespace ReportesUnis
                                             string consultaperfil = "\"PrimaryFlag\" : ";
                                             string perfil = getBetween(consulta, consultaperfil, ",\n");
                                             var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
-                                            if (perfil == "true")
+                                            if (perfil == "true" && ImageId!="")
                                             {
                                                 updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
                                                 mensajeValidacion = "La fotografía se actualizó correctamente en HCM.";

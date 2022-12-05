@@ -3,6 +3,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OpenIdConnect;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Web;
@@ -36,6 +37,31 @@ namespace ReportesUnis
                     MenuHistoricosCXC.Visible = respuesta.Contains(MenuHistoricosCXC.ValidationGroup);
                     MenuHistoricosCXP.Visible = respuesta.Contains(MenuHistoricosCXP.ValidationGroup);
                     MenuHistoricosGL.Visible = respuesta.Contains(MenuHistoricosGL.ValidationGroup);
+
+                }
+
+                if (respuesta.Contains("RLI_VistaAlumnos"))
+                {
+                    RepEstudiantes.Visible = true;
+                }
+                else
+                {
+                    RepEstudiantes.Visible = respuesta.Contains(RepEstudiantes.ValidationGroup);
+                }
+
+                if (respuesta.Contains("DATOS_FOTOGRAFIAS"))
+                {
+                    RepEstudiantes.Visible = RepEmpleados.Visible = RepCamarasEst.Visible = RepCamarasEmp.Visible = CargaCTEst.Visible = CargaCTEmp.Visible = ActEmpleados.Visible = true;
+                }
+                else
+                {
+                    RepEstudiantes.Visible = respuesta.Contains(RepEstudiantes.ValidationGroup);
+                    RepEmpleados.Visible = respuesta.Contains(RepEmpleados.ValidationGroup);
+                    RepCamarasEst.Visible = respuesta.Contains(RepCamarasEst.ValidationGroup);
+                    RepCamarasEmp.Visible = respuesta.Contains(RepCamarasEmp.ValidationGroup);
+                    CargaCTEst.Visible = respuesta.Contains(CargaCTEst.ValidationGroup);
+                    CargaCTEmp.Visible = respuesta.Contains(CargaCTEmp.ValidationGroup);
+                    ActEmpleados.Visible = respuesta.Contains(ActEmpleados.ValidationGroup);
                 }
             }
             catch (Exception)
@@ -43,7 +69,7 @@ namespace ReportesUnis
 
                 throw;
             }
-            
+
         }
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
         {
