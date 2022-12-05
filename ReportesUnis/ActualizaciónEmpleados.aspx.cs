@@ -790,26 +790,26 @@ namespace ReportesUnis
             string[] result = sustituirCaracteres().Split('|');
             count = result.Count();
             string[,] arrlist;
-            string[] resultado = new string[count];
+            string[] resultado = new string[count+1];
             arrlist = new string[Convert.ToInt32(count), 2];
 
             try
             {
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < count+1; i++)
                 {
-                    if (i == count - 1)
+                    if (i == count-1)
                     {
-                        resultado[i] = "-";
+                        string palabra = result[i];
+                        resultado[i] = palabra;
                     }
-                    else if (i != count - 1)
+                    else if (i != count-1 && i < count-1)
                     {
                         string palabra = result[i];
                         resultado[i] = StringExtensions.RemoveEnd(palabra, mun);
                     }
                     else
                     {
-                        string palabra = result[i];
-                        resultado[i] = palabra;
+                        resultado[i] = "-";
                     }
                 }
 
@@ -845,6 +845,8 @@ namespace ReportesUnis
         {
             aux = 2;
             listadoMunicipios();
+            aux = 3;
+            listadoZonas();
         }
 
         /// CONSUMO DE API
