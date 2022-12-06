@@ -40,7 +40,7 @@ namespace ReportesUnis
                     files.Add(new ListItem(Path.GetFileName(filePath), filePath));
                 }
             }
-        }        
+        }
 
         [WebMethod]
         public string Consultar(string dpi)
@@ -102,19 +102,29 @@ namespace ReportesUnis
 
         private string consultaGetImagenes(string consultar, int cantidad, string personId)
         {
-            string consulta = consultaUser("nationalIdentifiers", personId);
-            /*if (cantidad >= 0)
-                consulta = consulta.Substring(0, cantidad);*/
-            string consulta2 = consulta.Replace("\n    \"", "|");
-            string[] result = consulta2.Split('|');
-            string personID = getBetween(consulta, ", {\n      \"NationalIdentifierId\" ", ",\n      \"LegislationCode\" : \"GT\",\n      \"NationalIdentifierType\" : \"CUI\"");
-            personID = getBetween(consulta, ", {\n      \"NationalIdentifierId\" : ", ",\n      \"");
-            credencialesWS(archivoWS, "Consultar");
-            var vchrUrlWS = Variables.wsUrl;
-            var user = Variables.wsUsuario;
-            var pass = Variables.wsPassword;
-            var dtFechaBuscarPersona = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
-            string respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/emps/" + consultar, user, pass);
+            string respuesta = "";
+            if (consultar != "/child/photo/")
+            {
+                string consulta = consultaUser("nationalIdentifiers", personId);
+                /*if (cantidad >= 0)
+                    consulta = consulta.Substring(0, cantidad);*/
+                string consulta2 = consulta.Replace("\n    \"", "|");
+                string[] result = consulta2.Split('|');
+                string personID = getBetween(consulta, "\n      \"NationalIdentifierId\" : ", ",\n      \"LegislationCode\" : \"GT\",\n      \"NationalIdentifierType\" : \"CUI\"");
+                /*if (personID=="")
+                    personID = getBetween(consulta, "\n      \"NationalIdentifierId\" : ", ",\n      \"LegislationCode\" : \"GT\",\n      \"NationalIdentifierType\" : \"PASAPORTE\"");
+                */
+                credencialesWS(archivoWS, "Consultar");
+                var vchrUrlWS = Variables.wsUrl;
+                var user = Variables.wsUsuario;
+                var pass = Variables.wsPassword;
+                var dtFechaBuscarPersona = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/emps/" + consultar, user, pass);
+            }
+            else
+            {
+                respuesta = "";
+            }
             return respuesta;
         }
 
@@ -391,7 +401,7 @@ namespace ReportesUnis
                     string[] result = sustituirCaracteres(NombreImagen).Split('|');
                     if (ExtensionesPermitidas.Contains(ExtensionFotografia))
                     {
-                        if (result.Length >4)
+                        if (result.Length > 4)
                         {
                             try
                             {
@@ -403,7 +413,11 @@ namespace ReportesUnis
                                 string comIm = personId + "/child/photo/";
                                 string consultaImagenes = consultaGetImagenes(comIm, NombreImagen.Length, result[5]);
                                 string PhotoId = getBetween(consulta, "\"PhotoId\" : ", ",\n");
-                                string ImageId = getBetween(consultaImagenes, "\"ImageId\" : ", ",\n");
+                                string ImageId = "";
+                                if (consultaImagenes != "")
+                                {
+                                    ImageId = getBetween(consultaImagenes, "\"ImageId\" : ", ",\n");
+                                }
 
                                 using (Stream fs = uploadedFile.InputStream)
                                 {
@@ -416,7 +430,7 @@ namespace ReportesUnis
                                             string consultaperfil = "\"PrimaryFlag\" : ";
                                             string perfil = getBetween(consulta, consultaperfil, ",\n");
                                             var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
-                                            if (perfil == "true" && ImageId!="")
+                                            if (perfil == "true" && ImageId != "")
                                             {
                                                 updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
                                                 mensajeValidacion = "La fotografía se actualizó correctamente en HCM.";
@@ -480,7 +494,7 @@ namespace ReportesUnis
             GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
             GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
             GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
-            GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());            
+            GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
             Response.ContentType = "application/text";
             Response.AddHeader("content-disposition", "attachment; filename=Reporte de Carga.txt");
             Response.TransmitFile(ArchivoBitacora);

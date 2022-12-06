@@ -39,7 +39,7 @@
     </script>
 
     <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
-    <div class="container"2>
+    <div class="container2">
         <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="True" accept="image/jpeg" onchange="validateFileSize();" />
         <div id="dvMsg" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
             El tamaño máximo permitido es de 1 GB
