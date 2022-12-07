@@ -434,14 +434,27 @@ namespace ReportesUnis
                                             {
                                                 updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
                                                 mensajeValidacion = "La fotografía se actualizó correctamente en HCM.";
+                                                GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "  " + NombreImagen.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
+                                                ContadorArchivosCorrectos++;
                                             }
                                             else
                                             {
+                                                respuestaPost = 0;
                                                 createPhoto(personId, "photo", Imgn);
-                                                mensajeValidacion = "La fotografía se creó correctamente en HCM.";
+                                                if (respuestaPost != 1)
+                                                {
+                                                    mensajeValidacion = "La fotografía se creó correctamente en HCM.";
+                                                    GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "  " + NombreImagen.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
+                                                    ContadorArchivosCorrectos++;
+                                                }
+                                                else
+                                                {
+                                                    mensajeValidacion = "Error al crear la fotografía en HCM.";
+                                                    GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                                    ContadorArchivosConError++;
+                                                }
                                             }
-                                            GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "  " + NombreImagen.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
-                                            ContadorArchivosCorrectos++;
+                                            
                                         }
                                         catch (Exception ex)
                                         {

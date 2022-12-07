@@ -38,9 +38,8 @@ namespace ReportesUnis.API
                 else
                     return 1;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message);
                 return 1;
             }
         }
