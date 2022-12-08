@@ -37,7 +37,7 @@ namespace ReportesUnis
         int aux = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
-            TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+            TextUser.Text = "2153023380401";//Context.User.Identity.Name.Replace("@unis.edu.gt", "");
             if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaEmpleados") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
             {
                 Response.Redirect(@"~/Default.aspx");
@@ -835,10 +835,11 @@ namespace ReportesUnis
             }
             catch (Exception)
             {
-                txtZona.DataSource = "";
+                resultado = new string[count];
+                resultado[0] = "-";
+                txtZona.DataSource = resultado;
                 txtZona.DataTextField = "";
                 txtZona.DataValueField = "";
-                txtZona.DataBind();
             }
         }
 
@@ -870,10 +871,10 @@ namespace ReportesUnis
         int respuestaPatch = 0;
         int respuestaPost = 0;
 
-        private string consultaGetworkers(string expand)
+        private string consultaGetworkers(string expand, string expandUser)
         {
-            string consulta = consultaUser("nationalIdentifiers", UserEmplid.Text);
-            int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
+            string consulta = consultaUser(expandUser, UserEmplid.Text);
+            int cantidad = consulta.IndexOf("2153023380401"/*Context.User.Identity.Name.Replace("@unis.edu.gt", "")*/);
             if (cantidad >= 0)
                 consulta = consulta.Substring(0, cantidad);
             string consulta2 = consulta.Replace("\n    \"", "|");
@@ -891,7 +892,7 @@ namespace ReportesUnis
         private string consultaGetImagenes(string consultar)
         {
             string consulta = consultaUser("nationalIdentifiers", UserEmplid.Text);
-            int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
+            int cantidad = consulta.IndexOf("2153023380401"/*Context.User.Identity.Name.Replace("@unis.edu.gt", "")*/);
             if (cantidad >= 0)
                 consulta = consulta.Substring(0, cantidad);
             string consulta2 = consulta.Replace("\n    \"", "|");
@@ -926,7 +927,7 @@ namespace ReportesUnis
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
             int respuesta = api.Patch(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/" + esquema + personId + "/child/" + tables + "/" + ID, user, pass, info, consulta, effective);
-            respuestaPatch = respuestaPatch + respuesta;
+            respuestaPatch = respuesta + respuestaPatch;
         }
 
         private void create(string personId, string tables, string datos, string EXTEN)
@@ -970,7 +971,7 @@ namespace ReportesUnis
                 string mensajeValidacion = "";
                 //Obtener se obtiene toda la información del empleado
                 string expand = "legislativeInfo,phones,addresses,photos";
-                string consulta = consultaGetworkers(expand);
+                string consulta = consultaGetworkers(expand, "nationalIdentifiers");
                 aux = 5;
                 string country = CodigoPais();
 
@@ -981,6 +982,8 @@ namespace ReportesUnis
                 string PersonLegislativeId = getBetween(consulta, "child/legislativeInfo/", "\",\n");
                 string pli = getBetween(consulta, "\"PersonLegislativeId\" : ", ",");
                 string effective = getBetween(consulta, "\"PersonLegislativeId\" : " + pli + ",\n      \"EffectiveStartDate\" : \"", "\",\n");
+                string adi= getBetween(consulta, "\"AddressId\" : ", ",");
+                string effectiveAdd = getBetween(consulta, "\"AddressId\" : " + adi + ",\n      \"EffectiveStartDate\" : \"", "\",\n");
 
                 string comIm = personId + "/child/photo/";
                 string consultaImagenes = consultaGetImagenes(comIm);
@@ -1033,14 +1036,16 @@ namespace ReportesUnis
                 var estadoC = "{\"MaritalStatus\": " + estadoCivil(CmbEstado.Text) + "}";
                 var phoneNumber = "{\"PhoneNumber\": \"" + txtTelefono.Text + "\"}";
                 var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"AddressType\" :\"HOME\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\",\"Country\": \"" + country + "\"}";
-                //Actualiza por medio del metodo PATCH            
+                //Actualiza por medio del metodo PATCH
+                respuestaPatch = 0;
+                respuestaPost = 0;
                 updatePatch(phoneNumber, personId, "phones", PhoneId, "phones", "", "workers/");
                 updatePatch(estadoC, personId, "legislativeInfo", PersonLegislativeId, "legislativeInfo", effective, "workers/");
                 if (PaisInicial.Text == Pais.Text)
                 {
-                    Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"AddressType\" :\"HOME\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\"}";
+                    Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\"}";
 
-                    updatePatch(Address, personId, "addresses", AddressId, "addresses", effective, "workers/");
+                    updatePatch(Address, personId, "addresses", AddressId, "addresses", effectiveAdd, "workers/");
                 }
                 else
                     create(personId, "addresses", Address, "workers/");
@@ -1069,13 +1074,13 @@ namespace ReportesUnis
                 if (cMBpAIS.Text.Equals("-"))
                     lblActualizacion.Text = lblActualizacion.Text +"Un país";
                 if (CmbMunicipio.Text.Equals("-") && lblActualizacion.Text == "Es necesario seleccionar: ")
-                    lblActualizacion.Text = lblActualizacion.Text +"\n Un departamento";
+                    lblActualizacion.Text = lblActualizacion.Text +"Un departamento";
                 else
                     lblActualizacion.Text = lblActualizacion.Text + ", un departamento";
                 if (CmbDepartamento.Text.Equals("-") && lblActualizacion.Text == "Es necesario seleccionar: ")
-                    lblActualizacion.Text = lblActualizacion.Text +"Un muncipio";
+                    lblActualizacion.Text = lblActualizacion.Text +"Un municipio";
                 else
-                    lblActualizacion.Text = lblActualizacion.Text +" y un muncipio";
+                    lblActualizacion.Text = lblActualizacion.Text +" y un municipio";
             }
 
         }
