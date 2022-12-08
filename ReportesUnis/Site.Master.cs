@@ -42,16 +42,25 @@ namespace ReportesUnis
 
                 if (respuesta.Contains("RLI_VistaAlumnos"))
                 {
-                    RepEstudiantes.Visible = true;
+                    ActEstudiantes.Visible = true;
                 }
                 else
                 {
-                    RepEstudiantes.Visible = respuesta.Contains(RepEstudiantes.ValidationGroup);
+                    ActEstudiantes.Visible = respuesta.Contains(ActEstudiantes.ValidationGroup);
+                }
+                
+                if (respuesta.Contains("RLI_VistaEmpleados"))
+                {
+                    ActEmpleados.Visible = true;
+                }
+                else
+                {
+                    ActEmpleados.Visible = respuesta.Contains(ActEmpleados.ValidationGroup);
                 }
 
                 if (respuesta.Contains("DATOS_FOTOGRAFIAS"))
                 {
-                    RepEstudiantes.Visible = RepEmpleados.Visible = RepCamarasEst.Visible = RepCamarasEmp.Visible = CargaCTEst.Visible = CargaCTEmp.Visible = ActEmpleados.Visible = true;
+                    RepEstudiantes.Visible = RepEmpleados.Visible = RepCamarasEst.Visible = RepCamarasEmp.Visible = CargaCTEst.Visible = CargaCTEmp.Visible = true;
                 }
                 else
                 {
@@ -61,7 +70,6 @@ namespace ReportesUnis
                     RepCamarasEmp.Visible = respuesta.Contains(RepCamarasEmp.ValidationGroup);
                     CargaCTEst.Visible = respuesta.Contains(CargaCTEst.ValidationGroup);
                     CargaCTEmp.Visible = respuesta.Contains(CargaCTEmp.ValidationGroup);
-                    ActEmpleados.Visible = respuesta.Contains(ActEmpleados.ValidationGroup);
                 }
             }
             catch (Exception)

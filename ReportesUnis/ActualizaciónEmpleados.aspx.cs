@@ -38,13 +38,13 @@ namespace ReportesUnis
         protected void Page_Load(object sender, EventArgs e)
         {
             TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
-            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("DATOS_FOTOGRAFIAS") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
+            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaEmpleados") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
             {
                 Response.Redirect(@"~/Default.aspx");
             }
             if (!IsPostBack)
             {
-                
+
                 matrizDatos();
                 aux = 2;
                 listadoMunicipios();
@@ -770,6 +770,8 @@ namespace ReportesUnis
                     }
                 }
 
+                if (resultado[0].ToString().Equals(""))
+                    resultado[0] = "-";
                 CmbMunicipio.DataSource = resultado;
                 CmbMunicipio.DataTextField = "";
                 CmbMunicipio.DataValueField = "";
@@ -790,33 +792,46 @@ namespace ReportesUnis
             string[] result = sustituirCaracteres().Split('|');
             count = result.Count();
             string[,] arrlist;
-            string[] resultado = new string[count+1];
+            string[] resultado;
             arrlist = new string[Convert.ToInt32(count), 2];
 
             try
             {
-                for (int i = 0; i < count+1; i++)
+                if (result.Count() > 1)
                 {
-                    if (i == count-1)
+                    resultado = new string[count + 1];
+                    for (int i = 0; i < count + 1; i++)
                     {
-                        string palabra = result[i];
-                        resultado[i] = palabra;
+                        if (i == count - 1)
+                        {
+                            string palabra = result[i];
+                            resultado[i] = palabra;
+                        }
+                        else if (i != count - 1 && i < count - 1)
+                        {
+                            string palabra = result[i];
+                            resultado[i] = StringExtensions.RemoveEnd(palabra, mun);
+                        }
+                        else
+                        {
+                            resultado[i] = "-";
+                        }
                     }
-                    else if (i != count-1 && i < count-1)
-                    {
-                        string palabra = result[i];
-                        resultado[i] = StringExtensions.RemoveEnd(palabra, mun);
-                    }
-                    else
-                    {
-                        resultado[i] = "-";
-                    }
-                }
 
-                txtZona.DataSource = resultado;
-                txtZona.DataTextField = "";
-                txtZona.DataValueField = "";
-                txtZona.DataBind();
+                    txtZona.DataSource = resultado;
+                    txtZona.DataTextField = "";
+                    txtZona.DataValueField = "";
+                    txtZona.DataBind();
+                }
+                else
+                {
+                    resultado = new string[count];
+                    resultado[0] = "-";
+                    txtZona.DataSource = resultado;
+                    txtZona.DataTextField = "";
+                    txtZona.DataValueField = "";
+                    txtZona.DataBind();
+                }
             }
             catch (Exception)
             {
@@ -843,6 +858,7 @@ namespace ReportesUnis
         }
         protected void CmbDepartamento_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             aux = 2;
             listadoMunicipios();
             aux = 3;
@@ -1049,7 +1065,17 @@ namespace ReportesUnis
             }
             else
             {
-                lblActualizacion.Text = "Es necesario seleccionar un país, departamento y muncipio";
+                lblActualizacion.Text = "Es necesario seleccionar: ";
+                if (cMBpAIS.Text.Equals("-"))
+                    lblActualizacion.Text = lblActualizacion.Text +"Un país";
+                if (CmbMunicipio.Text.Equals("-") && lblActualizacion.Text == "Es necesario seleccionar: ")
+                    lblActualizacion.Text = lblActualizacion.Text +"\n Un departamento";
+                else
+                    lblActualizacion.Text = lblActualizacion.Text + ", un departamento";
+                if (CmbDepartamento.Text.Equals("-") && lblActualizacion.Text == "Es necesario seleccionar: ")
+                    lblActualizacion.Text = lblActualizacion.Text +"Un muncipio";
+                else
+                    lblActualizacion.Text = lblActualizacion.Text +" y un muncipio";
             }
 
         }
@@ -1098,10 +1124,30 @@ namespace ReportesUnis
         {
             aux = 1;
             listaDepartamentos();
-            aux = 2;
-            listadoMunicipios();
-            aux = 3;
-            listadoZonas();
+            if (!String.IsNullOrWhiteSpace(CmbDepartamento.Text) || CmbDepartamento.Text != "")
+            {
+                aux = 2;
+                listadoMunicipios();
+                aux = 3;
+                listadoZonas();
+            }
+            else
+            {
+                string[] resultado = new string[1];
+                resultado[0] = "-";
+                CmbMunicipio.DataSource = resultado;
+                CmbMunicipio.DataTextField = "";
+                CmbMunicipio.DataValueField = "";
+                CmbMunicipio.DataBind();
+                txtZona.DataSource = resultado;
+                txtZona.DataTextField = "";
+                txtZona.DataValueField = "";
+                txtZona.DataBind();
+                CmbDepartamento.DataSource = resultado;
+                CmbDepartamento.DataTextField = "";
+                CmbDepartamento.DataValueField = "";
+                CmbDepartamento.DataBind();
+            }
         }
 
         public void GuardarBitacora(string ArchivoBitacora, string DescripcionBitacora)
