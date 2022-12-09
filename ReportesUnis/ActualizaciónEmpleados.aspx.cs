@@ -37,7 +37,7 @@ namespace ReportesUnis
         int aux = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
-            TextUser.Text = "2153023380401";//Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+            TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
             if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaEmpleados") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
             {
                 Response.Redirect(@"~/Default.aspx");
@@ -874,7 +874,7 @@ namespace ReportesUnis
         private string consultaGetworkers(string expand, string expandUser)
         {
             string consulta = consultaUser(expandUser, UserEmplid.Text);
-            int cantidad = consulta.IndexOf("2153023380401"/*Context.User.Identity.Name.Replace("@unis.edu.gt", "")*/);
+            int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
                 consulta = consulta.Substring(0, cantidad);
             string consulta2 = consulta.Replace("\n    \"", "|");
@@ -892,7 +892,7 @@ namespace ReportesUnis
         private string consultaGetImagenes(string consultar)
         {
             string consulta = consultaUser("nationalIdentifiers", UserEmplid.Text);
-            int cantidad = consulta.IndexOf("2153023380401"/*Context.User.Identity.Name.Replace("@unis.edu.gt", "")*/);
+            int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
                 consulta = consulta.Substring(0, cantidad);
             string consulta2 = consulta.Replace("\n    \"", "|");
