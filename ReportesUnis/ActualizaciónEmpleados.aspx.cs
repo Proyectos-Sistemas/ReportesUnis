@@ -37,7 +37,7 @@ namespace ReportesUnis
         int aux = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
-            TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+            TextUser.Text = "2153023380401";//Context.User.Identity.Name.Replace("@unis.edu.gt", "");
             if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaEmpleados") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
             {
                 Response.Redirect(@"~/Default.aspx");
@@ -86,7 +86,7 @@ namespace ReportesUnis
             }
             else if (aux == 2)
             {
-                CuerpoConsultaPorMunicipio(Variables.wsUsuario, Variables.wsPassword, CmbDepartamento.SelectedValue);
+                CuerpoConsultaPorMunicipio(Variables.wsUsuario, Variables.wsPassword, CmbDepartamento.SelectedValue, cMBpAIS.SelectedValue);
             }
             else if (aux == 3)
             {
@@ -203,7 +203,7 @@ namespace ReportesUnis
         }
 
         //Crea el cuerpo que se utiliza para consultar los municipios
-        private static void CuerpoConsultaPorMunicipio(string idPersona, string passwordServicio, string departamento)
+        private static void CuerpoConsultaPorMunicipio(string idPersona, string passwordServicio, string departamento, string pais)
         {
             Variables.soapBody = @"<?xml version=""1.0""?>
                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:v2=""http://xmlns.oracle.com/oxp/service/v2"">
@@ -220,6 +220,12 @@ namespace ReportesUnis
                                                 <v2:name>COUNTRY</v2:name>
                                                         <v2:values>
                                                             <v2:item>" + departamento + @"</v2:item>
+                                                        </v2:values>
+                                                </v2:item>   
+                                            <v2:item>
+                                                <v2:name>PAIS</v2:name>
+                                                        <v2:values>
+                                                            <v2:item>" + pais + @"</v2:item>
                                                         </v2:values>
                                                 </v2:item>
                                            </v2:listOfParamNameValues>
@@ -515,8 +521,9 @@ namespace ReportesUnis
                 {
                     try
                     {
-                        int mun = CmbDepartamento.SelectedValue.Length + 28;
-                        sustituto = sustituto.Remove(0, mun);
+                        int mun = CmbDepartamento.SelectedValue.Length + 34;
+                        int pais = cMBpAIS.SelectedValue.Length + mun;
+                        sustituto = sustituto.Remove(0, pais);
                         sustituto = sustituto.TrimEnd('|');
                     }
                     catch (Exception)
@@ -731,7 +738,7 @@ namespace ReportesUnis
             string sustituto = DecodeStringFromBase64(Consultar()).Replace('"', '\n');
             sustituto = Regex.Replace(sustituto, @"\n+", "|");
 
-            int largo = 20;
+            int largo = 22;
             sustituto = sustituto.Remove(0, largo);
             sustituto = sustituto + "-";
             sustituto = sustituto.TrimEnd('|');
@@ -747,27 +754,30 @@ namespace ReportesUnis
         public void listadoMunicipios()
         {
             int count = 0;
-            int depto = CmbDepartamento.SelectedValue.ToString().Length;
+            int depto = cMBpAIS.SelectedValue.ToString().Length;
             string[] result = sustituirCaracteres().Split('|');
             count = result.Length;
-            string[] resultado = new string[count];
-            //string sustituto = DecodeStringFromBase64(Consultar()).Replace('"', '\r');
-            //sustituto = Regex.Replace(sustituto, @"\n+", "");
-            //sustituto = Regex.Replace(sustituto, @"\r", "");
-
+            if (result[0].Contains("UNICO"))
+            {
+                count = 1;
+            }
+            string[] resultado = new string[count / 2 + 1];
             try
             {
-                for (int i = 0; i < count; i++)
+                int j = 0;
+                for (int i = 0; i < count;)
                 {
                     if (count == 1 || i == count - 1)
                     {
-                        resultado[i] = result[i];
+                        resultado[j] = result[i];
                     }
                     else
                     {
                         string palabra = result[i];
-                        resultado[i] = StringExtensions.RemoveEnd(palabra, depto);
+                        resultado[j] = StringExtensions.RemoveEnd(palabra, depto);
                     }
+                    i = i + 2;
+                    j++;
                 }
 
                 if (resultado[0].ToString().Equals(""))
@@ -874,7 +884,7 @@ namespace ReportesUnis
         private string consultaGetworkers(string expand, string expandUser)
         {
             string consulta = consultaUser(expandUser, UserEmplid.Text);
-            int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
+            int cantidad = consulta.IndexOf("2153023380401");//Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
                 consulta = consulta.Substring(0, cantidad);
             string consulta2 = consulta.Replace("\n    \"", "|");
@@ -892,7 +902,7 @@ namespace ReportesUnis
         private string consultaGetImagenes(string consultar)
         {
             string consulta = consultaUser("nationalIdentifiers", UserEmplid.Text);
-            int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
+            int cantidad = consulta.IndexOf("2153023380401");//Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
                 consulta = consulta.Substring(0, cantidad);
             string consulta2 = consulta.Replace("\n    \"", "|");
@@ -978,12 +988,19 @@ namespace ReportesUnis
                 //Se obtienen los id's de las tablas a las cuales se les agregará información
                 string personId = getBetween(consulta, "workers/", "/child/");
                 string PhoneId = getBetween(consulta, "\"PhoneId\" : ", ",\n");
-                string AddressId = getBetween(consulta, "child/addresses/", "\",\n");
                 string PersonLegislativeId = getBetween(consulta, "child/legislativeInfo/", "\",\n");
                 string pli = getBetween(consulta, "\"PersonLegislativeId\" : ", ",");
                 string effective = getBetween(consulta, "\"PersonLegislativeId\" : " + pli + ",\n      \"EffectiveStartDate\" : \"", "\",\n");
-                string adi= getBetween(consulta, "\"AddressId\" : ", ",");
-                string effectiveAdd = getBetween(consulta, "\"AddressId\" : " + adi + ",\n      \"EffectiveStartDate\" : \"", "\",\n");
+                string dff = getBetween(consulta, "\"AddressId\"", "\"PrimaryFlag\" : true");
+                int largo = contadorSlash(dff.Length, dff);
+                dff = dff.Replace('"', '\n');
+                dff = Regex.Replace(dff, @" \n+", "\n");
+                dff = Regex.Replace(dff, @"\n+", "");
+                dff = Regex.Replace(dff, @",     ", "|");
+                string[] result = dff.Split('|');
+                int newDFF = contadorID(result.Length, result);
+                string effectiveAdd = result[newDFF].Substring(20, result[newDFF].Length - 20);
+
 
                 string comIm = personId + "/child/photo/";
                 string consultaImagenes = consultaGetImagenes(comIm);
@@ -1004,10 +1021,11 @@ namespace ReportesUnis
                             {
                                 byte[] Imagen = br.ReadBytes((Int32)fs.Length);
                                 string b64 = Convert.ToBase64String(Imagen, 0, Imagen.Length);
-                                string consultaperfil = "\"PrimaryFlag\" : ";
+                                string pid = getBetween(consulta, "\"PhotoId\" :", ",");
+                                string consultaperfil = pid + ",\n      \"PrimaryFlag\" : ";
                                 string perfil = getBetween(consulta, consultaperfil, ",\n");
                                 var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
-                                if (perfil == "true" && !String.IsNullOrEmpty(ImageId))
+                                if (perfil == "true" && ImageId != "")
                                 {
                                     updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
                                     mensajeValidacion = "y la fotografía se actualizó correctamente en HCM.";
@@ -1035,31 +1053,78 @@ namespace ReportesUnis
                 //Se crea el body que se enviará a cada tabla
                 var estadoC = "{\"MaritalStatus\": " + estadoCivil(CmbEstado.Text) + "}";
                 var phoneNumber = "{\"PhoneNumber\": \"" + txtTelefono.Text + "\"}";
-                var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"AddressType\" :\"HOME\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\",\"Country\": \"" + country + "\"}";
+                var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"AddressType\" :\"HOME\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"PrimaryFlag\": true,\"AddlAddressAttribute3\": \"" + txtZona.Text + "\",\"Country\": \"" + country + "\"}";
                 //Actualiza por medio del metodo PATCH
                 respuestaPatch = 0;
                 respuestaPost = 0;
+                int au = 0;
+                string mensajeError = "Ocurrió un problema al actualizar su: ";
                 updatePatch(phoneNumber, personId, "phones", PhoneId, "phones", "", "workers/");
+                if (respuestaPatch != 0)
+                {
+                    mensajeError = mensajeError + "Número de teléfono ";
+                    au = au + 1;
+                }
                 updatePatch(estadoC, personId, "legislativeInfo", PersonLegislativeId, "legislativeInfo", effective, "workers/");
+                if (respuestaPatch != 0 && mensajeError != "Ocurrió un problema al actualizar su: ")
+                {
+                    mensajeError = mensajeError + "Estado civil ";
+                    au = au + 1;
+                }
+                else if (respuestaPatch != 0)
+                {
+                    mensajeError = mensajeError + ", estado civil ";
+                    au = au + 1;
+                }
+
                 if (PaisInicial.Text == Pais.Text)
                 {
+                    string primary = getBetween(consulta, "HOME\",\n      \"PrimaryFlag\" : true", "\n        \"name\" ");
+                    string AddressId = getBetween(primary, "child/addresses", "\",");
                     Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\"}";
 
                     updatePatch(Address, personId, "addresses", AddressId, "addresses", effectiveAdd, "workers/");
+                    if (respuestaPatch != 0 && mensajeError != "Ocurrió un problema al actualizar su: ")
+                    {
+                        mensajeError = mensajeError + "Dirección ";
+                        au = au + 1;
+                    }
+                    else if (respuestaPatch != 0)
+                    {
+                        mensajeError = mensajeError + "y dirección ";
+                        au = au + 1;
+                    }
                 }
-                else
-                    create(personId, "addresses", Address, "workers/");
-                int au = respuestaPost;
-                if (respuestaPatch != 0 || respuestaPost != 0)
-                    lblActualizacion.Text = "Ocurrió un problema al actualizar su información";
                 else
                 {
-                    lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
-                    if (mensajeValidacion == " pero no se encontró ninguna fotografía para almacenar.")
-                        GuardarBitacora(ArchivoBitacora, "---".PadRight(36) + "  " + Context.User.Identity.Name.Replace("@unis.edu.gt", "").PadRight(26) + "  No se ingresó ninguna imagen               ".PadRight(60));
+                    create(personId, "addresses", Address, "workers/");
+                    if (respuestaPost != 0 && mensajeError != "Ocurrió un problema al actualizar su: ")
+                    {
+                        mensajeError = mensajeError + "Dirección ";
+                        au = au + 1;
+                    }
+                    else if (respuestaPost != 0)
+                    {
+                        mensajeError = mensajeError + "y dirección ";
+                        au = au + 1;
+                    }
 
                 }
-                // lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
+                if (au == 0)
+                {
+                    lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
+                    PaisInicial.Text = Pais.Text;
+                    if (mensajeValidacion == " , no se encontró ninguna fotografía para almacenar.")
+                        GuardarBitacora(ArchivoBitacora, "---".PadRight(36) + "  " + "2153023380401"/*Context.User.Identity.Name.Replace("@unis.edu.gt", "")*/.PadRight(26) + "  No se ingresó ninguna imagen               ".PadRight(60));
+                    else
+                    {
+                        ContadorArchivos++;
+                    }
+                }
+                else
+                {
+                    lblActualizacion.Text = mensajeError + mensajeValidacion;
+                }
 
                 GuardarBitacora(ArchivoBitacora, "");
                 GuardarBitacora(ArchivoBitacora, "");
@@ -1072,15 +1137,15 @@ namespace ReportesUnis
             {
                 lblActualizacion.Text = "Es necesario seleccionar: ";
                 if (cMBpAIS.Text.Equals("-"))
-                    lblActualizacion.Text = lblActualizacion.Text +"Un país";
+                    lblActualizacion.Text = lblActualizacion.Text + "Un país";
                 if (CmbMunicipio.Text.Equals("-") && lblActualizacion.Text == "Es necesario seleccionar: ")
-                    lblActualizacion.Text = lblActualizacion.Text +"Un departamento";
+                    lblActualizacion.Text = lblActualizacion.Text + "Un departamento";
                 else
                     lblActualizacion.Text = lblActualizacion.Text + ", un departamento";
                 if (CmbDepartamento.Text.Equals("-") && lblActualizacion.Text == "Es necesario seleccionar: ")
-                    lblActualizacion.Text = lblActualizacion.Text +"Un municipio";
+                    lblActualizacion.Text = lblActualizacion.Text + "Un municipio";
                 else
-                    lblActualizacion.Text = lblActualizacion.Text +" y un municipio";
+                    lblActualizacion.Text = lblActualizacion.Text + " y un municipio";
             }
 
         }
@@ -1165,6 +1230,36 @@ namespace ReportesUnis
         public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
         {
             using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
+        }
+
+        public int contadorID(int largo, string[] cadena)
+        {
+            int posicion = 0;
+            for (int i = 0; i < largo; i++)
+            {
+                if (cadena[i].Contains("EffectiveStartDate"))
+                {
+                    posicion = i;
+                }
+            }
+            return posicion;
+        }
+
+        public int contadorSlash(int largo, string cadena)
+        {
+            int contador = 0;
+            string letra;
+
+            for (int i = 0; i < largo; i++)
+            {
+                letra = cadena.Substring(i, 1);
+
+                if (letra == "\"")
+                {
+                    contador++;
+                }
+            }
+            return contador;
         }
 
     }

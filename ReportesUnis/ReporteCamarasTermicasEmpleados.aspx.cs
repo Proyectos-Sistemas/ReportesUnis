@@ -897,98 +897,115 @@ namespace ReportesUnis
 
         public void matrizDatos()
         {
-            if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
+            int largo = TxtBuscador.Text.Length;
+            int contador = contadorEspacios(largo, TxtBuscador.Text);
+
+            if (Convert.ToDateTime(CldrCiclosInicio.Text) < Convert.ToDateTime(CldrCiclosFin.Text))
             {
-                if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
+                if (contador != largo)
                 {
-                    GridViewReporteCT.DataSource = "";
-
-                    string[] result = sustituirCaracteres("").Split('|');
-                    decimal registros = 0;
-                    decimal count = 0;
-                    int datos = 0;
-                    string[,] arrlist;
-                    string jerarquiaPerson;
-                    if (result.Count() > 12)
+                    if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
                     {
-                        registros = result.Count() / 13;
-                        count = Math.Round(registros, 0);
-                        arrlist = new string[Convert.ToInt32(count), 13];
-
-                        for (int i = 0; i < count; i++)
+                        if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
                         {
-                            for (int k = 0; k < 13; k++)
-                            {
-                                arrlist[i, k] = result[datos];
-                                datos++;
-                            }
-                        }
+                            GridViewReporteCT.DataSource = "";
 
-                        try
-                        {
-                            DataSetLocalRpt dsReporte = new DataSetLocalRpt();
-                            try
+                            string[] result = sustituirCaracteres("").Split('|');
+                            decimal registros = 0;
+                            decimal count = 0;
+                            int datos = 0;
+                            string[,] arrlist;
+                            string jerarquiaPerson;
+                            if (result.Count() > 12)
                             {
+                                registros = result.Count() / 13;
+                                count = Math.Round(registros, 0);
+                                arrlist = new string[Convert.ToInt32(count), 13];
 
-                                //Generacion de matriz para llenado de grid desde una consulta
                                 for (int i = 0; i < count; i++)
                                 {
-                                    DataRow newFila = dsReporte.Tables["RptCTEmpleados"].NewRow();
-                                    newFila["FIRST_NAME"] = (arrlist[i, 5] ?? "").ToString();
-                                    newFila["LAST_NAME"] = (arrlist[i, 6] ?? "").ToString();
-                                    newFila["ID"] = (arrlist[i, 7] ?? "").ToString();
-                                    jerarquiaPerson = jerarquia((arrlist[i, 10] ?? "").ToString());
-                                    jerarquiaPerson = getBetween(jerarquiaPerson, "\"jerarquia\": \"", "\"");
-                                    newFila["PERSON_GROUP"] = "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + jerarquiaPerson;//(arrlist[i, 10] ?? "").ToString();
-                                    newFila["Start_Time_of_Effective_Period"] = "";
-                                    newFila["End_Time_of_Effective_Period"] = "";
-                                    newFila["PHONE"] = (arrlist[i, 9] ?? "").ToString();
-                                    newFila["DEPARTAMENTO"] = (arrlist[i, 10] ?? "").ToString();
-                                    newFila["GENDER"] = (arrlist[i, 11] ?? "").ToString();
-                                    newFila["EMAIL"] = arrlist[i, 12].ToString();
-                                    newFila["TYPE"] = "";
-                                    newFila["CARD"] = "";
-                                    newFila["REMARK"] = "";
-                                    newFila["DOCK_STATION_LOGIN_PASSWORD"] = "";
-                                    newFila["SUPPORTISSUEDCUSTOMPROPERTIES"] = "";
-                                    newFila["SKINSURFACE_TEMPERATURE"] = "";
-                                    newFila["TEMPERATURE_STATUS"] = "";
-                                    newFila["EMPLID"] = "";
-                                    dsReporte.Tables["RptCTEmpleados"].Rows.Add(newFila);
+                                    for (int k = 0; k < 13; k++)
+                                    {
+                                        arrlist[i, k] = result[datos];
+                                        datos++;
+                                    }
                                 }
 
-                            }
-                            catch (Exception x)
-                            {
-                                Console.WriteLine(x.ToString());
-                            }
+                                try
+                                {
+                                    DataSetLocalRpt dsReporte = new DataSetLocalRpt();
+                                    try
+                                    {
 
-                            GridViewReporteCT.DataSource = dsReporte.Tables["RptCTEmpleados"];
-                            GridViewReporteCT.DataBind();
-                            GridViewReporteCT.UseAccessibleHeader = true;
-                            GridViewReporteCT.HeaderRow.TableSection = TableRowSection.TableHeader;
-                            lblBusqueda.Text = "";
+                                        //Generacion de matriz para llenado de grid desde una consulta
+                                        for (int i = 0; i < count; i++)
+                                        {
+                                            DataRow newFila = dsReporte.Tables["RptCTEmpleados"].NewRow();
+                                            newFila["FIRST_NAME"] = (arrlist[i, 5] ?? "").ToString();
+                                            newFila["LAST_NAME"] = (arrlist[i, 6] ?? "").ToString();
+                                            newFila["ID"] = (arrlist[i, 7] ?? "").ToString();
+                                            jerarquiaPerson = jerarquia((arrlist[i, 10] ?? "").ToString());
+                                            jerarquiaPerson = getBetween(jerarquiaPerson, "\"jerarquia\": \"", "\"");
+                                            newFila["PERSON_GROUP"] = "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + jerarquiaPerson;//(arrlist[i, 10] ?? "").ToString();
+                                            newFila["Start_Time_of_Effective_Period"] = "";
+                                            newFila["End_Time_of_Effective_Period"] = "";
+                                            newFila["PHONE"] = (arrlist[i, 9] ?? "").ToString();
+                                            newFila["DEPARTAMENTO"] = (arrlist[i, 10] ?? "").ToString();
+                                            newFila["GENDER"] = (arrlist[i, 11] ?? "").ToString();
+                                            newFila["EMAIL"] = arrlist[i, 12].ToString();
+                                            newFila["TYPE"] = "";
+                                            newFila["CARD"] = "";
+                                            newFila["REMARK"] = "";
+                                            newFila["DOCK_STATION_LOGIN_PASSWORD"] = "";
+                                            newFila["SUPPORTISSUEDCUSTOMPROPERTIES"] = "";
+                                            newFila["SKINSURFACE_TEMPERATURE"] = "";
+                                            newFila["TEMPERATURE_STATUS"] = "";
+                                            newFila["EMPLID"] = "";
+                                            dsReporte.Tables["RptCTEmpleados"].Rows.Add(newFila);
+                                        }
+
+                                    }
+                                    catch (Exception x)
+                                    {
+                                        Console.WriteLine(x.ToString());
+                                    }
+
+                                    GridViewReporteCT.DataSource = dsReporte.Tables["RptCTEmpleados"];
+                                    GridViewReporteCT.DataBind();
+                                    GridViewReporteCT.UseAccessibleHeader = true;
+                                    GridViewReporteCT.HeaderRow.TableSection = TableRowSection.TableHeader;
+                                    lblBusqueda.Text = "";
+                                }
+                                catch (Exception x)
+                                {
+                                    Console.WriteLine(x.ToString());
+                                }
+                                lblBusqueda.Text = " ";
+                            }
+                            else
+                            {
+                                lblBusqueda.Text = "No se encontró información con los valores ingresados";
+                                if (LbxBusqueda.Text == "Género")
+                                    lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
+                            }
+                            TxtBuscador.Enabled = false;
+                            CldrCiclosInicio.Enabled = false;
+                            CldrCiclosFin.Enabled = false;
+                            BtnImg.Enabled = true;
+                            BtnTxt.Enabled = true;
+                            BtnNBusqueda.Enabled = true;
+                            BtnBuscar2.Enabled = false;
+                            LbxBusqueda.Enabled = false;
                         }
-                        catch (Exception x)
+                        else
                         {
-                            Console.WriteLine(x.ToString());
+                            lblBusqueda.Text = "Ingrese un valor a buscar";
                         }
-                        lblBusqueda.Text = " ";
                     }
                     else
                     {
-                        lblBusqueda.Text = "No se encontró información con los valores ingresados";
-                        if (LbxBusqueda.Text == "Género")
-                            lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
+                        lblBusqueda.Text = "Para realizar búesqueda por género intente ingresando Male o Female";
                     }
-                    TxtBuscador.Enabled = false;
-                    CldrCiclosInicio.Enabled = false;
-                    CldrCiclosFin.Enabled = false;
-                    BtnImg.Enabled = true;
-                    BtnTxt.Enabled = true;
-                    BtnNBusqueda.Enabled = true;
-                    BtnBuscar2.Enabled = false;
-                    LbxBusqueda.Enabled = false;
                 }
                 else
                 {
@@ -997,7 +1014,7 @@ namespace ReportesUnis
             }
             else
             {
-                lblBusqueda.Text = "Para realizar búesqueda por género intente ingresando Male o Female";
+                lblBusqueda.Text = "La fecha inicial debe de ser menor a la fecha final";
             }
         }
 
@@ -1027,202 +1044,214 @@ namespace ReportesUnis
         //Llenado de informacion a las columnas correspondientes del excel
         protected void GenerarExcel(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
+            int largo = TxtBuscador.Text.Length;
+            int contadorEspacio = contadorEspacios(largo, TxtBuscador.Text);
+            if (Convert.ToDateTime(CldrCiclosInicio.Text) < Convert.ToDateTime(CldrCiclosFin.Text))
             {
-                SLDocument sl = new SLDocument();
-                int celda = 1;
-                //Letras de las columnas para la generacion de excel
-                string[] LETRA = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q" };
-                //Texto plano
-                sl.RenameWorksheet(SLDocument.DefaultFirstSheetName, "Reporte Estudiantes " + DateTime.Now.ToString("G"));
-                sl.SetCellValue("A" + celda, "Rule");
-                celda++;
-                sl.SetCellValue("A" + celda, "The items with asterisk are required.At least one of family name and given name is required.");
-                celda++;
-                sl.SetCellValue("A" + celda, "Do NOT change the layout and column title in this template file. The importing may fail if changed.");
-                celda++;
-                sl.SetCellValue("A" + celda, "Supports adding persons to the existing person group whose name is separated by slash. For example, the name format of Group A under All Persons is All Persons/Group A.");
-                celda++;
-                sl.SetCellValue("A" + celda, "Start/End Time of Effective Period: The effective period of the person for access control and time & attendance. Format: yyyy/mm/dd HH:MM:SS.");
-                celda++;
-                sl.SetCellValue("A" + celda, "Domain Person and Domain Group Person don't support adding and editing person's basic information and additional information by importing.");
-                celda++;
-                sl.SetCellValue("A" + celda, "No more than five cards can be issued to one person. Each two card numbers should be separated by semicolon, e.g., 01;02;03;04;05.");
-                celda++;
-                sl.SetCellValue("A" + celda, "It supports editing the persons' additional information in a batch, the fields of which are already created in the system. Please enter the additional information according to the type. For single selection type, select one from the drop-down list.");
-                celda++;
-                sl.SetCellValue("A" + celda, "Supports custom attribute input formats separated by commas, for example: attribute name 1, attribute name 2");
-                celda++;
-
-                if (!String.IsNullOrEmpty(LbxBusqueda.Text))
+                if (contadorEspacio != largo)
                 {
-                    //Cabeceras
-                    if (celda == 10)
+                    if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
                     {
-                        for (int k = 0; k < GridViewReporteCT.Columns.Count; k++)
+                        SLDocument sl = new SLDocument();
+                        int celda = 1;
+                        //Letras de las columnas para la generacion de excel
+                        string[] LETRA = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q" };
+                        //Texto plano
+                        sl.RenameWorksheet(SLDocument.DefaultFirstSheetName, "Reporte Estudiantes " + DateTime.Now.ToString("G"));
+                        sl.SetCellValue("A" + celda, "Rule");
+                        celda++;
+                        sl.SetCellValue("A" + celda, "The items with asterisk are required.At least one of family name and given name is required.");
+                        celda++;
+                        sl.SetCellValue("A" + celda, "Do NOT change the layout and column title in this template file. The importing may fail if changed.");
+                        celda++;
+                        sl.SetCellValue("A" + celda, "Supports adding persons to the existing person group whose name is separated by slash. For example, the name format of Group A under All Persons is All Persons/Group A.");
+                        celda++;
+                        sl.SetCellValue("A" + celda, "Start/End Time of Effective Period: The effective period of the person for access control and time & attendance. Format: yyyy/mm/dd HH:MM:SS.");
+                        celda++;
+                        sl.SetCellValue("A" + celda, "Domain Person and Domain Group Person don't support adding and editing person's basic information and additional information by importing.");
+                        celda++;
+                        sl.SetCellValue("A" + celda, "No more than five cards can be issued to one person. Each two card numbers should be separated by semicolon, e.g., 01;02;03;04;05.");
+                        celda++;
+                        sl.SetCellValue("A" + celda, "It supports editing the persons' additional information in a batch, the fields of which are already created in the system. Please enter the additional information according to the type. For single selection type, select one from the drop-down list.");
+                        celda++;
+                        sl.SetCellValue("A" + celda, "Supports custom attribute input formats separated by commas, for example: attribute name 1, attribute name 2");
+                        celda++;
+
+                        if (!String.IsNullOrEmpty(LbxBusqueda.Text))
                         {
-                            sl.SetCellValue("A" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("B" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("C" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("D" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("E" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("F" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("G" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("H" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("I" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("J" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("K" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("L" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("M" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("N" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("O" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("P" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            sl.SetCellValue("Q" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
-                            k++;
-                            celda++;
+                            //Cabeceras
+                            if (celda == 10)
+                            {
+                                for (int k = 0; k < GridViewReporteCT.Columns.Count; k++)
+                                {
+                                    sl.SetCellValue("A" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("B" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("C" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("D" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("E" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("F" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("G" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("H" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("I" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("J" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("K" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("L" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("M" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("N" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("O" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("P" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    sl.SetCellValue("Q" + celda, removeUnicode(GridViewReporteCT.Columns[k].ToString()));
+                                    k++;
+                                    celda++;
+                                }
+                            }
+
+                            //Llenado de las columnas con la informacion
+
+                            if (celda > 10)
+                            {
+                                string[] result = sustituirCaracteres("").Split('|');
+                                decimal registros = 0;
+                                decimal count = 0;
+                                int datos = 0;
+                                string[,] arrlist;
+                                string jerarquiaPerson;
+                                if (result.Count() > 16)
+                                {
+                                    registros = result.Count() / 13;
+                                    count = Math.Round(registros, 0);
+                                    arrlist = new string[Convert.ToInt32(count), 13];
+
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        for (int k = 0; k < 13; k++)
+                                        {
+                                            arrlist[i, k] = result[datos];
+                                            datos++;
+                                        }
+                                    }
+                                    int contador = GridViewReporteCT.Rows.Count;
+                                    for (int i = 0; i < contador; i++)
+                                    {
+
+                                        sl.SetCellValue("A" + celda, (arrlist[i, 5] ?? "").ToString()); //First Name
+                                        sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString()); //Last Name
+                                        sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString()); //ID
+                                        sl.SetCellValue("D" + celda, "Basic Person"); //TYPE
+                                        jerarquiaPerson = jerarquia((arrlist[i, 10] ?? "").ToString());
+                                        jerarquiaPerson = getBetween(jerarquiaPerson, "\"jerarquia\": \"", "\"");
+                                        sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + jerarquiaPerson.TrimEnd('-'));//+ (arrlist[i, 10] ?? "").ToString()); //Person Group
+                                        sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString()); //GENDER
+                                        sl.SetCellValue("G" + celda, ""); //Start Time of Effective Period
+                                        sl.SetCellValue("H" + celda, ""); //End Time of Effective Period
+                                        sl.SetCellValue("I" + celda, ""); //CARD
+                                        sl.SetCellValue("J" + celda, arrlist[i, 12].ToString().TrimEnd('-')); //EMAIL
+                                        sl.SetCellValue("K" + celda, (arrlist[i, 9] ?? "").ToString().TrimEnd('-')); //PHONE
+                                        sl.SetCellValue("L" + celda, ""); //REMARK
+                                        sl.SetCellValue("M" + celda, ""); //Dock Station Login Password
+                                        sl.SetCellValue("N" + celda, ""); //Support Issued Custom Properties
+                                        sl.SetCellValue("O" + celda, ""); //Skin-surface Temperature
+                                        sl.SetCellValue("P" + celda, ""); //Temperature Status
+                                        sl.SetCellValue("Q" + celda, (arrlist[i, 10] ?? "").ToString()); //DEPARTAMENTO
+                                        celda++;
+                                    }
+                                    if (result.Count() > 3)
+                                    {
+                                        //Nombre del archivo
+                                        string nombre = "Reporte Camara Termica Empleados " + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".xlsx";
+                                        //Lugar de almacenamiento
+                                        sl.SaveAs(CurrentDirectory + "ReportesCT/" + nombre);
+                                        Response.ContentType = "application/ms-excel";
+                                        Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                                        Response.TransmitFile(CurrentDirectory + "ReportesCT/" + nombre);
+                                    }
+                                    else
+                                    {
+                                        lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
+                                    }
+                                }
+                                else
+                                {
+                                    registros = result.Count() / 13;
+                                    count = Math.Round(registros, 0);
+                                    arrlist = new string[Convert.ToInt32(count), 13];
+
+                                    for (int i = 0; i < count; i++)
+                                    {
+                                        for (int k = 0; k < 13; k++)
+                                        {
+                                            arrlist[i, k] = result[datos];
+                                            datos++;
+                                        }
+                                    }
+                                    int contador = GridViewReporteCT.Rows.Count;
+                                    for (int i = 0; i < contador; i++)
+                                    {
+
+                                        sl.SetCellValue("A" + celda, (arrlist[i, 5] ?? "").ToString()); //FIRS NAME
+                                        sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString()); //LAST NAME
+                                        sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString()); //ID
+                                        sl.SetCellValue("D" + celda, "Basic Person"); //TYPE
+                                        jerarquiaPerson = jerarquia((arrlist[i, 10] ?? "").ToString());
+                                        jerarquiaPerson = getBetween(jerarquiaPerson, "\"jerarquia\": \"", "\"");
+                                        sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + jerarquiaPerson);//(arrlist[i, 10] ?? "").ToString()); //PERSON GROUP
+                                        sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString()); //GENDER
+                                        sl.SetCellValue("G" + celda, ""); //Start Time of Effective Period
+                                        sl.SetCellValue("H" + celda, ""); //End Time of Effective Period
+                                        sl.SetCellValue("I" + celda, ""); //CARD
+                                        sl.SetCellValue("J" + celda, arrlist[i, 12].ToString()); //EMAIL
+                                        sl.SetCellValue("K" + celda, (arrlist[i, 9] ?? "").ToString()); //PHONE
+                                        sl.SetCellValue("L" + celda, ""); //REMARK
+                                        sl.SetCellValue("M" + celda, ""); //Dock Station Login Password
+                                        sl.SetCellValue("N" + celda, ""); //Support Issued Custom Properties
+                                        sl.SetCellValue("O" + celda, ""); //Skin-surface Temperature
+                                        sl.SetCellValue("P" + celda, ""); //Temperature Status
+                                        sl.SetCellValue("Q" + celda, (arrlist[i, 10] ?? "").ToString()); //DEPARTAMENTO
+                                        celda++;
+                                    }
+                                    if (result.Count() > 3)
+                                    {
+                                        //Nombre del archivo
+                                        string nombre = "Reporte Camara Termica Empleados " + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".xlsx";
+                                        //Lugar de almacenamiento
+                                        sl.SaveAs(CurrentDirectory + "ReportesCT/" + nombre);
+                                        Response.ContentType = "application/ms-excel";
+                                        Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
+                                        Response.TransmitFile(CurrentDirectory + "ReportesCT/" + nombre);
+                                    }
+                                    else
+                                    {
+                                        lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
+                                    }
+                                }
+                            }
                         }
                     }
-
-                    //Llenado de las columnas con la informacion
-
-                    if (celda > 10)
+                    else
                     {
-                        string[] result = sustituirCaracteres("").Split('|');
-                        decimal registros = 0;
-                        decimal count = 0;
-                        int datos = 0;
-                        string[,] arrlist;
-                        string jerarquiaPerson;
-                        if (result.Count() > 16)
-                        {
-                            registros = result.Count() / 13;
-                            count = Math.Round(registros, 0);
-                            arrlist = new string[Convert.ToInt32(count), 13];
-
-                            for (int i = 0; i < count; i++)
-                            {
-                                for (int k = 0; k < 13; k++)
-                                {
-                                    arrlist[i, k] = result[datos];
-                                    datos++;
-                                }
-                            }
-                            int contador = GridViewReporteCT.Rows.Count;
-                            for (int i = 0; i < contador; i++)
-                            {
-
-                                sl.SetCellValue("A" + celda, (arrlist[i, 5] ?? "").ToString()); //First Name
-                                sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString()); //Last Name
-                                sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString()); //ID
-                                sl.SetCellValue("D" + celda, "Basic Person"); //TYPE
-                                jerarquiaPerson = jerarquia((arrlist[i, 10] ?? "").ToString());
-                                jerarquiaPerson = getBetween(jerarquiaPerson, "\"jerarquia\": \"", "\"");
-                                sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + jerarquiaPerson.TrimEnd('-'));//+ (arrlist[i, 10] ?? "").ToString()); //Person Group
-                                sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString()); //GENDER
-                                sl.SetCellValue("G" + celda, ""); //Start Time of Effective Period
-                                sl.SetCellValue("H" + celda, ""); //End Time of Effective Period
-                                sl.SetCellValue("I" + celda, ""); //CARD
-                                sl.SetCellValue("J" + celda, arrlist[i, 12].ToString().TrimEnd('-')); //EMAIL
-                                sl.SetCellValue("K" + celda, (arrlist[i, 9] ?? "").ToString().TrimEnd('-')); //PHONE
-                                sl.SetCellValue("L" + celda, ""); //REMARK
-                                sl.SetCellValue("M" + celda, ""); //Dock Station Login Password
-                                sl.SetCellValue("N" + celda, ""); //Support Issued Custom Properties
-                                sl.SetCellValue("O" + celda, ""); //Skin-surface Temperature
-                                sl.SetCellValue("P" + celda, ""); //Temperature Status
-                                sl.SetCellValue("Q" + celda, (arrlist[i, 10] ?? "").ToString()); //DEPARTAMENTO
-                                celda++;
-                            }
-                            if (result.Count() > 3)
-                            {
-                                //Nombre del archivo
-                                string nombre = "Reporte Camara Termica Empleados " + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".xlsx";
-                                //Lugar de almacenamiento
-                                sl.SaveAs(CurrentDirectory + "ReportesCT/" + nombre);
-                                Response.ContentType = "application/ms-excel";
-                                Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-                                Response.TransmitFile(CurrentDirectory + "ReportesCT/" + nombre);
-                            }
-                            else
-                            {
-                                lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
-                            }
-                        }
-                        else
-                        {
-                            registros = result.Count() / 13;
-                            count = Math.Round(registros, 0);
-                            arrlist = new string[Convert.ToInt32(count), 13];
-
-                            for (int i = 0; i < count; i++)
-                            {
-                                for (int k = 0; k < 13; k++)
-                                {
-                                    arrlist[i, k] = result[datos];
-                                    datos++;
-                                }
-                            }
-                            int contador = GridViewReporteCT.Rows.Count;
-                            for (int i = 0; i < contador; i++)
-                            {
-
-                                sl.SetCellValue("A" + celda, (arrlist[i, 5] ?? "").ToString()); //FIRS NAME
-                                sl.SetCellValue("B" + celda, (arrlist[i, 6] ?? "").ToString()); //LAST NAME
-                                sl.SetCellValue("C" + celda, (arrlist[i, 7] ?? "").ToString()); //ID
-                                sl.SetCellValue("D" + celda, "Basic Person"); //TYPE
-                                jerarquiaPerson = jerarquia((arrlist[i, 10] ?? "").ToString());
-                                jerarquiaPerson = getBetween(jerarquiaPerson, "\"jerarquia\": \"", "\"");
-                                sl.SetCellValue("E" + celda, "UNIS/" + (arrlist[i, 8] ?? "").ToString() + "/" + jerarquiaPerson);//(arrlist[i, 10] ?? "").ToString()); //PERSON GROUP
-                                sl.SetCellValue("F" + celda, (arrlist[i, 11] ?? "").ToString()); //GENDER
-                                sl.SetCellValue("G" + celda, ""); //Start Time of Effective Period
-                                sl.SetCellValue("H" + celda, ""); //End Time of Effective Period
-                                sl.SetCellValue("I" + celda, ""); //CARD
-                                sl.SetCellValue("J" + celda, arrlist[i, 12].ToString()); //EMAIL
-                                sl.SetCellValue("K" + celda, (arrlist[i, 9] ?? "").ToString()); //PHONE
-                                sl.SetCellValue("L" + celda, ""); //REMARK
-                                sl.SetCellValue("M" + celda, ""); //Dock Station Login Password
-                                sl.SetCellValue("N" + celda, ""); //Support Issued Custom Properties
-                                sl.SetCellValue("O" + celda, ""); //Skin-surface Temperature
-                                sl.SetCellValue("P" + celda, ""); //Temperature Status
-                                sl.SetCellValue("Q" + celda, (arrlist[i, 10] ?? "").ToString()); //DEPARTAMENTO
-                                celda++;
-                            }
-                            if (result.Count() > 3)
-                            {
-                                //Nombre del archivo
-                                string nombre = "Reporte Camara Termica Empleados " + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".xlsx";
-                                //Lugar de almacenamiento
-                                sl.SaveAs(CurrentDirectory + "ReportesCT/" + nombre);
-                                Response.ContentType = "application/ms-excel";
-                                Response.AddHeader("content-disposition", "attachment; filename=" + nombre);
-                                Response.TransmitFile(CurrentDirectory + "ReportesCT/" + nombre);
-                            }
-                            else
-                            {
-                                lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
-                            }
-                        }
+                        lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
                     }
                 }
             }
             else
             {
-                lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
+                lblBusqueda.Text = "La fecha inicial debe de ser menor a la fecha final";
             }
         }
 
@@ -1518,6 +1547,21 @@ namespace ReportesUnis
             lblDescarga.Text = "";
             LbxBusqueda.Enabled = true;
         }
+        public int contadorEspacios(int largo, string cadena)
+        {
+            int contador = 0;
+            string letra;
 
+            for (int i = 0; i < largo; i++)
+            {
+                letra = cadena.Substring(i, 1);
+
+                if (letra == " ")
+                {
+                    contador++;
+                }
+            }
+            return contador;
+        }
     }
 }

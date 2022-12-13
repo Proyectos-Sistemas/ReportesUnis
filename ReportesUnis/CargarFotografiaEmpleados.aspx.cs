@@ -88,9 +88,6 @@ namespace ReportesUnis
             string consulta = consultaUser("nationalIdentifiers", personId);
             if (cantidad >= 0)
                 consulta = consulta.Substring(0, cantidad);
-            //string consulta2 = consulta.Replace("\n    \"", "|");
-            //string[] result = consulta2.Split('|');
-            //string personID = getBetween(consulta, "\"PersonId\" : ", ",");
             credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
@@ -395,7 +392,7 @@ namespace ReportesUnis
                     ContadorArchivos++;
                     Error = false;
                     string ExtensionFotografia = Path.GetExtension(uploadedFile.FileName).ToLower();
-                    string[] ExtensionesPermitidas = { ".jpeg", ".jpg" };
+                    string[] ExtensionesPermitidas = { ".jpeg", ".jpg", ".png" };
 
                     string NombreImagen = Path.GetFileNameWithoutExtension(uploadedFile.FileName);
                     string[] result = sustituirCaracteres(NombreImagen).Split('|');
@@ -427,7 +424,7 @@ namespace ReportesUnis
                                         {
                                             byte[] Imagen = br.ReadBytes((Int32)fs.Length);
                                             string b64 = Convert.ToBase64String(Imagen, 0, Imagen.Length);
-                                            string consultaperfil = "\"PrimaryFlag\" : ";
+                                            string consultaperfil = "\"PhotoId\" : "+PhotoId+",\n      \"PrimaryFlag\" : ";
                                             string perfil = getBetween(consulta, consultaperfil, ",\n");
                                             var Imgn = "{\"ImageName\" : \"" + NombreImagen + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + b64 + "\"}";
                                             if (perfil == "true" && ImageId != "")
@@ -513,38 +510,6 @@ namespace ReportesUnis
             Response.TransmitFile(ArchivoBitacora);
             Response.Flush();
             Response.End();
-        }
-
-        protected void DownloadFile(object sender, EventArgs e)
-        {
-            //DecargaFoto("");
-            //int id = int.Parse((sender as LinkButton).CommandArgument);
-            //byte[] bytes;
-            //string fileName, contentType;
-            //string constr = TxtURL.Text;
-            //using (OracleConnection con = new OracleConnection(constr))
-            //{
-            //    using (OracleCommand cmd = new OracleCommand())
-            //    {
-            //        cmd.CommandText = "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension FROM SYSADM.PS_EMPL_PHOTO P WHERE EMPLID=:Id";
-            //        //cmd.CommandText = "select Name, Data, ContentType from tblFiles where Id=:Id";
-            //        //cmd.Parameters.AddWithValue(":Id", id);
-            //        cmd.Parameters.Add(new OracleParameter("Id", id));
-            //        cmd.Connection = con;
-            //        con.Open();
-            //        using (OracleDataReader sdr = cmd.ExecuteReader())
-            //        {
-            //            sdr.Read();
-
-            //            bytes = (byte[])sdr["EMPLOYEE_PHOTO"];
-            //            contentType = sdr["Extension"].ToString();
-            //            fileName = sdr["EMPLID"].ToString() + "." + contentType.ToLower();
-            //            Console.WriteLine(fileName);
-            //        }
-            //        con.Close();
-            //    }
-            //}
-
         }
 
         public static Image LoadBase64(string base64)
