@@ -1533,134 +1533,141 @@ namespace ReportesUnis
         {
             string sustituto = "";
 
-            if (desc == 0)
+            try
             {
-                sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('"', '\n');
-                sustituto = Regex.Replace(sustituto, @" \n+", "\n");
-                sustituto = Regex.Replace(sustituto, @"\n+", "");
-                sustituto = Regex.Replace(sustituto, @"--", " ");
-                if (sustituto.Length > 110)
+                if (desc == 0)
                 {
-                    if (String.IsNullOrEmpty(TxtBuscador.Text) && String.IsNullOrEmpty(CldrCiclosInicio.Text))
+                    sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('"', '\n');
+                    sustituto = Regex.Replace(sustituto, @" \n+", "\n");
+                    sustituto = Regex.Replace(sustituto, @"\n+", "");
+                    sustituto = Regex.Replace(sustituto, @"--", " ");
+                    if (sustituto.Length > 110)
                     {
-                        sustituto = sustituto.Remove(0, 136);
+                        if (String.IsNullOrEmpty(TxtBuscador.Text) && String.IsNullOrEmpty(CldrCiclosInicio.Text))
+                        {
+                            sustituto = sustituto.Remove(0, 136);
+                        }
+                        else
+                        {
+                            //Se valida que tipo de busqueda se realiza pues este dato lo devuelve el string sustituto y dependiendo
+                            //de eso son los caracteres que se eliminan para que unicamente quede la informacion que se necesita.
+
+                            if (LbxBusqueda.Text.Equals("Nombre") && (String.IsNullOrEmpty(LbxBusqueda2.Text) || LbxBusqueda2.Visible == false))
+                            {
+                                int largo = 245;
+                                sustituto = sustituto.Remove(0, largo);
+                            }
+                            else if (LbxBusqueda.Text.Equals("Apellido") && (String.IsNullOrEmpty(LbxBusqueda2.Text) || LbxBusqueda2.Visible == false))
+                            {
+                                int largo = 250;
+                                sustituto = sustituto.Remove(0, largo);
+                            }
+                            else if (LbxBusqueda.Text.Equals("DPI") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                            {
+                                int largo = 245;
+                                sustituto = sustituto.Remove(0, largo);
+                            }
+                            else if (LbxBusqueda.Text.Equals("Dependencia") && (String.IsNullOrEmpty(LbxBusqueda2.Text) || LbxBusqueda2.Visible == false))
+                            {
+                                int largo = 253;
+                                sustituto = sustituto.Remove(0, largo);
+                            }
+                            else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido")))
+                            {
+                                int largo = 244;
+                                sustituto = sustituto.Remove(0, largo);
+                            }
+                            else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI")))
+                            {
+                                int largo = 241;
+                                sustituto = sustituto.Remove(0, largo);
+                            }
+                            else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia")))
+                            {
+                                int largo = 249;
+                                sustituto = sustituto.Remove(0, largo);
+                            }
+                            else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI")))
+                            {
+                                int largo = 245;
+                                sustituto = sustituto.Remove(0, largo);
+
+                            }
+                            else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia")))
+                            {
+                                int largo = 253;
+                                sustituto = sustituto.Remove(0, largo);
+                            }
+                            else if ((LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia")))
+                            {
+                                int largo = 248;
+                                sustituto = sustituto.Remove(0, largo);
+                            }
+                        }
                     }
-                    else
+                }
+                else
+                {
+                    sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('\"', '\t');
+                    sustituto = Regex.Replace(sustituto, @"\n+", " ");
+                    sustituto = Regex.Replace(sustituto, @"\t", "");
+
+                    if (LbxBusqueda.Text.Equals("Nombre") && String.IsNullOrEmpty(LbxBusqueda2.Text))
                     {
-                        //Se valida que tipo de busqueda se realiza pues este dato lo devuelve el string sustituto y dependiendo
-                        //de eso son los caracteres que se eliminan para que unicamente quede la informacion que se necesita.
+                        int largo = 55;
+                        sustituto = sustituto.Remove(0, largo);
+                    }
+                    else if (LbxBusqueda.Text.Equals("Apellido") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                    {
+                        int largo = 57;
+                        sustituto = sustituto.Remove(0, largo);
+                    }
+                    else if (LbxBusqueda.Text.Equals("DPI") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                    {
+                        int largo = 52;
+                        sustituto = sustituto.Remove(0, largo);
+                    }
+                    else if (LbxBusqueda.Text.Equals("Dependencia") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                    {
+                        int largo = 60;
+                        sustituto = sustituto.Remove(0, largo);
+                    }
+                    else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido")))
+                    {
+                        int largo = 63;
+                        sustituto = sustituto.Remove(0, largo);
+                    }
+                    else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI")))
+                    {
+                        int largo = 58;
+                        sustituto = sustituto.Remove(0, largo);
+                    }
+                    else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia")))
+                    {
+                        int largo = 66;
+                        sustituto = sustituto.Remove(0, largo);
+                    }
+                    else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI")))
+                    {
+                        int largo = 60;
+                        sustituto = sustituto.Remove(0, largo);
 
-                        if (LbxBusqueda.Text.Equals("Nombre") && (String.IsNullOrEmpty(LbxBusqueda2.Text) || LbxBusqueda2.Visible == false))
-                        {
-                            int largo = 245;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if (LbxBusqueda.Text.Equals("Apellido") && (String.IsNullOrEmpty(LbxBusqueda2.Text) || LbxBusqueda2.Visible == false))
-                        {
-                            int largo = 250;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if (LbxBusqueda.Text.Equals("DPI") && String.IsNullOrEmpty(LbxBusqueda2.Text))
-                        {
-                            int largo = 245;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if (LbxBusqueda.Text.Equals("Dependencia") && (String.IsNullOrEmpty(LbxBusqueda2.Text) || LbxBusqueda2.Visible == false))
-                        {
-                            int largo = 253;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido")))
-                        {
-                            int largo = 244;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI")))
-                        {
-                            int largo = 241;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia")))
-                        {
-                            int largo = 249;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI")))
-                        {
-                            int largo = 245;
-                            sustituto = sustituto.Remove(0, largo);
-
-                        }
-                        else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia")))
-                        {
-                            int largo = 253;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
-                        else if ((LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia")))
-                        {
-                            int largo = 248;
-                            sustituto = sustituto.Remove(0, largo);
-                        }
+                    }
+                    else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia")))
+                    {
+                        int largo = 68;
+                        sustituto = sustituto.Remove(0, largo);
+                    }
+                    else if ((LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia")))
+                    {
+                        int largo = 63;
+                        sustituto = sustituto.Remove(0, largo);
                     }
                 }
             }
-            else
+            catch (Exception)
             {
-                sustituto = DecodeStringFromBase64(Consultar(dpi)).Replace('\"', '\t');
-                sustituto = Regex.Replace(sustituto, @"\n+", " ");
-                sustituto = Regex.Replace(sustituto, @"\t", "");
 
-                if (LbxBusqueda.Text.Equals("Nombre") && String.IsNullOrEmpty(LbxBusqueda2.Text))
-                {
-                    int largo = 55;
-                    sustituto = sustituto.Remove(0, largo);
-                }
-                else if (LbxBusqueda.Text.Equals("Apellido") && String.IsNullOrEmpty(LbxBusqueda2.Text))
-                {
-                    int largo = 57;
-                    sustituto = sustituto.Remove(0, largo);
-                }
-                else if (LbxBusqueda.Text.Equals("DPI") && String.IsNullOrEmpty(LbxBusqueda2.Text))
-                {
-                    int largo = 52;
-                    sustituto = sustituto.Remove(0, largo);
-                }
-                else if (LbxBusqueda.Text.Equals("Dependencia") && String.IsNullOrEmpty(LbxBusqueda2.Text))
-                {
-                    int largo = 60;
-                    sustituto = sustituto.Remove(0, largo);
-                }
-                else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido")))
-                {
-                    int largo = 63;
-                    sustituto = sustituto.Remove(0, largo);
-                }
-                else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI")))
-                {
-                    int largo = 58;
-                    sustituto = sustituto.Remove(0, largo);
-                }
-                else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia")))
-                {
-                    int largo = 66;
-                    sustituto = sustituto.Remove(0, largo);
-                }
-                else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI")))
-                {
-                    int largo = 60;
-                    sustituto = sustituto.Remove(0, largo);
-
-                }
-                else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia")))
-                {
-                    int largo = 68;
-                    sustituto = sustituto.Remove(0, largo);
-                }
-                else if ((LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia")))
-                {
-                    int largo = 63;
-                    sustituto = sustituto.Remove(0, largo);
-                }
             }
             return sustituto;
         }
@@ -1672,7 +1679,7 @@ namespace ReportesUnis
             int contador2 = contadorEspacios(largo2, TxtBuscador2.Text);
             if (Convert.ToDateTime(CldrCiclosInicio.Text) < Convert.ToDateTime(CldrCiclosFin.Text))
             {
-                if (contador != largo && contador2 != largo2)
+                if (contador != largo && (contador2 != largo2 || TxtBuscador2.Visible != true))
                 {
                     if ((!ChBusqueda.Checked && (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrWhiteSpace(TxtBuscador.Text)) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)) || (ChBusqueda.Checked && (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrWhiteSpace(TxtBuscador.Text)) && (!String.IsNullOrEmpty(TxtBuscador2.Text) || !String.IsNullOrWhiteSpace(TxtBuscador2.Text)) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)))
                     {
@@ -2005,7 +2012,7 @@ namespace ReportesUnis
                 }
                 else
                 {
-                    lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
+                    lblBusqueda.Text = "Es necesario que ingrese valores para realizar una búsqueda.";
                 }
             }
             else
@@ -2029,40 +2036,64 @@ namespace ReportesUnis
             int contador = contadorEspacios(largo, TxtBuscador.Text);
             int contador2 = contadorEspacios(largo2, TxtBuscador2.Text);
 
-            if (Convert.ToDateTime(CldrCiclosInicio.Text) < Convert.ToDateTime(CldrCiclosFin.Text))
+            if ((!String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)))
             {
-                if (contador != largo && contador2 != largo2)
+                if (Convert.ToDateTime(CldrCiclosInicio.Text) < Convert.ToDateTime(CldrCiclosFin.Text))
                 {
-                    if ((!ChBusqueda.Checked && !String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)) || (ChBusqueda.Checked && !String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(TxtBuscador2.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)))
+                    if (contador != largo && (contador2 != largo2 || TxtBuscador2.Visible != true))
                     {
+                        if ((!ChBusqueda.Checked && !String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)) || (ChBusqueda.Checked && !String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(TxtBuscador2.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)))
                         {
-                            buscar();
-                            //GridViewReporte.DataSource = "";
-                            //if (!ChBusqueda.Checked)
-                            //{
-                            //    LbxBusqueda2.Text = "";
-                            //}
-                            string[] result = sustituirCaracteres("").Split('|');
-                            decimal registros = 0;
-                            decimal count = 0;
-                            int datos = 0;
-                            string[,] arrlist;
-
-                            if (result.Count() > 20)
                             {
-                                if (!ChBusqueda.Checked)
+                                buscar();
+                                //GridViewReporte.DataSource = "";
+                                //if (!ChBusqueda.Checked)
+                                //{
+                                //    LbxBusqueda2.Text = "";
+                                //}
+                                string[] result = sustituirCaracteres("").Split('|');
+                                decimal registros = 0;
+                                decimal count = 0;
+                                int datos = 0;
+                                string[,] arrlist;
+
+                                if (result.Count() > 20)
                                 {
-                                    //Busqueda simple por Nombre, Apellido, DPI o dependencia
-                                    registros = result.Count() / 26;
-                                    count = Math.Round(registros, 0);
-                                    if (registros == 0)
-                                        count = 1;
-                                    arrlist = new string[Convert.ToInt32(count), 26];
-                                    if (result.Count() > 25)
+                                    if (!ChBusqueda.Checked)
                                     {
+                                        //Busqueda simple por Nombre, Apellido, DPI o dependencia
+                                        registros = result.Count() / 26;
+                                        count = Math.Round(registros, 0);
+                                        if (registros == 0)
+                                            count = 1;
+                                        arrlist = new string[Convert.ToInt32(count), 26];
+                                        if (result.Count() > 25)
+                                        {
+                                            for (int i = 0; i < count; i++)
+                                            {
+                                                for (int k = 0; k < 26; k++)
+                                                {
+                                                    if (result[datos].Equals("-"))
+                                                    {
+                                                        result[datos] = "";
+                                                    }
+                                                    arrlist[i, k] = result[datos];
+                                                    datos++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //Busqueda multiple por asignacion
+                                        registros = result.Count() / 27;
+                                        count = Math.Round(registros, 0);
+                                        arrlist = new string[Convert.ToInt32(count), 27];
+                                        if (registros == 0)
+                                            count = 1;
                                         for (int i = 0; i < count; i++)
                                         {
-                                            for (int k = 0; k < 26; k++)
+                                            for (int k = 0; k < 27; k++)
                                             {
                                                 if (result[datos].Equals("-"))
                                                 {
@@ -2073,271 +2104,95 @@ namespace ReportesUnis
                                             }
                                         }
                                     }
-                                }
-                                else
-                                {
-                                    //Busqueda multiple por asignacion
-                                    registros = result.Count() / 27;
-                                    count = Math.Round(registros, 0);
-                                    arrlist = new string[Convert.ToInt32(count), 27];
-                                    if (registros == 0)
-                                        count = 1;
-                                    for (int i = 0; i < count; i++)
-                                    {
-                                        for (int k = 0; k < 27; k++)
-                                        {
-                                            if (result[datos].Equals("-"))
-                                            {
-                                                result[datos] = "";
-                                            }
-                                            arrlist[i, k] = result[datos];
-                                            datos++;
-                                        }
-                                    }
-                                }
 
-                                try
-                                {
-                                    var bday = "";
-                                    var dia = "";
-                                    var mes = "";
-                                    var anio = "";
-                                    int flag_pas = 0;
-                                    var nacionalidad = "";
-                                    var Pasaporte = "";
-                                    var Cedula = "";
-                                    var FLAG_PAS = "";
-                                    var FLAG_DPI = "";
-                                    var FLAG_CED = "";
-                                    var DPI = "";
-
-                                    DataSetLocalRpt dsReporte = new DataSetLocalRpt();
                                     try
                                     {
-                                        string texto = "";
-                                        int aux = 100;
-                                        //Valida si no se hace busqueda multiple
-                                        if (!ChBusqueda.Checked && aux == 100)
-                                        {
-                                            //Generacion de matriz para llenado de grid desde una consulta
-                                            for (int i = 0; i < count; i++)
-                                            {
-                                                if (!arrlist[i, 8].ToString().Equals(""))
-                                                {
-                                                    bday = arrlist[i, 8].ToString().Substring(0, 10);
-                                                    anio = bday.Substring(0, 4);
-                                                    mes = bday.Substring(5, 2);
-                                                    dia = bday.Substring(8, 2);
-                                                    bday = dia + "-" + mes + "-" + anio;
-                                                }
-                                                else
-                                                {
-                                                    bday = "";
-                                                }
+                                        var bday = "";
+                                        var dia = "";
+                                        var mes = "";
+                                        var anio = "";
+                                        int flag_pas = 0;
+                                        var nacionalidad = "";
+                                        var Pasaporte = "";
+                                        var Cedula = "";
+                                        var FLAG_PAS = "";
+                                        var FLAG_DPI = "";
+                                        var FLAG_CED = "";
+                                        var DPI = "";
 
-                                                string carne = (arrlist[i, 18] ?? "").ToString();
-                                                if ((!String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
-                                                     (String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
-                                                     (String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
-                                                     (!String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
-                                                     (String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
-                                                     (!String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
-                                                     (!String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())))
+                                        DataSetLocalRpt dsReporte = new DataSetLocalRpt();
+                                        try
+                                        {
+                                            string texto = "";
+                                            int aux = 100;
+                                            //Valida si no se hace busqueda multiple
+                                            if (!ChBusqueda.Checked && aux == 100)
+                                            {
+                                                //Generacion de matriz para llenado de grid desde una consulta
+                                                for (int i = 0; i < count; i++)
                                                 {
-                                                    if ((arrlist[i, 4] ?? "").ToString() == carne) //DPI
+                                                    if (!arrlist[i, 8].ToString().Equals(""))
                                                     {
-                                                        Pasaporte = "";
-                                                        FLAG_PAS = "0";
-                                                        FLAG_DPI = "1";
-                                                        DPI = carne;
-                                                        FLAG_CED = "0";
-                                                        arrlist[i, 19] = "";
-                                                        arrlist[i, 20] = "";
-                                                        flag_pas = 0;
-                                                    }
-                                                    else if ((arrlist[i, 19] ?? "").ToString() == carne)
-                                                    {
-                                                        Pasaporte = carne;
-                                                        FLAG_PAS = "1";
-                                                        FLAG_DPI = "0";
-                                                        FLAG_CED = "0";
-                                                        Cedula = "";
-                                                        arrlist[i, 4] = "";
-                                                        arrlist[i, 20] = "";
-                                                        flag_pas = 1;
-                                                        DPI = "";
-                                                    }
-                                                    else if ((arrlist[i, 20] ?? "").ToString() == carne)
-                                                    {
-                                                        Pasaporte = "";
-                                                        FLAG_PAS = "0";
-                                                        FLAG_DPI = "0";
-                                                        Cedula = carne;
-                                                        FLAG_CED = "1";
+                                                        bday = arrlist[i, 8].ToString().Substring(0, 10);
+                                                        anio = bday.Substring(0, 4);
+                                                        mes = bday.Substring(5, 2);
+                                                        dia = bday.Substring(8, 2);
+                                                        bday = dia + "-" + mes + "-" + anio;
                                                     }
                                                     else
                                                     {
-                                                        Pasaporte = "";
-                                                        FLAG_PAS = "0";
-                                                        FLAG_DPI = "0";
-                                                        FLAG_CED = "0";
-                                                        Cedula = "";
-                                                        DPI = "";
+                                                        bday = "";
                                                     }
-                                                }
-                                                else
-                                                {
-                                                    Pasaporte = "";
-                                                    FLAG_PAS = "0";
-                                                    FLAG_DPI = "0";
-                                                    FLAG_CED = "0";
-                                                    DPI = "";
-                                                    flag_pas = 2;
-                                                }
 
-
-                                                if (String.IsNullOrWhiteSpace((arrlist[i, 22] ?? "").ToString()) && flag_pas == 1)
-                                                {
-                                                    nacionalidad = "Condición Migrante";
-                                                }
-                                                else if (String.IsNullOrWhiteSpace((arrlist[i, 22] ?? "").ToString()) && flag_pas == 0)
-                                                {
-                                                    nacionalidad = "Guatemala";
-                                                }
-                                                else
-                                                {
-                                                    nacionalidad = (arrlist[i, 22] ?? "").ToString();
-                                                }
-
-                                                texto = "|" + //IDUNIV
-                                                (arrlist[i, 12] ?? "").ToString() + " " + (arrlist[i, 14] ?? "").ToString() + "|" + //NOM_IMP
-                                                (arrlist[i, 12] ?? "").ToString() + "|" +//NOM1
-                                                (arrlist[i, 13] ?? "").ToString() + "|" +//NOM2
-                                                (arrlist[i, 14] ?? "").ToString() + "|" +//APE1
-                                                (arrlist[i, 15] ?? "").ToString() + "|" +//APE2
-                                                (arrlist[i, 16] ?? "").ToString() + "|" +//APE3
-                                                bday + "|" +//FE_NAC
-                                                (arrlist[i, 17] ?? "").ToString() + "|" +//SEXO
-                                                (arrlist[i, 7] ?? "").ToString() + "|" +//EST_CIV
-                                                nacionalidad + "|" +//NACIONALIDAD
-                                                FLAG_CED + "|" +//FLAG_CED
-                                                Cedula + "|" +//CEDULA
-                                                "|" +//DEPCED
-                                                "|" +//MUNCED
-                                                FLAG_DPI + "|" +//FLAG_DPI
-                                                DPI + "|" +//DPI
-                                                FLAG_PAS + "|" +//FLAG_PAS
-                                                Pasaporte + "|" +//PASS
-                                                "|" +//PAIS_PAS
-                                                (arrlist[i, 21] ?? "").ToString() + "|" +//NIT
-                                                "|" +//PASI_NIT
-                                                "|" +//PROF
-                                                (arrlist[i, 9] ?? "").ToString() + "|" +//DIRECCION
-                                                "|" +//CASA
-                                                "|" +//APTO
-                                                (arrlist[i, 23] ?? "").ToString() + "|" +//ZONA
-                                                "|" +//COL
-                                                (arrlist[i, 10] ?? "").ToString() + "|" +//MUNRES
-                                                (arrlist[i, 11] ?? "").ToString() + "|" +//DEPRES
-                                                (arrlist[i, 6] ?? "").ToString() + "|" +//TEL
-                                                "|" +//CEL
-                                                (arrlist[i, 24] ?? "").ToString().Replace("\t  ", "") + "|" +//EMAIL
-                                                carne + "|" +//CARNE
-                                                "|" +//CARR
-                                                (arrlist[i, 5] ?? "").ToString() + "|" +//FACUL                                         
-                                                "|" +//COD_EMP_U
-                                                "|" +//PUESTO
-                                                "|" +//DEP_EMP_U
-                                                "|" +//COD_BARRAS
-                                                "|" +//TIP_PER
-                                                "|" +//ACCION
-                                                "|" +//FOTO
-                                                "|" +//TIPO_CTA
-                                                "|" +//NO_CTA_BI
-                                                "|" +//F_U
-                                                "|" +//H_U
-                                                "|" +//TIP_ACC
-                                                "|" +//EMP_TRAB
-                                                "|" +//FEC_IN_TR
-                                                "|" +//ING_TR
-                                                "|" +//EGR_TR
-                                                "|" +//MONE_TR
-                                                "|" +//PUESTO_TR
-                                                "|" +//LUG_EMP
-                                                "|" +//FE_IN_EMP
-                                                "|" +//TEL_TR
-                                                "|" +//DIR_TR
-                                                "|" +//ZONA_TR
-                                                "|" +//DEP_TR
-                                                "|" +//MUNI_TR
-                                                "|" +//PAIS_TR
-                                                "|" +//ACT_EC
-                                                "|" +//OTRA_NA
-                                                "|" +//CONDMIG
-                                                "|";//O_CONDMIG
-                                                txtFile += texto;
-                                                txtFile += "\r\n";
-                                            }
-                                            aux = 500;
-                                        }
-                                        else if (ChBusqueda.Checked && aux == 100)
-                                        {
-                                            int i = 0;
-                                            for (i = 0; i < count; i++)
-                                            {
-                                                if (!arrlist[i, 9].ToString().Equals(""))
-                                                {
-                                                    bday = arrlist[i, 9].ToString().Substring(0, 10);
-                                                    anio = bday.Substring(0, 4);
-                                                    mes = bday.Substring(5, 2);
-                                                    dia = bday.Substring(8, 2);
-                                                    bday = dia + "-" + mes + "-" + anio;
-                                                }
-                                                else
-                                                {
-                                                    bday = "";
-                                                }
-
-                                                string carne = (arrlist[i, 19] ?? "").ToString();
-                                                if ((!String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
-                                                    (String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
-                                                    (String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
-                                                    (!String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
-                                                    (String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
-                                                    (!String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
-                                                    (!String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())))
-                                                {
-                                                    if ((arrlist[i, 5] ?? "").ToString() == carne)//DPI
+                                                    string carne = (arrlist[i, 18] ?? "").ToString();
+                                                    if ((!String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
+                                                         (String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
+                                                         (String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
+                                                         (!String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
+                                                         (String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
+                                                         (!String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())) ||
+                                                         (!String.IsNullOrWhiteSpace((arrlist[i, 4] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 19] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString())))
                                                     {
-                                                        Pasaporte = "";
-                                                        FLAG_PAS = "0";
-                                                        FLAG_DPI = "1";
-                                                        DPI = carne;
-                                                        FLAG_CED = "0";
-                                                        arrlist[i, 21] = "";
-                                                        arrlist[i, 20] = "";
-                                                        flag_pas = 0;
-                                                    }
-                                                    else if ((arrlist[i, 20] ?? "").ToString() == carne)//PASAPORTE
-                                                    {
-                                                        Pasaporte = carne;
-                                                        FLAG_PAS = "1";
-                                                        FLAG_DPI = "0";
-                                                        FLAG_CED = "0";
-                                                        arrlist[i, 5] = "";
-                                                        arrlist[i, 21] = "";
-                                                        Cedula = "";
-                                                        flag_pas = 1;
-                                                        DPI = "";
-                                                    }
-                                                    else if ((arrlist[i, 21] ?? "").ToString() == carne) //CEDULA
-                                                    {
-                                                        Pasaporte = carne;
-                                                        FLAG_PAS = "1";
-                                                        FLAG_DPI = "0";
-                                                        FLAG_CED = "0";
-                                                        Cedula = "";
-                                                        flag_pas = 1;
+                                                        if ((arrlist[i, 4] ?? "").ToString() == carne) //DPI
+                                                        {
+                                                            Pasaporte = "";
+                                                            FLAG_PAS = "0";
+                                                            FLAG_DPI = "1";
+                                                            DPI = carne;
+                                                            FLAG_CED = "0";
+                                                            arrlist[i, 19] = "";
+                                                            arrlist[i, 20] = "";
+                                                            flag_pas = 0;
+                                                        }
+                                                        else if ((arrlist[i, 19] ?? "").ToString() == carne)
+                                                        {
+                                                            Pasaporte = carne;
+                                                            FLAG_PAS = "1";
+                                                            FLAG_DPI = "0";
+                                                            FLAG_CED = "0";
+                                                            Cedula = "";
+                                                            arrlist[i, 4] = "";
+                                                            arrlist[i, 20] = "";
+                                                            flag_pas = 1;
+                                                            DPI = "";
+                                                        }
+                                                        else if ((arrlist[i, 20] ?? "").ToString() == carne)
+                                                        {
+                                                            Pasaporte = "";
+                                                            FLAG_PAS = "0";
+                                                            FLAG_DPI = "0";
+                                                            Cedula = carne;
+                                                            FLAG_CED = "1";
+                                                        }
+                                                        else
+                                                        {
+                                                            Pasaporte = "";
+                                                            FLAG_PAS = "0";
+                                                            FLAG_DPI = "0";
+                                                            FLAG_CED = "0";
+                                                            Cedula = "";
+                                                            DPI = "";
+                                                        }
                                                     }
                                                     else
                                                     {
@@ -2348,141 +2203,300 @@ namespace ReportesUnis
                                                         DPI = "";
                                                         flag_pas = 2;
                                                     }
-                                                }
-                                                else
-                                                {
-                                                    Pasaporte = "";
-                                                    FLAG_PAS = "0";
-                                                    FLAG_DPI = "0";
-                                                    FLAG_CED = "0";
-                                                    DPI = "";
-                                                    flag_pas = 2;
-                                                }
 
-                                                if (String.IsNullOrWhiteSpace((arrlist[i, 23] ?? "").ToString()) && flag_pas == 1)
-                                                {
-                                                    nacionalidad = "Condición Migrante";
-                                                }
-                                                else if (String.IsNullOrWhiteSpace((arrlist[i, 23] ?? "").ToString()) && flag_pas == 0)
-                                                {
-                                                    nacionalidad = "Guatemala";
-                                                }
-                                                else
-                                                {
-                                                    nacionalidad = (arrlist[i, 23] ?? "").ToString();
 
-                                                }
+                                                    if (String.IsNullOrWhiteSpace((arrlist[i, 22] ?? "").ToString()) && flag_pas == 1)
+                                                    {
+                                                        nacionalidad = "Condición Migrante";
+                                                    }
+                                                    else if (String.IsNullOrWhiteSpace((arrlist[i, 22] ?? "").ToString()) && flag_pas == 0)
+                                                    {
+                                                        nacionalidad = "Guatemala";
+                                                    }
+                                                    else
+                                                    {
+                                                        nacionalidad = (arrlist[i, 22] ?? "").ToString();
+                                                    }
 
-                                                texto = "|" + //IDUNIV
-                                                (arrlist[i, 13] ?? "").ToString() + " " + (arrlist[i, 15] ?? "").ToString() + "|" + //NOM_IMP
-                                                (arrlist[i, 13] ?? "").ToString() + "|" +//NOM1
-                                                (arrlist[i, 14] ?? "").ToString() + "|" +//NOM2
-                                                (arrlist[i, 15] ?? "").ToString() + "|" +//APE1
-                                                (arrlist[i, 16] ?? "").ToString() + "|" +//APE2
-                                                (arrlist[i, 17] ?? "").ToString() + "|" +//APE3
-                                                bday + "|" +//FE_NAC
-                                                (arrlist[i, 18] ?? "").ToString() + "|" +//SEXO
-                                                (arrlist[i, 8] ?? "").ToString() + "|" +//EST_CIV
-                                                nacionalidad + "|" +//NACIONALIDAD
-                                                FLAG_CED + "|" +//FLAG_CED
-                                                Cedula + "|" +//CEDULA
-                                                "|" +//DEPCED
-                                                "|" +//MUNCED
-                                                FLAG_DPI + "|" +//FLAG_DPI
-                                                DPI + "|" +//DPI
-                                                FLAG_PAS + "|" +//FLAG_PAS
-                                                Pasaporte + "|" +//PASS
-                                                "|" +//PAIS_PAS
-                                                (arrlist[i, 22] ?? "").ToString() + "|" +//NIT
-                                                "|" +//PASI_NIT
-                                                "|" +//PROF
-                                                (arrlist[i, 10] ?? "").ToString() + "|" +//DIRECCION
-                                                "|" +//CASA
-                                                "|" +//APTO
-                                                (arrlist[i, 24] ?? "").ToString() + "|" +//ZONA
-                                                "|" +//COL
-                                                (arrlist[i, 11] ?? "").ToString() + "|" +//MUNRES
-                                                (arrlist[i, 12] ?? "").ToString() + "|" +//DEPRES
-                                                (arrlist[i, 7] ?? "").ToString() + "|" +//TEL
-                                                "|" +//CEL
-                                                (arrlist[i, 25] ?? "").ToString() + "|" +//EMAIL
-                                                (arrlist[i, 19] ?? "").ToString() + "|" +//CARNE
-                                                "|" +//CARR
-                                                (arrlist[i, 6] ?? "").ToString() + "|" +//FACUL                                         
-                                                "|" +//COD_EMP_U
-                                                "|" +//PUESTO
-                                                "|" +//DEP_EMP_U
-                                                "|" +//COD_BARRAS
-                                                "|" +//TIP_PER
-                                                "|" +//ACCION
-                                                "|" +//FOTO
-                                                "|" +//TIPO_CTA
-                                                "|" +//NO_CTA_BI
-                                                "|" +//F_U
-                                                "|" +//H_U
-                                                "|" +//TIP_ACC
-                                                "|" +//EMP_TRAB
-                                                "|" +//FEC_IN_TR
-                                                "|" +//ING_TR
-                                                "|" +//EGR_TR
-                                                "|" +//MONE_TR
-                                                "|" +//PUESTO_TR
-                                                "|" +//LUG_EMP
-                                                "|" +//FE_IN_EMP
-                                                "|" +//TEL_TR
-                                                "|" +//DIR_TR
-                                                "|" +//ZONA_TR
-                                                "|" +//DEP_TR
-                                                "|" +//MUNI_TR
-                                                "|" +//PAIS_TR
-                                                "|" +//ACT_EC
-                                                "|" +//OTRA_NA
-                                                "|" +//CONDMIG
-                                                "|";//O_CONDMIG
-                                                txtFile += texto;
-                                                txtFile += "\r\n";
-                                                //i ++;
+                                                    texto = "|" + //IDUNIV
+                                                    (arrlist[i, 12] ?? "").ToString() + " " + (arrlist[i, 14] ?? "").ToString() + "|" + //NOM_IMP
+                                                    (arrlist[i, 12] ?? "").ToString() + "|" +//NOM1
+                                                    (arrlist[i, 13] ?? "").ToString() + "|" +//NOM2
+                                                    (arrlist[i, 14] ?? "").ToString() + "|" +//APE1
+                                                    (arrlist[i, 15] ?? "").ToString() + "|" +//APE2
+                                                    (arrlist[i, 16] ?? "").ToString() + "|" +//APE3
+                                                    bday + "|" +//FE_NAC
+                                                    (arrlist[i, 17] ?? "").ToString() + "|" +//SEXO
+                                                    (arrlist[i, 7] ?? "").ToString() + "|" +//EST_CIV
+                                                    nacionalidad + "|" +//NACIONALIDAD
+                                                    FLAG_CED + "|" +//FLAG_CED
+                                                    Cedula + "|" +//CEDULA
+                                                    "|" +//DEPCED
+                                                    "|" +//MUNCED
+                                                    FLAG_DPI + "|" +//FLAG_DPI
+                                                    DPI + "|" +//DPI
+                                                    FLAG_PAS + "|" +//FLAG_PAS
+                                                    Pasaporte + "|" +//PASS
+                                                    "|" +//PAIS_PAS
+                                                    (arrlist[i, 21] ?? "").ToString() + "|" +//NIT
+                                                    "|" +//PASI_NIT
+                                                    "|" +//PROF
+                                                    (arrlist[i, 9] ?? "").ToString() + "|" +//DIRECCION
+                                                    "|" +//CASA
+                                                    "|" +//APTO
+                                                    (arrlist[i, 23] ?? "").ToString() + "|" +//ZONA
+                                                    "|" +//COL
+                                                    (arrlist[i, 10] ?? "").ToString() + "|" +//MUNRES
+                                                    (arrlist[i, 11] ?? "").ToString() + "|" +//DEPRES
+                                                    (arrlist[i, 6] ?? "").ToString() + "|" +//TEL
+                                                    "|" +//CEL
+                                                    (arrlist[i, 24] ?? "").ToString().Replace("\t  ", "") + "|" +//EMAIL
+                                                    carne + "|" +//CARNE
+                                                    "|" +//CARR
+                                                    (arrlist[i, 5] ?? "").ToString() + "|" +//FACUL                                         
+                                                    "|" +//COD_EMP_U
+                                                    "|" +//PUESTO
+                                                    "|" +//DEP_EMP_U
+                                                    "|" +//COD_BARRAS
+                                                    "|" +//TIP_PER
+                                                    "|" +//ACCION
+                                                    "|" +//FOTO
+                                                    "|" +//TIPO_CTA
+                                                    "|" +//NO_CTA_BI
+                                                    "|" +//F_U
+                                                    "|" +//H_U
+                                                    "|" +//TIP_ACC
+                                                    "|" +//EMP_TRAB
+                                                    "|" +//FEC_IN_TR
+                                                    "|" +//ING_TR
+                                                    "|" +//EGR_TR
+                                                    "|" +//MONE_TR
+                                                    "|" +//PUESTO_TR
+                                                    "|" +//LUG_EMP
+                                                    "|" +//FE_IN_EMP
+                                                    "|" +//TEL_TR
+                                                    "|" +//DIR_TR
+                                                    "|" +//ZONA_TR
+                                                    "|" +//DEP_TR
+                                                    "|" +//MUNI_TR
+                                                    "|" +//PAIS_TR
+                                                    "|" +//ACT_EC
+                                                    "|" +//OTRA_NA
+                                                    "|" +//CONDMIG
+                                                    "|";//O_CONDMIG
+                                                    txtFile += texto;
+                                                    txtFile += "\r\n";
+                                                }
+                                                aux = 500;
                                             }
-                                            aux = 500;
+                                            else if (ChBusqueda.Checked && aux == 100)
+                                            {
+                                                int i = 0;
+                                                for (i = 0; i < count; i++)
+                                                {
+                                                    if (!arrlist[i, 9].ToString().Equals(""))
+                                                    {
+                                                        bday = arrlist[i, 9].ToString().Substring(0, 10);
+                                                        anio = bday.Substring(0, 4);
+                                                        mes = bday.Substring(5, 2);
+                                                        dia = bday.Substring(8, 2);
+                                                        bday = dia + "-" + mes + "-" + anio;
+                                                    }
+                                                    else
+                                                    {
+                                                        bday = "";
+                                                    }
+
+                                                    string carne = (arrlist[i, 19] ?? "").ToString();
+                                                    if ((!String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
+                                                        (String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
+                                                        (String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
+                                                        (!String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
+                                                        (String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
+                                                        (!String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())) ||
+                                                        (!String.IsNullOrWhiteSpace((arrlist[i, 5] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 20] ?? "").ToString()) && !String.IsNullOrWhiteSpace((arrlist[i, 21] ?? "").ToString())))
+                                                    {
+                                                        if ((arrlist[i, 5] ?? "").ToString() == carne)//DPI
+                                                        {
+                                                            Pasaporte = "";
+                                                            FLAG_PAS = "0";
+                                                            FLAG_DPI = "1";
+                                                            DPI = carne;
+                                                            FLAG_CED = "0";
+                                                            arrlist[i, 21] = "";
+                                                            arrlist[i, 20] = "";
+                                                            flag_pas = 0;
+                                                        }
+                                                        else if ((arrlist[i, 20] ?? "").ToString() == carne)//PASAPORTE
+                                                        {
+                                                            Pasaporte = carne;
+                                                            FLAG_PAS = "1";
+                                                            FLAG_DPI = "0";
+                                                            FLAG_CED = "0";
+                                                            arrlist[i, 5] = "";
+                                                            arrlist[i, 21] = "";
+                                                            Cedula = "";
+                                                            flag_pas = 1;
+                                                            DPI = "";
+                                                        }
+                                                        else if ((arrlist[i, 21] ?? "").ToString() == carne) //CEDULA
+                                                        {
+                                                            Pasaporte = carne;
+                                                            FLAG_PAS = "1";
+                                                            FLAG_DPI = "0";
+                                                            FLAG_CED = "0";
+                                                            Cedula = "";
+                                                            flag_pas = 1;
+                                                        }
+                                                        else
+                                                        {
+                                                            Pasaporte = "";
+                                                            FLAG_PAS = "0";
+                                                            FLAG_DPI = "0";
+                                                            FLAG_CED = "0";
+                                                            DPI = "";
+                                                            flag_pas = 2;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        Pasaporte = "";
+                                                        FLAG_PAS = "0";
+                                                        FLAG_DPI = "0";
+                                                        FLAG_CED = "0";
+                                                        DPI = "";
+                                                        flag_pas = 2;
+                                                    }
+
+                                                    if (String.IsNullOrWhiteSpace((arrlist[i, 23] ?? "").ToString()) && flag_pas == 1)
+                                                    {
+                                                        nacionalidad = "Condición Migrante";
+                                                    }
+                                                    else if (String.IsNullOrWhiteSpace((arrlist[i, 23] ?? "").ToString()) && flag_pas == 0)
+                                                    {
+                                                        nacionalidad = "Guatemala";
+                                                    }
+                                                    else
+                                                    {
+                                                        nacionalidad = (arrlist[i, 23] ?? "").ToString();
+
+                                                    }
+
+                                                    texto = "|" + //IDUNIV
+                                                    (arrlist[i, 13] ?? "").ToString() + " " + (arrlist[i, 15] ?? "").ToString() + "|" + //NOM_IMP
+                                                    (arrlist[i, 13] ?? "").ToString() + "|" +//NOM1
+                                                    (arrlist[i, 14] ?? "").ToString() + "|" +//NOM2
+                                                    (arrlist[i, 15] ?? "").ToString() + "|" +//APE1
+                                                    (arrlist[i, 16] ?? "").ToString() + "|" +//APE2
+                                                    (arrlist[i, 17] ?? "").ToString() + "|" +//APE3
+                                                    bday + "|" +//FE_NAC
+                                                    (arrlist[i, 18] ?? "").ToString() + "|" +//SEXO
+                                                    (arrlist[i, 8] ?? "").ToString() + "|" +//EST_CIV
+                                                    nacionalidad + "|" +//NACIONALIDAD
+                                                    FLAG_CED + "|" +//FLAG_CED
+                                                    Cedula + "|" +//CEDULA
+                                                    "|" +//DEPCED
+                                                    "|" +//MUNCED
+                                                    FLAG_DPI + "|" +//FLAG_DPI
+                                                    DPI + "|" +//DPI
+                                                    FLAG_PAS + "|" +//FLAG_PAS
+                                                    Pasaporte + "|" +//PASS
+                                                    "|" +//PAIS_PAS
+                                                    (arrlist[i, 22] ?? "").ToString() + "|" +//NIT
+                                                    "|" +//PASI_NIT
+                                                    "|" +//PROF
+                                                    (arrlist[i, 10] ?? "").ToString() + "|" +//DIRECCION
+                                                    "|" +//CASA
+                                                    "|" +//APTO
+                                                    (arrlist[i, 24] ?? "").ToString() + "|" +//ZONA
+                                                    "|" +//COL
+                                                    (arrlist[i, 11] ?? "").ToString() + "|" +//MUNRES
+                                                    (arrlist[i, 12] ?? "").ToString() + "|" +//DEPRES
+                                                    (arrlist[i, 7] ?? "").ToString() + "|" +//TEL
+                                                    "|" +//CEL
+                                                    (arrlist[i, 25] ?? "").ToString() + "|" +//EMAIL
+                                                    (arrlist[i, 19] ?? "").ToString() + "|" +//CARNE
+                                                    "|" +//CARR
+                                                    (arrlist[i, 6] ?? "").ToString() + "|" +//FACUL                                         
+                                                    "|" +//COD_EMP_U
+                                                    "|" +//PUESTO
+                                                    "|" +//DEP_EMP_U
+                                                    "|" +//COD_BARRAS
+                                                    "|" +//TIP_PER
+                                                    "|" +//ACCION
+                                                    "|" +//FOTO
+                                                    "|" +//TIPO_CTA
+                                                    "|" +//NO_CTA_BI
+                                                    "|" +//F_U
+                                                    "|" +//H_U
+                                                    "|" +//TIP_ACC
+                                                    "|" +//EMP_TRAB
+                                                    "|" +//FEC_IN_TR
+                                                    "|" +//ING_TR
+                                                    "|" +//EGR_TR
+                                                    "|" +//MONE_TR
+                                                    "|" +//PUESTO_TR
+                                                    "|" +//LUG_EMP
+                                                    "|" +//FE_IN_EMP
+                                                    "|" +//TEL_TR
+                                                    "|" +//DIR_TR
+                                                    "|" +//ZONA_TR
+                                                    "|" +//DEP_TR
+                                                    "|" +//MUNI_TR
+                                                    "|" +//PAIS_TR
+                                                    "|" +//ACT_EC
+                                                    "|" +//OTRA_NA
+                                                    "|" +//CONDMIG
+                                                    "|";//O_CONDMIG
+                                                    txtFile += texto;
+                                                    txtFile += "\r\n";
+                                                    //i ++;
+                                                }
+                                                aux = 500;
+                                            }
+                                            else
+                                            {
+                                                ret = 1;
+                                            }
                                         }
-                                        else
+                                        catch (Exception x)
                                         {
-                                            ret = 1;
+                                            Console.WriteLine(x.ToString());
                                         }
                                     }
                                     catch (Exception x)
                                     {
                                         Console.WriteLine(x.ToString());
                                     }
+                                    lblBusqueda.Text = " ";
                                 }
-                                catch (Exception x)
+                                else
                                 {
-                                    Console.WriteLine(x.ToString());
+                                    lblBusqueda.Text = "No se encontró información con los valores ingresados";
                                 }
-                                lblBusqueda.Text = " ";
                             }
-                            else
-                            {
-                                lblBusqueda.Text = "No se encontró información con los valores ingresados";
-                            }
+                            ret = 0;
                         }
-                        ret = 0;
+                        else
+                        {
+                            lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
+                            ret = 1;
+                        }
                     }
                     else
                     {
-                        lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
-                        ret = 1;
+                        lblBusqueda.Text = "Es necesario que ingrese  valores para realizar una búsqueda.";
                     }
                 }
                 else
                 {
-                    lblBusqueda.Text = "Es necesario que seleccione e ingrese los valores para realizar una búsqueda.";
+                    lblBusqueda.Text = "La fecha inicial debe de ser menor a la fecha final";
+                    ret = 2;
                 }
             }
             else
             {
-                lblBusqueda.Text = "La fecha inicial debe de ser menor a la fecha final";
-                ret = 2;
+                lblBusqueda.Text = "Es necesario ingresar las fechas para realizar la busqueda.";
             }
 
             //SE GENERA EL ARCHIVO

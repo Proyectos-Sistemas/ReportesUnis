@@ -139,124 +139,138 @@ namespace ReportesUnis
                 int contadorEspacio = contadorEspacios(largo1, TxtBuscador.Text);
                 int largo2 = TxtBuscador2.Text.Length;
                 int contadorEspacio2 = contadorEspacios(largo2, TxtBuscador2.Text);
-                if (Convert.ToDateTime(CldrCiclosInicio.Text) < Convert.ToDateTime(CldrCiclosFin.Text))
+                if ((!String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)))
                 {
-                    if ((!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrWhiteSpace(TxtBuscador.Text)) && (contadorEspacio != largo1 && contadorEspacio2 != largo2))
+                    if (Convert.ToDateTime(CldrCiclosInicio.Text) < Convert.ToDateTime(CldrCiclosFin.Text))
                     {
-
-                        if (!String.IsNullOrEmpty(TxtBuscador.Text) || !TxtBuscador2.Text.Equals(""))
+                        if (contadorEspacio != largo1 && (contadorEspacio2 != largo2 || TxtBuscador2.Visible != true))
                         {
-                            if (!String.IsNullOrEmpty(TxtBuscador.Text) && !LbxBusqueda.Text.Equals("Facultad"))
-                                TxtBuscador.Text = Mayuscula(TxtBuscador.Text);
-                            if (!String.IsNullOrEmpty(TxtBuscador2.Text) && !LbxBusqueda2.Text.Equals("Facultad"))
-                                TxtBuscador2.Text = Mayuscula(TxtBuscador2.Text);
-                            string where = stringWhere();
-                            if (!String.IsNullOrEmpty(where))
+                            if ((!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrWhiteSpace(TxtBuscador.Text)))
                             {
 
-                                string constr = TxtURL.Text;
-                                using (OracleConnection con = new OracleConnection(constr))
+                                if (!String.IsNullOrEmpty(TxtBuscador.Text) || !TxtBuscador2.Text.Equals(""))
                                 {
-                                    using (OracleCommand cmd = new OracleCommand())
+                                    if (!String.IsNullOrEmpty(TxtBuscador.Text) && !LbxBusqueda.Text.Equals("Facultad"))
+                                        TxtBuscador.Text = Mayuscula(TxtBuscador.Text);
+                                    if (!String.IsNullOrEmpty(TxtBuscador2.Text) && !LbxBusqueda2.Text.Equals("Facultad"))
+                                        TxtBuscador2.Text = Mayuscula(TxtBuscador2.Text);
+                                    string where = stringWhere();
+                                    if (!String.IsNullOrEmpty(where))
                                     {
-                                        cmd.CommandText = "SELECT " +
-                                                            "FLAG_DPI, " +
-                                                            "FLAG_PAS, " +
-                                                            "FLAG_CED, " +
-                                                            "PROF, " +
-                                                            "EMPLID, " +
-                                                            "FIRST_NAME, " +
-                                                            "SECOND_NAME, " +
-                                                            "LAST_NAME, " +
-                                                            "SECOND_LAST_NAME, " +
-                                                            "CARNE, " +
-                                                            "PHONE, " +
-                                                            "DPI, " +
-                                                            "CEDULA, " +
-                                                            "PASAPORTE, " +
-                                                            "CARRERA, " +
-                                                            "FACULTAD, " +
-                                                            "STATUS, " +
-                                                            "BIRTHDATE, " +
-                                                            "DIRECCION, " +
-                                                            "MUNICIPIO, " +
-                                                            "DEPARTAMENTO, " +
-                                                            "SEX, " +
-                                                            "PLACE, " +
-                                                            "EMAIL," +
-                                                            "ZONA " +
-                                                            "FROM ( " +
-                                                            "SELECT " +
-                                                            "DISTINCT PD.EMPLID, " +
-                                                            "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
-                                                            "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
-                                                            "SUBSTR(PD.FIRST_NAME,  LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))+2, LENGTH(PD.FIRST_NAME)-LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))) SECOND_NAME, " +
-                                                            "PD.LAST_NAME, " +
-                                                            "PD.SECOND_LAST_NAME, " +
-                                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
-                                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_DPI, " +
-                                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
-                                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_CED, " +
-                                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE, " +
-                                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_PAS, " +
-                                                            "PPD.PHONE, " +
-                                                            "TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
-                                                            "APD.DESCR CARRERA, " +
-                                                            "AGT.DESCR FACULTAD, " +
-                                                            "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
-                                                            "CASE WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
-                                                            "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '' END STATUS, " +
-                                                            "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
-                                                            " (select REPLACE(A1.ADDRESS3,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) ZONA, " +
-                                                            "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
-                                                            "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
-                                                            "'ESTUDIANTE' PROF, " +
-                                                            "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAIL " +
-                                                            "FROM " +
-                                                            "SYSADM.PS_PERS_DATA_SA_VW PD " +
-                                                            "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
-                                                            "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON C.COUNTRY = PD.BIRTHCOUNTRY " +
-                                                            "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
-                                                            "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
-                                                            "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                                                            "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                                            "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                                                            "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
-                                                            "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
-                                                            "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                                            "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
-                                                            "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
-                                                            where + ")" +
-                                                            "  WHERE CARNE=DPI OR CARNE=PASAPORTE OR CARNE=CEDULA ORDER BY 6 ASC";
-                                        cmd.Connection = con;
-                                        con.Open();
 
-                                        OracleDataReader reader = cmd.ExecuteReader();
-                                        if (reader.HasRows)
+                                        string constr = TxtURL.Text;
+                                        using (OracleConnection con = new OracleConnection(constr))
                                         {
-                                            GridViewReporte.DataSource = reader;
-                                            GridViewReporte.DataBind();
-                                            lblBusqueda.Text = "";
-                                            TxtBuscador.Enabled = false;
-                                            TxtBuscador2.Enabled = false;
-                                            CldrCiclosInicio.Enabled = false;
-                                            CldrCiclosFin.Enabled = false;
-                                            Button1.Enabled = true;
-                                            ButtonFts.Enabled = true;
-                                            BtnNBusqueda.Enabled = true;
-                                            BtnBuscar.Enabled = false;
-                                            ChBusqueda.Enabled = false;
-                                            LbxBusqueda.Enabled = false;
-                                            LbxBusqueda2.Enabled = false;
+                                            using (OracleCommand cmd = new OracleCommand())
+                                            {
+                                                cmd.CommandText = "SELECT " +
+                                                                    "FLAG_DPI, " +
+                                                                    "FLAG_PAS, " +
+                                                                    "FLAG_CED, " +
+                                                                    "PROF, " +
+                                                                    "EMPLID, " +
+                                                                    "FIRST_NAME, " +
+                                                                    "SECOND_NAME, " +
+                                                                    "LAST_NAME, " +
+                                                                    "SECOND_LAST_NAME, " +
+                                                                    "CARNE, " +
+                                                                    "PHONE, " +
+                                                                    "DPI, " +
+                                                                    "CEDULA, " +
+                                                                    "PASAPORTE, " +
+                                                                    "CARRERA, " +
+                                                                    "FACULTAD, " +
+                                                                    "STATUS, " +
+                                                                    "BIRTHDATE, " +
+                                                                    "DIRECCION, " +
+                                                                    "MUNICIPIO, " +
+                                                                    "DEPARTAMENTO, " +
+                                                                    "SEX, " +
+                                                                    "PLACE, " +
+                                                                    "EMAIL," +
+                                                                    "ZONA " +
+                                                                    "FROM ( " +
+                                                                    "SELECT " +
+                                                                    "DISTINCT PD.EMPLID, " +
+                                                                    "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
+                                                                    "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
+                                                                    "SUBSTR(PD.FIRST_NAME,  LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))+2, LENGTH(PD.FIRST_NAME)-LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))) SECOND_NAME, " +
+                                                                    "PD.LAST_NAME, " +
+                                                                    "PD.SECOND_LAST_NAME, " +
+                                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
+                                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_DPI, " +
+                                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
+                                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_CED, " +
+                                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE, " +
+                                                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_PAS, " +
+                                                                    "PPD.PHONE, " +
+                                                                    "TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
+                                                                    "APD.DESCR CARRERA, " +
+                                                                    "AGT.DESCR FACULTAD, " +
+                                                                    "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
+                                                                    "CASE WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
+                                                                    "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '' END STATUS, " +
+                                                                    "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                                                                    " (select REPLACE(A1.ADDRESS3,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) ZONA, " +
+                                                                    "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
+                                                                    "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
+                                                                    "'ESTUDIANTE' PROF, " +
+                                                                    "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAIL " +
+                                                                    "FROM " +
+                                                                    "SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                                                    "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                                                    "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON C.COUNTRY = PD.BIRTHCOUNTRY " +
+                                                                    "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                                                                    "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
+                                                                    "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                                                                    "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                                                                    "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                                                                    "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
+                                                                    "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
+                                                                    "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                                                    "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
+                                                                    "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                                                                    where + ")" +
+                                                                    "  WHERE CARNE=DPI OR CARNE=PASAPORTE OR CARNE=CEDULA ORDER BY 6 ASC";
+                                                cmd.Connection = con;
+                                                con.Open();
+
+                                                OracleDataReader reader = cmd.ExecuteReader();
+                                                if (reader.HasRows)
+                                                {
+                                                    GridViewReporte.DataSource = reader;
+                                                    GridViewReporte.DataBind();
+                                                    lblBusqueda.Text = "";
+                                                    TxtBuscador.Enabled = false;
+                                                    TxtBuscador2.Enabled = false;
+                                                    CldrCiclosInicio.Enabled = false;
+                                                    CldrCiclosFin.Enabled = false;
+                                                    Button1.Enabled = true;
+                                                    ButtonFts.Enabled = true;
+                                                    BtnNBusqueda.Enabled = true;
+                                                    BtnBuscar.Enabled = false;
+                                                    ChBusqueda.Enabled = false;
+                                                    LbxBusqueda.Enabled = false;
+                                                    LbxBusqueda2.Enabled = false;
+                                                }
+                                                else
+                                                {
+                                                    lblBusqueda.Text = "No se encontró información con los valores ingresados";
+                                                }
+                                                con.Close();
+                                            }
                                         }
-                                        else
-                                        {
-                                            lblBusqueda.Text = "No se encontró información con los valores ingresados";
-                                        }
-                                        con.Close();
+
+                                    }
+                                    else
+                                    {
+                                        lblBusqueda.Text = "Ingrese un valor a buscar";
                                     }
                                 }
-
+                                else
+                                {
+                                    lblBusqueda.Text = "Ingrese un valor a buscar";
+                                }
                             }
                             else
                             {
@@ -265,17 +279,17 @@ namespace ReportesUnis
                         }
                         else
                         {
-                            lblBusqueda.Text = "Ingrese un valor a buscar";
+                            lblBusqueda.Text = "Es necesario que ingrese valores para realizar una búsqueda.";
                         }
                     }
                     else
                     {
-                        lblBusqueda.Text = "Ingrese un valor a buscar";
+                        lblBusqueda.Text = "La fecha inicial debe de ser menor a la fecha final";
                     }
                 }
                 else
                 {
-                    lblBusqueda.Text = "La fecha inicial debe de ser menor a la fecha final";
+                    lblBusqueda.Text = "Es necesario ingresar las fechas para realizar la busqueda.";
                 }
             }
             catch (Exception)
@@ -315,111 +329,118 @@ namespace ReportesUnis
 
                 if (Convert.ToDateTime(CldrCiclosInicio.Text) < Convert.ToDateTime(CldrCiclosFin.Text))
                 {
-                    if ((!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrWhiteSpace(TxtBuscador.Text)) || (contadorEspacio != largo1 && contadorEspacio2 != largo2))
+                    if (contadorEspacio != largo1 && (contadorEspacio2 != largo2 || TxtBuscador2.Visible != true))
                     {
-                        if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrWhiteSpace(TxtBuscador.Text))
+                        if ((!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrWhiteSpace(TxtBuscador.Text)))
                         {
-                            string where = stringWhere();
-                            string constr = TxtURL.Text;
-                            string txtFile = "IDUNIV|NOM_IMP|NOM1|NOM2|APE1|APE2|APE3|FE_NAC|SEXO|EST_CIV|NACIONAL|FLAG_CED|CEDULA|DEPCED|MUNCED|FLAG_DPI|DPI|FLAG_PAS|PASS|PAIS_PAS|NIT|PAIS_NIT|PROF|DIR|CASA|APTO|ZONA|COL|MUNRES|DEPRES|TEL|CEL|EMAIL|CARNET|CARR|FACUL|COD_EMP_U|PUESTO|DEP_EMP_U|COD_BARRAS|TIP_PER|ACCION|FOTO|TIPO_CTA|NO_CTA_BI|F_U|H_U|TIP_ACC|EMP_TRAB|FEC_IN_TR|ING_TR|EGR_TR|MONE_TR|PUESTO_TR|LUG_EMP|FE_IN_EMP|TEL_TR|DIR_TR|ZONA_TR|DEP_TR|MUNI_TR|PAIS_TR|ACT_EC|OTRA_NA|CONDMIG|O_CONDMIG";
-                            txtFile += "\r\n";
-                            var dt = new DataTable();
-                            using (OracleConnection con = new OracleConnection(constr))
+                            if (!String.IsNullOrEmpty(TxtBuscador.Text) || !String.IsNullOrWhiteSpace(TxtBuscador.Text))
                             {
-                                using (OracleCommand cmd = new OracleCommand())
+                                string where = stringWhere();
+                                string constr = TxtURL.Text;
+                                string txtFile = "IDUNIV|NOM_IMP|NOM1|NOM2|APE1|APE2|APE3|FE_NAC|SEXO|EST_CIV|NACIONAL|FLAG_CED|CEDULA|DEPCED|MUNCED|FLAG_DPI|DPI|FLAG_PAS|PASS|PAIS_PAS|NIT|PAIS_NIT|PROF|DIR|CASA|APTO|ZONA|COL|MUNRES|DEPRES|TEL|CEL|EMAIL|CARNET|CARR|FACUL|COD_EMP_U|PUESTO|DEP_EMP_U|COD_BARRAS|TIP_PER|ACCION|FOTO|TIPO_CTA|NO_CTA_BI|F_U|H_U|TIP_ACC|EMP_TRAB|FEC_IN_TR|ING_TR|EGR_TR|MONE_TR|PUESTO_TR|LUG_EMP|FE_IN_EMP|TEL_TR|DIR_TR|ZONA_TR|DEP_TR|MUNI_TR|PAIS_TR|ACT_EC|OTRA_NA|CONDMIG|O_CONDMIG";
+                                txtFile += "\r\n";
+                                var dt = new DataTable();
+                                using (OracleConnection con = new OracleConnection(constr))
                                 {
-                                    cmd.CommandText =
-                                    " SELECT REPLACE(  '|' || '|' || FIRST_NAME || '|' || SECOND_NAME || '|' || LAST_NAME || '|' || '|' ||" +
-                                    " SECOND_LAST_NAME || '|' || BIRTHDATE || '|' || SEX || '|' || STATUS || '|' || PLACE || '|' ||" +
-                                    " FLAG_CED || '|' || CEDULA || '|' || '|' || '|' || FLAG_DPI || '|' || DPI || '|' || FLAG_PAS ||" +
-                                    " '|' || PASAPORTE || '|' || '|' || '|' || '|' || PROF || '|' || DIRECCION || '|' || '|' || '|' || ZONA||" +
-                                    " '|' || '|' || MUNICIPIO || '|' || DEPARTAMENTO || '|' || PHONE || '|' || '|' ||EMAIL|| '|' || CARNE || '|' ||" +
-                                    " CARRERA || '|' || FACULTAD || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
-                                    " '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
-                                    " '|' || '|' || '|' || '|' || '|' || '|' , '\t','')" +
-                                    "FROM ( " +
-                                    "SELECT " +
-                                    "DISTINCT PD.EMPLID, " +
-                                    "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
-                                    "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
-                                    "SUBSTR(PD.FIRST_NAME,  LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))+2, LENGTH(PD.FIRST_NAME)-LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))) SECOND_NAME, " +
-                                    "PD.LAST_NAME, " +
-                                    "PD.SECOND_LAST_NAME, " +
-                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
-                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_DPI, " +
-                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
-                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_CED, " +
-                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE, " +
-                                    "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_PAS, " +
-                                    "PPD.PHONE, " +
-                                    "TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
-                                    "APD.DESCR CARRERA, " +
-                                    "AGT.DESCR FACULTAD, " +
-                                    "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
-                                    "CASE WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
-                                    "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '' END STATUS, " +
-                                    "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
-                                    " (select REPLACE(A1.ADDRESS3,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) ZONA, " +
-                                    "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
-                                    "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
-                                    "'ESTUDIANTE' PROF, " +
-                                    "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAIL " +
-                                    "FROM " +
-                                    "SYSADM.PS_PERS_DATA_SA_VW PD " +
-                                    "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
-                                    "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON C.COUNTRY = PD.BIRTHCOUNTRY " +
-                                    "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
-                                    "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
-                                    "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                                    "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                    "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                                    "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
-                                    "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
-                                    "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                    "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
-                                    "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
-                                    where + ")" +
-                                    "  WHERE CARNE=DPI OR CARNE=PASAPORTE OR CARNE=CEDULA ORDER BY 1 ASC";
-                                    cmd.Connection = con;
-                                    con.Open();
+                                    using (OracleCommand cmd = new OracleCommand())
+                                    {
+                                        cmd.CommandText =
+                                        " SELECT REPLACE(  '|' || '|' || FIRST_NAME || '|' || SECOND_NAME || '|' || LAST_NAME || '|' || '|' ||" +
+                                        " SECOND_LAST_NAME || '|' || BIRTHDATE || '|' || SEX || '|' || STATUS || '|' || PLACE || '|' ||" +
+                                        " FLAG_CED || '|' || CEDULA || '|' || '|' || '|' || FLAG_DPI || '|' || DPI || '|' || FLAG_PAS ||" +
+                                        " '|' || PASAPORTE || '|' || '|' || '|' || '|' || PROF || '|' || DIRECCION || '|' || '|' || '|' || ZONA||" +
+                                        " '|' || '|' || MUNICIPIO || '|' || DEPARTAMENTO || '|' || PHONE || '|' || '|' ||EMAIL|| '|' || CARNE || '|' ||" +
+                                        " CARRERA || '|' || FACULTAD || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
+                                        " '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' || '|' ||" +
+                                        " '|' || '|' || '|' || '|' || '|' || '|' , '\t','')" +
+                                        "FROM ( " +
+                                        "SELECT " +
+                                        "DISTINCT PD.EMPLID, " +
+                                        "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
+                                        "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
+                                        "SUBSTR(PD.FIRST_NAME,  LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))+2, LENGTH(PD.FIRST_NAME)-LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))) SECOND_NAME, " +
+                                        "PD.LAST_NAME, " +
+                                        "PD.SECOND_LAST_NAME, " +
+                                        "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN PN.NATIONAL_ID ELSE '' END DPI, " +
+                                        "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_DPI, " +
+                                        "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
+                                        "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_CED, " +
+                                        "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE, " +
+                                        "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_PAS, " +
+                                        "PPD.PHONE, " +
+                                        "TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
+                                        "APD.DESCR CARRERA, " +
+                                        "AGT.DESCR FACULTAD, " +
+                                        "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
+                                        "CASE WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
+                                        "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '' END STATUS, " +
+                                        "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                                        " (select REPLACE(A1.ADDRESS3,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) ZONA, " +
+                                        "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
+                                        "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
+                                        "'ESTUDIANTE' PROF, " +
+                                        "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAIL " +
+                                        "FROM " +
+                                        "SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                        "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                        "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON C.COUNTRY = PD.BIRTHCOUNTRY " +
+                                        "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                                        "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
+                                        "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                                        "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                                        "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                                        "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                                        where + ")" +
+                                        "  WHERE CARNE=DPI OR CARNE=PASAPORTE OR CARNE=CEDULA ORDER BY 1 ASC";
+                                        cmd.Connection = con;
+                                        con.Open();
 
-                                    OracleDataReader reader = cmd.ExecuteReader();
-                                    OracleDataAdapter adapter = new OracleDataAdapter(cmd);
-                                    if (reader.HasRows)
-                                    {
-                                        adapter.Fill(dt);
-                                        int contador = dt.Rows.Count;
-                                        for (int i = 0; i < contador; i++)
+                                        OracleDataReader reader = cmd.ExecuteReader();
+                                        OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                                        if (reader.HasRows)
                                         {
-                                            txtFile = txtFile + dt.Rows[i].ItemArray[0].ToString();
-                                            txtFile += "\r\n";
+                                            adapter.Fill(dt);
+                                            int contador = dt.Rows.Count;
+                                            for (int i = 0; i < contador; i++)
+                                            {
+                                                txtFile = txtFile + dt.Rows[i].ItemArray[0].ToString();
+                                                txtFile += "\r\n";
+                                            }
                                         }
+                                        else
+                                        {
+                                            lblBusqueda.Text = "No se encontró información con los valores ingresados";
+                                        }
+                                        con.Close();
                                     }
-                                    else
-                                    {
-                                        lblBusqueda.Text = "No se encontró información con los valores ingresados";
-                                    }
-                                    con.Close();
                                 }
+                                Response.Clear();
+                                Response.Buffer = true;
+                                string FileName = "Reporte Estudiantes" + DateTime.Now + ".txt";
+                                Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+                                Response.Charset = "";
+                                Response.ContentType = "application/text";
+                                Response.Output.Write(txtFile);
+                                Response.Flush();
+                                Response.End();
                             }
-                            Response.Clear();
-                            Response.Buffer = true;
-                            string FileName = "Reporte Estudiantes" + DateTime.Now + ".txt";
-                            Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
-                            Response.Charset = "";
-                            Response.ContentType = "application/text";
-                            Response.Output.Write(txtFile);
-                            Response.Flush();
-                            Response.End();
+                            else
+                            {
+                                lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
+                            }
                         }
                         else
                         {
-                            lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
+                            lblBusqueda.Text = "Ingrese un valor a buscar";
                         }
                     }
                     else
                     {
-                        lblBusqueda.Text = "Ingrese un valor a buscar";
+                        lblBusqueda.Text = "Es necesario que ingrese valores para realizar una búsqueda.";
                     }
                 }
                 else
