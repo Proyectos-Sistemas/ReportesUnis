@@ -9,7 +9,7 @@
 
     <div class="container2">
         <asp:Label id="lblfoto" runat="server" Font-Bold="true">Fotografía:</asp:Label>
-        <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="False" accept="image/jpeg" onchange="validateFileSize();" />
+        <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="False" accept="image/png, image/jpeg" onchange="validateFileSize();" />
         <div id="dvMsg" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
             El tamaño máximo permitido es de 1 GB
         </div>
@@ -153,7 +153,7 @@
                 </asp:TableCell>
                 <%-- DIRECCION TEXTBOX 4--%>
                 <asp:TableCell>
-                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="3" MaxLength="240" Width="350px"></asp:TextBox>
+                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="3" MaxLength="240" Width="350px" on></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
                 <asp:TableCell Width="5%">

@@ -15,6 +15,7 @@ using ReportesUnis.API;
 using System.Web.Services.Description;
 using Microsoft.Win32;
 using NPOI.SS.Formula.Functions;
+using System.Drawing.Printing;
 
 namespace ReportesUnis
 {
@@ -749,6 +750,7 @@ namespace ReportesUnis
             cMBpAIS.DataTextField = "";
             cMBpAIS.DataValueField = "";
             cMBpAIS.DataBind();
+            lblActualizacion.Text = "";
         }
 
         public void listadoMunicipios()
@@ -786,6 +788,7 @@ namespace ReportesUnis
                 CmbMunicipio.DataTextField = "";
                 CmbMunicipio.DataValueField = "";
                 CmbMunicipio.DataBind();
+                lblActualizacion.Text = "";
             }
             catch (Exception)
             {
@@ -832,6 +835,7 @@ namespace ReportesUnis
                     txtZona.DataTextField = "";
                     txtZona.DataValueField = "";
                     txtZona.DataBind();
+                    lblActualizacion.Text = "";
                 }
                 else
                 {
@@ -954,7 +958,7 @@ namespace ReportesUnis
 
         protected void BtnActualizar_Click(object sender, EventArgs e)
         {
-            if (!cMBpAIS.Text.Equals("-") && !CmbMunicipio.Text.Equals("-") && !CmbDepartamento.Text.Equals("-"))
+            if (!cMBpAIS.Text.Equals("-") && !CmbMunicipio.Text.Equals("-") && !CmbDepartamento.Text.Equals("-") && !String.IsNullOrEmpty(CmbEstado.Text))
             {
                 string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
                 int ContadorArchivos = 0;
@@ -1028,12 +1032,12 @@ namespace ReportesUnis
                                 if (perfil == "true" && ImageId != "")
                                 {
                                     updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
-                                    mensajeValidacion = "y la fotografía se actualizó correctamente en HCM.";
+                                    mensajeValidacion = ". La fotografía se actualizó correctamente en HCM.";
                                 }
                                 else
                                 {
                                     create(personId, "photo", Imgn, "emps/");
-                                    mensajeValidacion = "y la fotografía se creó correctamente en HCM.";
+                                    mensajeValidacion = ". La fotografía se creó correctamente en HCM.";
                                 }
                                 GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "  " + NombreImagen.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
                                 ContadorArchivosCorrectos++;
@@ -1065,6 +1069,8 @@ namespace ReportesUnis
                     mensajeError = mensajeError + "Número de teléfono ";
                     au = au + 1;
                 }
+
+                respuestaPatch = 0;
                 updatePatch(estadoC, personId, "legislativeInfo", PersonLegislativeId, "legislativeInfo", effective, "workers/");
                 if (respuestaPatch != 0 && mensajeError != "Ocurrió un problema al actualizar su: ")
                 {
@@ -1077,14 +1083,18 @@ namespace ReportesUnis
                     au = au + 1;
                 }
 
+                respuestaPatch = 0;
+                respuestaPost = 0;
                 if (PaisInicial.Text == Pais.Text)
                 {
                     string primary = getBetween(consulta, "HOME\",\n      \"PrimaryFlag\" : true", "\n        \"name\" ");
+                    if (String.IsNullOrEmpty(primary))
+                        primary = getBetween(consulta, "HM\",\n      \"PrimaryFlag\" : true", "\n        \"name\" ");
                     string AddressId = getBetween(primary, "child/addresses", "\",");
                     Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\"}";
 
                     updatePatch(Address, personId, "addresses", AddressId, "addresses", effectiveAdd, "workers/");
-                    if (respuestaPatch != 0 && mensajeError != "Ocurrió un problema al actualizar su: ")
+                    if (respuestaPatch != 0 && mensajeError.Contains("Ocurrió un problema al actualizar su: "))
                     {
                         mensajeError = mensajeError + "Dirección ";
                         au = au + 1;
@@ -1098,7 +1108,7 @@ namespace ReportesUnis
                 else
                 {
                     create(personId, "addresses", Address, "workers/");
-                    if (respuestaPost != 0 && mensajeError != "Ocurrió un problema al actualizar su: ")
+                    if (respuestaPost != 0 && !mensajeError.Contains("Ocurrió un problema al actualizar su: "))
                     {
                         mensajeError = mensajeError + "Dirección ";
                         au = au + 1;
@@ -1114,7 +1124,7 @@ namespace ReportesUnis
                 {
                     lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
                     PaisInicial.Text = Pais.Text;
-                    if (mensajeValidacion == " , no se encontró ninguna fotografía para almacenar.")
+                    if (mensajeValidacion == " . No se encontró ninguna fotografía para almacenar.")
                         GuardarBitacora(ArchivoBitacora, "---".PadRight(36) + "  " + Context.User.Identity.Name.Replace("@unis.edu.gt", "").PadRight(26) + "  No se ingresó ninguna imagen               ".PadRight(60));
                     else
                     {
@@ -1123,7 +1133,7 @@ namespace ReportesUnis
                 }
                 else
                 {
-                    lblActualizacion.Text = mensajeError + mensajeValidacion;
+                        lblActualizacion.Text = mensajeError +", la demás información se actualizó correctamente. "+ mensajeValidacion;
                 }
 
                 GuardarBitacora(ArchivoBitacora, "");
@@ -1140,14 +1150,18 @@ namespace ReportesUnis
                     lblActualizacion.Text = lblActualizacion.Text + "Un país";
                 if (CmbMunicipio.Text.Equals("-") && lblActualizacion.Text == "Es necesario seleccionar: ")
                     lblActualizacion.Text = lblActualizacion.Text + "Un departamento";
-                else
+                else if (CmbMunicipio.Text.Equals("-"))
                     lblActualizacion.Text = lblActualizacion.Text + ", un departamento";
                 if (CmbDepartamento.Text.Equals("-") && lblActualizacion.Text == "Es necesario seleccionar: ")
                     lblActualizacion.Text = lblActualizacion.Text + "Un municipio";
-                else
+                else if (CmbDepartamento.Text.Equals("-"))
                     lblActualizacion.Text = lblActualizacion.Text + " y un municipio";
-            }
 
+                if(String.IsNullOrEmpty(CmbEstado.Text) && lblActualizacion.Text == "Es necesario seleccionar: ")
+                    lblActualizacion.Text = lblActualizacion.Text + "Un estado civil";
+                else if (String.IsNullOrEmpty(CmbEstado.Text))
+                    lblActualizacion.Text = lblActualizacion.Text + " y un estado civil";
+            }
         }
 
         //Funcion para extraerlos Id's
@@ -1262,5 +1276,6 @@ namespace ReportesUnis
             return contador;
         }
 
+        
     }
 }

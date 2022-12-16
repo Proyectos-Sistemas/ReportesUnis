@@ -299,7 +299,7 @@ namespace ReportesUnis
         private string actualizarInformacion()
         {
             string mensaje = "";
-            if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text))
+            if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text))
             {
                 try
                 {
@@ -384,7 +384,7 @@ namespace ReportesUnis
             }
             else
             {
-                mensaje = "No puede enviarse información vacía y es necesario seleccionar un país, departamento y muncipio";
+                mensaje = "No puede enviarse información vacía y es necesario seleccionar el estado civil, un país, un departamento y un muncipio";
             }
             return mensaje;
         }
@@ -404,7 +404,7 @@ namespace ReportesUnis
         {
             string informacion = actualizarInformacion();
 
-            if (informacion != "No puede enviarse información vacía y es necesario seleccionar un país, departamento y muncipio")
+            if (informacion != "No puede enviarse información vacía y es necesario seleccionar el estado civil, un país, un departamento y un muncipio")
             {
                 informacion = informacion + Upload();
             }
@@ -698,7 +698,7 @@ namespace ReportesUnis
                 }
                 else
                 {
-                    mensaje = " pero no se encontró ninguna fotografía para almacenar.";
+                    mensaje = ", no se encontró ninguna fotografía para almacenar.";
                 }
 
                 GuardarBitacora(ArchivoBitacora, "");
