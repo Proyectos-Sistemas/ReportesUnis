@@ -1211,7 +1211,7 @@ namespace ReportesUnis
                                             <v2:listOfParamNameValues>
                                                 <!--1st Parameter of BIP Report-->
                                                 <v2:item>
-                                                    <v2:name>NAME</v2:name>
+                                                    <v2:name>NOMBRE</v2:name>
                                                     <v2:values>
                                                         <v2:item>" + nombre + @"</v2:item>
                                                     </v2:values>
@@ -1612,55 +1612,55 @@ namespace ReportesUnis
                     sustituto = Regex.Replace(sustituto, @"\n+", " ");
                     sustituto = Regex.Replace(sustituto, @"\t", "");
 
-                    if (LbxBusqueda.Text.Equals("Nombre") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                    if (LbxBusqueda.Text.Equals("Nombre") && (String.IsNullOrEmpty(LbxBusqueda2.Text) || !ChBusqueda.Checked))
                     {
-                        int largo = 55;
+                        int largo = 67;
                         sustituto = sustituto.Remove(0, largo);
                     }
-                    else if (LbxBusqueda.Text.Equals("Apellido") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                    else if (LbxBusqueda.Text.Equals("Apellido") && (String.IsNullOrEmpty(LbxBusqueda2.Text) || !ChBusqueda.Checked))
                     {
-                        int largo = 57;
+                        int largo = 69;
                         sustituto = sustituto.Remove(0, largo);
                     }
-                    else if (LbxBusqueda.Text.Equals("DPI") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                    else if (LbxBusqueda.Text.Equals("DPI") && (String.IsNullOrEmpty(LbxBusqueda2.Text) || !ChBusqueda.Checked))
                     {
-                        int largo = 52;
+                        int largo = 64;
                         sustituto = sustituto.Remove(0, largo);
                     }
-                    else if (LbxBusqueda.Text.Equals("Dependencia") && String.IsNullOrEmpty(LbxBusqueda2.Text))
+                    else if (LbxBusqueda.Text.Equals("Dependencia") && (String.IsNullOrEmpty(LbxBusqueda2.Text) || !ChBusqueda.Checked))
                     {
-                        int largo = 60;
+                        int largo = 72;
                         sustituto = sustituto.Remove(0, largo);
                     }
                     else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Apellido")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Apellido")))
                     {
-                        int largo = 63;
+                        int largo = 75;
                         sustituto = sustituto.Remove(0, largo);
                     }
                     else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("DPI")))
                     {
-                        int largo = 58;
+                        int largo = 70;
                         sustituto = sustituto.Remove(0, largo);
                     }
                     else if ((LbxBusqueda.Text.Equals("Nombre") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Nombre") && LbxBusqueda.Text.Equals("Dependencia")))
                     {
-                        int largo = 66;
+                        int largo = 78;
                         sustituto = sustituto.Remove(0, largo);
                     }
                     else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("DPI")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("DPI")))
                     {
-                        int largo = 60;
+                        int largo = 72;
                         sustituto = sustituto.Remove(0, largo);
 
                     }
                     else if ((LbxBusqueda.Text.Equals("Apellido") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("Apellido") && LbxBusqueda.Text.Equals("Dependencia")))
                     {
-                        int largo = 68;
+                        int largo = 80;
                         sustituto = sustituto.Remove(0, largo);
                     }
                     else if ((LbxBusqueda.Text.Equals("DPI") && LbxBusqueda2.Text.Equals("Dependencia")) || (LbxBusqueda2.Text.Equals("DPI") && LbxBusqueda.Text.Equals("Dependencia")))
                     {
-                        int largo = 63;
+                        int largo = 75;
                         sustituto = sustituto.Remove(0, largo);
                     }
                 }
@@ -2853,7 +2853,7 @@ namespace ReportesUnis
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
                 }
                 else if (respuesta == "2")
-                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los estudiantes.";
+                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
             }
             catch (Exception)
             {

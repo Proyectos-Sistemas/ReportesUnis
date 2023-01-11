@@ -888,7 +888,7 @@ namespace ReportesUnis
             else
             {
                 int largo = TxtBuscador.Text.Length;
-                largo = 60;
+                largo = 67;
                 if (sustituto.Length > largo)
                     sustituto = sustituto.Remove(0, largo);
             }
@@ -906,8 +906,8 @@ namespace ReportesUnis
                 {
                     if (contador != largo)
                     {
-                        if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
-                        {
+                        //if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
+                        //{
                             if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
                             {
                                 GridViewReporteCT.DataSource = "";
@@ -1003,11 +1003,11 @@ namespace ReportesUnis
                             {
                                 lblBusqueda.Text = "Ingrese un valor a buscar";
                             }
-                        }
-                        else
-                        {
-                            lblBusqueda.Text = "Para realizar búesqueda por género intente ingresando Male o Female";
-                        }
+                        //}
+                        //else
+                        //{
+                        //    lblBusqueda.Text = "Para realizar búesqueda por género intente ingresando Male o Female";
+                        //}
                     }
                     else
                     {
@@ -1467,7 +1467,7 @@ namespace ReportesUnis
                     lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga de fotografías";
                 }
                 else if (respuesta == "2")
-                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los estudiantes.";
+                    lblBusqueda.Text = "No se encontraron imágenes relacionadas a los empleados.";
             }
             catch (Exception)
             {

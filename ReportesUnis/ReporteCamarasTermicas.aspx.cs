@@ -133,8 +133,8 @@ namespace ReportesUnis
                         {
                             if (!String.IsNullOrWhiteSpace(where))
                             {
-                                if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
-                                {
+                                //if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
+                                //{
                                     {
                                         using (OracleConnection con = new OracleConnection(constr))
                                         {
@@ -217,7 +217,7 @@ namespace ReportesUnis
                                                 {
                                                     lblBusqueda.Text = "No se encontró la información solicitada";
                                                     if (LbxBusqueda.Text == "Género")
-                                                        lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búesqueda por género intente ingresando Male o Female";
+                                                        lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búsqueda por género intente ingresando Male o Female";
                                                 }
                                                 con.Close();
                                             }
@@ -231,11 +231,11 @@ namespace ReportesUnis
                                         BtnBuscar2.Enabled = false;
                                         LbxBusqueda.Enabled = false;
                                     }
-                                }
-                                else
-                                {
-                                    lblBusqueda.Text = "Para realizar búesqueda por género intente ingresando Male o Female";
-                                }
+                                //}
+                                //else
+                                //{
+                                //    lblBusqueda.Text = "Para realizar búesqueda por género intente ingresando Male o Female";
+                                //}
                             }
                             else
                             {
@@ -584,7 +584,7 @@ namespace ReportesUnis
                     {
                         cmd.CommandText = "SELECT * FROM ( " +
                                             "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension, " +
-                                            "ROW_NUMBER() OVER(PARTITION BY P.EMPLID ORDER BY P.EMPLID) AS CNT " +
+                                            "ROW_NUMBER() OVER(PARTITION BY P.EMPLID ORDER BY P.EMPLID) AS CNT, PN.NATIONAL_ID DPI " +
                                             "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
                                             "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                             "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
@@ -605,8 +605,10 @@ namespace ReportesUnis
                                             "AND APD.INSTITUTION = AGT.INSTITUTION " +
                                             "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
                                             "AND CT.INSTITUTION = TT.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
                                             where +
-                                            "AND employee_photo IS NOT NULL )" +
+                                            "AND employee_photo IS NOT NULL " +
+                                            ")" +
                                             "WHERE CNT =1";
                         cmd.Connection = con;
                         con.Open();
@@ -621,7 +623,7 @@ namespace ReportesUnis
                                 DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
                                 newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
                                 newFila["contentType"] = row["Extension"].ToString();
-                                newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
+                                newFila["filename"] = row["DPI"].ToString() + "." + row["Extension"].ToString().ToLower();
                                 dsDownload.Tables["AllDownload"].Rows.Add(newFila);
                                 total = total + 1;
                             }
@@ -747,9 +749,9 @@ namespace ReportesUnis
                     string buscar = TxtBuscador.Text;
                     string min = buscar.ToLower();
                     if (min.Equals("male"))
-                        where = "WHERE PD.SEX LIKE('%M%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                        where = "WHERE PD.SEX LIKE('M%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                     else if (min.Equals("female"))
-                        where = "WHERE PD.SEX LIKE ('%F%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                        where = "WHERE PD.SEX LIKE ('F%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                     else if (buscar == "%")
                         where = "WHERE PD.SEX LIKE ('%%%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                     else

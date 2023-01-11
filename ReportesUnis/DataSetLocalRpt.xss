@@ -13,7 +13,7 @@
     <Shape ID="DesignTable:HistoricosCXCEncabezado" ZOrder="9" X="279" Y="321" Height="334" Width="216" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="330" />
     <Shape ID="DesignTable:HistoricosCXPEncabezado" ZOrder="7" X="511" Y="321" Height="334" Width="216" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="330" />
     <Shape ID="DesignTable:HistoricosGL" ZOrder="8" X="743" Y="320" Height="334" Width="170" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="330" />
-    <Shape ID="DesignTable:AllDownload" ZOrder="4" X="1353" Y="74" Height="86" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="82" />
+    <Shape ID="DesignTable:AllDownload" ZOrder="4" X="1353" Y="74" Height="86" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="24" SplitterPosition="101" />
     <Shape ID="DesignTable:RptEmpleados" ZOrder="6" X="1194" Y="74" Height="257" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="24" SplitterPosition="253" />
     <Shape ID="DesignTable:InfEstudiantes" ZOrder="5" X="1356" Y="179" Height="257" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="253" />
     <Shape ID="DesignTable:RptCTEmpleados" ZOrder="3" X="1512" Y="73" Height="219" Width="164" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="215" />

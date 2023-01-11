@@ -572,7 +572,7 @@ namespace ReportesUnis
                     {
                         cmd.CommandText = "SELECT * FROM ( " +
                                             "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension, " +
-                                            "ROW_NUMBER() OVER(PARTITION BY P.EMPLID ORDER BY P.EMPLID) AS CNT " +
+                                            "ROW_NUMBER() OVER(PARTITION BY P.EMPLID ORDER BY P.EMPLID) AS CNT , PN.NATIONAL_ID DPI " +
                                             "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
                                             "JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                             "JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
@@ -584,6 +584,7 @@ namespace ReportesUnis
                                             "JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
                                             "JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
                                             "JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
                                             where +
                                             "AND employee_photo IS NOT NULL " +
                                             ")WHERE CNT =1";
@@ -600,7 +601,7 @@ namespace ReportesUnis
                                 DataRow newFila = dsDownload.Tables["AllDownload"].NewRow();
                                 newFila["bytes"] = (byte[])row["EMPLOYEE_PHOTO"];
                                 newFila["contentType"] = row["Extension"].ToString();
-                                newFila["fileName"] = row["EMPLID"].ToString() + "." + row["Extension"].ToString().ToLower();
+                                newFila["fileName"] = row["DPI"].ToString() + "." + row["Extension"].ToString().ToLower();
                                 dsDownload.Tables["AllDownload"].Rows.Add(newFila);
                                 total = total + 1;
                             }
