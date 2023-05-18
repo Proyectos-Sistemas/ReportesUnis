@@ -161,11 +161,9 @@ element.style {
 	justify-content: center;
 	text-align:center;
 }
-
-.container {
+/*.container {
 	justify-content: center;
-}
-
+}*/
 .containerGV {
 	justify-content: center;
 	text-align: left;
@@ -175,18 +173,18 @@ element.style {
 	overflow-x: auto;
 	text-align:left !important;
 }
-#GVContainer2 {
+/*#GVContainer2 {
 	overflow-x: auto;
 	text-align:left !important;
-}
+}*/
 
 #BtnTxt{
 	margin: 25px;
 }
-
+/*
 th, td {
 	width: 150px;
 	word-wrap: break-word;
 	align-content: center;
 	vertical-align:central;
-}
+}*/

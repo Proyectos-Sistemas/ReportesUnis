@@ -191,7 +191,14 @@ namespace ReportesUnis
                 else if (LbxBusqueda.Text.Equals("Departamento"))
                 {
                     //Crea el cuerpo que se utiliza para consultar el servicio de HCM
-                    CuerpoConsultaDescargaXDependencia(Variables.wsUsuario, Variables.wsPassword, busqueda.ToUpper(), FI, FF);
+                    departamentos = getBetween(departamentosAPEX(busqueda.ToUpper()), "\"items\": [", "],");
+                    departamentos = departamentos.Replace("\r\n    {\r\n      \"departamento\": \"", "<v2:item>");
+                    departamentos = departamentos.Replace("\"", "");
+                    departamentos = departamentos.Replace("\r\n      ", " ");
+                    departamentos = departamentos.Replace("\r\n    },", "</v2:item> \r\n");
+                    departamentos = departamentos.Replace("\r\n    }\r\n  ", "</v2:item> \r\n").TrimStart(' ');
+                    //Crea el cuerpo que se utiliza para consultar el servicio de HCM
+                    CuerpoConsultaDescargaXDependencia(Variables.wsUsuario, Variables.wsPassword, departamentos, FI, FF);
                 }
                 else if (LbxBusqueda.Text.Equals("Género"))
                 {
@@ -1494,7 +1501,7 @@ namespace ReportesUnis
             WebClient _clientW = new WebClient();
             _clientW.Headers.Add(HttpRequestHeader.ContentType, "application/json; charset=utf-8");
             _clientW.Headers.Add("departamento", departamento);
-            string json = _clientW.DownloadString("https://apexdes.unis.edu.gt:8443/ords/unis_interfaces/Centralizador/JerarquiaDepartamentos");
+            string json = _clientW.DownloadString("https://apex.unis.edu.gt:8443/ords/unis_interfaces/Centralizador/JerarquiaDepartamentos");
             dynamic respuesta = JsonConvert.DeserializeObject(json).ToString();
 
             return respuesta;
@@ -1504,7 +1511,7 @@ namespace ReportesUnis
             WebClient _clientW = new WebClient();
             _clientW.Headers.Add(HttpRequestHeader.ContentType, "application/json; charset=utf-8");
             _clientW.Headers.Add("jerarquia", jerarquia);
-            string json = _clientW.DownloadString("https://apexdes.unis.edu.gt:8443/ords/unis_interfaces/Centralizador/BusquedaXDepartamento");
+            string json = _clientW.DownloadString("https://apex.unis.edu.gt:8443/ords/unis_interfaces/Centralizador/BusquedaXDepartamento");
             dynamic respuesta = JsonConvert.DeserializeObject(json).ToString();
 
             return respuesta;
