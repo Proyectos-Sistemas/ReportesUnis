@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Windows.Interop;
+//using DocumentFormat.OpenXml.Drawing;
+using Newtonsoft.Json;
+using NPOI.SS.Formula.Functions;
 using Oracle.ManagedDataAccess.Client;
 
 namespace ReportesUnis
@@ -16,7 +20,8 @@ namespace ReportesUnis
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
         protected void Page_Load(object sender, EventArgs e)
         {
-            TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+            //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+            TextUser.Text = "2676467470101";
             if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
             {
                 Response.Redirect(@"~/Default.aspx");
@@ -59,6 +64,11 @@ namespace ReportesUnis
             var mes = "";
             var anio = "";
             var bday = "";
+            var apellidoEx = "0";
+            int posicion = 0;
+            int posicion2 = 0;
+            int largoApellido = 0;
+            int excepcionApellido = 0;
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -106,8 +116,10 @@ namespace ReportesUnis
                     "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                     "AND PP.PHONE_TYPE = 'HOME' " +
                     "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                   "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                                                                      //"WHERE PN.NATIONAL_ID ='2372118661301' " +
+                    //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
+                    //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
+                    "WHERE PN.NATIONAL_ID ='2676467470101' " + // DE LEON
+                    //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián  
                    ") WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -115,6 +127,42 @@ namespace ReportesUnis
                         txtCarne.Text = reader["CARNE"].ToString();
                         txtNombre.Text = reader["FIRST_NAME"].ToString();
                         txtApellido.Text = reader["LAST_NAME"].ToString();
+                        largoApellido = reader["LAST_NAME"].ToString().TrimEnd(' ').Length;
+
+                        if ((txtApellido.Text.Substring(0, 5)).ToUpper().Equals("DE LA"))
+                        {
+                            posicion = txtApellido.Text.Substring(6,largoApellido-6).IndexOf(" ");
+                            txtContaador.Text = largoApellido.ToString() + " "+posicion.ToString();
+                            txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion+6);
+                        }else {
+                            posicion = reader["LAST_NAME"].ToString().IndexOf(" ");
+                            apellidoEx = divisionApellidos(reader["LAST_NAME"].ToString().Substring(0, posicion));
+                            txtContaador.Text = apellidoEx.ToString();
+                            excepcionApellido = apellidoEx.ToString().IndexOf("    }");
+                            txtContaador.Text = apellidoEx.ToString().Substring(excepcionApellido - 3,1);
+                            if (apellidoEx.ToString().Substring(excepcionApellido - 3, 1).Equals("1"))
+                            {
+                                posicion2 = txtApellido.Text.Substring(posicion+1, largoApellido-posicion).IndexOf(" ");
+                                txtContaador.Text = posicion2.ToString();
+                                txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion+1+posicion2);
+                            }
+                        }
+
+                        /*posicion = reader["LAST_NAME"].ToString().IndexOf(" ");
+                        apellidoEx = divisionApellidos(reader["LAST_NAME"].ToString().Substring(0,posicion));
+                        txtApellido.Text = reader["LAST_NAME"].ToString().Substring(posicion+1, largoApellido-(posicion+1));
+                        //txtContaador.Text = apellidoEx.ToString();
+                        excepcionApellido = apellidoEx.ToString().IndexOf("    }");
+                        //txtContaador.Text = largoApellido.ToString()+" "+posicion.ToString();//apellidoEx.ToString().Substring(excepcionApellido - 3,1);
+                        if (txtContaador.Text == "2")
+                        {
+                            posicion = txtApellido.ToString().IndexOf(" ") + 3;
+                            txtPrimerApellido.Text = txtApellido.ToString().Substring(0,posicion2);
+                        } /*else if (txtContaador.Text => "3")
+                        {
+
+                        }*/
+
                         txtDPI.Text = reader["DPI"].ToString();
                         CmbEstado.SelectedValue = reader["STATUS"].ToString();
 
@@ -469,8 +517,8 @@ namespace ReportesUnis
                         string[] ExtensionesPermitidas = { ".jpeg", ".jpg" };
 
                         //Nombre de la fotografía cargada (Sin extensión)
-                        //string NombreFoto = "2372118661301";//Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
-                        string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                        string NombreFoto = "3682754340101";//Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
+                        //string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                         if (ExtensionesPermitidas.Contains(ExtensionFotografia))
                         {
@@ -735,6 +783,31 @@ namespace ReportesUnis
             llenadoDepartamento();
             llenadoMunicipio();
             llenadoState();
+        }
+        public string divisionApellidos(string apellido)
+        {
+            WebClient _clientW = new WebClient();
+            _clientW.Headers.Add(HttpRequestHeader.ContentType, "application/json; charset=utf-8");
+            _clientW.Headers.Add("apellido", apellido);
+            string json = _clientW.DownloadString("https://apexdes.unis.edu.gt:8443/ords/unis_interfaces/Centralizador/ExcepcionesApellidos");
+            dynamic respuesta = JsonConvert.DeserializeObject(json).ToString();
+
+            return respuesta;
+        }
+
+        public static string getBetween(string strSource, string strStart, string strEnd)
+        {
+            int Start, End;
+            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+            {
+                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+                End = strSource.IndexOf(strEnd, Start);
+                return strSource.Substring(Start, End - Start);
+            }
+            else
+            {
+                return "";
+            }
         }
     }
 }

@@ -458,6 +458,14 @@
             <%-- TXTUSER ALMACENA EL DPI DEL USUARIO QUE ESTA REALIZANDO CAMBIOS --%>
             <asp:TextBox ID="TextUser" runat="server" Visible="false"></asp:TextBox>
         </div>
+        <div>
+            <%-- TXTUSER si el apellido cuenta con un a excepcion --%>
+            <asp:TextBox ID="txtContaador" runat="server" Visible="true"></asp:TextBox>
+        </div>
+        <div>
+            <%-- TXTUSER si el apellido cuenta con un a excepcion --%>
+            <asp:TextBox ID="txtPrimerApellido" runat="server" Visible="true"></asp:TextBox>
+        </div>
     </div>
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
