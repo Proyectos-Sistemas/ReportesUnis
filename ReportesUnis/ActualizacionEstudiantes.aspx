@@ -37,6 +37,8 @@
     <asp:TextBox ID="txtAccion" runat="server" Visible="true"></asp:TextBox>
     <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
     <asp:TextBox ID="txtInsert" runat="server" Visible="true"></asp:TextBox>
+    <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
+    <asp:TextBox ID="txtInsertBI" runat="server" Visible="true"></asp:TextBox>
     <%-- TXTEXISTE ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
     <asp:TextBox ID="txtExiste" runat="server" Visible="true"></asp:TextBox>
 
