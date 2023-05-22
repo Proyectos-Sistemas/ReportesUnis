@@ -18,13 +18,27 @@
 
 
     <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
-    <asp:TextBox ID="UserEmplid" runat="server" Visible="false"></asp:TextBox>
+    <asp:TextBox ID="UserEmplid" runat="server" Visible="true"></asp:TextBox>
     <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
     <asp:TextBox ID="State" runat="server" Visible="false"></asp:TextBox>
     <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE TELEFONO O NO--%>
-    <asp:TextBox ID="TruePhone" runat="server" Visible="false"></asp:TextBox>
+    <asp:TextBox ID="TruePhone" runat="server" Visible="true"></asp:TextBox>
     <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE DIRECCION O NO--%>
-    <asp:TextBox ID="TrueDir" runat="server" Visible="false"></asp:TextBox>
+    <asp:TextBox ID="TrueDir" runat="server" Visible="true"></asp:TextBox>
+    <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
+    <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
+    <%-- TXTUSER ALMACENA EL DPI DEL USUARIO QUE ESTA REALIZANDO CAMBIOS --%>
+    <asp:TextBox ID="TextUser" runat="server" Visible="false"></asp:TextBox>
+    <%-- TXTCONTADOR para contar las excepciones encontradas de apellidos --%>
+    <asp:TextBox ID="txtContaador" runat="server" Visible="true"></asp:TextBox>
+    <%-- TXTPRIMERAPELLIDO  se almacena el primer apellido del estudiante --%>
+    <asp:TextBox ID="txtPrimerApellido" runat="server" Visible="true"></asp:TextBox>
+    <%-- TXTACCION se almacena el primer apellido del estudiante --%>
+    <asp:TextBox ID="txtAccion" runat="server" Visible="true"></asp:TextBox>
+    <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
+    <asp:TextBox ID="txtInsert" runat="server" Visible="true"></asp:TextBox>
+    <%-- TXTEXISTE ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
+    <asp:TextBox ID="txtExiste" runat="server" Visible="true"></asp:TextBox>
 
     <%-- VALIDACION CAMPOS NULOS --%>
     <div style="margin-left: auto; margin-right: auto; text-align: center;">
@@ -450,23 +464,7 @@
         </div>
 
     </div>
-    <div>
-        <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
-        <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
-
-        <div>
-            <%-- TXTUSER ALMACENA EL DPI DEL USUARIO QUE ESTA REALIZANDO CAMBIOS --%>
-            <asp:TextBox ID="TextUser" runat="server" Visible="false"></asp:TextBox>
-        </div>
-        <div>
-            <%-- TXTUSER si el apellido cuenta con un a excepcion --%>
-            <asp:TextBox ID="txtContaador" runat="server" Visible="true"></asp:TextBox>
-        </div>
-        <div>
-            <%-- TXTUSER si el apellido cuenta con un a excepcion --%>
-            <asp:TextBox ID="txtPrimerApellido" runat="server" Visible="true"></asp:TextBox>
-        </div>
-    </div>
+    
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>
