@@ -78,6 +78,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox TxtURL;
 
         /// <summary>
+        /// Control TxtURLSql.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtURLSql;
+
+        /// <summary>
         /// Control TextUser.
         /// </summary>
         /// <remarks>
@@ -139,6 +148,33 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtExiste;
+
+        /// <summary>
+        /// Control txtMunicipioDPI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMunicipioDPI;
+
+        /// <summary>
+        /// Control txtDepartamentoDPI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDepartamentoDPI;
+
+        /// <summary>
+        /// Control txtPath.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPath;
 
         /// <summary>
         /// Control RequiredFieldValidatorNull1.

@@ -1,0 +1,1 @@
+Data Source=172.16.240.48,1433;Initial Catalog=Carnets;User Id=3217767041601;Password=C@rn3t5_DB

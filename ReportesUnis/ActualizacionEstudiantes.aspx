@@ -27,6 +27,8 @@
     <asp:TextBox ID="TrueDir" runat="server" Visible="true"></asp:TextBox>
     <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
     <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
+    <%-- TXTURLSQL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
+    <asp:TextBox ID="TxtURLSql" runat="server" Visible="true"></asp:TextBox>
     <%-- TXTUSER ALMACENA EL DPI DEL USUARIO QUE ESTA REALIZANDO CAMBIOS --%>
     <asp:TextBox ID="TextUser" runat="server" Visible="false"></asp:TextBox>
     <%-- TXTCONTADOR para contar las excepciones encontradas de apellidos --%>
@@ -41,6 +43,12 @@
     <asp:TextBox ID="txtInsertBI" runat="server" Visible="true"></asp:TextBox>
     <%-- TXTEXISTE ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
     <asp:TextBox ID="txtExiste" runat="server" Visible="true"></asp:TextBox>
+    <%-- TXTMUNICIPIODPI ALMACENA EL MUNICIPIO DEL DPI --%>
+    <asp:TextBox ID="txtMunicipioDPI" runat="server" Visible="true"></asp:TextBox>
+    <%-- TXTDEPARTAMENTODPI ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
+    <asp:TextBox ID="txtDepartamentoDPI" runat="server" Visible="true"></asp:TextBox>
+    <%-- TXTPath ALMACENA EL PATH DONDE SE ALMACENARA LA IMAGEN --%>
+    <asp:TextBox ID="txtPath" runat="server" Visible="true"></asp:TextBox>
 
     <%-- VALIDACION CAMPOS NULOS --%>
     <div style="margin-left: auto; margin-right: auto; text-align: center;">
