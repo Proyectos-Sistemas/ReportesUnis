@@ -15,43 +15,61 @@
         </div>
     </div>
         <hr />
+    <div class="container2" id="CargaDPI" runat="server" visible="false">
+        <asp:Label ID="Label3" runat="server" Font-Bold="false">Para realizar un cambio en su nombre es necesario adjuntar fotografia de su DPI(ambos lados)/Pasaporte</asp:Label>
+        <br />
+        <asp:Label ID="Label2" runat="server" Font-Bold="true">Documento de Identificación:</asp:Label>
+        <asp:FileUpload ID="FileUpload2" runat="server" AllowMultiple="true" accept="image/jpeg" onchange="validateFileSize();" />
+        <div id="dvMsge" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
+            El tamaño máximo permitido es de 1 GB
+        </div>
+     <hr />
+    </div>
 
 
     <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
-    <asp:TextBox ID="UserEmplid" runat="server" Visible="true"></asp:TextBox>
+    <asp:Label ID="UserEmplid" runat="server" Visible="true"></asp:Label>
     <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
-    <asp:TextBox ID="State" runat="server" Visible="false"></asp:TextBox>
+    <asp:Label ID="State" runat="server" Visible="false"></asp:Label>
     <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE TELEFONO O NO--%>
-    <asp:TextBox ID="TruePhone" runat="server" Visible="true"></asp:TextBox>
+    <asp:Label ID="TruePhone" runat="server" Visible="true"></asp:Label>
     <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE DIRECCION O NO--%>
-    <asp:TextBox ID="TrueDir" runat="server" Visible="true"></asp:TextBox>
+    <asp:Label ID="TrueDir" runat="server" Visible="true"></asp:Label>
     <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
-    <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
+    <asp:Label ID="TxtURL" runat="server" Visible="false"></asp:Label>
     <%-- TXTURLSQL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
-    <asp:TextBox ID="TxtURLSql" runat="server" Visible="true"></asp:TextBox>
+    <asp:Label ID="TxtURLSql" runat="server" Visible="true"></asp:Label>
     <%-- TXTUSER ALMACENA EL DPI DEL USUARIO QUE ESTA REALIZANDO CAMBIOS --%>
-    <asp:TextBox ID="TextUser" runat="server" Visible="false"></asp:TextBox>
+    <asp:Label ID="TextUser" runat="server" Visible="false"></asp:Label>
     <%-- TXTCONTADOR para contar las excepciones encontradas de apellidos --%>
-    <asp:TextBox ID="txtContaador" runat="server" Visible="true"></asp:TextBox>
+    <asp:Label ID="txtContaador" runat="server" Visible="true"></asp:Label>
     <%-- TXTPRIMERAPELLIDO  se almacena el primer apellido del estudiante --%>
-    <asp:TextBox ID="txtPrimerApellido" runat="server" Visible="true"></asp:TextBox>
+    <asp:Label ID="txtPrimerApellido" runat="server" Visible="true"></asp:Label>
     <%-- TXTACCION se almacena el primer apellido del estudiante --%>
-    <asp:TextBox ID="txtAccion" runat="server" Visible="true"></asp:TextBox>
+    <asp:Label ID="txtAccion" runat="server" Visible="true"></asp:Label>
+    <%-- TXTTipoACCION se almacena el primer apellido del estudiante --%>
+    <asp:Label ID="txtTipoAccion" runat="server" Visible="true"></asp:Label>
     <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
     <asp:TextBox ID="txtInsert" runat="server" Visible="true"></asp:TextBox>
     <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
     <asp:TextBox ID="txtInsertBI" runat="server" Visible="true"></asp:TextBox>
     <%-- TXTEXISTE ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
-    <asp:TextBox ID="txtExiste" runat="server" Visible="true"></asp:TextBox>
+    <asp:Label ID="txtExiste" runat="server" Visible="true"></asp:Label>
     <%-- TXTMUNICIPIODPI ALMACENA EL MUNICIPIO DEL DPI --%>
-    <asp:TextBox ID="txtMunicipioDPI" runat="server" Visible="true"></asp:TextBox>
+    <asp:Label ID="txtMunicipioDPI" runat="server" Visible="true"></asp:Label>
     <%-- TXTDEPARTAMENTODPI ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
-    <asp:TextBox ID="txtDepartamentoDPI" runat="server" Visible="true"></asp:TextBox>
+    <asp:Label ID="txtDepartamentoDPI" runat="server" Visible="true"></asp:Label>
     <%-- TXTPath ALMACENA EL PATH DONDE SE ALMACENARA LA IMAGEN --%>
-    <asp:TextBox ID="txtPath" runat="server" Visible="true"></asp:TextBox>
+    <asp:Label ID="txtPath" runat="server" Visible="true"></asp:Label>    
+    <%-- NOMBRE INICIAL--%>
+    <asp:Label ID="txtNInicial" runat="server" Visible="true"></asp:Label>
+    <%-- APELLIDO INICIAL --%>
+    <asp:Label ID="txtAInicial" runat="server" Visible="true"></asp:Label>
+    <%-- CONFIRMACION OPERADOR --%>
+    <asp:Label ID="txtConfirmacion" runat="server" Visible="true"></asp:Label>
 
     <%-- VALIDACION CAMPOS NULOS --%>
-    <div style="margin-left: auto; margin-right: auto; text-align: center;">
+    <%--<div style="margin-left: auto; margin-right: auto; text-align: center;">--%>
         <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull1" runat="server"
             ControlToValidate="txtDireccion"
             ErrorMessage="Ingresa una dirección."
@@ -65,7 +83,7 @@
             ForeColor="Red"
             Font-Size="Large" Font-Bold="true">
         </asp:RequiredFieldValidator>
-    </div>
+    <%--</div>--%>
     <div>
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
         <asp:Table id="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
@@ -153,7 +171,7 @@
                 </asp:TableCell>
                 <%-- NOMBRE  --%>
                 <asp:TableCell>
-                    <asp:Label ID="txtNombre" runat="server" Enabled="false" TextMode="MultiLine" Rows="2"></asp:Label>
+                    <asp:TextBox ID="txtNombre" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO --%>
                 <asp:TableCell Width="2%">
@@ -169,7 +187,7 @@
                 </asp:TableCell>
                 <%-- APELLIDO   --%>
                 <asp:TableCell>
-                    <asp:Label ID="txtApellido" runat="server" Enabled="false" TextMode="MultiLine" Rows="2"></asp:Label>
+                    <asp:TextBox ID="txtApellido" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO --%>
                 <asp:TableCell Width="2%">
@@ -475,6 +493,7 @@
 
     </div>
     
+       
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>

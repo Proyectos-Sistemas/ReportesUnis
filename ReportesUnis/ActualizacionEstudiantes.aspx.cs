@@ -21,6 +21,7 @@ namespace ReportesUnis
     public partial class ActualizacionEstudiantes : System.Web.UI.Page
     {
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        string mensaje = "";
         protected void Page_Load(object sender, EventArgs e)
         {
             //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
@@ -38,6 +39,8 @@ namespace ReportesUnis
                 mostrarInformación();
                 llenadoDepartamento();
                 llenadoState();
+
+                
                 if (String.IsNullOrEmpty(txtCarne.Text))
                 {
                     BtnActualizar.Visible = false;
@@ -154,7 +157,9 @@ namespace ReportesUnis
                     {
                         txtCarne.Text = reader["CARNE"].ToString();
                         txtNombre.Text = reader["FIRST_NAME"].ToString();
+                        txtNInicial.Text = reader["FIRST_NAME"].ToString();
                         txtApellido.Text = reader["LAST_NAME"].ToString();
+                        txtAInicial.Text = reader["LAST_NAME"].ToString();
                         largoApellido = reader["LAST_NAME"].ToString().TrimEnd(' ').Length;
 
                         if ((txtApellido.Text.Substring(0, 5)).ToUpper().Equals("DE LA"))
@@ -361,479 +366,544 @@ namespace ReportesUnis
         }
         private string actualizarInformacion()
         {
-            string mensaje = "";
-            txtAccion.Text = "1.1";
-            if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text))
+            
+            if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text)
             {
-                try
+                txtAccion.Text = "1";
+                txtTipoAccion.Text = "1.1";
+                txtConfirmacion.Text = "00"; //No requiere confirmación de operador 
+                if (FileUpload1.HasFile && !String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text))
                 {
-                    string constr = TxtURL.Text;
-                    string codPais = "";
-                    string ec = estadoCivil();
-                    string RegistroCarne = "0";
-                    using (OracleConnection con = new OracleConnection(constr))
+                    IngresoDatos();
+                }
+                else
+                {
+                    if (FileUpload1.HasFile)
                     {
-                        con.Open();
-                        OracleTransaction transaction;
-                        transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
-                        using (OracleCommand cmd = new OracleCommand())
+                        mensaje = "No puede enviarse información vacía y es necesario seleccionar el estado civil, un país, un departamento y un muncipio";
+                    }
+                    else
+                    {
+                        mensaje = "No puede enviarse información vacía y es necesario cargar una fotografía, seleccionar el estado civil, un país, un departamento y un muncipio";
+                    }
+                }
+            }
+            else
+            {
+                int contador = 1;
+                if (FileUpload2.HasFile)
+                {
+                    if (FileUpload1.HasFiles && FileUpload2.HasFiles) { 
+                        txtAccion.Text = "1";
+                        txtTipoAccion.Text = "1.1";
+                        txtConfirmacion.Text = "01"; //Requiere confirmación de operador 
+                        IngresoDatos();
+
+                        foreach (HttpPostedFile uploadedFile in FileUpload2.PostedFiles)
                         {
+                            string nombreArchivo = txtCarne.Text + "(" + contador + ").jpg";
+                            string ruta = CurrentDirectory + "/DPIUsuarios/" + nombreArchivo;
+                            uploadedFile.SaveAs(ruta);
+                            contador++;
+                        }
+                    }
+                    else
+                    {
+                        mensaje = "Es necesario cargar la fotografía y los documentos de identificación. Por favor cargar ambas de nuevo.";
+                    }
+                }
+                else
+                {
+                    CargaDPI.Visible = true;                
+                }
+            }
+                return mensaje;
+        }
+
+        //Eventos       
+        protected void CmbMunicipio_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            llenadoState();
+        }
+        protected void CmbDepartamento_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            llenadoMunicipio();
+            llenadoState();
+        }
+
+        protected string IngresoDatos()
+        {
+            try
+            {
+                string constr = TxtURL.Text;
+                string codPais = "";
+                string ec = estadoCivil();
+                string RegistroCarne = "0";
+                using (OracleConnection con = new OracleConnection(constr))
+                {
+                    con.Open();
+                    OracleTransaction transaction;
+                    transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        //Obtener codigo país
+                        cmd.Connection = con;
+                        cmd.CommandText = "SELECT COUNTRY FROM SYSADM.PS_COUNTRY_TBL WHERE DESCR = '" + CmbPais.SelectedValue + "'";
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            codPais = reader["COUNTRY"].ToString();
+                        }
+
+                        //SE VALIDA QUE NO EXISTA INFORMACIÓN REGISTRADA
+                        cmd.Transaction = transaction;
+                        cmd.Connection = con;
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARGO = '" + txtCarrera.Text + "' AND FACULTAD ='" + txtFacultad.Text + "' AND CARNET =SUBSTR('" + txtCarne.Text + "',0,8)";
+                        reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            RegistroCarne = reader["CONTADOR"].ToString();
+                        }
+                        //txtExiste.Text = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARGO = '" + txtCarrera.Text + "' AND FACULTAD ='" + txtFacultad.Text + "' AND CARNET =SUBSTR('" + txtCarne.Text + "',0,9)";
+                        txtExiste.Text = RegistroCarne.ToString()+ " registros";
+
+                        if (RegistroCarne == "0")
+                        {
+                            string nombreArchivo = txtCarne.Text + ".jpg";
+                            string ruta = txtPath.Text + nombreArchivo;
+                            FileUpload1.SaveAs(ruta);
+                            //txtInsert.Text = txtPath.Text + nombreArchivo;
+
                             cmd.Transaction = transaction;
                             //Obtener codigo país
                             cmd.Connection = con;
-                            cmd.CommandText = "SELECT COUNTRY FROM SYSADM.PS_COUNTRY_TBL WHERE DESCR = '" + CmbPais.SelectedValue + "'";
-                            OracleDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                codPais = reader["COUNTRY"].ToString();
-                            }
-
-                            //SE VALIDA QUE NO EXISTA INFORMACIÓN REGISTRADA
-                            cmd.Transaction = transaction;
-                            cmd.Connection = con;
-                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARGO = '" + txtCarrera.Text+"' AND FACULTAD ='"+txtFacultad.Text+ "' AND CARNET =SUBSTR('" + txtCarne.Text+ "',0,8)";
+                            cmd.CommandText = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
+                                            //txtInsert.Text = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, " +
+                                            //"FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, " +
+                                            //"Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, " +
+                                            //"Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
+                                            " Fec_Emision, NO_CTA_BI, ID_AGENCIA, CONFIRMACION) VALUES ('''" +
+                                            "||'" + txtPrimerApellido.Text + "'''||','" + //APELLIDO1
+                                            "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1)||''''||','" + //APELLIDO2
+                                            "||''''||SUBSTR(CARNE,0,8)||''''||','" + //CARNE
+                                            "||''''||CEDULA||''''||','" + //CEDULA
+                                            "||''''||SECOND_LAST_NAME||''''||','" +// APELLIDO DE CASADA
+                                            "||''''||UPPER(DEPARTAMENTO)||''''||','" + //DEPARTAMENTO DE RESIDENCIA
+                                            "||''''||SUBSTR(DIRECCION,0,30)||''''||','" + // DIRECCION
+                                            "||''''||EMAIL||''''||','" + // CORREO ELECTRONICO
+                                            "||STATUS||','" + // ESTADO CIVIL
+                                            "||'''" + txtFacultad.Text + "'''||','" + // FACULTAD
+                                            "||''''||BIRTHDATE||''''||','" + //FECHA DE NACIMIENTO
+                                            "||''''||FLAG_CED||''''||','" +
+                                            "||''''||FLAG_DPI||''''||','" +
+                                            "||''''||FLAG_PAS||''''||','" +
+                                            "||''''||UPPER(MUNICIPIO)||''''||'," + //MUNICIPIO DE RESIDENCIA
+                                            "NULL,'" + //NIT
+                                            "||''''||DPI||''''||','" + // NO_CUI
+                                            "||''''||PASAPORTE||''''||','" + // NUMERO DE PASAPORTE
+                                            "||''''||FIRST_NAME||''''||','" + //NOMBRE1
+                                            "||''''||SECOND_NAME||''''||','" +// NOMBRE 2
+                                            "||''''||FIRST_NAME||' '||'" + txtPrimerApellido.Text + "'||''''||','" + //APELLIDO DE IMPRESION
+                                            "||''''||BIRTHCOUNTRY||''''||','" + // PAIS NACIONALIDAD
+                                            "||''''||PROF||''''||','" + // PROFESION
+                                            "||SEX||'," + // SEXO
+                                            "NULL," + //TELEFONO
+                                            "NULL," + //ZONA
+                                            "" + txtAccion.Text + ",'" + //ACCION
+                                            "||''''||PHONE||''''||','" + //CELULAR
+                                            "||CARNE||','" + //CODIGO DE BARRAS
+                                            "||''''||CONDMIG||''''||','" + //CONDICION MIGRANTE
+                                            "||'2022," + //ID  UNIVERSIDAD
+                                            "NULL,'" + //PAIS PASAPORTE
+                                            "'" + txtTipoAccion.Text +  //TIPO_ACCION
+                                            "'','||2||'" + //TIPO PERSONA
+                                            ",NULL,'" + // PAIS NIT
+                                            "||''''||DEPARTAMENTO_CUI||''''||','" + // DEPARTAMENTO CUI
+                                            "||''''||MUNICIPIO_CUI||''''||'," + //MUNICIPIO CUI
+                                            "1," + //VALIDAR ENVIO
+                                            "'||'''" + ruta + "'''||'," + //PATH
+                                            "NULL," + //CODIGO
+                                            "NULL,'" + // DEPARTAMENTO
+                                            "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD')||''''||','" +//FECHA_HORA
+                                            "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD')||''''||','" +//FECHA_ENTREGA
+                                            "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD')||''''||','" +//FECHA_SOLICITADO
+                                            "||TIPO_DOCUMENTO||','" + //TIPO DOCUMENTO
+                                            "||'''" + txtCarrera.Text + "'''||','" + //CARGO
+                                            "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD')||''''||'" +//FECHA_EMISION
+                                            ", 0," + //NO CTA BI
+                                            " 2002," +//ID AGENCIA
+                                            ""+txtConfirmacion.Text+")'" + // confirmación operador
+                                            " AS INS " +
+                                            "FROM ( SELECT " +
+                                            "DISTINCT PD.EMPLID, " +
+                                            "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
+                                            "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
+                                            "SUBSTR(PD.FIRST_NAME,  LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))+2, LENGTH(PD.FIRST_NAME)-LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))) SECOND_NAME, " +
+                                            "PD.LAST_NAME, PD.BIRTHCOUNTRY," +
+                                            "PD.SECOND_LAST_NAME, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN SUBSTR(PN.NATIONAL_ID,0,9)" +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,0,9) ELSE '' END DPI, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN SUBSTR(PN.NATIONAL_ID,12,2) " +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,12,2) ELSE '' END MUNICIPIO_CUI," +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN  SUBSTR(PN.NATIONAL_ID,10,2) " +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,10,2) ELSE '' END DEPARTAMENTO_CUI," +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' " +
+                                            "    WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_DPI, " +
+                                            // "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN (SELECT * FROM (SELECT NOMBRE_DEPARTAMENTO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) " +
+                                            //"     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN (SELECT * FROM (SELECT NOMBRE_DEPARTAMENTO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) ELSE '' END NOMBRE_DEPARTAMENTO_CUI," +
+                                            //  "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN (SELECT * FROM (SELECT NOMBRE_MUNICIPIO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) " +
+                                            //"     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN (SELECT * FROM (SELECT NOMBRE_MUNICIPIO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) ELSE '' END NOMBRE_MUNICIPIO_CUI," +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' " +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' " +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '2' " +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '2'" +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '3' ELSE ' ' END TIPO_DOCUMENTO," +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_CED, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE NULL END PASAPORTE, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_PAS, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '2' ELSE NULL END CONDMIG, " +
+                                            "PPD.PHONE, " +
+                                            "TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
+                                            //"APD.DESCR CARRERA, " +
+                                            "AGT.DESCR FACULTAD, " +
+                                            "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
+                                            "CASE WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
+                                            "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '' END STATUS, " +
+                                            "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                                            " (select REPLACE(A1.ADDRESS3,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) ZONA, " +
+                                            "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
+                                            "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
+                                            "'ESTUDIANTE' PROF, " +
+                                            "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAIL " +
+                                            "FROM " +
+                                            "SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                            "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                            "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON C.COUNTRY = PD.BIRTHCOUNTRY " +
+                                            "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                                            "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
+                                            "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                                            "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                                            "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                                            "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                                            //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
+                                            "WHERE PN.NATIONAL_ID ='2676467470101')" +
+                                            "WHERE CARNE=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CARNE=PASAPORTE OR CARNE=CEDULA " +
+                                            "ORDER BY 1 ASC";
+                            //--4681531 PASAPORTE
                             reader = cmd.ExecuteReader();
                             while (reader.Read())
                             {
-                                RegistroCarne = reader["CONTADOR"].ToString();
+                                txtInsert.Text = reader["INS"].ToString();
                             }
-                            //txtExiste.Text = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARGO = '" + txtCarrera.Text + "' AND FACULTAD ='" + txtFacultad.Text + "' AND CARNET =SUBSTR('" + txtCarne.Text + "',0,9)";
-                            txtExiste.Text = RegistroCarne.ToString();
-
-                            if (RegistroCarne == "0")
+                            cmd.Transaction = transaction;
+                            //Obtener codigo país
+                            cmd.Connection = con;
+                            //txtInsertBI.Text = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
+                            cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
+                                           "([Carnet] " +
+                                           ",[Direccion] " +
+                                           ",[Zona] " +
+                                           ",[Colonia] " +
+                                           ",[Cedula] " +
+                                           ",[Depto_Cedula] " +
+                                           ",[Muni_Cedula] " +
+                                           ",[Cargo] " +
+                                           ",[Depto] " +
+                                           ",[Facultad] " +
+                                           ",[Codigo] " +
+                                           ",[Tipo_Persona] " +
+                                           ",[No_Cta_Bi] " +
+                                           ",[FechaNac] " +
+                                           ",[Fecha_Solicitado] " +
+                                           ",[Fecha_Entrega] " +
+                                           ",[Accion] " +
+                                           ",[Telefono] " +
+                                           ",[Nit] " +
+                                           ",[Nombre1] " +
+                                           ",[Apellido1] " +
+                                           ",[Apellido2] " +
+                                           ",[Decasada] " +
+                                           ",[Nombre2] " +
+                                           ",[Nombreimp] " +
+                                           ",[Sexo] " +
+                                           ",[Estado_Civil] " +
+                                           ",[Path_file] " +
+                                           ",[Fecha_Hora] " +
+                                           ",[Tipo_Accion] " +
+                                           ",[IDUNIV] " +
+                                           ",[Codigo_Barras] " +
+                                           ",[Fec_Emision] " +
+                                           ",[Nombre] " +
+                                           ",[Promocion] " +
+                                           ",[No_Recibo] " +
+                                           ",[Tipo_Sangre] " +
+                                           ",[Status] " +
+                                           ",[Tipo_Documento] " +
+                                           ",[ID_AGENCIA] " +
+                                           ",[Muni_Residencia] " +
+                                           ",[Depto_Residencia] " +
+                                           ",[norden] " +
+                                           ",[Observaciones] " +
+                                           ",[Pais_nacionalidad] " +
+                                           ",[Pais_pasaporte] " +
+                                           ",[No_Pasaporte] " +
+                                           ",[Profesion] " +
+                                           ",[Casa] " +
+                                           ",[Apto] " +
+                                           ",[Celular] " +
+                                           ",[Email] " +
+                                           ",[No_Cui] " +
+                                           ",[Depto_Cui] " +
+                                           ",[Muni_Cui] " +
+                                           ",[Pais_Nit] " +
+                                           ",[Flag_cedula] " +
+                                           ",[Flag_dpi] " +
+                                           ",[Flag_pasaporte] " +
+                                           ",[Tipo_cta] " +
+                                           ",[Emp_trab] " +
+                                           ",[Fec_In_Tr] " +
+                                           ",[Puesto_Tr] " +
+                                           ",[Lug_Tr] " +
+                                           ",[Fe_In_Tr] " +
+                                           ",[Ing_Tr] " +
+                                           ",[Egr_Tr] " +
+                                           ",[Mone_Tr] " +
+                                           ",[Tel_Tr] " +
+                                           ",[Dir_Tr] " +
+                                           ",[Zona_Tr] " +
+                                           ",[Dep_Tr] " +
+                                           ",[Muni_Tr] " +
+                                           ",[Pais_Tr] " +
+                                           ",[Act_Ec] " +
+                                           ",[Otra_Na] " +
+                                           ",[Condmig] " +
+                                           ",[O_Condmig] " +
+                                           ",[Validar_Envio]) " +
+                                     "VALUES ('''||SUBSTR(CARNE,0,8)||''''||','" + //CARNE
+                                            "||''''||SUBSTR(DIRECCION,0,30)||''''||','" + // DIRECCION
+                                            "||'NULL," + //ZONA
+                                            " NULL,'" + //COLONIA
+                                            "||''''||CEDULA||''''||','" + //CEDULA
+                                            "||'NULL, " + //DEPARTAMENTO CEDULA
+                                            "NULL,'" + //MUNICIPIO CEDULA
+                                            "||'''" + txtCarrera.Text + "'''||','" + //CARGO
+                                            "||'NULL,'" + //DEPARTAMENTO
+                                            "||'''" + txtFacultad.Text + "'''||','" + // FACULTAD
+                                            "||'NULL," + //CODIGO
+                                            "2," + //TIPO PERSONA
+                                            "0," + //NO CTA BI
+                                            "'''||BIRTHDATE||''''||','" + //FECHA DE NACIMIENTO           
+                                            "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''''||','" +//FECHA_ENTREGA
+                                            "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''''||','" +//FECHA_SOLICITADO
+                                            "||'" + txtAccion.Text + "," + //ACCION
+                                            "NULL," + //TELEFONO
+                                            "NULL,'" + //NIT
+                                            "||''''||FIRST_NAME||''''||','" + //NOMBRE1
+                                            "||'''" + txtPrimerApellido.Text + "'''||','" + //APELLIDO1
+                                            "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1)||''''||','" + //APELLIDO2
+                                            "||''''||SECOND_LAST_NAME||''''||','" +// APELLIDO DE CASADA
+                                            "||''''||SECOND_NAME||''''||','" +// NOMBRE 2
+                                            "||''''||FIRST_NAME||' '||'" + txtPrimerApellido.Text + "'||''''||','" + //APELLIDO DE IMPRESION
+                                            "||SEX||','" + // SEXO
+                                            "||STATUS||','" + // ESTADO CIVIL
+                                            "||'''" + ruta + "'''||','" + //PATH
+                                                                          //"NULL,'" + // PATH
+                                            "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''''||'," +//FECHA_HORA
+                                            "" + txtTipoAccion.Text + "," +//TIPO_ACCION
+                                            "2022,'" + //ID  UNIVERSIDAD
+                                            "||CARNE||'," + //CODIGO DE BARRAS
+                                            "NULL," +//FECHA_EMISION
+                                            "NULL," + //Nombre
+                                            "NULL," + //Promocion
+                                            "NULL," + //No_Recibo
+                                            "NULL," + //Tipo_Sangre
+                                            "NULL,'" + //Status
+                                            "||TIPO_DOCUMENTO||'," + //TIPO DOCUMENTO
+                                            "2002,'" +//ID AGENCIA
+                                            "||''''||UPPER(MUNICIPIO)||''''||','" + //MUNICIPIO RESIDENCIA
+                                            "||''''||UPPER(DEPARTAMENTO)||''''||'," + // DEPARTAMENTO RECIDENCIA
+                                            "NULL," + //norden
+                                            "NULL,'" + //Observaciones
+                                            "||''''||BIRTHCOUNTRY||''''||'," + // PAIS NACIONALIDAD
+                                            "NULL,'" + //PAIS PASAPORTE
+                                            "||''''||PASAPORTE||''''||','" + // NUMERO DE PASAPORTE
+                                            "||''''||PROF||''''||'," + // PROFESION
+                                            "NULL," + //Casa
+                                            "NULL,'" + //Apto
+                                            "||''''||PHONE||''''||','" + //CELULAR
+                                            "||''''||EMAIL||''''||','" + // CORREO ELECTRONICO
+                                            "||''''||DPI||''''||','" + // NO_CUI
+                                            "||''''||DEPARTAMENTO_CUI||''''||','" + // DEPARTAMENTO CUI
+                                            "||''''||MUNICIPIO_CUI||''''||'," + //MUNICIPIO CUI
+                                            "NULL,'" + //Pais_Nit
+                                            "||''''||FLAG_CED||''''||','" +
+                                            "||''''||FLAG_DPI||''''||','" +
+                                            "||''''||FLAG_PAS||''''||'," +
+                                            " 0," + //NO CTA BI
+                                            "NULL," + //Emp_trab
+                                            "NULL," + //Fec_In_Tr
+                                            "NULL," + //Puesto_Tr
+                                            "NULL," + //Lug_Tr
+                                            "NULL," + //Fe_In_Tr
+                                            "NULL," + //Ing_Tr
+                                            "NULL," + //
+                                            "NULL," + //
+                                            "NULL," + //
+                                            "NULL," + //Dir_Tr
+                                            "NULL," + //Zona_Tr
+                                            "NULL," + //Dep_Tr
+                                            "NULL," + //Muni_Tr
+                                            "NULL," + //Pais_Tr
+                                            "NULL," + //Act_Ec
+                                            "NULL,'" + //Otra_Na
+                                            "||''''||CONDMIG||''''||'," + //CONDICION MIGRANTE
+                                            "NULL," + //OTRA CONDICION MIGRANTE" 
+                                            "1)'" + //Validar_Envio" 
+                                            " AS INS " +
+                                            "FROM ( SELECT " +
+                                            "DISTINCT PD.EMPLID, " +
+                                            "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
+                                            "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
+                                            "SUBSTR(PD.FIRST_NAME,  LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))+2, LENGTH(PD.FIRST_NAME)-LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))) SECOND_NAME, " +
+                                            "PD.LAST_NAME, PD.BIRTHCOUNTRY," +
+                                            "PD.SECOND_LAST_NAME, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN SUBSTR(PN.NATIONAL_ID,0,9)" +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,0,9) ELSE NULL END DPI, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN SUBSTR(PN.NATIONAL_ID,12,2) " +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,12,2) ELSE NULL END MUNICIPIO_CUI," +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN  SUBSTR(PN.NATIONAL_ID,10,2) " +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,10,2) ELSE NULL END DEPARTAMENTO_CUI," +
+                                            //"CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN (SELECT * FROM (SELECT NOMBRE_DEPARTAMENTO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) " +
+                                            //"     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN (SELECT * FROM (SELECT NOMBRE_DEPARTAMENTO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) ELSE '' END NOMBRE_DEPARTAMENTO_CUI," +
+                                            //  "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN (SELECT * FROM (SELECT NOMBRE_MUNICIPIO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) " +
+                                            //"     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN (SELECT * FROM (SELECT NOMBRE_MUNICIPIO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) ELSE '' END NOMBRE_MUNICIPIO_CUI," +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' " +
+                                            "    WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_DPI, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' " +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' " +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '2' " +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '2'" +
+                                            "     WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '3' ELSE NULL END TIPO_DOCUMENTO," +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE NULL END CEDULA, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_CED, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE NULL END PASAPORTE, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_PAS, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '2' ELSE NULL END CONDMIG, " +
+                                            "PPD.PHONE, " +
+                                            "TO_CHAR(PD.BIRTHDATE, 'YYYY-MM-DD HH:MM:SS') BIRTHDATE, " +
+                                            //"APD.DESCR CARRERA, " +
+                                            "AGT.DESCR FACULTAD, " +
+                                            "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE NULL END SEX, " +
+                                            "CASE WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
+                                            "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE NULL END STATUS, " +
+                                            "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
+                                            " (select REPLACE(A1.ADDRESS3,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) ZONA, " +
+                                            "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
+                                            "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
+                                            "'ESTUDIANTE' PROF, " +
+                                            "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAIL " +
+                                            "FROM " +
+                                            "SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                            "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                            "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON C.COUNTRY = PD.BIRTHCOUNTRY " +
+                                            "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                                            "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
+                                            "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                                            "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                                            "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                                            "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                                            //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
+                                            "WHERE PN.NATIONAL_ID ='2676467470101')" +
+                                            "WHERE CARNE=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CARNE=PASAPORTE OR CARNE=CEDULA " +
+                                            "ORDER BY 1 ASC";
+                            //--4681531 PASAPORTE
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
                             {
-                                string nombreArchivo = txtCarne.Text+".jpg";
-                                string ruta = txtPath.Text+ nombreArchivo;
-                                FileUpload1.SaveAs(ruta);
-                                //txtInsert.Text = txtPath.Text + nombreArchivo;
-
-                                cmd.Transaction = transaction;
-                                 //Obtener codigo país
-                                 cmd.Connection = con;
-                                 cmd.CommandText = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
-                                 //txtInsert.Text = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, " +
-                                                 //"FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, " +
-                                                 //"Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, " +
-                                                 //"Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
-                                                 " Fec_Emision, NO_CTA_BI, ID_AGENCIA) VALUES ('''" +
-                                                 "||'" + txtPrimerApellido.Text + "'''||','" + //APELLIDO1
-                                                 "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1)||''''||','" + //APELLIDO2
-                                                 "||''''||SUBSTR(CARNE,0,8)||''''||','" + //CARNE
-                                                 "||''''||CEDULA||''''||','" + //CEDULA
-                                                 "||''''||SECOND_LAST_NAME||''''||','" +// APELLIDO DE CASADA
-                                                 "||''''||UPPER(DEPARTAMENTO)||''''||','" + //DEPARTAMENTO DE RESIDENCIA
-                                                 "||''''||SUBSTR(DIRECCION,0,30)||''''||','" + // DIRECCION
-                                                 "||''''||EMAIL||''''||','" + // CORREO ELECTRONICO
-                                                 "||STATUS||','" + // ESTADO CIVIL
-                                                 "||'''" + txtFacultad.Text + "'''||','" + // FACULTAD
-                                                 "||''''||BIRTHDATE||''''||','" + //FECHA DE NACIMIENTO
-                                                 "||''''||FLAG_CED||''''||','" +
-                                                 "||''''||FLAG_DPI||''''||','" +
-                                                 "||''''||FLAG_PAS||''''||','" +
-                                                 "||''''||UPPER(MUNICIPIO)||''''||'," + //MUNICIPIO DE RESIDENCIA
-                                                 "NULL,'" + //NIT
-                                                 "||''''||DPI||''''||','" + // NO_CUI
-                                                 "||''''||PASAPORTE||''''||','" + // NUMERO DE PASAPORTE
-                                                 "||''''||FIRST_NAME||''''||','" + //NOMBRE1
-                                                 "||''''||SECOND_NAME||''''||','" +// NOMBRE 2
-                                                 "||''''||FIRST_NAME||' '||'" + txtPrimerApellido.Text + "'||''''||','" + //APELLIDO DE IMPRESION
-                                                 "||''''||BIRTHCOUNTRY||''''||','" + // PAIS NACIONALIDAD
-                                                 "||''''||PROF||''''||','" + // PROFESION
-                                                 "||SEX||'," + // SEXO
-                                                 "NULL," + //TELEFONO
-                                                 "NULL," + //ZONA
-                                                 "1,'" + //ACCION
-                                                 "||''''||PHONE||''''||','" + //CELULAR
-                                                 "||CARNE||','" + //CODIGO DE BARRAS
-                                                 "||''''||CONDMIG||''''||','" + //CONDICION MIGRANTE
-                                                 "||'2022," + //ID  UNIVERSIDAD
-                                                 "NULL,'" + //PAIS PASAPORTE
-                                                 "'" + txtAccion.Text +  //TIPO_ACCION
-                                                 "'','||2||'" + //TIPO PERSONA
-                                                 ",NULL,'" + // PAIS NIT
-                                                 "||''''||DEPARTAMENTO_CUI||''''||','" + // DEPARTAMENTO CUI
-                                                 "||''''||MUNICIPIO_CUI||''''||'," + //MUNICIPIO CUI
-                                                 "1," + //VALIDAR ENVIO
-                                                 "'||'''"+ruta+"'''||'," + //PATH
-                                                 "NULL," + //CODIGO
-                                                 "NULL,'" + // DEPARTAMENTO
-                                                 "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD')||''''||','" +//FECHA_HORA
-                                                 "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD')||''''||','" +//FECHA_ENTREGA
-                                                 "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD')||''''||','" +//FECHA_SOLICITADO
-                                                 "||TIPO_DOCUMENTO||','" + //TIPO DOCUMENTO
-                                                 "||'''" + txtCarrera.Text + "'''||','" + //CARGO
-                                                 "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD')||''''||'" +//FECHA_EMISION
-                                                 ", 0," + //NO CTA BI
-                                                 " 2002)'" +//ID AGENCIA
-                                                 " AS INS " +
-                                                 "FROM ( SELECT " +
-                                                 "DISTINCT PD.EMPLID, " +
-                                                 "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
-                                                 "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
-                                                 "SUBSTR(PD.FIRST_NAME,  LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))+2, LENGTH(PD.FIRST_NAME)-LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))) SECOND_NAME, " +
-                                                 "PD.LAST_NAME, PD.BIRTHCOUNTRY," +
-                                                 "PD.SECOND_LAST_NAME, " +
-                                                 "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN SUBSTR(PN.NATIONAL_ID,0,9)" +
-                                                 "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,0,9) ELSE '' END DPI, " +
-                                                 "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN SUBSTR(PN.NATIONAL_ID,12,2) " +
-                                                 "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,12,2) ELSE '' END MUNICIPIO_CUI," +
-                                                 "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN  SUBSTR(PN.NATIONAL_ID,10,2) " +
-                                                 "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,10,2) ELSE '' END DEPARTAMENTO_CUI," +
-                                                 "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' " +
-                                                 "    WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_DPI, " +
-                                                // "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN (SELECT * FROM (SELECT NOMBRE_DEPARTAMENTO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) " +
-                                                //"     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN (SELECT * FROM (SELECT NOMBRE_DEPARTAMENTO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) ELSE '' END NOMBRE_DEPARTAMENTO_CUI," +
-                                                //  "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN (SELECT * FROM (SELECT NOMBRE_MUNICIPIO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) " +
-                                                //"     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN (SELECT * FROM (SELECT NOMBRE_MUNICIPIO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) ELSE '' END NOMBRE_MUNICIPIO_CUI," +
-                                                 "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' " +
-                                                 "     WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' " +
-                                                 "     WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '2' " +
-                                                 "     WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '2'" +
-                                                 "     WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '3' ELSE ' ' END TIPO_DOCUMENTO," +
-                                                 "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE '' END CEDULA, " +
-                                                 "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_CED, " +
-                                                 "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE NULL END PASAPORTE, " +
-                                                 "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_PAS, " +
-                                                 "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '2' ELSE NULL END CONDMIG, " +
-                                                 "PPD.PHONE, " +
-                                                 "TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
-                                                 //"APD.DESCR CARRERA, " +
-                                                 "AGT.DESCR FACULTAD, " +
-                                                 "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
-                                                 "CASE WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
-                                                 "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '' END STATUS, " +
-                                                 "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
-                                                 " (select REPLACE(A1.ADDRESS3,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) ZONA, " +
-                                                 "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
-                                                 "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
-                                                 "'ESTUDIANTE' PROF, " +
-                                                 "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAIL " +
-                                                 "FROM " +
-                                                 "SYSADM.PS_PERS_DATA_SA_VW PD " +
-                                                 "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
-                                                 "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON C.COUNTRY = PD.BIRTHCOUNTRY " +
-                                                 "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
-                                                 "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
-                                                 "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                                                 "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                                 "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                                                 "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
-                                                 "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
-                                                 "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                                 "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
-                                                 "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
-                                                 //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                                 "WHERE PN.NATIONAL_ID ='2676467470101')" +
-                                                 "WHERE CARNE=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CARNE=PASAPORTE OR CARNE=CEDULA " +
-                                                 "ORDER BY 1 ASC";
-                                 //--4681531 PASAPORTE
-                                 reader = cmd.ExecuteReader();
-                                 while (reader.Read())
-                                 {
-                                     txtInsert.Text = reader["INS"].ToString();
-                                 }
-                                cmd.Transaction = transaction;
-                                //Obtener codigo país
-                                cmd.Connection = con;
-                                //txtInsertBI.Text = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
-                                cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
-                                               "([Carnet] " +
-                                               ",[Direccion] " +
-                                               ",[Zona] " +
-                                               ",[Colonia] " +
-                                               ",[Cedula] " +
-                                               ",[Depto_Cedula] " +
-                                               ",[Muni_Cedula] " +
-                                               ",[Cargo] " +
-                                               ",[Depto] " +
-                                               ",[Facultad] " +
-                                               ",[Codigo] " +
-                                               ",[Tipo_Persona] " +
-                                               ",[No_Cta_Bi] " +
-                                               ",[FechaNac] " +
-                                               ",[Fecha_Solicitado] " +
-                                               ",[Fecha_Entrega] " +
-                                               ",[Accion] " +
-                                               ",[Telefono] " +
-                                               ",[Nit] " +
-                                               ",[Nombre1] " +
-                                               ",[Apellido1] " +
-                                               ",[Apellido2] " +
-                                               ",[Decasada] " +
-                                               ",[Nombre2] " +
-                                               ",[Nombreimp] " +
-                                               ",[Sexo] " +
-                                               ",[Estado_Civil] " +
-                                               ",[Path_file] " +
-                                               ",[Fecha_Hora] " +
-                                               ",[Tipo_Accion] " +
-                                               ",[IDUNIV] " +
-                                               ",[Codigo_Barras] " +
-                                               ",[Fec_Emision] " +
-                                               ",[Nombre] " +
-                                               ",[Promocion] " +
-                                               ",[No_Recibo] " +
-                                               ",[Tipo_Sangre] " +
-                                               ",[Status] " +
-                                               ",[Tipo_Documento] " +
-                                               ",[ID_AGENCIA] " +
-                                               ",[Muni_Residencia] " +
-                                               ",[Depto_Residencia] " +
-                                               ",[norden] " +
-                                               ",[Observaciones] " +
-                                               ",[Pais_nacionalidad] " +
-                                               ",[Pais_pasaporte] " +
-                                               ",[No_Pasaporte] " +
-                                               ",[Profesion] " +
-                                               ",[Casa] " +
-                                               ",[Apto] " +
-                                               ",[Celular] " +
-                                               ",[Email] " +
-                                               ",[No_Cui] " +
-                                               ",[Depto_Cui] " +
-                                               ",[Muni_Cui] " +
-                                               ",[Pais_Nit] " +
-                                               ",[Flag_cedula] " +
-                                               ",[Flag_dpi] " +
-                                               ",[Flag_pasaporte] " +
-                                               ",[Tipo_cta] " +
-                                               ",[Emp_trab] " +
-                                               ",[Fec_In_Tr] " +
-                                               ",[Puesto_Tr] " +
-                                               ",[Lug_Tr] " +
-                                               ",[Fe_In_Tr] " +
-                                               ",[Ing_Tr] " +
-                                               ",[Egr_Tr] " +
-                                               ",[Mone_Tr] " +
-                                               ",[Tel_Tr] " +
-                                               ",[Dir_Tr] " +
-                                               ",[Zona_Tr] " +
-                                               ",[Dep_Tr] " +
-                                               ",[Muni_Tr] " +
-                                               ",[Pais_Tr] " +
-                                               ",[Act_Ec] " +
-                                               ",[Otra_Na] " +
-                                               ",[Condmig] " +
-                                               ",[O_Condmig] " +
-                                               ",[Validar_Envio]) " +
-                                         "VALUES ('''||SUBSTR(CARNE,0,8)||''''||','" + //CARNE
-                                                "||''''||SUBSTR(DIRECCION,0,30)||''''||','" + // DIRECCION
-                                                "||'NULL," + //ZONA
-                                                " NULL,'" + //COLONIA
-                                                "||''''||CEDULA||''''||','" + //CEDULA
-                                                "||'NULL, " + //DEPARTAMENTO CEDULA
-                                                "NULL,'" + //MUNICIPIO CEDULA
-                                                "||'''" + txtCarrera.Text + "'''||','" + //CARGO
-                                                "||'NULL,'" + //DEPARTAMENTO
-                                                "||'''" + txtFacultad.Text + "'''||','" + // FACULTAD
-                                                "||'NULL," + //CODIGO
-                                                "2," + //TIPO PERSONA
-                                                "0," + //NO CTA BI
-                                                "'''||BIRTHDATE||''''||','" + //FECHA DE NACIMIENTO           
-                                                "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''''||','" +//FECHA_ENTREGA
-                                                "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''''||','" +//FECHA_SOLICITADO
-                                                "||'1," + //ACCION
-                                                "NULL," + //TELEFONO
-                                                "NULL,'" + //NIT
-                                                "||''''||FIRST_NAME||''''||','" + //NOMBRE1
-                                                "||'''" + txtPrimerApellido.Text + "'''||','" + //APELLIDO1
-                                                "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1)||''''||','" + //APELLIDO2
-                                                "||''''||SECOND_LAST_NAME||''''||','" +// APELLIDO DE CASADA
-                                                "||''''||SECOND_NAME||''''||','" +// NOMBRE 2
-                                                "||''''||FIRST_NAME||' '||'" + txtPrimerApellido.Text + "'||''''||','" + //APELLIDO DE IMPRESION
-                                                "||SEX||','" + // SEXO
-                                                "||STATUS||','" + // ESTADO CIVIL
-                                                "||'''" + ruta + "'''||','" + //PATH
-                                                //"NULL,'" + // PATH
-                                                "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''''||'," +//FECHA_HORA
-                                                "" + txtAccion.Text + ",'" +//TIPO_ACCION
-                                                "||'2022,'" + //ID  UNIVERSIDAD
-                                                "||CARNE||'," + //CODIGO DE BARRAS
-                                                "NULL," +//FECHA_EMISION
-                                                "NULL," + //Nombre
-                                                "NULL," + //Promocion
-                                                "NULL," + //No_Recibo
-                                                "NULL," + //Tipo_Sangre
-                                                "NULL,'" + //Status
-                                                "||TIPO_DOCUMENTO||'," + //TIPO DOCUMENTO
-                                                "2002,'" +//ID AGENCIA
-                                                "||''''||UPPER(MUNICIPIO)||''''||','" + //MUNICIPIO RESIDENCIA
-                                                "||''''||UPPER(DEPARTAMENTO)||''''||'," + // DEPARTAMENTO RECIDENCIA
-                                                "NULL," + //norden
-                                                "NULL,'" + //Observaciones
-                                                "||''''||BIRTHCOUNTRY||''''||'," + // PAIS NACIONALIDAD
-                                                "NULL,'" + //PAIS PASAPORTE
-                                                "||''''||PASAPORTE||''''||','" + // NUMERO DE PASAPORTE
-                                                "||''''||PROF||''''||'," + // PROFESION
-                                                "NULL," + //Casa
-                                                "NULL,'" + //Apto
-                                                "||''''||PHONE||''''||','" + //CELULAR
-                                                "||''''||EMAIL||''''||','" + // CORREO ELECTRONICO
-                                                "||''''||DPI||''''||','" + // NO_CUI
-                                                "||''''||DEPARTAMENTO_CUI||''''||','" + // DEPARTAMENTO CUI
-                                                "||''''||MUNICIPIO_CUI||''''||'," + //MUNICIPIO CUI
-                                                "NULL,'" + //Pais_Nit
-                                                "||''''||FLAG_CED||''''||','" +
-                                                "||''''||FLAG_DPI||''''||','" +
-                                                "||''''||FLAG_PAS||''''||'," +
-                                                " 0," + //NO CTA BI
-                                                "NULL," + //Emp_trab
-                                                "NULL," + //Fec_In_Tr
-                                                "NULL," + //Puesto_Tr
-                                                "NULL," + //Lug_Tr
-                                                "NULL," + //Fe_In_Tr
-                                                "NULL," + //Ing_Tr
-                                                "NULL," + //
-                                                "NULL," + //
-                                                "NULL," + //
-                                                "NULL," + //Dir_Tr
-                                                "NULL," + //Zona_Tr
-                                                "NULL," + //Dep_Tr
-                                                "NULL," + //Muni_Tr
-                                                "NULL," + //Pais_Tr
-                                                "NULL," + //Act_Ec
-                                                "NULL,'" + //Otra_Na
-                                                "||''''||CONDMIG||''''||'," + //CONDICION MIGRANTE
-                                                "NULL," + //OTRA CONDICION MIGRANTE" 
-                                                "1)'" + //Validar_Envio" 
-                                                " AS INS " +
-                                                "FROM ( SELECT " +
-                                                "DISTINCT PD.EMPLID, " +
-                                                "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
-                                                "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
-                                                "SUBSTR(PD.FIRST_NAME,  LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))+2, LENGTH(PD.FIRST_NAME)-LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))) SECOND_NAME, " +
-                                                "PD.LAST_NAME, PD.BIRTHCOUNTRY," +
-                                                "PD.SECOND_LAST_NAME, " +
-                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN SUBSTR(PN.NATIONAL_ID,0,9)" +
-                                                "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,0,9) ELSE NULL END DPI, " +
-                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN SUBSTR(PN.NATIONAL_ID,12,2) " +
-                                                "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,12,2) ELSE NULL END MUNICIPIO_CUI," +
-                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN  SUBSTR(PN.NATIONAL_ID,10,2) " +
-                                                "     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN SUBSTR(PN.NATIONAL_ID,10,2) ELSE NULL END DEPARTAMENTO_CUI," +
-                                                //"CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN (SELECT * FROM (SELECT NOMBRE_DEPARTAMENTO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) " +
-                                                //"     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN (SELECT * FROM (SELECT NOMBRE_DEPARTAMENTO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) ELSE '' END NOMBRE_DEPARTAMENTO_CUI," +
-                                                //  "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN (SELECT * FROM (SELECT NOMBRE_MUNICIPIO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) " +
-                                                //"     WHEN PN.NATIONAL_ID_TYPE = 'CER' THEN (SELECT * FROM (SELECT NOMBRE_MUNICIPIO FROM UNIS_INTERFACES.CAT_CODIGO_DPI WHERE TEMINACION_DPI = SUBSTR(PN.NATIONAL_ID,10,4))) ELSE '' END NOMBRE_MUNICIPIO_CUI," +
-                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' " +
-                                                "    WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_DPI, " +
-                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' AND PN.NATIONAL_ID != ' ' THEN '1' " +
-                                                "     WHEN PN.NATIONAL_ID_TYPE = 'CER' AND PN.NATIONAL_ID != ' ' THEN '1' " +
-                                                "     WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '2' " +
-                                                "     WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '2'" +
-                                                "     WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '3' ELSE NULL END TIPO_DOCUMENTO," +
-                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' THEN PN.NATIONAL_ID ELSE NULL END CEDULA, " +
-                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_CED, " +
-                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE NULL END PASAPORTE, " +
-                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_PAS, " +
-                                                "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '2' ELSE NULL END CONDMIG, " +
-                                                "PPD.PHONE, " +
-                                                "TO_CHAR(PD.BIRTHDATE, 'YYYY-MM-DD HH:MM:SS') BIRTHDATE, " +
-                                                //"APD.DESCR CARRERA, " +
-                                                "AGT.DESCR FACULTAD, " +
-                                                "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE NULL END SEX, " +
-                                                "CASE WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
-                                                "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE NULL END STATUS, " +
-                                                "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
-                                                " (select REPLACE(A1.ADDRESS3,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) ZONA, " +
-                                                "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
-                                                "SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) DEPARTAMENTO, " +
-                                                "'ESTUDIANTE' PROF, " +
-                                                "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = PD.EMPLID AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAIL " +
-                                                "FROM " +
-                                                "SYSADM.PS_PERS_DATA_SA_VW PD " +
-                                                "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
-                                                "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON C.COUNTRY = PD.BIRTHCOUNTRY " +
-                                                "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
-                                                "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
-                                                "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                                                "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                                "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                                                "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
-                                                "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
-                                                "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                                "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
-                                                "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
-                                                //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                                "WHERE PN.NATIONAL_ID ='2676467470101')" +
-                                                "WHERE CARNE=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CARNE=PASAPORTE OR CARNE=CEDULA " +
-                                                "ORDER BY 1 ASC";
-                                //--4681531 PASAPORTE
-                                reader = cmd.ExecuteReader();
-                                while (reader.Read())
-                                {
-                                    txtInsertBI.Text = reader["INS"].ToString();
-                                }
-                            };
-                            
-                            try
-                            {
-                                if (String.IsNullOrEmpty(State.Text))
-                                    State.Text = " ";
-                                if (String.IsNullOrEmpty(txtDireccion2.Text))
-                                    txtDireccion2.Text = " ";
-                                if (String.IsNullOrEmpty(txtDireccion3.Text))
-                                    txtDireccion3.Text = " ";
-                                //Telefono y direccion
-                                cmd.Connection = con;
-                                cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_DATA PPD SET PPD.PHONE = '" + txtTelefono.Text + "', PPD.STATE =  '" + State.Text + "', " +
-                                    "PPD.ADDRESS1 = '" + txtDireccion.Text + "', PPD.ADDRESS2 = '" + txtDireccion2.Text + "', PPD.ADDRESS3 = '" + txtDireccion3.Text + "', PPD.COUNTRY = '" + codPais + "',LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "' WHERE PPD.EMPLID = '" + UserEmplid.Text + "'";
-                                cmd.ExecuteNonQuery();
-                                //Numero de Telefono
-                                if (!String.IsNullOrEmpty(TruePhone.Text))
-                                {
-                                    //TruePhone.Text = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PP.EMPLID = '" + UserEmplid.Text + "' AND PP.PHONE_TYPE='HOME'";
-                                    cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PP.EMPLID = '" + UserEmplid.Text + "' AND PP.PHONE_TYPE='HOME'";
-                                    cmd.ExecuteNonQuery();
-                                }
-                                else
-                                {
-                                    cmd.CommandText = "INSERT INTO SYSADM.PS_PERSONAL_PHONE (EMPLID, PHONE_TYPE,COUNTRY_CODE,EXTENSION,PHONE,PREF_PHONE_FLAG) VALUES ('" + UserEmplid.Text + "', 'HOME',' ',' ',  '" + txtTelefono.Text + "', 'Y')";
-                                    cmd.ExecuteNonQuery();
-                                }
-                                //Direccion
-                                if (!String.IsNullOrEmpty(TrueDir.Text))
-                                {
-                                    cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + State.Text + "', A.ADDRESS1 = '" + txtDireccion.Text + "', A.ADDRESS2 = '" + txtDireccion2.Text + "', A.ADDRESS3 = '" + txtDireccion3.Text + "', A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "' WHERE A.EMPLID = '" + UserEmplid.Text + "'";
-                                    cmd.ExecuteNonQuery();
-                                }
-                                else
-                                {
-                                    cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES (EMPLID, ADDRESS_TYPE,COUNTY,CITY,NUM1, NUM2, HOUSE_TYPE, ADDR_FIELD1, ADDR_FIELD2, ADDR_FIELD3,POSTAL,GEO_CODE,IN_CITY_LIMIT,ADDRESS1_AC,ADDRESS2_AC,ADDRESS3_AC,CITY_AC,REG_REGION,EFFDT,EFF_STATUS,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,STATE,LASTUPDDTTM,LASTUPDOPRID) " +
-                                        "VALUES('" + UserEmplid.Text + "', 'HOME',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'A', '" + codPais + "', '" + txtDireccion.Text + "', '" + txtDireccion2.Text + "', '" + txtDireccion3.Text + "', ' ','" + State.Text + "', '" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "','" + TextUser.Text + "')";
-                                    cmd.ExecuteNonQuery();
-                                    cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES_SA (LOC_ADDR_DATA,LOC_ADDR, LOC_ADDR_LINE, LOC_ADDR_TYPE, EXT_ORG_ID, DESCR_EXT_ORG, DESCR_ORG_LOCATION, CONTACT_NAME, DATA_SOURCE, EMPLID, ADDRESS_TYPE,EFFDT,ORG_LOCATION,MAINT_ADDR_MANUAL,MAINT_OTHER_MANUAL,ORG_CONTACT,SEASONAL_ADDR) " +
-                                        "VALUES(' ',' ',' ',' ',' ',' ',' ',' ',' ','" + UserEmplid.Text + "', 'HOME', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 0, 'N','N',0,'N')";
-                                    cmd.ExecuteNonQuery();
-                                }
-                                //Estado Civil
-                                cmd.CommandText = "UPDATE SYSADM.PS_PERS_DATA_EFFDT PD SET PD.MAR_STATUS = '" + ec + "' WHERE PD.EMPLID = '" + UserEmplid.Text + "'";
-                                cmd.ExecuteNonQuery();
-                            
-                                if (!txtInsert.Text.IsNullOrWhiteSpace())
-                                {
-                                    cmd.CommandText = txtInsert.Text;
-                                    cmd.ExecuteNonQuery();
-                                }                                
-                                
-                                transaction.Commit();
-                                con.Close();
-                                mensaje = "Su información fue actualizada correctamente";
+                                txtInsertBI.Text = reader["INS"].ToString();
                             }
-                            catch (Exception x)
-                            {
-                                transaction.Rollback();
-                                mensaje = "Ocurrió un problema al actualizar su información "+x;
-                            }
+                        };
                         
-                        }
-                    }
+                        try
+                        {
+                            /*if (String.IsNullOrEmpty(State.Text))
+                                State.Text = " ";
+                            if (String.IsNullOrEmpty(txtDireccion2.Text))
+                                txtDireccion2.Text = " ";
+                            if (String.IsNullOrEmpty(txtDireccion3.Text))
+                                txtDireccion3.Text = " ";
+                            //Telefono y direccion
+                            cmd.Connection = con;
+                            cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_DATA PPD SET PPD.PHONE = '" + txtTelefono.Text + "', PPD.STATE =  '" + State.Text + "', " +
+                                "PPD.ADDRESS1 = '" + txtDireccion.Text + "', PPD.ADDRESS2 = '" + txtDireccion2.Text + "', PPD.ADDRESS3 = '" + txtDireccion3.Text + "', PPD.COUNTRY = '" + codPais + "',LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "' WHERE PPD.EMPLID = '" + UserEmplid.Text + "'";
+                            cmd.ExecuteNonQuery();
+                            //Numero de Telefono
+                            if (!String.IsNullOrEmpty(TruePhone.Text))
+                            {
+                                //TruePhone.Text = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PP.EMPLID = '" + UserEmplid.Text + "' AND PP.PHONE_TYPE='HOME'";
+                                cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PP.EMPLID = '" + UserEmplid.Text + "' AND PP.PHONE_TYPE='HOME'";
+                                cmd.ExecuteNonQuery();
+                            }
+                            else
+                            {
+                                cmd.CommandText = "INSERT INTO SYSADM.PS_PERSONAL_PHONE (EMPLID, PHONE_TYPE,COUNTRY_CODE,EXTENSION,PHONE,PREF_PHONE_FLAG) VALUES ('" + UserEmplid.Text + "', 'HOME',' ',' ',  '" + txtTelefono.Text + "', 'Y')";
+                                cmd.ExecuteNonQuery();
+                            }
+                            //Direccion
+                            if (!String.IsNullOrEmpty(TrueDir.Text))
+                            {
+                                cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + State.Text + "', A.ADDRESS1 = '" + txtDireccion.Text + "', A.ADDRESS2 = '" + txtDireccion2.Text + "', A.ADDRESS3 = '" + txtDireccion3.Text + "', A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "' WHERE A.EMPLID = '" + UserEmplid.Text + "'";
+                                cmd.ExecuteNonQuery();
+                            }
+                            else
+                            {
+                                cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES (EMPLID, ADDRESS_TYPE,COUNTY,CITY,NUM1, NUM2, HOUSE_TYPE, ADDR_FIELD1, ADDR_FIELD2, ADDR_FIELD3,POSTAL,GEO_CODE,IN_CITY_LIMIT,ADDRESS1_AC,ADDRESS2_AC,ADDRESS3_AC,CITY_AC,REG_REGION,EFFDT,EFF_STATUS,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,STATE,LASTUPDDTTM,LASTUPDOPRID) " +
+                                    "VALUES('" + UserEmplid.Text + "', 'HOME',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'A', '" + codPais + "', '" + txtDireccion.Text + "', '" + txtDireccion2.Text + "', '" + txtDireccion3.Text + "', ' ','" + State.Text + "', '" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "','" + TextUser.Text + "')";
+                                cmd.ExecuteNonQuery();
+                                cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES_SA (LOC_ADDR_DATA,LOC_ADDR, LOC_ADDR_LINE, LOC_ADDR_TYPE, EXT_ORG_ID, DESCR_EXT_ORG, DESCR_ORG_LOCATION, CONTACT_NAME, DATA_SOURCE, EMPLID, ADDRESS_TYPE,EFFDT,ORG_LOCATION,MAINT_ADDR_MANUAL,MAINT_OTHER_MANUAL,ORG_CONTACT,SEASONAL_ADDR) " +
+                                    "VALUES(' ',' ',' ',' ',' ',' ',' ',' ',' ','" + UserEmplid.Text + "', 'HOME', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 0, 'N','N',0,'N')";
+                                cmd.ExecuteNonQuery();
+                            }
+                            //Estado Civil
+                            cmd.CommandText = "UPDATE SYSADM.PS_PERS_DATA_EFFDT PD SET PD.MAR_STATUS = '" + ec + "' WHERE PD.EMPLID = '" + UserEmplid.Text + "'";
+                            cmd.ExecuteNonQuery();*/
 
+                            if (!txtInsert.Text.IsNullOrWhiteSpace())
+                            {
+                                cmd.CommandText = txtInsert.Text;
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            transaction.Commit();
+                            con.Close();
+                            mensaje = "Su información fue actualizada correctamente";
+                        }
+                        catch (Exception x)
+                        {
+                            transaction.Rollback();
+                            mensaje = "Ocurrió un problema al actualizar su información " + x;
+                        }
+                        
+                    }
+                }
+                if (RegistroCarne == "0")
+                {
                     using (SqlConnection conexion = new SqlConnection(TxtURLSql.Text))
                     {
                         conexion.Open();
                         txtExiste.Text = "//";
                         var trans = conexion.BeginTransaction();
-                        
+
                         txtExiste.Text = "/";
                         using (SqlCommand sqlCommand = new SqlCommand(txtInsertBI.Text))
                         {
@@ -857,36 +927,31 @@ namespace ReportesUnis
                         }
                     }
                 }
-                catch (Exception X)
-                {
-                    mensaje = "Ocurrió un problema al actualizar su información"+X;
-                }
             }
-            else
+            catch (Exception X)
             {
-                mensaje = "No puede enviarse información vacía y es necesario seleccionar el estado civil, un país, un departamento y un muncipio";
+                mensaje = "Ocurrió un problema al actualizar su información" + X;
             }
             return mensaje;
-        }
-
-        //Eventos       
-        protected void CmbMunicipio_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            llenadoState();
-        }
-        protected void CmbDepartamento_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            llenadoMunicipio();
-            llenadoState();
         }
 
         protected void BtnActualizar_Click(object sender, EventArgs e)
         {
             string informacion = actualizarInformacion();
 
-            if (informacion != "No puede enviarse información vacía y es necesario seleccionar el estado civil, un país, un departamento y un muncipio")
+            if ((informacion != "No puede enviarse información vacía y es necesario seleccionar el estado civil, un país, un departamento y un muncipio" || informacion != "No puede enviarse información vacía y es necesario cargar una fotografía, seleccionar el estado civil, un país, un departamento y un muncipio") && txtNInicial.Text == txtNombre.Text && txtAInicial.Text == txtApellido.Text)
             {
-                informacion = informacion + Upload();
+                if (FileUpload1.HasFile)
+                {
+                    informacion = informacion + Upload();
+                }
+            }
+            else if (txtNInicial.Text != txtNombre.Text && txtAInicial.Text != txtApellido.Text)
+            {
+                if (FileUpload1.HasFile && FileUpload2.HasFiles)
+                {
+                    informacion = informacion + Upload();
+                }
             }
 
             lblActualizacion.Text = informacion;

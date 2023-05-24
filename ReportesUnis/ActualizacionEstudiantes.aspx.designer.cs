@@ -33,13 +33,49 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.FileUpload FileUpload1;
 
         /// <summary>
+        /// Control CargaDPI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl CargaDPI;
+
+        /// <summary>
+        /// Control Label3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label3;
+
+        /// <summary>
+        /// Control Label2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label2;
+
+        /// <summary>
+        /// Control FileUpload2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload FileUpload2;
+
+        /// <summary>
         /// Control UserEmplid.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox UserEmplid;
+        protected global::System.Web.UI.WebControls.Label UserEmplid;
 
         /// <summary>
         /// Control State.
@@ -48,7 +84,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox State;
+        protected global::System.Web.UI.WebControls.Label State;
 
         /// <summary>
         /// Control TruePhone.
@@ -57,7 +93,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TruePhone;
+        protected global::System.Web.UI.WebControls.Label TruePhone;
 
         /// <summary>
         /// Control TrueDir.
@@ -66,7 +102,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TrueDir;
+        protected global::System.Web.UI.WebControls.Label TrueDir;
 
         /// <summary>
         /// Control TxtURL.
@@ -75,7 +111,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtURL;
+        protected global::System.Web.UI.WebControls.Label TxtURL;
 
         /// <summary>
         /// Control TxtURLSql.
@@ -84,7 +120,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtURLSql;
+        protected global::System.Web.UI.WebControls.Label TxtURLSql;
 
         /// <summary>
         /// Control TextUser.
@@ -93,7 +129,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextUser;
+        protected global::System.Web.UI.WebControls.Label TextUser;
 
         /// <summary>
         /// Control txtContaador.
@@ -102,7 +138,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtContaador;
+        protected global::System.Web.UI.WebControls.Label txtContaador;
 
         /// <summary>
         /// Control txtPrimerApellido.
@@ -111,7 +147,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPrimerApellido;
+        protected global::System.Web.UI.WebControls.Label txtPrimerApellido;
 
         /// <summary>
         /// Control txtAccion.
@@ -120,7 +156,16 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAccion;
+        protected global::System.Web.UI.WebControls.Label txtAccion;
+
+        /// <summary>
+        /// Control txtTipoAccion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtTipoAccion;
 
         /// <summary>
         /// Control txtInsert.
@@ -147,7 +192,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtExiste;
+        protected global::System.Web.UI.WebControls.Label txtExiste;
 
         /// <summary>
         /// Control txtMunicipioDPI.
@@ -156,7 +201,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMunicipioDPI;
+        protected global::System.Web.UI.WebControls.Label txtMunicipioDPI;
 
         /// <summary>
         /// Control txtDepartamentoDPI.
@@ -165,7 +210,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDepartamentoDPI;
+        protected global::System.Web.UI.WebControls.Label txtDepartamentoDPI;
 
         /// <summary>
         /// Control txtPath.
@@ -174,7 +219,34 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPath;
+        protected global::System.Web.UI.WebControls.Label txtPath;
+
+        /// <summary>
+        /// Control txtNInicial.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtNInicial;
+
+        /// <summary>
+        /// Control txtAInicial.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtAInicial;
+
+        /// <summary>
+        /// Control txtConfirmacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtConfirmacion;
 
         /// <summary>
         /// Control RequiredFieldValidatorNull1.
@@ -228,7 +300,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtNombre;
+        protected global::System.Web.UI.WebControls.TextBox txtNombre;
 
         /// <summary>
         /// Control txtApellido.
@@ -237,7 +309,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtApellido;
+        protected global::System.Web.UI.WebControls.TextBox txtApellido;
 
         /// <summary>
         /// Control txtCumple.
