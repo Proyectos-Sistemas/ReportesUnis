@@ -71,6 +71,8 @@
     <asp:TextBox ID="txtCInicial" runat="server" Visible="true"></asp:TextBox>
     <%-- CONFIRMACION OPERADOR --%>
     <asp:Label ID="txtConfirmacion" runat="server" Visible="true"></asp:Label>
+    <%-- ¡tiene pasaporte? --%>
+    <asp:Label ID="txtPaisPasaporte" runat="server" Visible="true"></asp:Label>
 
     <%-- VALIDACION CAMPOS NULOS --%>
     <%--<div style="margin-left: auto; margin-right: auto; text-align: center;">--%>
