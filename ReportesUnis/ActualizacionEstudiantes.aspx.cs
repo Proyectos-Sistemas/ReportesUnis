@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Windows.Interop;
+using DocumentFormat.OpenXml.Office.Word;
 using Microsoft.Ajax.Utilities;
 //using DocumentFormat.OpenXml.Drawing;
 using Newtonsoft.Json;
@@ -107,9 +108,9 @@ namespace ReportesUnis
                 {
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO," +
-                        "DEPARTAMENTO, CNT FROM (" +
+                        "DEPARTAMENTO, SECOND_LAST_NAME, CNT FROM (" +
                     "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, " +
-                    "PD.LAST_NAME|| ' ' || PD.SECOND_LAST_NAME LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
+                    "PD.LAST_NAME, PD.SECOND_LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
                     "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
                     "APD.DESCR CARRERA, AGT.DESCR FACULTAD, " +
                     "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'No Consta' END STATUS, " +
@@ -149,7 +150,8 @@ namespace ReportesUnis
                     "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                     //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
                     //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                    "WHERE PN.NATIONAL_ID ='2676467470101' " + // DE LEON
+                    //"WHERE PN.NATIONAL_ID ='2676467470101' " + // DE LEON
+                    "WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
                     //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián  
                    ") WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
@@ -159,13 +161,15 @@ namespace ReportesUnis
                         txtNombre.Text = reader["FIRST_NAME"].ToString();
                         txtNInicial.Text = reader["FIRST_NAME"].ToString();
                         txtApellido.Text = reader["LAST_NAME"].ToString();
+                        txtCasada.Text = reader["SECOND_LAST_NAME"].ToString();
+                        txtCInicial.Text = reader["SECOND_LAST_NAME"].ToString();
                         txtAInicial.Text = reader["LAST_NAME"].ToString();
-                        largoApellido = reader["LAST_NAME"].ToString().TrimEnd(' ').Length;
+                        largoApellido = txtAInicial.Text.Length;// + " " + posicion.ToString();
 
                         if ((txtApellido.Text.Substring(0, 5)).ToUpper().Equals("DE LA"))
                         {
                             posicion = txtApellido.Text.Substring(6, largoApellido - 6).IndexOf(" ");
-                            txtContaador.Text = largoApellido.ToString() + " " + posicion.ToString();
+                            txtContaador.Text = txtAInicial.Text.Length.ToString() + " " + posicion.ToString();
                             txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 6);
                         }
                         else
@@ -177,7 +181,7 @@ namespace ReportesUnis
                             txtContaador.Text = apellidoEx.ToString().Substring(excepcionApellido - 3, 1);
                             if (apellidoEx.ToString().Substring(excepcionApellido - 3, 1).Equals("1"))
                             {
-                                posicion2 = txtApellido.Text.Substring(posicion + 1, largoApellido - posicion).IndexOf(" ");
+                                posicion2 = txtApellido.Text.Substring(posicion + 1, largoApellido - (posicion+1)).IndexOf(" ");
                                 txtContaador.Text = posicion2.ToString();
                                 txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 1 + posicion2);
                             }
@@ -367,7 +371,7 @@ namespace ReportesUnis
         private string actualizarInformacion()
         {
             
-            if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text)
+            if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
             {
                 txtAccion.Text = "1";
                 txtTipoAccion.Text = "1.1";
@@ -405,6 +409,24 @@ namespace ReportesUnis
                             string ruta = CurrentDirectory + "/DPIUsuarios/" + nombreArchivo;
                             uploadedFile.SaveAs(ruta);
                             contador++;
+                        }
+                        string constr = TxtURL.Text;
+
+                         using (OracleConnection con = new OracleConnection(constr))
+                         {
+                             con.Open();
+                             OracleTransaction transaction;
+                             transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                             using (OracleCommand cmd = new OracleCommand())
+                             {
+                                 cmd.Transaction = transaction;
+                                 //Obtener codigo país
+                                 cmd.Connection = con;
+
+                                //txtExiste.Text= "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + txtApellido.Text + "," + txtCasada.Text + " " + txtNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + txtApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + txtNombre.Text + "'),' ',''), LAST_NAME ='" + txtApellido.Text + "', FIRST_NAME='" + txtNombre.Text + "', SECOND_LAST_NAME='" + txtCasada.Text + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + txtCasada.Text + "'),' ',''), NAME_DISPLAY='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_FORMAL='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_DISPLAY_SRCH =REPLACE('" + txtNombre.Text + txtApellido.Text + txtCasada.Text + "',' ','')  WHERE PN.EMPLID = '" + UserEmplid.Text + "'";
+                                cmd.CommandText = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + txtApellido.Text + "," + txtCasada.Text + " " + txtNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + txtApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + txtNombre.Text + "'),' ',''), LAST_NAME ='" + txtApellido.Text + "', FIRST_NAME='" + txtNombre.Text + "', SECOND_LAST_NAME='" + txtCasada.Text + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + txtCasada.Text + "'),' ',''), NAME_DISPLAY='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_FORMAL='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_DISPLAY_SRCH=UPPER(REPLACE('" + txtNombre.Text + txtApellido.Text + txtCasada.Text + "',' ',''))  WHERE PN.EMPLID = '" + UserEmplid.Text + "'";
+                                //cmd.ExecuteNonQuery();
+                            }
                         }
                     }
                     else
@@ -446,6 +468,7 @@ namespace ReportesUnis
                     transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
                     using (OracleCommand cmd = new OracleCommand())
                     {
+                        
                         cmd.Transaction = transaction;
                         //Obtener codigo país
                         cmd.Connection = con;
@@ -479,14 +502,11 @@ namespace ReportesUnis
                             //Obtener codigo país
                             cmd.Connection = con;
                             cmd.CommandText = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
-                                            //txtInsert.Text = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, " +
-                                            //"FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, " +
-                                            //"Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, " +
-                                            //"Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
+                            // txtInsert.Text = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
                                             " Fec_Emision, NO_CTA_BI, ID_AGENCIA, CONFIRMACION) VALUES ('''" +
                                             "||'" + txtPrimerApellido.Text + "'''||','" + //APELLIDO1
-                                            "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1)||''''||','" + //APELLIDO2
-                                            "||''''||SUBSTR(CARNE,0,8)||''''||','" + //CARNE
+                                            "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1) ||' '||'" + txtCasada.Text.TrimEnd(' ')+"'||''''||','" + //APELLIDO2
+                                            "||''''||SUBSTR(CARNE,0,13)||''''||','" + //CARNE
                                             "||''''||CEDULA||''''||','" + //CEDULA
                                             "||''''||SECOND_LAST_NAME||''''||','" +// APELLIDO DE CASADA
                                             "||''''||UPPER(DEPARTAMENTO)||''''||','" + //DEPARTAMENTO DE RESIDENCIA
@@ -592,7 +612,7 @@ namespace ReportesUnis
                                             "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                             "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                             //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                            "WHERE PN.NATIONAL_ID ='2676467470101')" +
+                                            "WHERE PN.NATIONAL_ID ='2327809510101')" +
                                             "WHERE CARNE=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CARNE=PASAPORTE OR CARNE=CEDULA " +
                                             "ORDER BY 1 ASC";
                             //--4681531 PASAPORTE
@@ -685,7 +705,7 @@ namespace ReportesUnis
                                            ",[Condmig] " +
                                            ",[O_Condmig] " +
                                            ",[Validar_Envio]) " +
-                                     "VALUES ('''||SUBSTR(CARNE,0,8)||''''||','" + //CARNE
+                                     "VALUES ('''||SUBSTR(CARNE,0,13)||''''||','" + //CARNE
                                             "||''''||SUBSTR(DIRECCION,0,30)||''''||','" + // DIRECCION
                                             "||'NULL," + //ZONA
                                             " NULL,'" + //COLONIA
@@ -706,7 +726,7 @@ namespace ReportesUnis
                                             "NULL,'" + //NIT
                                             "||''''||FIRST_NAME||''''||','" + //NOMBRE1
                                             "||'''" + txtPrimerApellido.Text + "'''||','" + //APELLIDO1
-                                            "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1)||''''||','" + //APELLIDO2
+                                            "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1)||' "+txtCasada.Text.TrimEnd(' ')+"'||''''||','" + //APELLIDO2
                                             "||''''||SECOND_LAST_NAME||''''||','" +// APELLIDO DE CASADA
                                             "||''''||SECOND_NAME||''''||','" +// NOMBRE 2
                                             "||''''||FIRST_NAME||' '||'" + txtPrimerApellido.Text + "'||''''||','" + //APELLIDO DE IMPRESION
@@ -823,7 +843,7 @@ namespace ReportesUnis
                                             "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                             "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                             //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                            "WHERE PN.NATIONAL_ID ='2676467470101')" +
+                                            "WHERE PN.NATIONAL_ID ='2327809510101')" +
                                             "WHERE CARNE=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CARNE=PASAPORTE OR CARNE=CEDULA " +
                                             "ORDER BY 1 ASC";
                             //--4681531 PASAPORTE
@@ -835,8 +855,8 @@ namespace ReportesUnis
                         };
                         
                         try
-                        {
-                            /*if (String.IsNullOrEmpty(State.Text))
+                        {/*
+                            if (String.IsNullOrEmpty(State.Text))
                                 State.Text = " ";
                             if (String.IsNullOrEmpty(txtDireccion2.Text))
                                 txtDireccion2.Text = " ";
@@ -877,6 +897,18 @@ namespace ReportesUnis
                             //Estado Civil
                             cmd.CommandText = "UPDATE SYSADM.PS_PERS_DATA_EFFDT PD SET PD.MAR_STATUS = '" + ec + "' WHERE PD.EMPLID = '" + UserEmplid.Text + "'";
                             cmd.ExecuteNonQuery();*/
+
+                            if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
+                            {
+                                txtExiste2.Text = "NO SE MODIFICA PS_NAMES";
+                            }else
+                            {                                
+                                //ACTUALIZAR NOMBRES
+                                //txtExiste2.Text =  txtApellido.Text + "," + txtCasada.Text + "," + txtNombre.Text;
+                                txtExiste2.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + txtApellido.Text + " " + txtCasada.Text + "," + txtNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + txtApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + txtNombre.Text + "'),' ',''), LAST_NAME ='" + txtApellido.Text + "', FIRST_NAME='" + txtNombre.Text + "', SECOND_LAST_NAME='" + txtCasada.Text + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + txtCasada.Text + "'),' ',''), NAME_DISPLAY='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_FORMAL='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_DISPLAY_SRCH =UPPER(REPLACE('" + txtNombre.Text + txtApellido.Text + txtCasada.Text + "',' ',''))  WHERE PN.EMPLID = '" + UserEmplid.Text + "'";
+                                cmd.CommandText = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + txtApellido.Text + " " + txtCasada.Text + "," + txtNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + txtApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + txtNombre.Text + "'),' ',''), LAST_NAME ='" + txtApellido.Text + "', FIRST_NAME='" + txtNombre.Text + "', SECOND_LAST_NAME='" + txtCasada.Text + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + txtCasada.Text + "'),' ',''), NAME_DISPLAY='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_FORMAL='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_DISPLAY_SRCH =UPPER(REPLACE('" + txtNombre.Text + txtApellido.Text + txtCasada.Text + "',' ',''))  WHERE PN.EMPLID = '" + UserEmplid.Text + "'";
+                                cmd.ExecuteNonQuery();
+                            }
 
                             if (!txtInsert.Text.IsNullOrWhiteSpace())
                             {
@@ -926,6 +958,8 @@ namespace ReportesUnis
                             }
                         }
                     }
+                   // txtExiste.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + txtApellido.Text + "," + txtCasada.Text + " " + txtNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + txtApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + txtNombre.Text + "'),' ',''), LAST_NAME ='" + txtApellido.Text + "', FIRST_NAME='" + txtNombre.Text + "', SECOND_LAST_NAME='" + txtCasada.Text + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + txtCasada.Text + "'),' ',''), NAME_DISPLAY='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_FORMAL='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_DISPLAY_SRCH =REPLACE('" + txtNombre.Text + txtApellido.Text + txtCasada.Text + "',' ',''),  WHERE PN.EMPLID = '" + UserEmplid.Text + "'";
+
                 }
             }
             catch (Exception X)
@@ -946,7 +980,7 @@ namespace ReportesUnis
                     informacion = informacion + Upload();
                 }
             }
-            else if (txtNInicial.Text != txtNombre.Text && txtAInicial.Text != txtApellido.Text)
+            else if (txtNInicial.Text != txtNombre.Text || txtAInicial.Text != txtApellido.Text || txtCInicial.Text != txtCasada.Text)
             {
                 if (FileUpload1.HasFile && FileUpload2.HasFiles)
                 {

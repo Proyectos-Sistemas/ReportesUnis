@@ -138,7 +138,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtContaador;
+        protected global::System.Web.UI.WebControls.TextBox txtContaador;
 
         /// <summary>
         /// Control txtPrimerApellido.
@@ -195,6 +195,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label txtExiste;
 
         /// <summary>
+        /// Control txtExiste2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtExiste2;
+
+        /// <summary>
         /// Control txtMunicipioDPI.
         /// </summary>
         /// <remarks>
@@ -237,7 +246,16 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtAInicial;
+        protected global::System.Web.UI.WebControls.TextBox txtAInicial;
+
+        /// <summary>
+        /// Control txtCInicial.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtCInicial;
 
         /// <summary>
         /// Control txtConfirmacion.
@@ -285,6 +303,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label txtCarne;
 
         /// <summary>
+        /// Control txtCumple.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtCumple;
+
+        /// <summary>
         /// Control txtDPI.
         /// </summary>
         /// <remarks>
@@ -312,13 +339,13 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox txtApellido;
 
         /// <summary>
-        /// Control txtCumple.
+        /// Control txtCasada.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtCumple;
+        protected global::System.Web.UI.WebControls.TextBox txtCasada;
 
         /// <summary>
         /// Control txtCarrera.

@@ -42,7 +42,7 @@
     <%-- TXTUSER ALMACENA EL DPI DEL USUARIO QUE ESTA REALIZANDO CAMBIOS --%>
     <asp:Label ID="TextUser" runat="server" Visible="false"></asp:Label>
     <%-- TXTCONTADOR para contar las excepciones encontradas de apellidos --%>
-    <asp:Label ID="txtContaador" runat="server" Visible="true"></asp:Label>
+    <asp:TextBox ID="txtContaador" runat="server" Visible="true"></asp:TextBox>
     <%-- TXTPRIMERAPELLIDO  se almacena el primer apellido del estudiante --%>
     <asp:Label ID="txtPrimerApellido" runat="server" Visible="true"></asp:Label>
     <%-- TXTACCION se almacena el primer apellido del estudiante --%>
@@ -53,8 +53,10 @@
     <asp:TextBox ID="txtInsert" runat="server" Visible="true"></asp:TextBox>
     <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
     <asp:TextBox ID="txtInsertBI" runat="server" Visible="true"></asp:TextBox>
-    <%-- TXTEXISTE ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
+    <%-- TXTEXISTE ALMACENA vALORES PARA HACER VALIDACIONES --%>
     <asp:Label ID="txtExiste" runat="server" Visible="true"></asp:Label>
+    <%-- TXTEXISTE2 ALMACENA vALORES PARA HACER VALIDACIONES --%>
+    <asp:Label ID="txtExiste2" runat="server" Visible="true"></asp:Label>
     <%-- TXTMUNICIPIODPI ALMACENA EL MUNICIPIO DEL DPI --%>
     <asp:Label ID="txtMunicipioDPI" runat="server" Visible="true"></asp:Label>
     <%-- TXTDEPARTAMENTODPI ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
@@ -64,7 +66,9 @@
     <%-- NOMBRE INICIAL--%>
     <asp:Label ID="txtNInicial" runat="server" Visible="true"></asp:Label>
     <%-- APELLIDO INICIAL --%>
-    <asp:Label ID="txtAInicial" runat="server" Visible="true"></asp:Label>
+    <asp:TextBox ID="txtAInicial" runat="server" Visible="true"></asp:TextBox>
+    <%-- APELLIDO CASADA INICIAL --%>
+    <asp:TextBox ID="txtCInicial" runat="server" Visible="true"></asp:TextBox>
     <%-- CONFIRMACION OPERADOR --%>
     <asp:Label ID="txtConfirmacion" runat="server" Visible="true"></asp:Label>
 
@@ -114,19 +118,17 @@
                         <%--<br />--%>
                 </asp:TableCell>
 
-                <%-- ESPACIO 6--%>
-                <asp:TableCell Width="2%">
-                        <%--<br />--%>
+                <%-- FECHA DE NACIMIENTO LABEL --%>
+                <asp:TableCell>
+                        <asp:Label runat="server" Font-Bold="true">Fecha de Nacimiento:</asp:Label>
                 </asp:TableCell>
-
-                <%-- ESPACIO 7--%>
+                <%-- ESPACIO --%>
                 <asp:TableCell Width="2%">
-                        <%--<br />--%>
+                       <%--<br />--%>
                 </asp:TableCell>
-
-                <%-- ESPACIO 8--%>
-                <asp:TableCell Width="2%">
-                        <%--<br />--%>
+                <%-- FECHA DE NACIMIENTO  --%>
+                <asp:TableCell>
+                    <asp:Label ID="txtCumple" runat="server" Enabled="false"></asp:Label>
                 </asp:TableCell>
 
                 <%-- ESPACIO 9--%>
@@ -169,41 +171,41 @@
                 <asp:TableCell Width="2%">
                         <%--<br />--%>
                 </asp:TableCell>
-                <%-- NOMBRE  --%>
+                <%-- NOMBRE  4--%>
                 <asp:TableCell>
                     <asp:TextBox ID="txtNombre" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
                 </asp:TableCell>
-                <%-- ESPACIO --%>
+                <%-- ESPACIO 5--%>
                 <asp:TableCell Width="2%">
                         <%--<br />--%>
                 </asp:TableCell>
-                <%-- APELLIDO LABEL --%>
+                <%-- APELLIDO LABEL 6--%>
                 <asp:TableCell>
                         <asp:Label runat="server" Font-Bold="true">Apellidos:</asp:Label> 
                 </asp:TableCell>
-                <%-- ESPACIO --%>
+                <%-- ESPACIO 7 --%>
                 <asp:TableCell Width="2%">
                        <%--<br />--%>
                 </asp:TableCell>
-                <%-- APELLIDO   --%>
+                <%-- APELLIDO   8--%>
                 <asp:TableCell>
                     <asp:TextBox ID="txtApellido" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
                 </asp:TableCell>
-                <%-- ESPACIO --%>
+                <%-- ESPACIO 9--%>
                 <asp:TableCell Width="2%">
                         <%--<br />--%>
                 </asp:TableCell>
-                <%-- FECHA DE NACIMIENTO LABEL --%>
+                <%-- APELLIDO CASADA LABEL --%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Fecha de Nacimiento:</asp:Label>
+                        <asp:Label runat="server" Font-Bold="true">Apellido de Casada:</asp:Label>
                 </asp:TableCell>
                 <%-- ESPACIO --%>
                 <asp:TableCell Width="2%">
                        <%--<br />--%>
                 </asp:TableCell>
-                <%-- FECHA DE NACIMIENTO  --%>
+                <%-- APELLIDO CASADA  --%>
                 <asp:TableCell>
-                    <asp:Label ID="txtCumple" runat="server" Enabled="false"></asp:Label>
+                    <asp:TextBox ID="txtCasada" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO --%>
                 <asp:TableCell Width="2%">
