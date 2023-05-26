@@ -7,7 +7,7 @@
     </div>
         <hr />
 
-    <div class="container2">
+    <div class="container2" id="CargaFotografia" runat="server" visible="true">
         <asp:Label ID="lblfoto" runat="server" Font-Bold="true">Fotografía:</asp:Label>
         <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="False" accept="image/jpeg" onchange="validateFileSize();" />
         <div id="dvMsg" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
@@ -26,70 +26,72 @@
      <hr />
     </div>
 
-
-    <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
-    <asp:Label ID="UserEmplid" runat="server" Visible="true"></asp:Label>
-    <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
-    <asp:Label ID="State" runat="server" Visible="false"></asp:Label>
-    <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE TELEFONO O NO--%>
-    <asp:Label ID="TruePhone" runat="server" Visible="true"></asp:Label>
-    <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE DIRECCION O NO--%>
-    <asp:Label ID="TrueDir" runat="server" Visible="true"></asp:Label>
-    <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
-    <asp:Label ID="TxtURL" runat="server" Visible="false"></asp:Label>
-    <%-- TXTURLSQL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
-    <asp:Label ID="TxtURLSql" runat="server" Visible="true"></asp:Label>
-    <%-- TXTUSER ALMACENA EL DPI DEL USUARIO QUE ESTA REALIZANDO CAMBIOS --%>
-    <asp:Label ID="TextUser" runat="server" Visible="false"></asp:Label>
-    <%-- TXTCONTADOR para contar las excepciones encontradas de apellidos --%>
-    <asp:TextBox ID="txtContaador" runat="server" Visible="true"></asp:TextBox>
-    <%-- TXTPRIMERAPELLIDO  se almacena el primer apellido del estudiante --%>
-    <asp:Label ID="txtPrimerApellido" runat="server" Visible="true"></asp:Label>
-    <%-- TXTACCION se almacena el primer apellido del estudiante --%>
-    <asp:Label ID="txtAccion" runat="server" Visible="true"></asp:Label>
-    <%-- TXTTipoACCION se almacena el primer apellido del estudiante --%>
-    <asp:Label ID="txtTipoAccion" runat="server" Visible="true"></asp:Label>
-    <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
-    <asp:TextBox ID="txtInsert" runat="server" Visible="true"></asp:TextBox>
-    <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
-    <asp:TextBox ID="txtInsertBI" runat="server" Visible="true"></asp:TextBox>
-    <%-- TXTEXISTE ALMACENA vALORES PARA HACER VALIDACIONES --%>
-    <asp:Label ID="txtExiste" runat="server" Visible="true"></asp:Label>
-    <%-- TXTEXISTE2 ALMACENA vALORES PARA HACER VALIDACIONES --%>
-    <asp:Label ID="txtExiste2" runat="server" Visible="true"></asp:Label>
-    <%-- TXTMUNICIPIODPI ALMACENA EL MUNICIPIO DEL DPI --%>
-    <asp:Label ID="txtMunicipioDPI" runat="server" Visible="true"></asp:Label>
-    <%-- TXTDEPARTAMENTODPI ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
-    <asp:Label ID="txtDepartamentoDPI" runat="server" Visible="true"></asp:Label>
-    <%-- TXTPath ALMACENA EL PATH DONDE SE ALMACENARA LA IMAGEN --%>
-    <asp:Label ID="txtPath" runat="server" Visible="true"></asp:Label>    
-    <%-- NOMBRE INICIAL--%>
-    <asp:Label ID="txtNInicial" runat="server" Visible="true"></asp:Label>
-    <%-- APELLIDO INICIAL --%>
-    <asp:TextBox ID="txtAInicial" runat="server" Visible="true"></asp:TextBox>
-    <%-- APELLIDO CASADA INICIAL --%>
-    <asp:TextBox ID="txtCInicial" runat="server" Visible="true"></asp:TextBox>
-    <%-- CONFIRMACION OPERADOR --%>
-    <asp:Label ID="txtConfirmacion" runat="server" Visible="true"></asp:Label>
-    <%-- ¡tiene pasaporte? --%>
-    <asp:Label ID="txtPaisPasaporte" runat="server" Visible="true"></asp:Label>
-
     <%-- VALIDACION CAMPOS NULOS --%>
-    <%--<div style="margin-left: auto; margin-right: auto; text-align: center;">--%>
+    <div style="margin-left: auto; margin-right: auto; text-align: center;">
         <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull1" runat="server"
             ControlToValidate="txtDireccion"
             ErrorMessage="Ingresa una dirección."
             ForeColor="Red"
             Font-Size="Large" Font-Bold="true">
         </asp:RequiredFieldValidator>
-        <br />
+     </div>
+    <div style="margin-left: auto; margin-right: auto; text-align: center;">
         <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull12" runat="server"
             ControlToValidate="txtTelefono"
             ErrorMessage=" Ingresa un número de teléfono."
             ForeColor="Red"
             Font-Size="Large" Font-Bold="true">
         </asp:RequiredFieldValidator>
-    <%--</div>--%>
+    </div>
+    <br />
+        <div id="CamposAuxiliares" runat="server" visible="false">
+        <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
+        <asp:Label ID="UserEmplid" runat="server" Visible="false"></asp:Label>
+        <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
+        <asp:Label ID="State" runat="server" Visible="false"></asp:Label>
+        <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE TELEFONO O NO--%>
+        <asp:Label ID="TruePhone" runat="server" Visible="false"></asp:Label>
+        <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE DIRECCION O NO--%>
+        <asp:Label ID="TrueDir" runat="server" Visible="false"></asp:Label>
+        <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
+        <asp:Label ID="TxtURL" runat="server" Visible="false"></asp:Label>
+        <%-- TXTURLSQL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
+        <asp:Label ID="TxtURLSql" runat="server" Visible="false"></asp:Label>
+        <%-- TXTUSER ALMACENA EL DPI DEL USUARIO QUE ESTA REALIZANDO CAMBIOS --%>
+        <asp:Label ID="TextUser" runat="server" Visible="false"></asp:Label>
+        <%-- TXTCONTADOR para contar las excepciones encontradas de apellidos --%>
+        <asp:TextBox ID="txtContaador" runat="server" Visible="false"></asp:TextBox>
+        <%-- TXTPRIMERAPELLIDO  se almacena el primer apellido del estudiante --%>
+        <asp:Label ID="txtPrimerApellido" runat="server" Visible="false"></asp:Label>
+        <%-- TXTACCION se almacena el primer apellido del estudiante --%>
+        <asp:Label ID="txtAccion" runat="server" Visible="false"></asp:Label>
+        <%-- TXTTipoACCION se almacena el primer apellido del estudiante --%>
+        <asp:Label ID="txtTipoAccion" runat="server" Visible="false"></asp:Label>
+        <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
+        <asp:TextBox ID="txtInsert" runat="server" Visible="false"></asp:TextBox>
+        <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
+        <asp:TextBox ID="txtInsertBI" runat="server" Visible="false"></asp:TextBox>
+        <%-- TXTEXISTE ALMACENA vALORES PARA HACER VALIDACIONES --%>
+        <asp:Label ID="txtExiste" runat="server" Visible="false"></asp:Label>
+        <%-- TXTEXISTE2 ALMACENA vALORES PARA HACER VALIDACIONES --%>
+        <asp:Label ID="txtExiste2" runat="server" Visible="false"></asp:Label>
+        <%-- TXTMUNICIPIODPI ALMACENA EL MUNICIPIO DEL DPI --%>
+        <asp:Label ID="txtMunicipioDPI" runat="server" Visible="false"></asp:Label>
+        <%-- TXTDEPARTAMENTODPI ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
+        <asp:Label ID="txtDepartamentoDPI" runat="server" Visible="false"></asp:Label>
+        <%-- TXTPath ALMACENA EL PATH DONDE SE ALMACENARA LA IMAGEN --%>
+        <asp:Label ID="txtPath" runat="server" Visible="false"></asp:Label>    
+        <%-- NOMBRE INICIAL--%>
+        <asp:Label ID="txtNInicial" runat="server" Visible="false"></asp:Label>
+        <%-- APELLIDO INICIAL --%>
+        <asp:TextBox ID="txtAInicial" runat="server" Visible="false"></asp:TextBox>
+        <%-- APELLIDO CASADA INICIAL --%>
+        <asp:TextBox ID="txtCInicial" runat="server" Visible="false"></asp:TextBox>
+        <%-- CONFIRMACION OPERADOR --%>
+        <asp:Label ID="txtConfirmacion" runat="server" Visible="false"></asp:Label>
+        <%-- ¡tiene pasaporte? --%>
+        <asp:Label ID="txtPaisPasaporte" runat="server" Visible="false"></asp:Label>
+    </div>
     <div>
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
         <asp:Table id="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
@@ -455,7 +457,7 @@
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>
-        <asp:Table runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
+        <asp:Table id="tbactualizar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
             <asp:TableRow>
                 <%-- ESPACIO --%>
                 <asp:TableCell>

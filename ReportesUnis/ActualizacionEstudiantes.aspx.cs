@@ -16,6 +16,7 @@ using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using NPOI.SS.Formula.Functions;
 using Oracle.ManagedDataAccess.Client;
+using Windows.Devices.Sensors;
 
 namespace ReportesUnis
 {
@@ -23,34 +24,54 @@ namespace ReportesUnis
     {
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
         string mensaje = "";
+        string controlPantalla = "";
         protected void Page_Load(object sender, EventArgs e)
         {
-            //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
-            TextUser.Text = "2676467470101";
-            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
+            LeerInfoTxt();
+            controlPantalla = PantallaHabilitada("ActualizacionEstudiantes");
+            txtExiste.Text = controlPantalla; 
+            if (controlPantalla == "1")
             {
-                Response.Redirect(@"~/Default.aspx");
-            }
-            if (!IsPostBack)
-            {
-                LeerInfoTxt();
-                LeerInfoTxtSQL();
-                LeerInfoTxtPath();
-                llenadoPais();
-                mostrarInformación();
-                llenadoDepartamento();
-                llenadoState();
-
-                
-                if (String.IsNullOrEmpty(txtCarne.Text))
+                //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                    TextUser.Text = "2676467470101";
+                if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
                 {
-                    BtnActualizar.Visible = false;
-                    lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
-                    CmbPais.SelectedValue = "Guatemala";
-                    tabla.Visible = false;
-                    FileUpload1.Visible = false;
-                    lblfoto.Visible = false;
+                    Response.Redirect(@"~/Default.aspx");
                 }
+                if (!IsPostBack)
+                {
+                        controlPantalla = PantallaHabilitada("ActualizacionEstudiantesSemanal");
+                        if (controlPantalla == "1")
+                        {
+                            LeerInfoTxtSQL();
+                            LeerInfoTxtPath();
+                            llenadoPais();
+                            mostrarInformación();
+                            llenadoDepartamento();
+                            llenadoState();
+
+
+                            if (String.IsNullOrEmpty(txtCarne.Text))
+                            {
+                                BtnActualizar.Visible = false;
+                                lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
+                                CmbPais.SelectedValue = "Guatemala";
+                                tabla.Visible = false;
+                                FileUpload1.Visible = false;
+                                lblfoto.Visible = false;
+                            }
+                        }
+                        else
+                        {
+                            lblActualizacion.Text = "La pantalla de actualización está disponible únicamente de Lunes a Viernes.";
+                        controlCamposVisibles();
+                        }               
+                }
+            }
+            else
+            {
+                lblActualizacion.Text = "¡IMPORTANTE! Esta página no está disponible, ¡Permanece atento a nuevas fechas para actualizar tus datos!";
+                controlCamposVisibles();
             }
         }
 
@@ -88,6 +109,12 @@ namespace ReportesUnis
                 txtPath.Text = line;
                 file.Close();
             }
+        }
+        void controlCamposVisibles()
+        {
+            CargaFotografia.Visible = false;
+            tabla.Visible = false;
+            tbactualizar.Visible = false;
         }
         private void mostrarInformación()
         {
@@ -368,6 +395,45 @@ namespace ReportesUnis
             }
             return VALOR;
         }
+        protected string PantallaHabilitada(string PANTALLA)
+        {
+            txtExiste2.Text = "SELECT COUNT(*) AS CONTADOR " +
+                        "FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE " +
+                        "WHERE TO_CHAR(SYSDATE,'YYYY-MM-DD') " +
+                        "BETWEEN FECHA_INICIO AND FECHA_FIN " +
+                        "AND PANTALLA ='" + PANTALLA + "'";
+            string constr = TxtURL.Text;
+            string control = "0";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        cmd.Connection = con;
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR " +
+                        "FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE " +
+                        "WHERE TO_CHAR(SYSDATE,'YYYY-MM-DD') " +
+                        "BETWEEN FECHA_INICIO AND FECHA_FIN " +
+                        "AND PANTALLA ='"+PANTALLA+"'";
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            control = reader["CONTADOR"].ToString();
+                        }
+
+                        con.Close();
+                    }
+                    catch (Exception x)
+                    {
+                        control = x.ToString();
+                    }
+                }
+            }
+            return control;
+        }
+
         private string actualizarInformacion()
         {
             
