@@ -44,7 +44,7 @@
         </asp:RequiredFieldValidator>
     </div>
     <br />
-        <div id="CamposAuxiliares" runat="server" visible="false">
+    <div id="CamposAuxiliares" runat="server" visible="false">
         <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
         <asp:Label ID="UserEmplid" runat="server" Visible="false"></asp:Label>
         <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>

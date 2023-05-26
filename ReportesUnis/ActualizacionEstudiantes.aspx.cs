@@ -24,13 +24,13 @@ namespace ReportesUnis
     {
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
         string mensaje = "";
-        string controlPantalla = "";
+        int controlPantalla;
         protected void Page_Load(object sender, EventArgs e)
         {
             LeerInfoTxt();
-            controlPantalla = PantallaHabilitada("ActualizacionEstudiantes");
-            txtExiste.Text = controlPantalla; 
-            if (controlPantalla == "1")
+            controlPantalla = PantallaHabilitada("Carnetización Masiva");
+            txtExiste.Text = controlPantalla.ToString(); 
+            if (controlPantalla >= 1)
             {
                 //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
                     TextUser.Text = "2676467470101";
@@ -40,8 +40,8 @@ namespace ReportesUnis
                 }
                 if (!IsPostBack)
                 {
-                        controlPantalla = PantallaHabilitada("ActualizacionEstudiantesSemanal");
-                        if (controlPantalla == "1")
+                        controlPantalla = PantallaHabilitada("Semana");
+                        if (controlPantalla >= 1)
                         {
                             LeerInfoTxtSQL();
                             LeerInfoTxtPath();
@@ -395,7 +395,7 @@ namespace ReportesUnis
             }
             return VALOR;
         }
-        protected string PantallaHabilitada(string PANTALLA)
+        protected int PantallaHabilitada(string PANTALLA)
         {
             txtExiste2.Text = "SELECT COUNT(*) AS CONTADOR " +
                         "FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE " +
@@ -431,7 +431,7 @@ namespace ReportesUnis
                     }
                 }
             }
-            return control;
+            return Convert.ToInt32(control);
         }
 
         private string actualizarInformacion()

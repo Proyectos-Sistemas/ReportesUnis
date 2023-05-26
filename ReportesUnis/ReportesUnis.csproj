@@ -349,6 +349,7 @@
     <Content Include="LogInterfazCC.aspx" />
     <Content Include="LogInterfazHCMCS.aspx" />
     <Content Include="LogSerbipagos.aspx" />
+    <Content Include="MantenimientoPantallas.aspx" />
     <Content Include="ReporteCamarasTermicas.aspx" />
     <Content Include="ReporteCamarasTermicasEmpleados.aspx" />
     <Content Include="ReporteEmpleados.aspx" />
@@ -525,6 +526,13 @@
     </Compile>
     <Compile Include="LogSerbipagos.aspx.designer.cs">
       <DependentUpon>LogSerbipagos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MantenimientoPantallas.aspx.cs">
+      <DependentUpon>MantenimientoPantallas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MantenimientoPantallas.aspx.designer.cs">
+      <DependentUpon>MantenimientoPantallas.aspx</DependentUpon>
     </Compile>
     <Compile Include="Models\Modelos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
