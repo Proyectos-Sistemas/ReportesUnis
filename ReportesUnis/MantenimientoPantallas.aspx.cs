@@ -25,8 +25,8 @@ namespace ReportesUnis
 
         private void LoadData()
         {
-            GridViewReporte.HeaderStyle.HorizontalAlign= HorizontalAlign.Center;
-            GridViewReporte.RowStyle.HorizontalAlign= HorizontalAlign.Center;
+            GridViewReporte.HeaderStyle.HorizontalAlign = HorizontalAlign.Center;
+            GridViewReporte.RowStyle.HorizontalAlign = HorizontalAlign.Center;
             DataTable dt = new DataTable();
             DataRow dr = dt.NewRow();
 
@@ -80,8 +80,10 @@ namespace ReportesUnis
 
         private void Insertar()
         {
+            lblActualizacion.Text = "";
             string constr = TxtURL.Text;
             int contador = 0;
+            divActualizar.Visible = false;
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -91,7 +93,7 @@ namespace ReportesUnis
                 {
                     try
                     {
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE WHERE FECHA_INICIO='"+DTInicio.Text+"' AND FECHA_FIN='"+DTFin.Text+"' AND PANTALLA ='"+CmbTipo.Text+"'";
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE WHERE FECHA_INICIO='" + DTInicio.Text + "' AND FECHA_FIN='" + DTFin.Text + "' AND PANTALLA ='" + CmbTipo.Text + "'";
                         cmd.Connection = con;
 
                         OracleDataReader reader = cmd.ExecuteReader();
@@ -104,12 +106,21 @@ namespace ReportesUnis
                         {
                             if (Convert.ToDateTime(DTInicio.Text) < Convert.ToDateTime(DTFin.Text))
                             {
-                                cmd.Connection = con;
-                                cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_PANTALLA_CARNE (FECHA_INICIO, FECHA_FIN, PANTALLA) VALUES('" + DTInicio.Text + "','" + DTFin.Text + "','" + CmbTipo.Text + "')";
-                                cmd.ExecuteNonQuery();
-                                transaction.Commit();
-                                con.Close();
-                                Buscar();
+                                try
+                                {
+                                    cmd.Connection = con;
+                                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_PANTALLA_CARNE (FECHA_INICIO, FECHA_FIN, PANTALLA) VALUES('" + DTInicio.Text + "','" + DTFin.Text + "','" + CmbTipo.Text + "')";
+                                    cmd.ExecuteNonQuery();
+                                    transaction.Commit();
+                                    con.Close();
+                                    Buscar();
+                                    lblActualizacion.Text = "La información fue almacenada correctamente.";
+                                }
+                                catch (Exception)
+                                {
+                                    lblActualizacion.Text = "No se pudo insertar la información a causa de un error interno.";
+                                    transaction.Rollback();
+                                }
                             }
                             else
                             {
@@ -127,15 +138,16 @@ namespace ReportesUnis
                         transaction.Rollback();
                         TXTINICIO.Text = TXTINICIO.Text + x;
                     }
-
                 }
             }
         }
 
         public void Actualizar()
         {
+            lblActualizacion.Text = "";
             string constr = TxtURL.Text;
             int ID = 30000;
+            divActualizar.Visible = false;
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -154,20 +166,29 @@ namespace ReportesUnis
                             ID = Convert.ToInt32(reader["ID_REGISTRO"]);
                         }
 
-                        if ((!String.IsNullOrEmpty(DTInicio.Text)) && (!String.IsNullOrEmpty(DTFin.Text)) && ID != 30000)
+                        if ((!String.IsNullOrEmpty(DTInicio.Text)) && (!String.IsNullOrEmpty(DTFin.Text)) && ID != 30000 && ID != 0)
                         {
-                            if (Convert.ToDateTime(DTInicio.Text) < Convert.ToDateTime(DTFin.Text))
+                            if (Convert.ToDateTime(DTNInicio.Text) < Convert.ToDateTime(DTNFin.Text))
                             {
-                                cmd.Connection = con;
-                                cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_PANTALLA_CARNE SET " +
-                                    "FECHA_INICIO = '" + DTInicio.Text +"'," +
-                                    "FECHA_FIN = '" + DTFin.Text + "'," +
-                                    "PANTALLA = '" + CmbTipo.Text + "' " +
-                                    "WHERE ID_REGISTRO = "+ID;
-                                cmd.ExecuteNonQuery();
-                                transaction.Commit();
-                                con.Close();
-                                Buscar();
+                                try
+                                {
+                                    cmd.Connection = con;
+                                    cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_PANTALLA_CARNE SET " +
+                                        "FECHA_INICIO = '" + DTNInicio.Text + "'," +
+                                        "FECHA_FIN = '" + DTNFin.Text + "'," +
+                                        "PANTALLA = '" + CmbTipo.Text + "' " +
+                                        "WHERE ID_REGISTRO = " + ID;
+                                    cmd.ExecuteNonQuery();
+                                    transaction.Commit();
+                                    con.Close();
+                                    Buscar();
+                                    lblActualizacion.Text = "La información se actualizó correctamente.";
+                                }
+                                catch (Exception x)
+                                {
+                                    lblActualizacion.Text = "No se pudo actualizar la información a causa de un error interno.";
+                                    transaction.Rollback();
+                                }
                             }
                             else
                             {
@@ -191,8 +212,10 @@ namespace ReportesUnis
         }
         public void Eliminar()
         {
+            lblActualizacion.Text = "";
             string constr = TxtURL.Text;
             int ID = 30000;
+            divActualizar.Visible = false;
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -211,16 +234,25 @@ namespace ReportesUnis
                             ID = Convert.ToInt32(reader["ID_REGISTRO"]);
                         }
 
-                        if ((!String.IsNullOrEmpty(DTInicio.Text)) && (!String.IsNullOrEmpty(DTFin.Text)) && ID != 30000)
+                        if ((!String.IsNullOrEmpty(DTInicio.Text)) && (!String.IsNullOrEmpty(DTFin.Text)) && ID != 30000 && ID != 0)
                         {
                             if (Convert.ToDateTime(DTInicio.Text) < Convert.ToDateTime(DTFin.Text))
                             {
-                                cmd.Connection = con;
-                                cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE WHERE ID_REGISTRO = "+ID;
-                                cmd.ExecuteNonQuery();
-                                transaction.Commit();
-                                con.Close();
-                                Buscar();
+                                try
+                                {
+                                    cmd.Connection = con;
+                                    cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE WHERE ID_REGISTRO = " + ID;
+                                    cmd.ExecuteNonQuery();
+                                    transaction.Commit();
+                                    con.Close();
+                                    Buscar();
+                                    lblActualizacion.Text = "La información se eliminó correctamente.";
+                                }
+                                catch (Exception)
+                                {
+                                    lblActualizacion.Text = "No se pudo eliminar la información a causa de un error interno.";
+                                    transaction.Rollback();
+                                }
                             }
                             else
                             {
@@ -236,7 +268,7 @@ namespace ReportesUnis
                     catch (Exception x)
                     {
                         transaction.Rollback();
-                        TXTINICIO.Text = "DELETE FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE SET WHERE ID_REGISTRO = " + ID+"----" + x;
+                        TXTINICIO.Text = "DELETE FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE SET WHERE ID_REGISTRO = " + ID + "----" + x;
                     }
 
                 }
@@ -248,22 +280,60 @@ namespace ReportesUnis
             Insertar();
             //TXTINICIO.Text = "INSERT INTO UNIS_INTERFACES.TBL_PANTALLA_CARNE (FECHA_INICIO, FECHA_FIN, PANTALLA) VALUES('" + DTInicio.Text + "','" + DTFin.Text + "','" + CmbTipo.Text + "')";
         }
-        
+
         protected void BtnActualizar_Click(object sender, EventArgs e)
         {
-            Actualizar();
-            //TXTINICIO.Text = "INSERT INTO UNIS_INTERFACES.TBL_PANTALLA_CARNE (FECHA_INICIO, FECHA_FIN, PANTALLA) VALUES('" + DTInicio.Text + "','" + DTFin.Text + "','" + CmbTipo.Text + "')";
+            if ((!String.IsNullOrEmpty(DTInicio.Text)) && (!String.IsNullOrEmpty(DTFin.Text)))
+            {
+                lblActualizacion.Text = "";
+                if (divActualizar.Visible == false)
+                {
+                    divActualizar.Visible = true;
+                }
+                else
+                {
+                    Actualizar();
+                    //TXTINICIO.Text = "UPDATE UNIS_INTERFACES.TBL_PANTALLA_CARNE SET FECHA_INICIO = '" + DTNInicio.Text + "', FECHA_FIN = '" + DTNFin.Text + "', PANTALLA = '" + CmbTipo.Text + "' WHERE ID_REGISTRO = " + ID;
+                }
+            }
+            else
+            {
+                lblActualizacion.Text = "Por favor ingrese el rango de fecha actual de la información que desea actualizar.";
+            }
         }
 
         protected void BtnEliminar_Click(object sender, EventArgs e)
         {
             Eliminar();
+            //TXTINICIO.Text = "DELETE FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE WHERE ID_REGISTRO = " + ID;
         }
 
         protected void DTInicio_TextChanged(object sender, EventArgs e)
         {
-            DateTime inicio = Convert.ToDateTime(DTInicio.Text).AddDays(4);
-            DTFin.Text = Convert.ToDateTime(DTInicio.Text).AddDays(4).ToString("yyyy-MM-dd");
+            try
+            {
+                DateTime inicio = Convert.ToDateTime(DTInicio.Text).AddDays(4);
+                DTFin.Text = Convert.ToDateTime(DTInicio.Text).AddDays(4).ToString("yyyy-MM-dd");
+                lblActualizacion.Text = "";
+            }
+            catch (Exception)
+            {
+                lblActualizacion.Text = "Intente seleccionar la fecha desde el calendario2.";
+            }
+        }
+
+        protected void DTNInicio_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                DateTime inicio = Convert.ToDateTime(DTNInicio.Text).AddDays(4);
+                DTNFin.Text = Convert.ToDateTime(DTNInicio.Text).AddDays(4).ToString("yyyy-MM-dd");
+                lblActualizacion.Text = "";
+            }
+            catch (Exception)
+            {
+                lblActualizacion.Text = "Intente seleccionar la fecha desde el calendario.";
+            }
         }
     }
 }

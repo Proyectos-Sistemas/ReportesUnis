@@ -118,6 +118,81 @@
         <asp:Label ID="TXTINICIO" runat="server" Visible="true"></asp:Label>
     </div>
 
+     <div class="container" id="divActualizar" runat="server" visible="false">
+        <h6 style="text-align: center;">Ingrese las nuevas fechas:</h6>
+
+        <asp:Table id="Table1" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
+            <asp:TableRow HorizontalAlign="Center">
+                <%-- ESPACIO 1--%>
+                <asp:TableCell Width="2%">
+                        <br />
+                </asp:TableCell>
+
+                <%-- TIPO  2--%>
+                <asp:TableCell>
+                </asp:TableCell>
+
+                <%-- FECHA INICIO LABEL 3--%>
+                <asp:TableCell>
+                        <asp:Label runat="server" Font-Bold="true">Nueva Fecha Inicio:</asp:Label> 
+                </asp:TableCell>
+
+                <%-- ESPACIO 4--%>
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
+                </asp:TableCell>
+
+                <%-- FECHA INICIO  6--%>
+                <asp:TableCell>
+                    <asp:TextBox ID="DTNInicio" runat="server"  TextMode="Date" placeholder="yyyy-mm-dd" AutoPostBack="true" OnTextChanged="DTNInicio_TextChanged" ></asp:TextBox>
+                </asp:TableCell>
+
+                <%-- ESPACIO 7--%>
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
+                </asp:TableCell>
+
+                <%-- FECHA FIN LABEL 8--%>
+                <asp:TableCell>
+                        <asp:Label runat="server" Font-Bold="true">Nueva Fecha Fin:</asp:Label>
+                </asp:TableCell>
+
+                <%-- ESPACIO 9--%>
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
+                </asp:TableCell>
+
+                <%-- FECHA FIN 10--%>
+                <asp:TableCell>
+                    <asp:TextBox ID="DTNFin" runat="server"  TextMode="Date" placeholder="yyyy-mm-dd"></asp:TextBox>
+                </asp:TableCell>
+
+                <%-- ESPACIO 11--%>
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
+                </asp:TableCell>
+
+                <%-- TIPO LABEL 12--%>
+                <asp:TableCell>
+                </asp:TableCell>
+
+                <%-- ESPACIO 13--%>
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
+                </asp:TableCell>
+
+                <%-- TIPO  14--%>
+                <asp:TableCell>
+                </asp:TableCell>
+
+                <%-- ESPACIO 15--%>
+                <asp:TableCell Width="2%">
+                        <br />
+                </asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>                 
+    </div>
+    <hr />
     <asp:Table id="TblGrid" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
             <asp:TableRow>
                 <%-- ESPACIO 1--%>
