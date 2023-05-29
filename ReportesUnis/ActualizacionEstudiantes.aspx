@@ -44,7 +44,7 @@
         </asp:RequiredFieldValidator>
     </div>
     <br />
-    <div id="CamposAuxiliares" runat="server" visible="false">
+    <div id="CamposAuxiliares" runat="server" visible="true">
         <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
         <asp:Label ID="UserEmplid" runat="server" Visible="false"></asp:Label>
         <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
@@ -68,7 +68,7 @@
         <%-- TXTTipoACCION se almacena el primer apellido del estudiante --%>
         <asp:Label ID="txtTipoAccion" runat="server" Visible="false"></asp:Label>
         <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
-        <asp:TextBox ID="txtInsert" runat="server" Visible="false"></asp:TextBox>
+        <asp:TextBox ID="txtInsert" runat="server" Visible="true"></asp:TextBox>
         <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
         <asp:TextBox ID="txtInsertBI" runat="server" Visible="false"></asp:TextBox>
         <%-- TXTEXISTE ALMACENA vALORES PARA HACER VALIDACIONES --%>
@@ -91,6 +91,8 @@
         <asp:Label ID="txtConfirmacion" runat="server" Visible="false"></asp:Label>
         <%-- ¡tiene pasaporte? --%>
         <asp:Label ID="txtPaisPasaporte" runat="server" Visible="false"></asp:Label>
+        <%-- ¡tiene pasaporte? --%>
+        <asp:Label ID="txtCantidadImagenesDpi" runat="server" Visible="true">0</asp:Label>
     </div>
     <div>
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>

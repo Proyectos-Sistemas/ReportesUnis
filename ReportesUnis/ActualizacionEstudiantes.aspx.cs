@@ -177,7 +177,7 @@ namespace ReportesUnis
                     "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                     //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
                     //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                    //"WHERE PN.NATIONAL_ID ='2676467470101' " + // DE LEON
+                    //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
                     "WHERE PN.NATIONAL_ID ='4681531' " + // DE LEON
                     //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián  
                    ") WHERE CNT = 1";
@@ -474,6 +474,7 @@ namespace ReportesUnis
                             string nombreArchivo = txtCarne.Text + "(" + contador + ").jpg";
                             string ruta = CurrentDirectory + "/DPIUsuarios/" + nombreArchivo;
                             uploadedFile.SaveAs(ruta);
+                            txtCantidadImagenesDpi.Text = contador.ToString();
                             contador++;
                         }                        
                     }
@@ -553,10 +554,10 @@ namespace ReportesUnis
                             cmd.Connection = con;
                             cmd.CommandText = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
                             //txtInsert.Text = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
-                                            " Fec_Emision, NO_CTA_BI, ID_AGENCIA, CONFIRMACION) VALUES ('''" +
+                                            " Fec_Emision, NO_CTA_BI, ID_AGENCIA, CONFIRMACION,TOTALFOTOS) VALUES ('''" +
                                             "||'" + txtPrimerApellido.Text + "'''||','" + //APELLIDO1
-                                            "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1) ||' '||'" + txtCasada.Text.TrimEnd(' ')+"'||''''||','" + //APELLIDO2
-                                            "||''''||SUBSTR(CARNE,0,13)||''''||','" + //CARNE
+                                            "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1)" + //APELLIDO2
+                                            "||''','||''''||SUBSTR(CARNE,0,13)||''''||','" + //CARNE
                                             "||''''||CEDULA||''''||','" + //CEDULA
                                             "||''''||SECOND_LAST_NAME||''''||','" +// APELLIDO DE CASADA
                                             "||''''||UPPER(DEPARTAMENTO)||''''||','" + //DEPARTAMENTO DE RESIDENCIA
@@ -603,7 +604,7 @@ namespace ReportesUnis
                                             "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD')||''''||'" +//FECHA_EMISION
                                             ", 0," + //NO CTA BI
                                             " 2002," +//ID AGENCIA
-                                            ""+txtConfirmacion.Text+")'" + // confirmación operador
+                                            ""+txtConfirmacion.Text+",'''||"+txtCantidadImagenesDpi.Text+"||''')'" + // confirmación operador
                                             " AS INS " +
                                             "FROM ( SELECT " +
                                             "DISTINCT PD.EMPLID, " +
