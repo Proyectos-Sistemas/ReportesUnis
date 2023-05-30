@@ -177,8 +177,8 @@ namespace ReportesUnis
                     "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                     //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
                     //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                    //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
-                    "WHERE PN.NATIONAL_ID ='4681531' " + // DE LEON
+                    "WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
+                    //"WHERE PN.NATIONAL_ID ='4681531' " + // DE LEON
                     //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián  
                    ") WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
@@ -660,8 +660,8 @@ namespace ReportesUnis
                                             "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                             "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                             //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                            //"WHERE PN.NATIONAL_ID ='2327809510101')" +
-                                            "WHERE PN.NATIONAL_ID ='4681531')" +
+                                            "WHERE PN.NATIONAL_ID ='2327809510101')" +
+                                            //"WHERE PN.NATIONAL_ID ='4681531')" +
                                             "WHERE CARNE=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CARNE=PASAPORTE OR CARNE=CEDULA " +
                                             "ORDER BY 1 ASC";
                             //--4681531 PASAPORTE
@@ -889,7 +889,8 @@ namespace ReportesUnis
                                             "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                             "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                             //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                            "WHERE PN.NATIONAL_ID ='4681531')" +
+                                            //"WHERE PN.NATIONAL_ID ='4681531')" +
+                                            "WHERE PN.NATIONAL_ID ='2327809510101')" +
                                             "WHERE CARNE=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CARNE=PASAPORTE OR CARNE=CEDULA " +
                                             "ORDER BY 1 ASC";
                             //--4681531 PASAPORTE

@@ -8,13 +8,21 @@
         <hr />
     <div id="CamposAuxiliares" runat="server" visible="false">
         <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
-        <asp:TextBox ID="TxtURL" runat="server" Visible="true"></asp:TextBox>
+        <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
         <%-- TXTINICIO SE UTILIZA PARA VISUALIZAR FECHA --%>
-        <asp:TextBox ID="TXTINICIO" runat="server" Visible="true"></asp:TextBox>        
+        <asp:TextBox ID="TXTINICIO" runat="server" Visible="false"></asp:TextBox>        
         <%-- TXTPath ALMACENA EL PATH DONDE SE ALMACENARA LA IMAGEN --%>
         <asp:Label ID="txtPath" runat="server" Visible="false"></asp:Label>       
         <%-- TxtCantidad, almacena la cantidad de imagenes almacenadas --%>
-        <asp:Label ID="txtCantidad" runat="server" Visible="false"></asp:Label>    
+        <asp:Label ID="txtCantidad" runat="server" Visible="false">0</asp:Label>  
+        <%-- TXTURLSQL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
+        <asp:Label ID="TxtURLSql" runat="server" Visible="false"></asp:Label>  
+        <%-- TXTEXISTE ALMACENA vALORES PARA HACER VALIDACIONES --%>
+        <asp:TextBox ID="txtExiste" runat="server" Visible="false"></asp:TextBox>
+        <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
+        <asp:TextBox ID="txtInsertBI" runat="server" Visible="false"></asp:TextBox>
+        <%-- txtInsertApexI ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
+        <asp:TextBox ID="txtInsertApex" runat="server" Visible="false"></asp:TextBox>
     </div>
     <div>
         <asp:Table id="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
@@ -107,12 +115,12 @@
 
                 <%-- COMBOBOX 4--%>
                 <asp:TableCell>
-                        <asp:TextBox ID="txtCarne" runat="server" MaxLength="13" Width="150px"></asp:TextBox>
+                        <asp:TextBox ID="txtCarne" runat="server" MaxLength="13" Width="150px" ></asp:TextBox>
                 </asp:TableCell>
 
                 <%-- ESPACIO 5--%>
                 <asp:TableCell > 
-                    <asp:Button ID="BtnBuscar" runat="server" Text="Buscar" CssClass="btn-danger-unis" Enabled="true"  />
+                    <asp:Button ID="BtnBuscar" runat="server" Text="Buscar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnBuscar_Click" />
                 </asp:TableCell>
 
                 <%-- ESPACIO 6--%>
@@ -123,7 +131,8 @@
                 <asp:TableCell Width="10"> 
                 </asp:TableCell>
         </asp:TableRow>                       
-        </asp:Table>   
+        </asp:Table>
+        <br />
     </div>
 
     <div class="container" id="divConfirmar" runat="server" visible="false">
@@ -156,6 +165,9 @@
         </asp:TableRow>
         </asp:Table>
         <br />
+    </div>
+
+    <div class="container" id="divCampos" runat="server" visible="false">     
         <asp:Table id="tabla4" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
@@ -472,9 +484,12 @@
                         <br />
                 </asp:TableCell>
             </asp:TableRow>           
-        </asp:Table><br />
+        </asp:Table>
+        <br />
+    </div>
 
-        <h4 style="text-align: center;" runat="server" visible="false" id="HDocumentacion">Documentación Adjunta</h4>
+    <div class="container" id="divDPI" runat="server" visible="false">  
+        <h4 style="text-align: center;" runat="server" visible="true" id="HDocumentacion">Documentación Adjunta</h4>
         <asp:Table id="tabla5" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
                 <asp:TableRow>
                 <%-- ESPACIO 1--%>
@@ -503,6 +518,59 @@
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>
+    </div>
+
+    <div class="container" id="divBtnConfirmar" runat="server" visible="false">
+        <asp:Table id="TbBtnsConfirmar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
+            <asp:TableRow>
+                <%-- ESPACIO 1--%>
+                <asp:TableCell>
+                        <br />
+                </asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow>                
+                <%-- ESPACIO 2.1--%>
+                <asp:TableCell>
+                    <asp:Button ID="BtnConfirmar" runat="server" Text="Confirmar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnConfirmar_Click" />
+                </asp:TableCell>
+                <%-- ESPACIO 2.2--%>
+                <asp:TableCell>
+                    <asp:Button ID="BtnRechazar" runat="server" Text="Rechazar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnRechazar_Click"/>
+                </asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow>                
+                <%-- ESPACIO 3--%>
+                <asp:TableCell HorizontalAlign="Center">
+                </asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>
+    </div>
+
+    <div class="container" id="divBtnGenerar" runat="server" visible="false">
+        <asp:Table id="TbBtnsGenerar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
+            <asp:TableRow>
+                <%-- ESPACIO 1--%>
+                <asp:TableCell>
+                        <br />
+                </asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow>                
+                <%-- ESPACIO 2.1--%>
+                <asp:TableCell>
+                    <asp:Button ID="BtnGenerar" runat="server" Text="Generar Renovación" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnGenerar_Click" />
+                </asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow>                
+                <%-- ESPACIO 3--%>
+                <asp:TableCell HorizontalAlign="Center">
+                </asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>
+    </div>
+
+    <div visible="false" style="margin-left: auto; margin-right: auto; text-align: center;",>
+            <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
+            </asp:Label>
     </div>
 
 </asp:Content>
