@@ -97,7 +97,7 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT ' ' CARNET FROM DUAL UNION SELECT CARNET FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CONFIRMACION = '"+confirmacion+"'";
+                    cmd.CommandText = "SELECT ' ' CARNET FROM DUAL UNION SELECT CARNET FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE TIPO_PERSONA = 2 AND CONFIRMACION = '"+confirmacion+"'";
                     OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                     DataSet ds = new DataSet();
                     adapter.Fill(ds);
@@ -148,7 +148,7 @@ namespace ReportesUnis
                         "' ' FACULTAD,' ' CELULAR,' ' FECHANAC,' ' ESTADO_CIVIL,' ' DIRECCION,' ' DEPTO_RESIDENCIA,' ' MUNI_RESIDENCIA, ' ' TOTALFOTOS FROM DUAL UNION " +
                         "SELECT CARNET, NOMBRE1, NOMBRE2, APELLIDO1, APELLIDO2, DECASADA, CARGO, FACULTAD, CELULAR, FECHANAC, " +
                         "CASE WHEN ESTADO_CIVIL = 1 THEN 'SOLTERO' WHEN ESTADO_CIVIL ='2' THEN 'CASADO' ELSE '' END ESTADO_CIVIL, DIRECCION, " +
-                        "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE "+where;
+                        "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE "+where+ " AND TIPO_PERSONA = 2";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -181,7 +181,7 @@ namespace ReportesUnis
                 llenado("CARNET = '" + txtCarne.Text + "' AND CONFIRMACION = '0'");
                 if (TxtDpi.Text.IsNullOrWhiteSpace())
                 {
-                    lblActualizacion.Text = "No se encontró información para el Carne " + txtCarne.Text;
+                    lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
                 }
             }
             else
@@ -213,35 +213,42 @@ namespace ReportesUnis
 
         private void Rechazar()
         {
-            lblActualizacion.Text = "";
-            string constr = TxtURL.Text;
-            int ID = 30000;
-            using (OracleConnection con = new OracleConnection(constr))
+            if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
             {
-                con.Open();
-                OracleTransaction transaction;
-                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
-                using (OracleCommand cmd = new OracleCommand())
+                lblActualizacion.Text = "";
+                string constr = TxtURL.Text;
+                int ID = 30000;
+                using (OracleConnection con = new OracleConnection(constr))
                 {
-                    try
+                    con.Open();
+                    OracleTransaction transaction;
+                    transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                    using (OracleCommand cmd = new OracleCommand())
                     {
-                        cmd.Connection = con;
-                        cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + CmbCarne.Text+"'";
-                        cmd.ExecuteNonQuery();
-                        transaction.Commit();
-                        con.Close();
-                        Buscar("1");
-                        lblActualizacion.Text = "Se ha rechazado la solicitud de carnet.";
-                    }
-                    catch (Exception)
-                    {
-                        lblActualizacion.Text = "No se pudo eliminar la información a causa de un error interno." + "  DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + CmbCarne.Text + "'";
-                        transaction.Rollback();
-                    }
+                        try
+                        {
+                            cmd.Connection = con;
+                            cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + CmbCarne.Text + "'";
+                            cmd.ExecuteNonQuery();
+                            transaction.Commit();
+                            con.Close();
+                            Buscar("1");
+                            lblActualizacion.Text = "Se ha rechazado la solicitud de carnet.";
+                        }
+                        catch (Exception)
+                        {
+                            lblActualizacion.Text = "No se pudo eliminar la información a causa de un error interno." + "  DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + CmbCarne.Text + "'";
+                            transaction.Rollback();
+                        }
 
+                    }
                 }
+                LimpiarCampos();
             }
-            LimpiarCampos();
+            else 
+            { 
+                lblActualizacion.Text = "Debe de ingresar un número de carnet para poder rechazar la información."; 
+            }
         }
 
         protected void BtnRechazar_Click(object sender, EventArgs e)
@@ -251,32 +258,38 @@ namespace ReportesUnis
 
         protected void Confirmar()
         {
-            string respuesta = null;
-            string fecha = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            QueryInsertBi();
-            //SE INGRESA LA INFORMACIÓN EN EL BANCO
-            respuesta = ConsumoSQL(txtInsertBI.Text);
-            if (respuesta == "0")
+            if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
             {
-                respuesta = "";                
-                QueryUpdateApex("0", fecha,fecha,fecha,"1",CmbCarne.Text);
-                if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+                string respuesta = null;
+                string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                QueryInsertBi();
+                //SE INGRESA LA INFORMACIÓN EN EL BANCO
+                respuesta = ConsumoSQL(txtInsertBI.Text);
+                if (respuesta == "0")
                 {
-                    respuesta = ConsumoOracle(txtInsertApex.Text);
+                    respuesta = "";
+                    QueryUpdateApex("0", fecha, fecha, fecha, "1", CmbCarne.Text);
+                    if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+                    {
+                        respuesta = ConsumoOracle(txtInsertApex.Text);
+                    }
                 }
-            }
-            
-            if (respuesta == "0")
-            {
-                lblActualizacion.Text = "Se confirmó correctamente la información";
-                Buscar("1");
-                LimpiarCampos();
+
+                if (respuesta == "0")
+                {
+                    lblActualizacion.Text = "Se confirmó correctamente la información";
+                    Buscar("1");
+                    LimpiarCampos();
+                }
+                else
+                {
+                    lblActualizacion.Text = "Ocurrió un problema al confirmar la información";
+                }
             }
             else
             {
-                lblActualizacion.Text = "Ocurrió un problema al confirmar la información";
+                lblActualizacion.Text = "Debe de seleccionar un número de carnet para poder confirmar la información.";
             }
-
         }
 
         protected void QueryInsertBi()
@@ -530,31 +543,39 @@ namespace ReportesUnis
 
         protected void BtnGenerar_Click(object sender, EventArgs e)
         {
-            string respuesta = null;
-            string fecha = DateTime.Now.ToString("yyyy-MM-dd");
-            string consultaBi = QueryActualizaBi();
-            txtExiste.Text = consultaBi;
-            //SE INGRESA LA INFORMACIÓN EN EL BANCO
-            respuesta = ConsumoSQL(consultaBi);
-            if (respuesta == "0")
+            if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
             {
-                respuesta = "";
-                QueryUpdateApex("0", fecha, fecha, fecha, "2", txtCarne.Text);
-                if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+                string respuesta = null;
+                string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                string consultaBi = QueryActualizaBi();
+                txtExiste.Text = consultaBi;
+                //SE INGRESA LA INFORMACIÓN EN EL BANCO
+                respuesta = ConsumoSQL(consultaBi);
+                if (respuesta == "0")
                 {
-                    respuesta = ConsumoOracle(txtInsertApex.Text);
+                    respuesta = "";
+                    QueryUpdateApex("0", fecha, fecha, fecha, "2", txtCarne.Text);
+                    if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+                    {
+                        respuesta = ConsumoOracle(txtInsertApex.Text);
+                    }
                 }
-            }
 
-            if (respuesta == "0")
-            {
-                lblActualizacion.Text = "Se almacenó correctamente la información para la renovación del carné";
-                LimpiarCampos();
+                if (respuesta == "0")
+                {
+                    lblActualizacion.Text = "Se almacenó correctamente la información para la renovación del carné";
+                    LimpiarCampos();
+                }
+                else
+                {
+                    lblActualizacion.Text = "Ocurrió un problema al almacenar la información";
+                }
             }
             else
             {
-                lblActualizacion.Text = "Ocurrió un problema al almacenar la información";
+                lblActualizacion.Text = "Debe de ingresar un número de carnet para poder realizar la generación.";
             }
+            
         }
 
     }

@@ -3,7 +3,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
         <br />
-        <h2 style="text-align: center;">CARNETIZACIÓN</h2>
+        <h2 style="text-align: center;">CARNETIZACIÓN ESTUDIANTES</h2>
     </div>
         <hr />
     <div id="CamposAuxiliares" runat="server" visible="false">

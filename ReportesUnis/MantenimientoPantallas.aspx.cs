@@ -183,6 +183,10 @@ namespace ReportesUnis
                                     con.Close();
                                     Buscar();
                                     lblActualizacion.Text = "La información se actualizó correctamente.";
+                                    DTInicio.Text = null; 
+                                    DTFin.Text =null; 
+                                    DTNFin.Text =null; 
+                                    DTNInicio.Text =null;
                                 }
                                 catch (Exception x)
                                 {
@@ -193,12 +197,15 @@ namespace ReportesUnis
                             else
                             {
                                 lblActualizacion.Text = "La fecha de inicio debe de ser menor a la final.";
-
+                                DTNFin.Text = null;
+                                DTNInicio.Text = null;
                             }
                         }
                         else
                         {
                             lblActualizacion.Text = "Valide los datos ingresados para actualizar.";
+                            DTNFin.Text = null;
+                            DTNInicio.Text = null;
                         }
                     }
                     catch (Exception x)
@@ -247,6 +254,8 @@ namespace ReportesUnis
                                     con.Close();
                                     Buscar();
                                     lblActualizacion.Text = "La información se eliminó correctamente.";
+                                    DTInicio.Text = null;
+                                    DTFin.Text = null;
                                 }
                                 catch (Exception)
                                 {
@@ -257,7 +266,6 @@ namespace ReportesUnis
                             else
                             {
                                 lblActualizacion.Text = "La fecha de inicio debe de ser menor a la final.";
-
                             }
                         }
                         else
