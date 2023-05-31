@@ -178,6 +178,14 @@
                             <a id="CargaCTEmp" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/CargarFotografiaEmpleados">Carga Masiva de Fotografías Empleados</a>
                             <a id="ActEstudiantes" runat="server" validationgroup="RLI_VistaAlumnos" class="dropdown-item" href="~/ActualizacionEstudiantes">Actualización de información de Estudiantes</a>
                             <a id="ActEmpleados" runat="server" validationgroup="RLI_VistaEmpleados" class="dropdown-item" href="~/ActualizaciónEmpleados">Actualización de información de Empleados</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown" id="liNavbarCarnet">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarCarnet" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Carnetización
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a id="MantPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Tiempo Pantallas</a>
+                            <a id="GestionesEstudiantes" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónDeCarne">Gestión Estudiantes</a>
                             <%--<a id="MantenimientoPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Mantenimiento Pantallas</a>--%>
                         </div>
                     </li>

@@ -22,8 +22,16 @@ namespace ReportesUnis
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
         protected void Page_Load(object sender, EventArgs e)
         {
-            LeerInfoTxt();
-            LeerInfoTxtSQL();
+
+            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("DATOS_FOTOGRAFIAS") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
+            {
+                Response.Redirect(@"~/Default.aspx");
+            }
+            if (!IsPostBack)
+            {
+                LeerInfoTxt();
+                LeerInfoTxtSQL();
+            }
         }
 
         protected void RadioButtonConfirmar_CheckedChanged(object sender, EventArgs e)
