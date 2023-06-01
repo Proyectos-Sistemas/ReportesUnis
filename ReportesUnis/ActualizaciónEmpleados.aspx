@@ -7,7 +7,7 @@
     </div>
     <hr />
 
-    <div class="container2">
+    <div class="container2" id="CargaFotografia" runat="server" visible="true">
         <asp:Label id="lblfoto" runat="server" Font-Bold="true">Fotografía:</asp:Label>
         <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="False" accept="image/png, image/jpeg" onchange="validateFileSize();" />
         <div id="dvMsg" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
@@ -15,13 +15,77 @@
         </div>
     </div>
     <hr />
-
-    <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
-    <asp:TextBox ID="UserEmplid" runat="server" Visible="false"></asp:TextBox>
-    <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
-    <asp:TextBox ID="State" runat="server" Visible="false"></asp:TextBox>
-    <asp:TextBox ID="Pais" runat="server" Visible="false"></asp:TextBox>
-    <asp:TextBox ID="PaisInicial" runat="server" Visible="false"></asp:TextBox>
+    <div class="container2" id="CargaDPI" runat="server" visible="false">
+        <asp:Label ID="Label3" runat="server" Font-Bold="false">Para realizar un cambio en su nombre es necesario adjuntar fotografia de su DPI(ambos lados)/Pasaporte</asp:Label>
+        <br />
+        <asp:Label ID="Label2" runat="server" Font-Bold="true">Documento de Identificación:</asp:Label>
+        <asp:FileUpload ID="FileUpload2" runat="server" AllowMultiple="true" accept="image/jpeg" onchange="validateFileSize();" />
+        <div id="dvMsge" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
+            El tamaño máximo permitido es de 1 GB
+        </div>
+     <hr />
+    </div>
+    <%-- VALIDACION CAMPOS NULOS --%>
+    <div style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="false">
+        <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull1" runat="server"
+            ControlToValidate="txtDireccion"
+            ErrorMessage="Ingresa una dirección."
+            ForeColor="Red"
+            Font-Size="Large" Font-Bold="true">
+        </asp:RequiredFieldValidator>
+    </div>
+    <div style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="false">
+            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull12" runat="server"
+                ControlToValidate="txtTelefono"
+                ErrorMessage=" Ingresa un número de teléfono."
+                ForeColor="Red"
+                Font-Size="Large" Font-Bold="true">
+            </asp:RequiredFieldValidator>
+    </div>
+    <div style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="false">
+            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull13" runat="server"
+                ControlToValidate="cMBpAIS"
+                ErrorMessage=" Seleccione un país."
+                ForeColor="Red"
+                Font-Size="Large" Font-Bold="true">
+            </asp:RequiredFieldValidator>
+    </div>
+    <div style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="false">
+        <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull14" runat="server"
+            ControlToValidate="CmbDepartamento"
+            ErrorMessage=" Seleccione un departamento."
+            ForeColor="Red"
+            Font-Size="Large" Font-Bold="true">
+        </asp:RequiredFieldValidator>
+    </div>
+    <div style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="false">
+        <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull15" runat="server"
+            ControlToValidate="CmbMunicipio"
+            ErrorMessage=" Seleccione un municipio."
+            ForeColor="Red"
+            Font-Size="Large" Font-Bold="true">
+        </asp:RequiredFieldValidator>
+    </div>
+    <br /> 
+    <div id="CamposAuxiliares" runat="server" visible="true">         
+        <%-- TXTEXISTE2 ALMACENA vALORES PARA HACER VALIDACIONES --%>
+        <asp:Label ID="txtExiste2" runat="server" Visible="false"></asp:Label>
+         <%-- NOMBRE INICIAL--%>
+        <asp:Label ID="txtNInicial" runat="server" Visible="false"></asp:Label>
+        <%-- APELLIDO INICIAL --%>
+        <asp:TextBox ID="txtAInicial" runat="server" Visible="false"></asp:TextBox>
+        <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
+        <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
+        <%-- TXTUSER ALMACENA EL DPI DEL USUARIO QUE ESTA REALIZANDO CAMBIOS --%>
+        <asp:TextBox ID="TextUser" runat="server" Visible="false"></asp:TextBox>
+        <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
+        <asp:TextBox ID="UserEmplid" runat="server" Visible="false"></asp:TextBox>
+        <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
+        <asp:TextBox ID="State" runat="server" Visible="false"></asp:TextBox>
+        <asp:TextBox ID="Pais" runat="server" Visible="false"></asp:TextBox>
+        <asp:TextBox ID="PaisInicial" runat="server" Visible="false"></asp:TextBox>
+        <asp:TextBox ID="Txtsustituto" runat="server" Visible="false"></asp:TextBox>
+    </div>
 
     <div>
         <br />
@@ -29,92 +93,37 @@
         <asp:Table id="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed ">
 
             <asp:TableRow HorizontalAlign="Center">
-                <%-- ESPACIO --%>
-                <asp:TableCell>
-                        <br />
-                </asp:TableCell>
-                <%-- NOMBRE LABEL --%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Nombres:</asp:Label> 
-                </asp:TableCell>
-                <%-- ESPACIO --%>
-                <asp:TableCell Width="5%">
-                        <br />
-                </asp:TableCell>
-                <%-- NOMBRE  --%>
-                <asp:TableCell>
-                    <asp:Label ID="txtNombre" runat="server" Enabled="false" TextMode="MultiLine" Rows="2"></asp:Label>
-                </asp:TableCell>
-                <%-- ESPACIO --%>
-                <asp:TableCell Width="5%">
-                        <br />
-                </asp:TableCell>
-                <%-- APELLIDO LABEL --%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Apellidos:</asp:Label> 
-                </asp:TableCell>
-                <%-- ESPACIO --%>
-                <asp:TableCell Width="5%">
-                        <br />
-                </asp:TableCell>
-                <%-- APELLIDO  --%>
-                <asp:TableCell>
-                    <asp:Label ID="txtApellido" runat="server" Enabled="false" TextMode="MultiLine" Rows="2"></asp:Label>
-                </asp:TableCell>
-                <%-- ESPACIO --%>
-                <asp:TableCell>
-                        <br />
-                </asp:TableCell>
-                <%-- DPI LABEL --%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">DPI/Pasaporte:</asp:Label> 
-                </asp:TableCell>
-                <%-- ESPACIO --%>
-                <asp:TableCell Width="5%">
-                        <br />
-                </asp:TableCell>
-                <%-- DPI --%>
-                <asp:TableCell>
-                    <asp:Label ID="txtdPI" runat="server" Enabled="false"></asp:Label>
-                </asp:TableCell>
-                <%-- ESPACIO --%>
-                <asp:TableCell>
-                        <br />
-                </asp:TableCell>
-            </asp:TableRow>
-
-            <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
                 <asp:TableCell>
                         <br />
                 </asp:TableCell>
-                <%-- FECHA DE NACIMIENTO LABEL 2--%>
+                <%-- DPI LABEL 2--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Fecha de Nacimiento:</asp:Label>
+                        <asp:Label runat="server" Font-Bold="true">DPI/Pasaporte:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
                 <asp:TableCell Width="5%">
                         <br />
                 </asp:TableCell>
-                <%-- FECHA DE NACIMIENTO  4--%>
+                <%-- DPI 4--%>
                 <asp:TableCell>
-                    <asp:Label ID="txtCumple" runat="server" Enabled="false"></asp:Label>
+                        <asp:Label ID="txtdPI" runat="server" Enabled="false"></asp:Label>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
-                <asp:TableCell>
+                <asp:TableCell Width="5%">
                         <br />
                 </asp:TableCell>
-                <%-- ESPACIO 6--%>
+                <%-- FECHA DE NACIMIENTO LABEL 6--%>
                 <asp:TableCell>
-                        <br />
+                        <asp:Label runat="server" Font-Bold="true">Fecha de Nacimiento:</asp:Label>
                 </asp:TableCell>
                 <%-- ESPACIO 7--%>
-                <asp:TableCell>
+                <asp:TableCell Width="5%">
                         <br />
                 </asp:TableCell>
-                <%-- ESPACIO 8--%>
+                <%-- FECHA DE NACIMIENTO 8--%>
                 <asp:TableCell>
-                        <br />
+                    <asp:Label ID="txtCumple" runat="server" Enabled="false"></asp:Label>
                 </asp:TableCell>
                 <%-- ESPACIO 9--%>
                 <asp:TableCell>
@@ -137,6 +146,116 @@
                         <br />
                 </asp:TableCell>
             </asp:TableRow>
+
+            <asp:TableRow HorizontalAlign="Center">
+                <%-- ESPACIO 1--%>
+                <asp:TableCell>
+                        <br />
+                </asp:TableCell>
+                <%-- NOMBRE LABEL 2--%>
+                <asp:TableCell>
+                        <asp:Label runat="server" Font-Bold="true">Primer Nombre:</asp:Label> 
+                </asp:TableCell>
+                <%-- ESPACIO 3--%>
+                <asp:TableCell Width="5%">
+                        <br />
+                </asp:TableCell>
+                <%-- PRIMER NOMBRE 4--%>
+                <asp:TableCell>
+                        <asp:TextBox ID="txtNombre1" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                </asp:TableCell>
+                <%-- ESPACIO 5--%>
+                <asp:TableCell Width="5%">
+                        <br />
+                </asp:TableCell>
+                <%-- ESPACIO 6--%>
+                <asp:TableCell>
+                        <br />
+                </asp:TableCell>
+                <%-- ESPACIO 7--%>
+                <asp:TableCell Width="5%">
+                        <br />
+                </asp:TableCell>
+                <%-- ESPACIO 8--%>
+                <asp:TableCell>
+                        <br />
+                </asp:TableCell>
+                <%-- ESPACIO 9--%>
+                <asp:TableCell>
+                        <br />
+                </asp:TableCell>       
+                <%-- NOMBRE LABEL 10--%>
+                <asp:TableCell>
+                        <asp:Label runat="server" Font-Bold="true">Segundo Nombre:</asp:Label> 
+                </asp:TableCell>
+                <%-- ESPACIO 11--%>
+                <asp:TableCell Width="5%">
+                        <br />
+                </asp:TableCell>
+                <%-- SEGUNDO NOMBRE 12--%>
+                <asp:TableCell>
+                        <asp:TextBox ID="txtNombre2" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                </asp:TableCell>
+                <%-- ESPACIO 13--%>
+                <asp:TableCell>
+                        <br />
+                </asp:TableCell>
+        </asp:TableRow>
+        
+            <asp:TableRow HorizontalAlign="Center">
+                <%-- ESPACIO 1--%>
+                <asp:TableCell>
+                        <br />
+                </asp:TableCell>
+                <%-- APELLIDO LABEL 2--%>
+                <asp:TableCell>
+                        <asp:Label runat="server" Font-Bold="true">Primer Apellido:</asp:Label> 
+                </asp:TableCell>
+                <%-- ESPACIO 3--%>
+                <asp:TableCell Width="5%">
+                        <br />
+                </asp:TableCell>
+                <%-- PRIMER APELLIDO 4--%>
+                <asp:TableCell>
+                        <asp:TextBox ID="txtApellido1" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                </asp:TableCell>
+                <%-- ESPACIO 5--%>
+                <asp:TableCell Width="5%">
+                        <br />
+                </asp:TableCell>        
+                <%-- APELLIDO LABEL 6--%>
+                <asp:TableCell>
+                        <asp:Label runat="server" Font-Bold="true">Segundo Apellido:</asp:Label> 
+                </asp:TableCell>
+                <%-- ESPACIO 7--%>
+                <asp:TableCell Width="5%">
+                        <br />
+                </asp:TableCell>
+                <%-- SEGUNDO APELLIDO 8--%>
+                <asp:TableCell>
+                        <asp:TextBox ID="txtApellido2" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                </asp:TableCell>
+                <%-- ESPACIO 9--%>
+                <asp:TableCell>
+                        <br />
+                </asp:TableCell>    
+                <%-- APELLIDO LABEL 10--%>
+                <asp:TableCell>
+                        <asp:Label runat="server" Font-Bold="true">Apellido de Casada:</asp:Label> 
+                </asp:TableCell>
+                <%-- ESPACIO 11--%>
+                <asp:TableCell Width="5%">
+                        <br />
+                </asp:TableCell>
+                <%-- PRIMER APELLIDO 12--%>
+                <asp:TableCell>
+                        <asp:TextBox ID="txtApellidoCasada" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                </asp:TableCell>
+                <%-- ESPACIO 13--%>
+                <asp:TableCell>
+                        <br />
+                </asp:TableCell>
+        </asp:TableRow>
 
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
@@ -311,9 +430,9 @@
                         <br />
                 </asp:TableCell>
             </asp:TableRow>
-
+        
         </asp:Table>
-        <asp:Table runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
+       <asp:Table id="tbactualizar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
             <asp:TableRow>
                 <%-- ESPACIO --%>
                 <asp:TableCell>
@@ -322,7 +441,7 @@
             </asp:TableRow>
             <asp:TableRow>
                 <asp:TableCell>
-                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" OnClick="BtnActualizar_Click" />
+                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnActualizar_Click" />
                 </asp:TableCell>
             </asp:TableRow>
             <asp:TableRow>
@@ -335,41 +454,6 @@
             <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
             </asp:Label>
             <br />
-            <%-- VALIDACION CAMPOS NULOS --%>
-            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull1" runat="server"
-                ControlToValidate="txtDireccion"
-                ErrorMessage="Ingresa una dirección."
-                ForeColor="Red"
-                Font-Size="Large" Font-Bold="true">
-            </asp:RequiredFieldValidator>
-            <br />
-            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull12" runat="server"
-                ControlToValidate="txtTelefono"
-                ErrorMessage=" Ingresa un número de teléfono."
-                ForeColor="Red"
-                Font-Size="Large" Font-Bold="true">
-            </asp:RequiredFieldValidator>
-            <br />
-            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull13" runat="server"
-                ControlToValidate="cMBpAIS"
-                ErrorMessage=" Seleccione un país."
-                ForeColor="Red"
-                Font-Size="Large" Font-Bold="true">
-            </asp:RequiredFieldValidator>
-            <br />
-            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull14" runat="server"
-                ControlToValidate="CmbDepartamento"
-                ErrorMessage=" Seleccione un departamento."
-                ForeColor="Red"
-                Font-Size="Large" Font-Bold="true">
-            </asp:RequiredFieldValidator>
-            <br />
-            <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull15" runat="server"
-                ControlToValidate="CmbMunicipio"
-                ErrorMessage=" Seleccione un municipio."
-                ForeColor="Red"
-                Font-Size="Large" Font-Bold="true">
-            </asp:RequiredFieldValidator>
             <%-- VALIDACION MINIMO DE CARACTERES --%>
             <br />
             <asp:CustomValidator ID="validarTelefono" runat="server" ControlToValidate="txtTelefono"
@@ -390,14 +474,8 @@
             </script>
 
         </div>
-        <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
-        <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
-
-        <%-- TXTUSER ALMACENA EL DPI DEL USUARIO QUE ESTA REALIZANDO CAMBIOS --%>
-        <asp:TextBox ID="TextUser" runat="server" Visible="false"></asp:TextBox>
     </div>
     <script src="Scripts/UNIS/Unis.js"></script>
-    <div class="preloader" id="preloader"></div>
-
+    <div class="preloader" id="preloader"></div>    
 
 </asp:Content>

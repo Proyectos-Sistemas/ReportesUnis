@@ -16,6 +16,7 @@ using System.Web.Services.Description;
 using Microsoft.Win32;
 using NPOI.SS.Formula.Functions;
 using System.Drawing.Printing;
+using Oracle.ManagedDataAccess.Client;
 
 namespace ReportesUnis
 {
@@ -23,6 +24,8 @@ namespace ReportesUnis
     {
         public static string archivoConfiguraciones = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config.dat");
         public static string archivoWS = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConfigWS.dat");
+        string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        int controlPantalla;
         public static class StringExtensions
         {
             public static String RemoveEnd(String str, int len)
@@ -38,33 +41,69 @@ namespace ReportesUnis
         int aux = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
-            TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
-            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaEmpleados") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
+            LeerInfoTxt();
+            controlPantalla = PantallaHabilitada("Carnetización Masiva");
+            if (controlPantalla >= 1)
             {
-                Response.Redirect(@"~/Default.aspx");
-            }
-            if (!IsPostBack)
-            {
-
-                matrizDatos();
-                aux = 2;
-                listadoMunicipios();
-                aux = 3;
-                listadoZonas();
-                aux = 4;
-                PaisInicial.Text = Pais.Text;
-                if (String.IsNullOrEmpty(txtdPI.Text))
+                TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaEmpleados") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
                 {
-                    BtnActualizar.Visible = false;
-                    lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como empleados";
-                    tabla.Visible = false;
-                    FileUpload1.Visible = false;
-                    lblfoto.Visible = false;
+                    Response.Redirect(@"~/Default.aspx");
                 }
+                if (!IsPostBack)
+                {
+                    controlPantalla = PantallaHabilitada("Semana");
+                    if (controlPantalla >= 1)
+                    {
+                        matrizDatos();
+                       /* aux = 2;
+                        listadoMunicipios();
+                        aux = 3;
+                        listadoZonas();
+                        aux = 4;
+                        PaisInicial.Text = Pais.Text;
+                        if (String.IsNullOrEmpty(txtdPI.Text))
+                        {
+                            BtnActualizar.Visible = false;
+                            lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como empleados";
+                            tabla.Visible = false;
+                            FileUpload1.Visible = false;
+                            lblfoto.Visible = false;
+                        }*/
+                    }
+                    else
+                    {
+                        lblActualizacion.Text = "La pantalla de actualización está disponible únicamente de Lunes a Viernes.";
+                        controlCamposVisibles();
+                    }
+                }
+                else
+                    aux = 2;
             }
             else
-                aux = 2;
+            {
+                lblActualizacion.Text = "¡IMPORTANTE! Esta página no está disponible, ¡Permanece atento a nuevas fechas para actualizar tus datos!";
+                controlCamposVisibles();
+            }
 
+        }
+
+        void LeerInfoTxt()
+        {
+            string rutaCompleta = CurrentDirectory + "conexion.txt";
+            string line = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                line = file.ReadToEnd();
+                TxtURL.Text = line;
+                file.Close();
+            }
+        }
+        void controlCamposVisibles()
+        {
+            CargaFotografia.Visible = false;
+            tabla.Visible = false;
+            tbactualizar.Visible = false;
         }
 
         [WebMethod]
@@ -502,7 +541,8 @@ namespace ReportesUnis
                 {
                     int largo = 0;
                     string nombre = TextUser.Text.TrimEnd(' ');
-                    largo = nombre.Length + 156;
+                    //largo = nombre.Length + 156;
+                    largo = nombre.Length + 197;
                     sustituto = sustituto.Remove(0, largo);
                 }
                 else if (aux == 1)
@@ -557,7 +597,7 @@ namespace ReportesUnis
 
                 sustituto = sustituto;
             }
-
+            Txtsustituto.Text = sustituto;
             return sustituto;
         }
 
@@ -568,7 +608,7 @@ namespace ReportesUnis
             decimal count = 0;
             int datos = 0;
             string[,] arrlist;
-            int valor = 15;
+            int valor = 17;
 
             aux = 4;
             listaPaises();
@@ -596,14 +636,14 @@ namespace ReportesUnis
                 DataSetLocalRpt dsReporte = new DataSetLocalRpt();
                 try
                 {
-                    if (valor == 15)
+                    if (valor == 17)
                     {
                         //Generacion de matriz para llenado de grid desde una consulta
                         for (int i = 0; i < count; i++)
                         {
                             //DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
-                            txtNombre.Text = (arrlist[i, 1] ?? "").ToString();
-                            txtApellido.Text = (arrlist[i, 2] ?? "").ToString();
+                            txtNombre1.Text = (arrlist[i, 1] ?? "").ToString();
+                            txtApellido1.Text = (arrlist[i, 2] ?? "").ToString();
                             txtdPI.Text = (arrlist[i, 3] ?? "").ToString();
                             txtFacultad.Text = (arrlist[i, 4] ?? "").ToString();
                             txtTelefono.Text = (arrlist[i, 5] ?? "").ToString();
@@ -641,18 +681,19 @@ namespace ReportesUnis
 
                             txtCumple.Text = bday;
 
-
                             txtDireccion.Text = arrlist[i, 8].ToString();
-                            txtDireccion2.Text = arrlist[i, 12].ToString();
-                            cMBpAIS.SelectedValue = (arrlist[i, 11] ?? "").ToString();
                             aux = 1;
                             listaDepartamentos();
                             aux = 0;
                             CmbMunicipio.SelectedValue = (arrlist[i, 9] ?? "").ToString();
                             CmbDepartamento.SelectedValue = (arrlist[i, 10] ?? "").ToString();
-                            UserEmplid.Text = (arrlist[i, 14] ?? "").ToString();
+                            cMBpAIS.SelectedValue = (arrlist[i, 11] ?? "").ToString();
+                            txtDireccion2.Text = arrlist[i, 12].ToString();
                             txtZona.Text = (arrlist[i, 13] ?? "").ToString();
-
+                            UserEmplid.Text = (arrlist[i, 14] ?? "").ToString();
+                            txtNombre2.Text = (arrlist[i, 15] ?? "").ToString();
+                            txtApellido2.Text = (arrlist[i, 16] ?? "").ToString();
+                            txtApellidoCasada.Text = (arrlist[i, 17] ?? "").ToString().Replace('-',' ');
                             //dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                         }
                     }
@@ -1276,6 +1317,45 @@ namespace ReportesUnis
             return contador;
         }
 
-        
+        protected int PantallaHabilitada(string PANTALLA)
+        {
+            txtExiste2.Text = "SELECT COUNT(*) AS CONTADOR " +
+                        "FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE " +
+                        "WHERE TO_CHAR(SYSDATE,'YYYY-MM-DD') " +
+                        "BETWEEN FECHA_INICIO AND FECHA_FIN " +
+                        "AND PANTALLA ='" + PANTALLA + "'";
+            string constr = TxtURL.Text;
+            string control = "0";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        cmd.Connection = con;
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR " +
+                        "FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE " +
+                        "WHERE TO_CHAR(SYSDATE,'YYYY-MM-DD') " +
+                        "BETWEEN FECHA_INICIO AND FECHA_FIN " +
+                        "AND PANTALLA ='" + PANTALLA + "'";
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            control = reader["CONTADOR"].ToString();
+                        }
+
+                        con.Close();
+                    }
+                    catch (Exception x)
+                    {
+                        control = x.ToString();
+                    }
+                }
+            }
+            return Convert.ToInt32(control);
+        }
+
+
     }
 }
