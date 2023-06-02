@@ -27,7 +27,7 @@
     </div>
 
     <%-- VALIDACION CAMPOS NULOS --%>
-    <div style="margin-left: auto; margin-right: auto; text-align: center;">
+    <div style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="false">
         <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull1" runat="server"
             ControlToValidate="txtDireccion"
             ErrorMessage="Ingresa una dirección."
@@ -35,7 +35,7 @@
             Font-Size="Large" Font-Bold="true">
         </asp:RequiredFieldValidator>
      </div>
-    <div style="margin-left: auto; margin-right: auto; text-align: center;">
+    <div style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="false">
         <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull12" runat="server"
             ControlToValidate="txtTelefono"
             ErrorMessage=" Ingresa un número de teléfono."
@@ -43,7 +43,6 @@
             Font-Size="Large" Font-Bold="true">
         </asp:RequiredFieldValidator>
     </div>
-    <br />
     <div id="CamposAuxiliares" runat="server" visible="false">
         <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
         <asp:Label ID="UserEmplid" runat="server" Visible="false"></asp:Label>

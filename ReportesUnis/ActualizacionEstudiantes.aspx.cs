@@ -177,14 +177,15 @@ namespace ReportesUnis
                     "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                     //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
                     //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                    "WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
+                    //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
+                    "WHERE PN.NATIONAL_ID ='2990723550101' " + // DE LEON
                     //"WHERE PN.NATIONAL_ID ='4681531' " + // DE LEON
                     //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián  
                    ") WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        txtCarne.Text = reader["CARNE"].ToString();
+                        txtCarne.Text = reader["EMPLID"].ToString();
                         txtNombre.Text = reader["FIRST_NAME"].ToString();
                         txtNInicial.Text = reader["FIRST_NAME"].ToString();
                         txtApellido.Text = reader["LAST_NAME"].ToString();
@@ -241,7 +242,15 @@ namespace ReportesUnis
                         txtFacultad.Text = reader["FACULTAD"].ToString();
                         UserEmplid.Text = reader["EMPLID"].ToString();
                     }
-                    con.Close();
+
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT NOMBRE_COMPLETO FROM UNIS_INTERFACES.TBL_FACULTADES WHERE NOMBRE_CAMPUS ='" + txtFacultad.Text.TrimEnd().TrimStart() + "'";
+                    OracleDataReader reader2 = cmd.ExecuteReader();
+                    while (reader2.Read())
+                    {
+                        txtFacultad.Text = reader2["NOMBRE_COMPLETO"].ToString();
+                    }
+                        con.Close();
                 }
             }
         }
@@ -582,7 +591,7 @@ namespace ReportesUnis
                                             "NULL," + //ZONA
                                             "" + txtAccion.Text + ",'" + //ACCION
                                             "||''''||PHONE||''''||','" + //CELULAR
-                                            "||CARNE||','" + //CODIGO DE BARRAS
+                                            "||CODIGO_BARRAS||','" + //CODIGO DE BARRAS
                                             "||''''||CONDMIG||''''||','" + //CONDICION MIGRANTE
                                             "||'2022,'" + //ID  UNIVERSIDAD
                                             "||''''||PAIS_PASAPORTE||''''||','" + //PAIS PASAPORTE
@@ -606,8 +615,8 @@ namespace ReportesUnis
                                             ""+txtConfirmacion.Text+",'''||"+txtCantidadImagenesDpi.Text+"||''')'" + // confirmación operador
                                             " AS INS " +
                                             "FROM ( SELECT " +
-                                            "DISTINCT PD.EMPLID, " +
-                                            "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
+                                            "DISTINCT PD.EMPLID CARNE, " +
+                                            "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CODIGO_BARRAS, " +
                                             "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
                                             "SUBSTR(PD.FIRST_NAME,  LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))+2, LENGTH(PD.FIRST_NAME)-LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))) SECOND_NAME, " +
                                             "PD.LAST_NAME, PD.BIRTHCOUNTRY," +
@@ -659,9 +668,10 @@ namespace ReportesUnis
                                             "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                             "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                             //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                            "WHERE PN.NATIONAL_ID ='2327809510101')" +
+                                            //"WHERE PN.NATIONAL_ID ='2327809510101')" +
+                                            "WHERE PN.NATIONAL_ID ='2990723550101')" +
                                             //"WHERE PN.NATIONAL_ID ='4681531')" +
-                                            "WHERE CARNE=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CARNE=PASAPORTE OR CARNE=CEDULA " +
+                                            "WHERE CODIGO_BARRAS=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CODIGO_BARRAS=PASAPORTE OR CODIGO_BARRAS=CEDULA " +
                                             "ORDER BY 1 ASC";
                             //--4681531 PASAPORTE
                             reader = cmd.ExecuteReader();
@@ -785,7 +795,7 @@ namespace ReportesUnis
                                             "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''''||'," +//FECHA_HORA
                                             "" + txtTipoAccion.Text + "," +//TIPO_ACCION
                                             "2022,'" + //ID  UNIVERSIDAD
-                                            "||CARNE||'," + //CODIGO DE BARRAS
+                                            "||CODIGO_BARRAS||'," + //CODIGO DE BARRAS
                                             "NULL," +//FECHA_EMISION
                                             "NULL," + //Nombre
                                             "NULL," + //Promocion
@@ -835,8 +845,8 @@ namespace ReportesUnis
                                             "1)'" + //Validar_Envio" 
                                             " AS INS " +
                                             "FROM ( SELECT " +
-                                            "DISTINCT PD.EMPLID, " +
-                                            "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CARNE, " +
+                                            "DISTINCT PD.EMPLID CARNE, " +
+                                            "(SELECT PN2.NATIONAL_ID FROM SYSADM.PS_PERS_NID PN2 WHERE PD.EMPLID = PN2.EMPLID ORDER BY CASE WHEN PN2.NATIONAL_ID_TYPE = 'DPI' THEN 1 WHEN PN2.NATIONAL_ID_TYPE = 'PAS' THEN 2 WHEN PN2.NATIONAL_ID_TYPE = 'CED' THEN 3 ELSE 4 END FETCH FIRST 1 ROWS ONLY) CODIGO_BARRAS, " +
                                             "REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+') FIRST_NAME, " +
                                             "SUBSTR(PD.FIRST_NAME,  LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))+2, LENGTH(PD.FIRST_NAME)-LENGTH(REGEXP_SUBSTR(PD.FIRST_NAME, '[^ ]+'))) SECOND_NAME, " +
                                             "PD.LAST_NAME, PD.BIRTHCOUNTRY," +
@@ -889,8 +899,8 @@ namespace ReportesUnis
                                             "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                             //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
                                             //"WHERE PN.NATIONAL_ID ='4681531')" +
-                                            "WHERE PN.NATIONAL_ID ='2327809510101')" +
-                                            "WHERE CARNE=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CARNE=PASAPORTE OR CARNE=CEDULA " +
+                                            "WHERE PN.NATIONAL_ID ='2990723550101')" +
+                                            "WHERE CODIGO_BARRAS=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CODIGO_BARRAS=PASAPORTE OR CODIGO_BARRAS=CEDULA " +
                                             "ORDER BY 1 ASC";
                             //--4681531 PASAPORTE
                             reader = cmd.ExecuteReader();
@@ -1038,7 +1048,6 @@ namespace ReportesUnis
 
             lblActualizacion.Text = informacion;
         }
-
         protected string Upload()
         {
             string mensaje = "";
