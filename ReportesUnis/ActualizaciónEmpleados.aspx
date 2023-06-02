@@ -3,7 +3,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container-fluid">
         <br />
-        <h2 style="text-align: center;">ACTUALIZACIÓN DE INFORMACIÓN DE EMPLEADOS</h2>
+        <h2 style="text-align: center;">ACTUALIZACIÓN DE INFORMACIÓN</h2>
     </div>
     <hr />
 
@@ -84,7 +84,9 @@
         <asp:TextBox ID="State" runat="server" Visible="false"></asp:TextBox>
         <asp:TextBox ID="Pais" runat="server" Visible="false"></asp:TextBox>
         <asp:TextBox ID="PaisInicial" runat="server" Visible="false"></asp:TextBox>
-        <asp:TextBox ID="Txtsustituto" runat="server" Visible="false"></asp:TextBox>
+        <asp:TextBox ID="Txtsustituto" runat="server" Visible="true"></asp:TextBox>
+        <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
+        <asp:TextBox ID="txtInsertBI" runat="server" Visible="false"></asp:TextBox>
     </div>
 
     <div>
@@ -152,33 +154,33 @@
                 <asp:TableCell>
                         <br />
                 </asp:TableCell>
-                <%-- NOMBRE LABEL 2--%>
+                <%-- PUESTO 2--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Primer Nombre:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">Puesto:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
                 <asp:TableCell Width="5%">
                         <br />
                 </asp:TableCell>
-                <%-- PRIMER NOMBRE 4--%>
+                <%-- PUESTO 4--%>
                 <asp:TableCell>
-                        <asp:TextBox ID="txtNombre1" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                      <asp:TextBox ID="txtPuesto" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>  
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
                 <asp:TableCell Width="5%">
                         <br />
                 </asp:TableCell>
-                <%-- ESPACIO 6--%>
+                <%-- PRIMER NOMBRE 6--%>
                 <asp:TableCell>
-                        <br />
+                        <asp:Label runat="server" Font-Bold="true">Primer Nombre:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 7--%>
                 <asp:TableCell Width="5%">
                         <br />
                 </asp:TableCell>
-                <%-- ESPACIO 8--%>
+                <%-- PRIMER NOMBRE 8--%>
                 <asp:TableCell>
-                        <br />
+                        <asp:TextBox ID="txtNombre1" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO 9--%>
                 <asp:TableCell>

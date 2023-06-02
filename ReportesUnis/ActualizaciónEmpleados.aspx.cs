@@ -56,7 +56,7 @@ namespace ReportesUnis
                     if (controlPantalla >= 1)
                     {
                         matrizDatos();
-                       /* aux = 2;
+                        aux = 2;
                         listadoMunicipios();
                         aux = 3;
                         listadoZonas();
@@ -69,7 +69,7 @@ namespace ReportesUnis
                             tabla.Visible = false;
                             FileUpload1.Visible = false;
                             lblfoto.Visible = false;
-                        }*/
+                        }
                     }
                     else
                     {
@@ -201,7 +201,7 @@ namespace ReportesUnis
                                                 </v2:item>
                                            </v2:listOfParamNameValues>
                                         </v2:parameterNameValues>           
-                                        <v2:reportAbsolutePath>/Custom/UNIS/ Web Services/Actualización/InformeActualizarEmpleados.xdo</v2:reportAbsolutePath>
+                                        <v2:reportAbsolutePath>/Custom/UNIS/ Web Services/Actualización/InformeActualizarEmpleadosV2.xdo</v2:reportAbsolutePath>
                                        <v2:sizeOfDataChunkDownload>-1</v2:sizeOfDataChunkDownload>
                                      </v2:reportRequest>
                                      <v2:userID>" + idPersona + @"</v2:userID>
@@ -541,8 +541,7 @@ namespace ReportesUnis
                 {
                     int largo = 0;
                     string nombre = TextUser.Text.TrimEnd(' ');
-                    //largo = nombre.Length + 156;
-                    largo = nombre.Length + 197;
+                    largo = nombre.Length + 203;
                     sustituto = sustituto.Remove(0, largo);
                 }
                 else if (aux == 1)
@@ -608,7 +607,7 @@ namespace ReportesUnis
             decimal count = 0;
             int datos = 0;
             string[,] arrlist;
-            int valor = 17;
+            int valor = 18;
 
             aux = 4;
             listaPaises();
@@ -636,7 +635,7 @@ namespace ReportesUnis
                 DataSetLocalRpt dsReporte = new DataSetLocalRpt();
                 try
                 {
-                    if (valor == 17)
+                    if (valor == 18)
                     {
                         //Generacion de matriz para llenado de grid desde una consulta
                         for (int i = 0; i < count; i++)
@@ -694,6 +693,7 @@ namespace ReportesUnis
                             txtNombre2.Text = (arrlist[i, 15] ?? "").ToString();
                             txtApellido2.Text = (arrlist[i, 16] ?? "").ToString();
                             txtApellidoCasada.Text = (arrlist[i, 17] ?? "").ToString().Replace('-',' ');
+                            txtPuesto.Text = (arrlist[i, 18] ?? "").ToString();
                             //dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                         }
                     }
@@ -1356,6 +1356,31 @@ namespace ReportesUnis
             return Convert.ToInt32(control);
         }
 
+        private string ValidarRegistros()
+        {
+            string constr = TxtURL.Text;
 
+            string RegistroCarne = "0";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE";
+                    cmd.Connection = con;
+                    con.Open();
+
+                    //SE VALIDA QUE NO EXISTA INFORMACIÓN REGISTRADA
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARGO = '" + txtPuesto.Text + "' AND FACULTAD ='" + txtFacultad.Text + "' AND CARNET =SUBSTR('" + txtdPI.Text + "',0,13) AND NOMBRE1 = '" + txtNombre1.Text + "' AND NOMBRE2 = '" + txtNombre2.Text + "' AND APELLIDO1 = '" + txtApellido1.Text + "' AND APELLIDO2 = '" + txtApellido2.Text + "' AND UPPER(REPLACE(DECASADA,' ','')) = UPPER(REPLACE('" + txtApellidoCasada.Text + "', ' ', '')))";
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        RegistroCarne = reader["CONTADOR"].ToString();
+                    }
+                }
+            }
+            return RegistroCarne;
+        }
     }
 }

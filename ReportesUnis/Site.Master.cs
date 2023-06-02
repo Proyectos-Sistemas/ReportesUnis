@@ -40,23 +40,23 @@ namespace ReportesUnis
 
                 }
 
-                if (respuesta.Contains("RLI_VistaAlumnos"))
-                {
-                    ActEstudiantes.Visible = true;
-                }
-                else
-                {
-                    ActEstudiantes.Visible = respuesta.Contains(ActEstudiantes.ValidationGroup);
-                }
+                //if (respuesta.Contains("RLI_VistaAlumnos"))
+                //{
+                //    ActEstudiantes.Visible = true;
+                //}
+                //else
+                //{
+                //    ActEstudiantes.Visible = respuesta.Contains(ActEstudiantes.ValidationGroup);
+                //}
                 
-                if (respuesta.Contains("RLI_VistaEmpleados"))
-                {
-                    ActEmpleados.Visible = true;
-                }
-                else
-                {
-                    ActEmpleados.Visible = respuesta.Contains(ActEmpleados.ValidationGroup);
-                }
+                //if (respuesta.Contains("RLI_VistaEmpleados"))
+                //{
+                //    ActEmpleados.Visible = true;
+                //}
+                //else
+                //{
+                //    ActEmpleados.Visible = respuesta.Contains(ActEmpleados.ValidationGroup);
+                //}
 
                 if (respuesta.Contains("DATOS_FOTOGRAFIAS"))
                 {

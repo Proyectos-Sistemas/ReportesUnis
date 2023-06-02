@@ -222,6 +222,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox Txtsustituto;
 
         /// <summary>
+        /// Control txtInsertBI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtInsertBI;
+
+        /// <summary>
         /// Control tabla.
         /// </summary>
         /// <remarks>
@@ -256,6 +265,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label txtFacultad;
+
+        /// <summary>
+        /// Control txtPuesto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPuesto;
 
         /// <summary>
         /// Control txtNombre1.

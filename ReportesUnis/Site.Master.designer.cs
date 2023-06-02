@@ -141,22 +141,13 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlAnchor CargaCTEmp;
 
         /// <summary>
-        /// Control ActEstudiantes.
+        /// Control Actualizacion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor ActEstudiantes;
-
-        /// <summary>
-        /// Control ActEmpleados.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor ActEmpleados;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor Actualizacion;
 
         /// <summary>
         /// Control MantPantallas.
