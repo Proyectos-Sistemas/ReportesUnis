@@ -25,25 +25,38 @@
         </div>
      <hr />
     </div>
-
-    <%-- VALIDACION CAMPOS NULOS --%>
-    <div style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="false">
+     <%-- VALIDACION CAMPOS NULOS --%>
+    <div id="ValidacionDir" style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="true">
         <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull1" runat="server"
             ControlToValidate="txtDireccion"
             ErrorMessage="Ingresa una dirección."
             ForeColor="Red"
-            Font-Size="Large" Font-Bold="true">
+            Font-Size="Medium" Font-Bold="true"            >
         </asp:RequiredFieldValidator>
-     </div>
-    <div style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="false">
+        <br />
         <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull12" runat="server"
             ControlToValidate="txtTelefono"
             ErrorMessage=" Ingresa un número de teléfono."
             ForeColor="Red"
-            Font-Size="Large" Font-Bold="true">
+            Font-Size="Medium" Font-Bold="true">
+        </asp:RequiredFieldValidator>
+        <br />
+        <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull13" runat="server"
+            ControlToValidate="txtNombre"
+            ErrorMessage=" Ingresa tu nombre."
+            ForeColor="Red"
+            Font-Size="Medium" Font-Bold="true">
+        </asp:RequiredFieldValidator>
+        <br />
+        <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull15" runat="server"
+            ControlToValidate="txtApellido"
+            ErrorMessage=" Ingresa tu apellido."
+            ForeColor="Red"
+            Font-Size="Medium" Font-Bold="true">
         </asp:RequiredFieldValidator>
     </div>
-    <div id="CamposAuxiliares" runat="server" visible="false">
+    
+    <div id="CamposAuxiliares" runat="server" visible="true">
         <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
         <asp:Label ID="UserEmplid" runat="server" Visible="false"></asp:Label>
         <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
@@ -67,13 +80,15 @@
         <%-- TXTTipoACCION se almacena el primer apellido del estudiante --%>
         <asp:Label ID="txtTipoAccion" runat="server" Visible="false"></asp:Label>
         <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
-        <asp:TextBox ID="txtInsert" runat="server" Visible="true"></asp:TextBox>
+        <asp:TextBox ID="txtInsert" runat="server" Visible="false"></asp:TextBox>
         <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
         <asp:TextBox ID="txtInsertBI" runat="server" Visible="false"></asp:TextBox>
         <%-- TXTEXISTE ALMACENA vALORES PARA HACER VALIDACIONES --%>
         <asp:Label ID="txtExiste" runat="server" Visible="false"></asp:Label>
         <%-- TXTEXISTE2 ALMACENA vALORES PARA HACER VALIDACIONES --%>
-        <asp:Label ID="txtExiste2" runat="server" Visible="false"></asp:Label>
+        <asp:Label ID="txtExiste2" runat="server" Visible="true"></asp:Label>
+        <%-- TXTEXISTE3 ALMACENA vALORES PARA HACER VALIDACIONES --%>
+        <asp:TextBox ID="txtExiste3" runat="server" Visible="true"></asp:TextBox>
         <%-- TXTMUNICIPIODPI ALMACENA EL MUNICIPIO DEL DPI --%>
         <asp:Label ID="txtMunicipioDPI" runat="server" Visible="false"></asp:Label>
         <%-- TXTDEPARTAMENTODPI ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
@@ -84,6 +99,10 @@
         <asp:Label ID="txtNInicial" runat="server" Visible="false"></asp:Label>
         <%-- APELLIDO INICIAL --%>
         <asp:TextBox ID="txtAInicial" runat="server" Visible="false"></asp:TextBox>
+        <%-- APELLIDO PARA APEX --%>
+        <asp:TextBox ID="txtApellidoAPEX" runat="server" Visible="false"></asp:TextBox>
+        <%-- NOMBRE PARA APEX --%>
+        <asp:TextBox ID="txtNombreAPEX" runat="server" Visible="true"></asp:TextBox>
         <%-- APELLIDO CASADA INICIAL --%>
         <asp:TextBox ID="txtCInicial" runat="server" Visible="false"></asp:TextBox>
         <%-- CONFIRMACION OPERADOR --%>
@@ -91,7 +110,7 @@
         <%-- ¡tiene pasaporte? --%>
         <asp:Label ID="txtPaisPasaporte" runat="server" Visible="false"></asp:Label>
         <%-- ¡tiene pasaporte? --%>
-        <asp:Label ID="txtCantidadImagenesDpi" runat="server" Visible="true">0</asp:Label>
+        <asp:Label ID="txtCantidadImagenesDpi" runat="server" Visible="false">0</asp:Label>
     </div>
     <div>
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
@@ -471,33 +490,33 @@
                 </asp:TableCell>
             </asp:TableRow>
             <asp:TableRow>
-                <asp:TableCell HorizontalAlign="Center">
+                <asp:TableCell>
+                    <%-- VALIDACION MINIMO DE CARACTERES --%>
+                    <asp:CustomValidator ID="validarTelefono" runat="server" ControlToValidate="txtTelefono"
+                        ErrorMessage="El número de teléfono debe de tener al menos 8 caracteres" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red" Font-Size="Large" Font-Bold="true"></asp:CustomValidator>
+                    <script type="text/javascript">
+                        function VerificarCantidadTelefono(sender, args) {
+                            args.IsValid = (args.Value.length >= 7);
+                        }
+                    </script>
+                    <br />
+                    <asp:CustomValidator ID="validarDireccion" runat="server" ControlToValidate="txtDireccion"
+                        ErrorMessage="La dirección debe de tener al menos 10 caracteres" ClientValidationFunction="VerificarCantidadDireccion" ForeColor="Red" Font-Size="Large" Font-Bold="true"></asp:CustomValidator>
+                    <script type="text/javascript">
+                        function VerificarCantidadDireccion(sender, args) {
+                            args.IsValid = (args.Value.length >= 9 && args.Value.length >= 1);
+                        }
+                    </script>
                 </asp:TableCell>
-            </asp:TableRow>
+            </asp:TableRow>            
         </asp:Table>
-        <br />
         <div style="margin-left: auto; margin-right: auto; text-align: center;">
             <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
             </asp:Label>
-            <br />
-            <%-- VALIDACION MINIMO DE CARACTERES --%>
-            <asp:CustomValidator ID="validarTelefono" runat="server" ControlToValidate="txtTelefono"
-                ErrorMessage="El número de teléfono debe de tener al menos 8 caracteres" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red" Font-Size="Large" Font-Bold="true"></asp:CustomValidator>
-            <script type="text/javascript">
-                function VerificarCantidadTelefono(sender, args) {
-                    args.IsValid = (args.Value.length >= 7);
-                }
-            </script>
-            <br />
-            <asp:CustomValidator ID="validarDireccion" runat="server" ControlToValidate="txtDireccion"
-                ErrorMessage="La dirección debe de tener al menos 10 caracteres" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red" Font-Size="Large" Font-Bold="true"></asp:CustomValidator>
-            <script type="text/javascript">
-                function VerificarCantidadDireccion(sender, args) {
-                    args.IsValid = (args.Value.length >= 9);
-                }
-            </script>
-        </div>
-
+            <br /> 
+            
+        <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red"/> 
+        </div>      
     </div>
     
        

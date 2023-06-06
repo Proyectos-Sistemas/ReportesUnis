@@ -11,6 +11,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Windows.Interop;
 using DocumentFormat.OpenXml.Office.Word;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.Ajax.Utilities;
 //using DocumentFormat.OpenXml.Drawing;
 using Newtonsoft.Json;
@@ -203,15 +204,27 @@ namespace ReportesUnis
                         else
                         {
                             posicion = reader["LAST_NAME"].ToString().IndexOf(" ");
-                            apellidoEx = divisionApellidos(reader["LAST_NAME"].ToString().Substring(0, posicion));
-                            txtContaador.Text = apellidoEx.ToString();
-                            excepcionApellido = apellidoEx.ToString().IndexOf("    }");
-                            txtContaador.Text = apellidoEx.ToString().Substring(excepcionApellido - 3, 1);
-                            if (apellidoEx.ToString().Substring(excepcionApellido - 3, 1).Equals("1"))
+                            if (posicion > 0)
                             {
-                                posicion2 = txtApellido.Text.Substring(posicion + 1, largoApellido - (posicion+1)).IndexOf(" ");
-                                txtContaador.Text = posicion2.ToString();
-                                txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 1 + posicion2);
+                                apellidoEx = divisionApellidos(reader["LAST_NAME"].ToString().Substring(0, posicion));
+                                txtContaador.Text = apellidoEx.ToString();
+                                excepcionApellido = apellidoEx.ToString().IndexOf("    }");
+                                txtContaador.Text = apellidoEx.ToString().Substring(excepcionApellido - 3, 1);
+                                if (apellidoEx.ToString().Substring(excepcionApellido - 3, 1).Equals("1"))
+                                {
+                                    posicion2 = txtApellido.Text.Substring(posicion + 1, largoApellido - (posicion + 1)).IndexOf(" ");
+                                    txtContaador.Text = posicion2.ToString();
+                                    txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 1 + posicion2);
+                                }
+                            }                            
+                            /*else
+                            {
+                                txtPrimerApellido.Text = getBetween(txtApellido.Text, "", " ");
+                            }
+                            */
+                            if (txtPrimerApellido.Text.IsNullOrWhiteSpace())
+                            {
+                                txtPrimerApellido.Text = getBetween(txtApellido.Text, "", " ");
                             }
                         }
 
@@ -510,15 +523,86 @@ namespace ReportesUnis
             llenadoState();
         }
 
+        public static int ContarEspacios(string texto)
+        {
+            int contador = 0;
+            string letra;
+
+            for (int i = 0; i < texto.Length; i++)
+            {
+                letra = texto.Substring(i, 1);
+
+                if (letra == " ")
+                {
+                    contador++;
+                }
+            }
+
+            return contador;
+        }
+
         protected string IngresoDatos()
         {
             try
             {
+                txtNombreAPEX.Text = null;
                 string constr = TxtURL.Text;
                 string codPais = "";
                 string ec = estadoCivil();
                 string RegistroCarne = "0";
                 string controlOracle = "0";
+                var apellidoEx = "0";
+                int posicion = 0;
+                int posicion2 = 0;
+                int largoApellido = 0;
+                int excepcionApellido = 0;
+                int espaciosApellido = ContarEspacios(txtApellido.Text);
+                int espaciosNombre = ContarEspacios(txtNombre.Text);
+                string[] nombres = txtNombre.Text.TrimEnd(' ').Split(' ');
+                int nombresTotal = nombres.Length;
+                if ((txtApellido.Text.Substring(0, 5)).ToUpper().Equals("DE LA"))
+                {
+                    posicion = txtApellido.Text.Substring(6, largoApellido - 6).IndexOf(" ");
+                    txtContaador.Text = txtAInicial.Text.Length.ToString() + " " + posicion.ToString();
+                    txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 6);
+                }
+                else
+                {
+                    posicion = txtApellido.Text.IndexOf(" ");
+                    if (posicion > 0)
+                    {
+                        apellidoEx = divisionApellidos(txtApellido.ToString().Substring(0, posicion));
+                        txtContaador.Text = apellidoEx.ToString();
+                        excepcionApellido = apellidoEx.ToString().IndexOf("    }");
+                        txtContaador.Text = apellidoEx.ToString().Substring(excepcionApellido - 3, 1);
+                        if (apellidoEx.ToString().Substring(excepcionApellido - 3, 1).Equals("1"))
+                        {
+                            posicion2 = txtApellido.Text.Substring(posicion + 1, largoApellido - (posicion + 1)).IndexOf(" ");
+                            txtContaador.Text = posicion2.ToString();
+                            txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 1 + posicion2);
+                        }
+                        if (txtPrimerApellido.Text.IsNullOrWhiteSpace())
+                        {
+                            txtPrimerApellido.Text = getBetween(txtApellido.Text, "", " ");
+                        }
+                    }
+                    /*else
+                    {
+                        txtPrimerApellido.Text = getBetween(txtApellido.Text, "", " ");
+                    }
+                    */
+                    
+                }
+                
+                if (nombresTotal > 1)
+                {
+                    for (int i = 1 ; i < nombresTotal ; i++)
+                    {
+                        txtNombreAPEX.Text = txtNombreAPEX.Text + " " + nombres[i]  ;
+                    }
+                }
+
+                txtNombreAPEX.Text.TrimStart(' ');
                 using (OracleConnection con = new OracleConnection(constr))
                 {
                     con.Open();
@@ -540,8 +624,8 @@ namespace ReportesUnis
                         //SE VALIDA QUE NO EXISTA INFORMACIÓN REGISTRADA
                         cmd.Transaction = transaction;
                         cmd.Connection = con;
-                        txtExiste2.Text = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARGO = '" + txtCarrera.Text + "' AND FACULTAD ='" + txtFacultad.Text + "' AND CARNET =SUBSTR('" + txtCarne.Text + "',0,13) AND (REPLACE(NOMBRE1||NOMBRE2,' ','') = REPLACE('"+txtNombre.Text+ "',' ','') AND REPLACE(APELLIDO1||APELLIDO2,' ','') = REPLACE('"+txtApellido.Text+ "', ' ', '')  AND UPPER(REPLACE(DECASADA,' ','')) = UPPER(REPLACE('" + txtCasada.Text+"', ' ', '')))";
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARGO = '" + txtCarrera.Text + "' AND FACULTAD ='" + txtFacultad.Text + "' AND CARNET =SUBSTR('" + txtCarne.Text + "',0,13) AND (REPLACE(NOMBRE1||NOMBRE2,' ','') = REPLACE('"+txtNombre.Text+ "',' ','') AND REPLACE(APELLIDO1||APELLIDO2,' ','') = REPLACE('"+txtApellido.Text+ "', ' ', '')  AND UPPER(REPLACE(DECASADA,' ','')) = UPPER(REPLACE('" + txtCasada.Text+"', ' ', '')))";
+                        txtExiste2.Text = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARGO = '" + txtCarrera.Text + "' AND FACULTAD ='" + txtFacultad.Text + "' AND CARNET =SUBSTR('" + txtCarne.Text + "',0,13) AND (REPLACE(NOMBRE1||NOMBRE2,' ','') = REPLACE('"+txtNombre.Text+ "',' ','') AND REPLACE(APELLIDO1||APELLIDO2,' ','') = REPLACE('"+txtApellido.Text+ "', ' ', ''))";
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARGO = '" + txtCarrera.Text + "' AND FACULTAD ='" + txtFacultad.Text + "' AND CARNET =SUBSTR('" + txtCarne.Text + "',0,13) AND (REPLACE(NOMBRE1||NOMBRE2,' ','') = REPLACE('"+txtNombre.Text+ "',' ','') AND REPLACE(APELLIDO1||APELLIDO2,' ','') = REPLACE('"+txtApellido.Text+ "', ' ', ''))";
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
@@ -559,13 +643,31 @@ namespace ReportesUnis
 
                             cmd.Transaction = transaction;
                             //Obtener codigo país
+                            txtExiste3.Text = txtPrimerApellido.Text+" insert";
+                            if(espaciosApellido > 0)
+                            {
+                                if (txtApellido.Text.Length - txtPrimerApellido.Text.Length - 1 > 0)
+                                {
+                                    txtApellidoAPEX.Text = txtApellido.Text.Substring((txtPrimerApellido.Text.Length + 1), (txtApellido.Text.Length - txtPrimerApellido.Text.Length - 1));
+                                }
+                                else
+                                {
+                                    txtApellidoAPEX.Text = " ";
+                                }
+                            }
+                            else
+                            {
+                                txtPrimerApellido.Text = txtApellido.Text;
+                                txtApellidoAPEX.Text = " ";
+                            }
+                                                        
                             cmd.Connection = con;
                             cmd.CommandText = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
                             //txtInsert.Text = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
                                             " Fec_Emision, NO_CTA_BI, ID_AGENCIA, CONFIRMACION,TOTALFOTOS) VALUES ('''" +
-                                            "||'" + txtPrimerApellido.Text + "'''||','" + //APELLIDO1
-                                            "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1)" + //APELLIDO2
-                                            "||''','||''''||SUBSTR(CARNE,0,13)||''''||','" + //CARNE
+                                            "||'" + txtPrimerApellido.Text + "'''||'," + //APELLIDO1
+                                            "''"+ txtApellidoAPEX.Text+ //APELLIDO2
+                                            "'','||''''||SUBSTR(CARNE,0,13)||''''||','" + //CARNE
                                             "||''''||CEDULA||''''||','" + //CEDULA
                                             "||''''||SECOND_LAST_NAME||''''||','" +// APELLIDO DE CASADA
                                             "||''''||UPPER(DEPARTAMENTO)||''''||','" + //DEPARTAMENTO DE RESIDENCIA
@@ -581,8 +683,8 @@ namespace ReportesUnis
                                             "NULL,'" + //NIT
                                             "||''''||DPI||''''||','" + // NO_CUI
                                             "||''''||PASAPORTE||''''||','" + // NUMERO DE PASAPORTE
-                                            "||''''||FIRST_NAME||''''||','" + //NOMBRE1
-                                            "||''''||SECOND_NAME||''''||','" +// NOMBRE 2
+                                            "||'''" + nombres[0].ToString() +"'''||','" + //NOMBRE1
+                                            "||'''"+txtNombreAPEX.Text+"'''||','" +// NOMBRE 2
                                             "||''''||FIRST_NAME||' '||'" + txtPrimerApellido.Text + "'||''''||','" + //APELLIDO DE IMPRESION
                                             "||''''||PLACE||''''||','" + // PAIS NACIONALIDAD
                                             "||''''||PROF||''''||','" + // PROFESION
@@ -782,16 +884,15 @@ namespace ReportesUnis
                                             "||'" + txtAccion.Text + "," + //ACCION
                                             "NULL," + //TELEFONO
                                             "NULL,'" + //NIT
-                                            "||''''||FIRST_NAME||''''||','" + //NOMBRE1
+                                            "||'''"+ nombres[0].ToString() + "'''||','" + //NOMBRE1
                                             "||'''" + txtPrimerApellido.Text + "'''||','" + //APELLIDO1
-                                            "||''''||SUBSTR(LAST_NAME, length('" + txtPrimerApellido.Text + "')+2, length(last_name)-length('" + txtPrimerApellido.Text + "')-1)||' "+txtCasada.Text.TrimEnd(' ')+"'||''''||','" + //APELLIDO2
-                                            "||''''||SECOND_LAST_NAME||''''||','" +// APELLIDO DE CASADA
+                                            "||'''" + txtApellidoAPEX.Text + "'''||','" + //APELLIDO2
+                                            "||'''"+ txtNombreAPEX.Text + "'''||','" +// APELLIDO DE CASADA
                                             "||''''||SECOND_NAME||''''||','" +// NOMBRE 2
                                             "||''''||FIRST_NAME||' '||'" + txtPrimerApellido.Text + "'||''''||','" + //APELLIDO DE IMPRESION
                                             "||SEX||','" + // SEXO
                                             "||STATUS||','" + // ESTADO CIVIL
                                             "||'''" + ruta + "'''||','" + //PATH
-                                                                          //"NULL,'" + // PATH
                                             "||''''||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''''||'," +//FECHA_HORA
                                             "" + txtTipoAccion.Text + "," +//TIPO_ACCION
                                             "2022,'" + //ID  UNIVERSIDAD
@@ -958,7 +1059,7 @@ namespace ReportesUnis
 
                             if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
                             {
-                                txtExiste2.Text = "NO SE MODIFICA PS_NAMES";
+                                txtExiste.Text = txtExiste3.Text + "   NO SE MODIFICA PS_NAMES";
                             }else
                             {                                
                                 //ACTUALIZAR NOMBRES
@@ -982,10 +1083,10 @@ namespace ReportesUnis
                             transaction.Rollback();
                             mensaje = "Ocurrió un problema al actualizar su información " + x;
                             controlOracle = "1";
-                        }
-                        
+                        }                       
                     }
                 }
+                
                 if (RegistroCarne == "0" && controlOracle == "0" && txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
                 {
                     using (SqlConnection conexion = new SqlConnection(TxtURLSql.Text))
@@ -1017,7 +1118,6 @@ namespace ReportesUnis
                         }
                     }
                    // txtExiste.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + txtApellido.Text + "," + txtCasada.Text + " " + txtNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + txtApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + txtNombre.Text + "'),' ',''), LAST_NAME ='" + txtApellido.Text + "', FIRST_NAME='" + txtNombre.Text + "', SECOND_LAST_NAME='" + txtCasada.Text + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + txtCasada.Text + "'),' ',''), NAME_DISPLAY='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_FORMAL='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_DISPLAY_SRCH =REPLACE('" + txtNombre.Text + txtApellido.Text + txtCasada.Text + "',' ',''),  WHERE PN.EMPLID = '" + UserEmplid.Text + "'";
-
                 }
             }
             catch (Exception X)
@@ -1397,5 +1497,6 @@ namespace ReportesUnis
                 return "";
             }
         }
+
     }
 }

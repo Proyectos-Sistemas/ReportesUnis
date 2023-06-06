@@ -78,6 +78,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.FileUpload FileUpload2;
 
         /// <summary>
+        /// Control ValidacionDir.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ValidacionDir;
+
+        /// <summary>
         /// Control RequiredFieldValidatorNull1.
         /// </summary>
         /// <remarks>
@@ -94,6 +103,24 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidatorNull12;
+
+        /// <summary>
+        /// Control RequiredFieldValidatorNull13.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidatorNull13;
+
+        /// <summary>
+        /// Control RequiredFieldValidatorNull15.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidatorNull15;
 
         /// <summary>
         /// Control CamposAuxiliares.
@@ -240,6 +267,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label txtExiste2;
 
         /// <summary>
+        /// Control txtExiste3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtExiste3;
+
+        /// <summary>
         /// Control txtMunicipioDPI.
         /// </summary>
         /// <remarks>
@@ -283,6 +319,24 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAInicial;
+
+        /// <summary>
+        /// Control txtApellidoAPEX.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtApellidoAPEX;
+
+        /// <summary>
+        /// Control txtNombreAPEX.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtNombreAPEX;
 
         /// <summary>
         /// Control txtCInicial.
@@ -492,15 +546,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Button BtnActualizar;
 
         /// <summary>
-        /// Control lblActualizacion.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblActualizacion;
-
-        /// <summary>
         /// Control validarTelefono.
         /// </summary>
         /// <remarks>
@@ -517,5 +562,23 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator validarDireccion;
+
+        /// <summary>
+        /// Control lblActualizacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblActualizacion;
+
+        /// <summary>
+        /// Control ValidationSummary1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ValidationSummary ValidationSummary1;
     }
 }
