@@ -5,16 +5,20 @@
         <br />
         <h2 style="text-align: center;">ACTUALIZACIÓN DE INFORMACIÓN</h2>
     </div>
-        <hr />
+    <hr />
 
     <div class="container2" id="CargaFotografia" runat="server" visible="true">
-        <asp:Label ID="lblfoto" runat="server" Font-Bold="true">Fotografía:</asp:Label>
-        <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="False" accept="image/jpeg" onchange="validateFileSize();" />
-        <div id="dvMsg" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
-            El tamaño máximo permitido es de 1 GB
+       
+        <div>
+            <h5 style="text-align: center;">Toma de Fografía</h5>
+            <video id="videoElement" width="400" height="300" autoplay></video>
+            <canvas id="canvas" width="400" height="300"></canvas>
+        </div>
+        <div>
+            <button id="captureBtn" name="captureBtn" class="btn-danger-unis">Capturar imagen</button>
+            <textarea id="urlPath" name="urlPath" style="display:none"></textarea>
         </div>
     </div>
-        <hr />
     <div class="container2" id="CargaDPI" runat="server" visible="false">
         <asp:Label ID="Label3" runat="server" Font-Bold="false">Para realizar un cambio en su nombre es necesario adjuntar fotografia de su DPI(ambos lados)/Pasaporte</asp:Label>
         <br />
@@ -23,15 +27,15 @@
         <div id="dvMsge" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
             El tamaño máximo permitido es de 1 GB
         </div>
-     <hr />
+        <hr />
     </div>
-     <%-- VALIDACION CAMPOS NULOS --%>
+    <%-- VALIDACION CAMPOS NULOS --%>
     <div id="ValidacionDir" style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="true">
         <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull1" runat="server"
             ControlToValidate="txtDireccion"
             ErrorMessage="Ingresa una dirección."
             ForeColor="Red"
-            Font-Size="Medium" Font-Bold="true"            >
+            Font-Size="Medium" Font-Bold="true">
         </asp:RequiredFieldValidator>
         <br />
         <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull12" runat="server"
@@ -55,7 +59,7 @@
             Font-Size="Medium" Font-Bold="true">
         </asp:RequiredFieldValidator>
     </div>
-    
+
     <div id="CamposAuxiliares" runat="server" visible="true">
         <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
         <asp:Label ID="UserEmplid" runat="server" Visible="false"></asp:Label>
@@ -94,7 +98,7 @@
         <%-- TXTDEPARTAMENTODPI ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
         <asp:Label ID="txtDepartamentoDPI" runat="server" Visible="false"></asp:Label>
         <%-- TXTPath ALMACENA EL PATH DONDE SE ALMACENARA LA IMAGEN --%>
-        <asp:Label ID="txtPath" runat="server" Visible="false"></asp:Label>    
+        <asp:Label ID="txtPath" runat="server" Visible="false"></asp:Label>
         <%-- NOMBRE INICIAL--%>
         <asp:Label ID="txtNInicial" runat="server" Visible="false"></asp:Label>
         <%-- APELLIDO INICIAL --%>
@@ -114,7 +118,7 @@
     </div>
     <div>
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
-        <asp:Table id="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
+        <asp:Table ID="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
 
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
@@ -310,7 +314,7 @@
                         <br />
                 </asp:TableCell>
                 <%-- DIRECION LABEL 2--%>
-                <asp:TableCell >
+                <asp:TableCell>
                         <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
@@ -318,7 +322,7 @@
                         <%--<br />--%>
                 </asp:TableCell>
                 <%-- DIRECCION TEXTBOX 4--%>
-                <asp:TableCell >
+                <asp:TableCell>
                     <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="3" MaxLength="55" Width="365px"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
@@ -328,7 +332,7 @@
                 <%-- DIRECION2 LABEL 6--%>
                 <asp:TableCell>
                         <asp:Label runat="server" Font-Bold="true">Dirección 2:</asp:Label> 
-                </asp:TableCell >
+                </asp:TableCell>
                 <%-- ESPACIO 7--%>
                 <asp:TableCell Width="2%">
                        <%--<br />--%>
@@ -433,7 +437,7 @@
                 </asp:TableCell>
                 <%-- ESPACIO 4--%>
                 <asp:TableCell>
-                        <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" Width="365px"></asp:TextBox>
+                    <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" Width="365px"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
                 <asp:TableCell Width="2%">
@@ -465,7 +469,7 @@
                 </asp:TableCell>
                 <%-- ESTADO CIVIL DROPDOWN 12--%>
                 <asp:TableCell>
-                        <asp:DropDownList ID="CmbEstado" runat="server" Width="220px">
+                    <asp:DropDownList ID="CmbEstado" runat="server" Width="220px">
                         <asp:ListItem Selected="False" Value=""></asp:ListItem>
                         <asp:ListItem>Casado</asp:ListItem>
                         <asp:ListItem>Soltero</asp:ListItem>
@@ -477,7 +481,7 @@
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>
-        <asp:Table id="tbactualizar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
+        <asp:Table ID="tbactualizar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
             <asp:TableRow>
                 <%-- ESPACIO --%>
                 <asp:TableCell>
@@ -508,18 +512,52 @@
                         }
                     </script>
                 </asp:TableCell>
-            </asp:TableRow>            
+            </asp:TableRow>
         </asp:Table>
         <div style="margin-left: auto; margin-right: auto; text-align: center;">
             <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
             </asp:Label>
-            <br /> 
-            
-        <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red"/> 
-        </div>      
+            <br />
+
+            <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red" />
+        </div>
     </div>
+
+    <script>
+        // Acceder a la cámara y mostrar el video en el elemento de video
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                var videoElement = document.getElementById('videoElement');
+                videoElement.srcObject = stream;
+            })
+            .catch(function (error) {
+                console.error('Error al acceder a la cámara: ', error);
+            });
+
+        // Capturar imagen cuando se haga clic en el botón
+        var videoElement = document.getElementById('videoElement');
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var captureBtn = document.getElementById('captureBtn');
+        const textarea = document.getElementById("urlPath");
+        const textoFoto = document.getElementById("texto");
+        captureBtn.addEventListener('click', function () {
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            event.preventDefault();
+            //Convertir la imagen del lienzo en base64
+            var imageData = canvas.toDataURL('image/jpeg');
+            textarea.value = imageData;
+        });
+
+        function CambiarEstadoBoton(habilitado) {
+            var boton = document.getElementById('captureBtn');
+            var videoElement = document.getElementById('videoElement');
+            boton.disabled = !habilitado;
+            videoElement.disabled = !habilitado;
+        }
+
+    </script>
     
-       
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>
