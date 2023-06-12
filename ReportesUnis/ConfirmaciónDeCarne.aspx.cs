@@ -31,6 +31,7 @@ namespace ReportesUnis
             {
                 LeerInfoTxt();
                 LeerInfoTxtSQL();
+                LeerInfoTxtPath();
             }
         }
 
@@ -40,7 +41,8 @@ namespace ReportesUnis
             divConfirmar.Visible = true;
             divGenerar.Visible = false;
             divCampos.Visible = true;
-            divDPI.Visible = true; 
+            divDPI.Visible = true;
+            divFotografia.Visible = true;
             divBtnConfirmar.Visible = true;
             divBtnGenerar.Visible = false;
             Buscar("1");
@@ -54,6 +56,7 @@ namespace ReportesUnis
             divGenerar.Visible = true;
             divCampos.Visible = true;
             divDPI.Visible = false;
+            divFotografia.Visible = false;
             divBtnConfirmar.Visible = false;
             divBtnGenerar.Visible = true;
             txtCarne.Text = null;
@@ -70,11 +73,11 @@ namespace ReportesUnis
                     HDocumentacion.Visible = true;
                     if (i == 0)
                     {
-                        ImgDPI1.ImageUrl = "~/DPIUsuarios/" + CmbCarne.Text+"(1).jpg";
+                        ImgDPI1.ImageUrl = "~/DPIUsuarios/" + CmbCarne.Text + "(1).jpg";
                     }
                     if (i == 1)
                     {
-                        ImgDPI2.ImageUrl = "~/DPIUsuarios/" + CmbCarne.Text+"(2).jpg";
+                        ImgDPI2.ImageUrl = "~/DPIUsuarios/" + CmbCarne.Text + "(2).jpg";
                     }
                 }
             }
@@ -86,6 +89,8 @@ namespace ReportesUnis
             {
                 lblActualizacion.Text = null;
             }
+            HFoto.Visible = true;
+            ImgFoto1.ImageUrl = "~/DPIUsuarios/Fotos/" + TxtDpi.Text + ".jpg";
         }
 
         private void Buscar(string confirmacion)
@@ -97,7 +102,7 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT ' ' CARNET FROM DUAL UNION SELECT CARNET FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE TIPO_PERSONA = 2 AND CONFIRMACION = '"+confirmacion+"'";
+                    cmd.CommandText = "SELECT ' ' CARNET FROM DUAL UNION SELECT CARNET FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE TIPO_PERSONA = 2 AND CONFIRMACION = '" + confirmacion + "'";
                     OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                     DataSet ds = new DataSet();
                     adapter.Fill(ds);
@@ -136,7 +141,7 @@ namespace ReportesUnis
 
         private void llenado(string where)
         {
-            
+
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -144,15 +149,15 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT ' ' CARNET,' ' NOMBRE1,' ' NOMBRE2,' ' APELLIDO1,' ' APELLIDO2,' ' DECASADA,' ' CARGO," +
+                    cmd.CommandText = "SELECT ' ' CUI,' ' NOMBRE1,' ' NOMBRE2,' ' APELLIDO1,' ' APELLIDO2,' ' DECASADA,' ' CARGO," +
                         "' ' FACULTAD,' ' CELULAR,' ' FECHANAC,' ' ESTADO_CIVIL,' ' DIRECCION,' ' DEPTO_RESIDENCIA,' ' MUNI_RESIDENCIA, ' ' TOTALFOTOS FROM DUAL UNION " +
-                        "SELECT CARNET, NOMBRE1, NOMBRE2, APELLIDO1, APELLIDO2, DECASADA, CARGO, FACULTAD, CELULAR, FECHANAC, " +
+                        "SELECT NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, NOMBRE1, NOMBRE2, APELLIDO1, APELLIDO2, DECASADA, CARGO, FACULTAD, CELULAR, FECHANAC, " +
                         "CASE WHEN ESTADO_CIVIL = 1 THEN 'SOLTERO' WHEN ESTADO_CIVIL ='2' THEN 'CASADO' ELSE '' END ESTADO_CIVIL, DIRECCION, " +
-                        "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE "+where+ " AND TIPO_PERSONA = 2";
+                        "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE " + where + " AND TIPO_PERSONA = 2";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        TxtDpi.Text = reader["CARNET"].ToString();
+                        TxtDpi.Text = reader["CUI"].ToString();
                         TxtPrimerNombre.Text = reader["NOMBRE1"].ToString();
                         TxtSegundoNombre.Text = reader["NOMBRE2"].ToString();
                         TxtPrimerApellido.Text = reader["APELLIDO1"].ToString();
@@ -166,7 +171,8 @@ namespace ReportesUnis
                         TxtDepartamento.Text = reader["DEPTO_RESIDENCIA"].ToString();
                         TxtMunicipio.Text = reader["MUNI_RESIDENCIA"].ToString();
                         TxtTel.Text = reader["CELULAR"].ToString();
-                        txtCantidad.Text = reader["TOTALFOTOS"].ToString();                        
+                        txtCantidad.Text = reader["TOTALFOTOS"].ToString();
+                        txtCantidad.Text = reader["TOTALFOTOS"].ToString();
                     }
                     con.Close();
                 }
@@ -179,10 +185,8 @@ namespace ReportesUnis
             if (!txtCarne.Text.IsNullOrWhiteSpace())
             {
                 llenado("CARNET = '" + txtCarne.Text + "' AND CONFIRMACION = '0'");
-                if (TxtDpi.Text.IsNullOrWhiteSpace())
-                {
-                    lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
-                }
+
+                lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
             }
             else
             {
@@ -190,7 +194,7 @@ namespace ReportesUnis
             }
         }
 
-        private void LimpiarCampos ()
+        private void LimpiarCampos()
         {
             TxtDpi.Text = null;
             TxtPrimerNombre.Text = null;
@@ -206,9 +210,10 @@ namespace ReportesUnis
             TxtDepartamento.Text = null;
             TxtMunicipio.Text = null;
             TxtTel.Text = null;
-            txtCantidad.Text = null;
             ImgDPI2.ImageUrl = null;
             ImgDPI1.ImageUrl = null;
+            ImgFoto1.ImageUrl = null;            
+            txtCantidad.Text = null;
         }
 
         private void Rechazar()
@@ -245,9 +250,9 @@ namespace ReportesUnis
                 }
                 LimpiarCampos();
             }
-            else 
-            { 
-                lblActualizacion.Text = "Debe de ingresar un número de carnet para poder rechazar la información."; 
+            else
+            {
+                lblActualizacion.Text = "Debe de ingresar un número de carnet para poder rechazar la información.";
             }
         }
 
@@ -263,15 +268,21 @@ namespace ReportesUnis
                 string respuesta = null;
                 string fecha = DateTime.Now.ToString("yyyy-MM-dd");
                 QueryInsertBi();
+                QueryActualizaNombre();
                 //SE INGRESA LA INFORMACIÓN EN EL BANCO
                 respuesta = ConsumoSQL(txtInsertBI.Text);
                 if (respuesta == "0")
                 {
-                    respuesta = "";
-                    QueryUpdateApex("0", fecha, fecha, fecha, "1", CmbCarne.Text);
-                    if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+                    respuesta = ConsumoOracle(txtInsertName.Text);
+
+                    if (respuesta == "0")
                     {
-                        respuesta = ConsumoOracle(txtInsertApex.Text);
+                        respuesta = "";
+                        QueryUpdateApex("0", fecha, fecha, fecha, "1", CmbCarne.Text);
+                        if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+                        {
+                            respuesta = ConsumoOracle(txtInsertApex.Text);
+                        }
                     }
                 }
 
@@ -279,11 +290,17 @@ namespace ReportesUnis
                 {
                     lblActualizacion.Text = "Se confirmó correctamente la información";
                     Buscar("1");
+                    File.Delete(CurrentDirectory+"/DPIUsuarios/Fotos/" + TxtDpi.Text + ".jpg");
+                    for (int i = 0; i < Convert.ToInt16(txtCantidad.Text); i++)
+                    {
+                        File.Delete(CurrentDirectory+"/DPIUsuarios/" + CmbCarne.Text + "(" + i + ").jpg");
+                    }
                     LimpiarCampos();
                 }
                 else
                 {
                     lblActualizacion.Text = "Ocurrió un problema al confirmar la información";
+                    ConsumoSQL("DELETE FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CARNET ='" + CmbCarne.Text + "'");
                 }
             }
             else
@@ -351,6 +368,7 @@ namespace ReportesUnis
                                    ",[Depto_Residencia] " +
                                    ",[norden] " +
                                    ",[Observaciones] " +
+                                   ",[Pais_nacionalidad] " +
                                    ",[Pais_nacionalidad] " +
                                    ",[Pais_pasaporte] " +
                                    ",[No_Pasaporte] " +
@@ -434,7 +452,7 @@ namespace ReportesUnis
                                     "||O_CONDMIG||''','''  " + //OTRA CONDICION MIGRANTE
                                     "||VALIDAR_ENVIO||''')'" +//OTRA CONDICION MIGRANTE 
                                     " AS INS " +
-                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET ='"+CmbCarne.Text+"')";
+                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET ='" + CmbCarne.Text + "')";
                     OracleDataReader reader = cmd.ExecuteReader();
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -451,19 +469,24 @@ namespace ReportesUnis
             string fecha = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             consulta = "UPDATE [dbo].[Tarjeta_Identificacion_prueba] SET " +
-                "[Fecha_Solicitado] = '"+fecha+"' , " +
-                "[Fecha_Entrega] = '"+fecha+"', " +
+                "[Fecha_Solicitado] = '" + fecha + "' , " +
+                "[Fecha_Entrega] = '" + fecha + "', " +
                 "[Accion] = '2', " +
-                "[Fecha_Hora] = '"+fecha+"', " +
-                "[Fec_Emision] = '"+fecha+"', " +
+                "[Fecha_Hora] = '" + fecha + "', " +
+                "[Fec_Emision] = '" + fecha + "', " +
                 "[Validar_Envio] = '1'  " +
-                "WHERE CARNET ='"+txtCarne.Text+"'";
+                "WHERE CARNET ='" + txtCarne.Text + "'";
             return consulta;
+        }
+
+        protected void QueryActualizaNombre()
+        {
+            txtInsertName.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "," + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "'),' ',''), LAST_NAME ='" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "', FIRST_NAME='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', SECOND_LAST_NAME='" + TxtApellidoCasada.Text + "', SECOND_LAST_SRCH=(REPLACE(UPPER('" + TxtApellidoCasada.Text + "'),' ',''))||' ', NAME_DISPLAY='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_FORMAL='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtPrimerNombre.Text + TxtSegundoNombre.Text + TxtPrimerApellido.Text + TxtSegundoApellido.Text + TxtApellidoCasada.Text + "',' ',''))  WHERE PN.EMPLID = '" + CmbCarne.Text + "'";
         }
         protected void QueryUpdateApex(string Confirmación, string Solicitado, string Entrega, string FechaHora, string Accion, string Carne)
         {
-            txtInsertApex.Text= "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION = '"+Confirmación+ "', FECHA_SOLICITADO='"+ Solicitado+ "', FECHA_ENTREGA='"+Entrega+"', " +
-                "ACCION='"+Accion+ "', FECHA_HORA='"+FechaHora+"'" +
+            txtInsertApex.Text = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION = '" + Confirmación + "', FECHA_SOLICITADO='" + Solicitado + "', FECHA_ENTREGA='" + Entrega + "', " +
+                "ACCION='" + Accion + "', FECHA_HORA='" + FechaHora + "'" +
                 " WHERE CARNET = '" + Carne + "'";
         }
         protected string ConsumoOracle(string ComandoConsulta)
@@ -535,7 +558,7 @@ namespace ReportesUnis
             }
             return retorno;
         }
-        
+
         protected void BtnConfirmar_Click(object sender, EventArgs e)
         {
             Confirmar();
@@ -575,7 +598,19 @@ namespace ReportesUnis
             {
                 lblActualizacion.Text = "Debe de ingresar un número de carnet para poder realizar la generación.";
             }
-            
+
+        }
+
+        void LeerInfoTxtPath()
+        {
+            string rutaCompleta = CurrentDirectory + "PathAlmacenamiento.txt";
+            string line = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                line = file.ReadToEnd();
+                txtPath.Text = line;
+                file.Close();
+            }
         }
 
     }

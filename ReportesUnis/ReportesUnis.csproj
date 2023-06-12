@@ -304,6 +304,7 @@
     <Content Include="Cargarfotografia.aspx" />
     <Content Include="CargarFotografiaEmpleados.aspx" />
     <Content Include="conexion.txt" />
+    <Content Include="ConfirmacionDeFotografias.aspx" />
     <Content Include="ConfirmaciónDeCarne.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -466,6 +467,13 @@
     </Compile>
     <Compile Include="CargarFotografiaEmpleados.aspx.designer.cs">
       <DependentUpon>CargarFotografiaEmpleados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ConfirmacionDeFotografias.aspx.cs">
+      <DependentUpon>ConfirmacionDeFotografias.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConfirmacionDeFotografias.aspx.designer.cs">
+      <DependentUpon>ConfirmacionDeFotografias.aspx</DependentUpon>
     </Compile>
     <Compile Include="ConfirmaciónDeCarne.aspx.cs">
       <DependentUpon>ConfirmaciónDeCarne.aspx</DependentUpon>

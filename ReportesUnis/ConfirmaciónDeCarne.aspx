@@ -21,8 +21,10 @@
         <asp:TextBox ID="txtExiste" runat="server" Visible="false"></asp:TextBox>
         <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
         <asp:TextBox ID="txtInsertBI" runat="server" Visible="false"></asp:TextBox>
+        <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT DEL NOMBRE --%>
+        <asp:TextBox ID="txtInsertName" runat="server" Visible="false"></asp:TextBox>
         <%-- txtInsertApexI ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
-        <asp:TextBox ID="txtInsertApex" runat="server" Visible="false"></asp:TextBox>
+        <asp:TextBox ID="txtInsertApex" runat="server" Visible="false"></asp:TextBox>  
     </div>
     <div>
         <asp:Table id="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
@@ -513,6 +515,27 @@
                 </asp:TableCell>
                     
                 <%-- ESPACIO 5--%>
+                <asp:TableCell Width="25%">
+                        <br />
+                </asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>
+    </div>
+    <div class="container" id="divFotografia" runat="server" visible="false">  
+        <h4 style="text-align: center;" runat="server" visible="true" id="HFoto">Fotografía Adjunta</h4>
+        <asp:Table id="tabla6" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
+                <asp:TableRow>
+                <%-- ESPACIO 1--%>
+                <asp:TableCell Width="25%">
+                        <br />
+                </asp:TableCell>
+
+                <%-- ESPACIO 2--%>
+                <asp:TableCell>
+                        <asp:Image ID="ImgFoto1" runat="server" Width="350px" /> 
+                </asp:TableCell>
+                
+                <%-- ESPACIO 3--%>
                 <asp:TableCell Width="25%">
                         <br />
                 </asp:TableCell>

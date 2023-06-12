@@ -8,15 +8,16 @@
     <hr />
 
     <div class="container2" id="CargaFotografia" runat="server" visible="true">
-       
+
         <div>
             <h5 style="text-align: center;">Toma de Fografía</h5>
             <video id="videoElement" width="400" height="300" autoplay></video>
             <canvas id="canvas" width="400" height="300"></canvas>
         </div>
+        <br />
         <div>
             <button id="captureBtn" name="captureBtn" class="btn-danger-unis">Capturar imagen</button>
-            <textarea id="urlPath" name="urlPath" style="display:none"></textarea>
+            <textarea id="urlPath" name="urlPath" style="display: none"></textarea>
         </div>
     </div>
     <div class="container2" id="CargaDPI" runat="server" visible="false">
@@ -29,38 +30,8 @@
         </div>
         <hr />
     </div>
-    <%-- VALIDACION CAMPOS NULOS --%>
-    <div id="ValidacionDir" style="margin-left: auto; margin-right: auto; text-align: center;" runat="server" visible="true">
-        <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull1" runat="server"
-            ControlToValidate="txtDireccion"
-            ErrorMessage="Ingresa una dirección."
-            ForeColor="Red"
-            Font-Size="Medium" Font-Bold="true">
-        </asp:RequiredFieldValidator>
-        <br />
-        <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull12" runat="server"
-            ControlToValidate="txtTelefono"
-            ErrorMessage=" Ingresa un número de teléfono."
-            ForeColor="Red"
-            Font-Size="Medium" Font-Bold="true">
-        </asp:RequiredFieldValidator>
-        <br />
-        <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull13" runat="server"
-            ControlToValidate="txtNombre"
-            ErrorMessage=" Ingresa tu nombre."
-            ForeColor="Red"
-            Font-Size="Medium" Font-Bold="true">
-        </asp:RequiredFieldValidator>
-        <br />
-        <asp:RequiredFieldValidator ID="RequiredFieldValidatorNull15" runat="server"
-            ControlToValidate="txtApellido"
-            ErrorMessage=" Ingresa tu apellido."
-            ForeColor="Red"
-            Font-Size="Medium" Font-Bold="true">
-        </asp:RequiredFieldValidator>
-    </div>
-
-    <div id="CamposAuxiliares" runat="server" visible="true">
+    <br />
+    <div id="CamposAuxiliares" runat="server" visible="false">
         <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
         <asp:Label ID="UserEmplid" runat="server" Visible="false"></asp:Label>
         <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
@@ -119,7 +90,6 @@
     <div>
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
         <asp:Table ID="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
-
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
                 <asp:TableCell Width="2%">
@@ -185,7 +155,12 @@
                 </asp:TableCell>
 
             </asp:TableRow>
-
+            <asp:TableRow HorizontalAlign="Center">
+                <%-- ESPACIO 1--%>
+                <asp:TableCell Width="2%">
+                        <br />
+                </asp:TableCell>
+            </asp:TableRow>
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
                 <asp:TableCell>
@@ -193,7 +168,7 @@
                 </asp:TableCell>
                 <%-- NOMBRE LABEL 2--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Nombres:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">Nombres*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
                 <asp:TableCell Width="2%">
@@ -202,6 +177,8 @@
                 <%-- NOMBRE  4--%>
                 <asp:TableCell>
                     <asp:TextBox ID="txtNombre" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                    <br />
+                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtNombre" ErrorMessage="Ingrese su nombre." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
                 <asp:TableCell Width="2%">
@@ -209,7 +186,7 @@
                 </asp:TableCell>
                 <%-- APELLIDO LABEL 6--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Apellidos:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">Apellidos*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 7 --%>
                 <asp:TableCell Width="2%">
@@ -218,6 +195,8 @@
                 <%-- APELLIDO   8--%>
                 <asp:TableCell>
                     <asp:TextBox ID="txtApellido" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                    <br />
+                    <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="txtApellido" ErrorMessage="Ingrese su apellido." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
                 <%-- ESPACIO 9--%>
                 <asp:TableCell Width="2%">
@@ -240,7 +219,12 @@
                         <%--<br />--%>
                 </asp:TableCell>
             </asp:TableRow>
-
+            <asp:TableRow HorizontalAlign="Center">
+                <%-- ESPACIO 1--%>
+                <asp:TableCell Width="2%">
+                        <br />
+                </asp:TableCell>
+            </asp:TableRow>
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
                 <asp:TableCell>
@@ -307,7 +291,12 @@
                        <%--<br />--%>
                 </asp:TableCell>
             </asp:TableRow>
-
+            <asp:TableRow HorizontalAlign="Center">
+                <%-- ESPACIO 1--%>
+                <asp:TableCell Width="2%">
+                        <br />
+                </asp:TableCell>
+            </asp:TableRow>
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
                 <asp:TableCell>
@@ -323,7 +312,11 @@
                 </asp:TableCell>
                 <%-- DIRECCION TEXTBOX 4--%>
                 <asp:TableCell>
+                    <asp:CustomValidator ID="validarDireccion" runat="server" ControlToValidate="txtDireccion" ErrorMessage="La dirección debe de tener al menos 10 caracteres" ClientValidationFunction="VerificarCantidadDireccion" ForeColor="Red" Font-Size="Small"></asp:CustomValidator>
+                    <br />
                     <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="3" MaxLength="55" Width="365px"></asp:TextBox>
+                    <br />
+                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtDireccion" ErrorMessage="Ingrese su dirección." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
                 <asp:TableCell Width="2%">
@@ -362,7 +355,12 @@
                        <%--<br />--%>
                 </asp:TableCell>
             </asp:TableRow>
-
+            <asp:TableRow HorizontalAlign="Center">
+                <%-- ESPACIO 1--%>
+                <asp:TableCell Width="2%">
+                        <br />
+                </asp:TableCell>
+            </asp:TableRow>
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
                 <asp:TableCell>
@@ -421,7 +419,12 @@
                         <br />
                 </asp:TableCell>
             </asp:TableRow>
-
+            <asp:TableRow HorizontalAlign="Center">
+                <%-- ESPACIO 1--%>
+                <asp:TableCell Width="2%">
+                        <br />
+                </asp:TableCell>
+            </asp:TableRow>
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
                 <asp:TableCell>
@@ -437,7 +440,11 @@
                 </asp:TableCell>
                 <%-- ESPACIO 4--%>
                 <asp:TableCell>
+                    <asp:CustomValidator ID="validarTelefono" runat="server" ControlToValidate="txtTelefono" ErrorMessage="El número de teléfono debe de tener al menos 8 caracteres" Font-Size="Small" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red"></asp:CustomValidator>
+                    <br />
                     <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" Width="365px"></asp:TextBox>
+                    <br />
+                    <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ControlToValidate="txtTelefono" ErrorMessage="Ingrese un número de teléfono." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
                 <asp:TableCell Width="2%">
@@ -481,36 +488,12 @@
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>
+
         <asp:Table ID="tbactualizar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
             <asp:TableRow>
-                <%-- ESPACIO --%>
                 <asp:TableCell>
-                        <br />
-                </asp:TableCell>
-            </asp:TableRow>
-            <asp:TableRow>
-                <asp:TableCell>
-                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnActualizar_Click" />
-                </asp:TableCell>
-            </asp:TableRow>
-            <asp:TableRow>
-                <asp:TableCell>
-                    <%-- VALIDACION MINIMO DE CARACTERES --%>
-                    <asp:CustomValidator ID="validarTelefono" runat="server" ControlToValidate="txtTelefono"
-                        ErrorMessage="El número de teléfono debe de tener al menos 8 caracteres" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red" Font-Size="Large" Font-Bold="true"></asp:CustomValidator>
-                    <script type="text/javascript">
-                        function VerificarCantidadTelefono(sender, args) {
-                            args.IsValid = (args.Value.length >= 7);
-                        }
-                    </script>
-                    <br />
-                    <asp:CustomValidator ID="validarDireccion" runat="server" ControlToValidate="txtDireccion"
-                        ErrorMessage="La dirección debe de tener al menos 10 caracteres" ClientValidationFunction="VerificarCantidadDireccion" ForeColor="Red" Font-Size="Large" Font-Bold="true"></asp:CustomValidator>
-                    <script type="text/javascript">
-                        function VerificarCantidadDireccion(sender, args) {
-                            args.IsValid = (args.Value.length >= 9 && args.Value.length >= 1);
-                        }
-                    </script>
+                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick = "BtnActualizar_Click"/>
+                    <%--<asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnActualizar_Click" OnClientClick="return mostrarAlerta();" />--%>
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>
@@ -518,8 +501,6 @@
             <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
             </asp:Label>
             <br />
-
-            <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red" />
         </div>
     </div>
 
@@ -555,9 +536,25 @@
             boton.disabled = !habilitado;
             videoElement.disabled = !habilitado;
         }
+        function mostrarAlerta() {
+            if (confirm("¿Está seguro de que su información es correcta?")) {
+                // Aquí puedes agregar el código para realizar la acción deseada después de la confirmación.
+                //alert("Acción confirmada");
+                __doPostBack('<%= BtnActualizar.ClientID %>', '');                
+                return true; // Permite continuar con la acción del botón
+            } else {
+                return false; // Cancela la acción del botón
+            }
+        }
 
+        function VerificarCantidadTelefono(sender, args) {
+            args.IsValid = (args.Value.length >= 7);
+        }
+
+        function VerificarCantidadDireccion(sender, args) {
+            args.IsValid = (args.Value.length >= 9 && args.Value.length >= 1);
+        }
     </script>
-    
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>
