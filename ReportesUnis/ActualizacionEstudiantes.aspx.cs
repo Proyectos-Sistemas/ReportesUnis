@@ -94,6 +94,18 @@ namespace ReportesUnis
                 TxtURL.Text = line;
                 file.Close();
             }
+        } 
+        
+        void LeerPathApex()
+        {
+            string rutaCompleta = CurrentDirectory + "urlApex.txt";
+            string line = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                line = file.ReadToEnd();
+                txtApex.Text = line;
+                file.Close();
+            }
         }
 
         void LeerInfoTxtSQL()
@@ -541,7 +553,6 @@ namespace ReportesUnis
                     string codPais = "";
                     string ec = estadoCivil();
                     string RegistroCarne = "0";
-                    string controlOracle = "0";
                     var apellidoEx = "0";
                     int posicion = 0;
                     int posicion2 = 0;
@@ -1078,7 +1089,6 @@ namespace ReportesUnis
                             {
                                 transaction.Rollback();
                                 mensaje = "Ocurrió un problema al actualizar su información " + x;
-                                controlOracle = "1";
                             }
                         }
                     }
@@ -1184,9 +1194,7 @@ namespace ReportesUnis
                 //Nombre de la fotografía cargada (Sin extensión)
                 string NombreFoto = "2990723550101";//Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
                                                     //string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
-                int contadorDuplicadosXUsuario = 0;
-                int contadorDuplicadosXNID = 0;
-
+            
                 //Busca si la persona ya tiene fotografía registrada para proceder a actualizar
                 using (OracleConnection conEmplid = new OracleConnection(constr))
                 {
@@ -1316,7 +1324,7 @@ namespace ReportesUnis
             WebClient _clientW = new WebClient();
             _clientW.Headers.Add(HttpRequestHeader.ContentType, "application/json; charset=utf-8");
             _clientW.Headers.Add("apellido", apellido);
-            string json = _clientW.DownloadString("https://apexdes.unis.edu.gt:8443/ords/unis_interfaces/Centralizador/ExcepcionesApellidos");
+            string json = _clientW.DownloadString(txtApex.Text+"unis_interfaces/Centralizador/ExcepcionesApellidos");
             dynamic respuesta = JsonConvert.DeserializeObject(json).ToString();
 
             return respuesta;

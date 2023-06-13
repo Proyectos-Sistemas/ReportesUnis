@@ -4,6 +4,9 @@
     <div class="container">
         <br />
         <h2 style="text-align: center;">REPORTE CÁMARAS TÉRMICAS EMPLEADOS</h2>
+        
+        <%-- TXTPath URL APEX SERVICIO --%>
+        <asp:Label ID="txtApex" runat="server" Visible="false"></asp:Label>
     </div>
     <div class="container2">
         <hr />

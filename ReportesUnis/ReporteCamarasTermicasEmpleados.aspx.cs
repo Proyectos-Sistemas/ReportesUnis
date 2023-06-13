@@ -1517,6 +1517,8 @@ namespace ReportesUnis
             return respuesta;
         }
 
+
+
         public static string getBetween(string strSource, string strStart, string strEnd)
         {
             int Start, End;
@@ -1532,6 +1534,17 @@ namespace ReportesUnis
             }
         }
 
+        void LeerPathApex()
+        {
+            string rutaCompleta = CurrentDirectory + "urlApex.txt";
+            string line = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                line = file.ReadToEnd();
+                txtApex.Text = line;
+                file.Close();
+            }
+        }
 
         public static int contarPalabras(string cadena)
         {

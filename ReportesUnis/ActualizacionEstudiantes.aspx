@@ -70,6 +70,8 @@
         <asp:Label ID="txtDepartamentoDPI" runat="server" Visible="false"></asp:Label>
         <%-- TXTPath ALMACENA EL PATH DONDE SE ALMACENARA LA IMAGEN --%>
         <asp:Label ID="txtPath" runat="server" Visible="false"></asp:Label>
+        <%-- TXTPath URL APEX SERVICIO --%>
+        <asp:Label ID="txtApex" runat="server" Visible="false"></asp:Label>
         <%-- NOMBRE INICIAL--%>
         <asp:Label ID="txtNInicial" runat="server" Visible="false"></asp:Label>
         <%-- APELLIDO INICIAL --%>

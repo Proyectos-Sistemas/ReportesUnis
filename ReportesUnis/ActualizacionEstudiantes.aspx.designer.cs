@@ -240,6 +240,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label txtPath;
 
         /// <summary>
+        /// Control txtApex.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtApex;
+
+        /// <summary>
         /// Control txtNInicial.
         /// </summary>
         /// <remarks>
