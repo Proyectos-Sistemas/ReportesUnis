@@ -23,7 +23,6 @@ namespace ReportesUnis
     {
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
         string rutaFisica = "";
-        int contador = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
             LeerInfoTxtPath();
@@ -170,7 +169,6 @@ namespace ReportesUnis
                 CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
                 if (checkBox.Checked)
                 {
-                    //prueba.Text = row.Cells[2].Text;
                     // Obtener el nombre de la imagen seleccionada sin extension
                     string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                     string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
@@ -402,10 +400,7 @@ namespace ReportesUnis
                     }
                 }
             }
-
-
         }
-
 
         private void ValidacionCheck()
         {
@@ -425,15 +420,6 @@ namespace ReportesUnis
 
                     }
                 }
-                else
-                {
-                    if (Convert.ToInt16(prueba.Text) > 0)
-                    {
-                        prueba.Text = (Convert.ToInt16(prueba.Text) - 1).ToString();
-                    }
-                    prueba.Text = contador.ToString();
-                }
-
             }
 
         }
