@@ -1501,7 +1501,7 @@ namespace ReportesUnis
             WebClient _clientW = new WebClient();
             _clientW.Headers.Add(HttpRequestHeader.ContentType, "application/json; charset=utf-8");
             _clientW.Headers.Add("departamento", departamento);
-            string json = _clientW.DownloadString("https://apex.unis.edu.gt:8443/ords/unis_interfaces/Centralizador/JerarquiaDepartamentos");
+            string json = _clientW.DownloadString(txtApex.Text+"unis_interfaces/Centralizador/JerarquiaDepartamentos");
             dynamic respuesta = JsonConvert.DeserializeObject(json).ToString();
 
             return respuesta;
@@ -1511,7 +1511,7 @@ namespace ReportesUnis
             WebClient _clientW = new WebClient();
             _clientW.Headers.Add(HttpRequestHeader.ContentType, "application/json; charset=utf-8");
             _clientW.Headers.Add("jerarquia", jerarquia);
-            string json = _clientW.DownloadString("https://apex.unis.edu.gt:8443/ords/unis_interfaces/Centralizador/BusquedaXDepartamento");
+            string json = _clientW.DownloadString(txtApex.Text+"unis_interfaces/Centralizador/BusquedaXDepartamento");
             dynamic respuesta = JsonConvert.DeserializeObject(json).ToString();
 
             return respuesta;
