@@ -184,8 +184,8 @@ namespace ReportesUnis
                     "AND PP.PHONE_TYPE = 'HOME' " +
                     "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                     //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                    //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                    "WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
+                    "WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
+                    //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
                     //"WHERE PN.NATIONAL_ID ='2990723550101' " + // DE LEON
                     //"WHERE PN.NATIONAL_ID ='4681531' " + // DE LEON
                     //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián  
@@ -484,7 +484,7 @@ namespace ReportesUnis
                     {
                         contador++;
                         string nombreArchivo = txtCarne.Text + "(" + contador + ").jpg";
-                        string ruta = CurrentDirectory + "/DPIUsuarios/" + nombreArchivo;
+                        string ruta = CurrentDirectory + "/Usuarios/DPI/" + nombreArchivo;
                         uploadedFile.SaveAs(ruta);
                     }
                     txtAccion.Text = "1";
@@ -545,7 +545,7 @@ namespace ReportesUnis
                     var apellidoEx = "0";
                     int posicion = 0;
                     int posicion2 = 0;
-                    int largoApellido = 0;
+                    int largoApellido = txtApellido.Text.Length;
                     int excepcionApellido = 0;
                     int espaciosApellido = ContarEspacios(txtApellido.Text);
                     int espaciosNombre = ContarEspacios(txtNombre.Text);
@@ -624,14 +624,14 @@ namespace ReportesUnis
                                 string nombreArchivo = txtCarne.Text + ".jpg";
                                 string ruta = txtPath.Text + nombreArchivo;
                                 //string fileName = Context.User.Identity.Name.Replace("@unis.edu.gt", "") + ".jpg";
-                                SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtDPI.Text + ".jpg");
+                                SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
                                 if (txtConfirmacion.Text == "01")
                                 {
-                                    SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "/DPIUsuarios/FotosConfirmación/", txtDPI.Text + ".jpg");
+                                    SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "/Usuarios/FotosConfirmación/", txtCarne.Text + ".jpg");
                                 }
                                 else
                                 {
-                                    SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "/DPIUsuarios/Fotos/", txtDPI.Text + ".jpg");
+                                    SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "/Usuarios/Fotos/", txtCarne.Text + ".jpg");
                                 }
 
                                 cmd.Transaction = transaction;
@@ -763,9 +763,9 @@ namespace ReportesUnis
                                                 "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                                 "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                                 //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                                "WHERE PN.NATIONAL_ID ='2327809510101')" +
+                                                //"WHERE PN.NATIONAL_ID ='2327809510101')" +
                                                 //"WHERE PN.NATIONAL_ID ='2990723550101')" +
-                                                //"WHERE PN.NATIONAL_ID ='4681531')" +
+                                                "WHERE PN.NATIONAL_ID ='3682754340101')" +
                                                 "WHERE CODIGO_BARRAS=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CODIGO_BARRAS=PASAPORTE OR CODIGO_BARRAS=CEDULA " +
                                                 "ORDER BY 1 ASC";
                                 //--4681531 PASAPORTE

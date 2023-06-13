@@ -51,15 +51,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox TxtURL;
 
         /// <summary>
-        /// Control prueba.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox prueba;
-
-        /// <summary>
         /// Control TxtURLSql.
         /// </summary>
         /// <remarks>
@@ -67,6 +58,33 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label TxtURLSql;
+
+        /// <summary>
+        /// Control txtInsertBI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtInsertBI;
+
+        /// <summary>
+        /// Control txtInsertApex.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtInsertApex;
+
+        /// <summary>
+        /// Control prueba.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox prueba;
 
         /// <summary>
         /// Control GridViewFotos.

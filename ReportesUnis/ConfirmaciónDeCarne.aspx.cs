@@ -73,11 +73,11 @@ namespace ReportesUnis
                     HDocumentacion.Visible = true;
                     if (i == 0)
                     {
-                        ImgDPI1.ImageUrl = "~/DPIUsuarios/" + CmbCarne.Text + "(1).jpg";
+                        ImgDPI1.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(1).jpg";
                     }
                     if (i == 1)
                     {
-                        ImgDPI2.ImageUrl = "~/DPIUsuarios/" + CmbCarne.Text + "(2).jpg";
+                        ImgDPI2.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(2).jpg";
                     }
                 }
             }
@@ -90,7 +90,7 @@ namespace ReportesUnis
                 lblActualizacion.Text = null;
             }
             HFoto.Visible = true;
-            ImgFoto1.ImageUrl = "~/DPIUsuarios/Fotos/" + TxtDpi.Text + ".jpg";
+            ImgFoto1.ImageUrl = "~/Usuarios/Fotos/" + TxtDpi.Text + ".jpg";
         }
 
         private void Buscar(string confirmacion)
@@ -290,10 +290,10 @@ namespace ReportesUnis
                 {
                     lblActualizacion.Text = "Se confirmó correctamente la información";
                     Buscar("1");
-                    File.Delete(CurrentDirectory+"/DPIUsuarios/Fotos/" + TxtDpi.Text + ".jpg");
+                    File.Delete(CurrentDirectory+"/Usuarios/Fotos/" + TxtDpi.Text + ".jpg");
                     for (int i = 0; i < Convert.ToInt16(txtCantidad.Text); i++)
                     {
-                        File.Delete(CurrentDirectory+"/DPIUsuarios/" + CmbCarne.Text + "(" + i + ").jpg");
+                        File.Delete(CurrentDirectory+ "/Usuarios/DPI/" + CmbCarne.Text + "(" + i + ").jpg");
                     }
                     LimpiarCampos();
                 }

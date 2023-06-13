@@ -60,7 +60,7 @@ namespace ReportesUnis
 
                 if (respuesta.Contains("DATOS_FOTOGRAFIAS"))
                 {
-                    RepEstudiantes.Visible = RepEmpleados.Visible = RepCamarasEst.Visible = RepCamarasEmp.Visible = CargaCTEst.Visible = CargaCTEmp.Visible = MantPantallas.Visible = GestionesEstudiantes.Visible =  true;
+                    RepEstudiantes.Visible = RepEmpleados.Visible = RepCamarasEst.Visible = RepCamarasEmp.Visible = CargaCTEst.Visible = CargaCTEmp.Visible = MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = true;
                 }
                 else
                 {
@@ -72,6 +72,7 @@ namespace ReportesUnis
                     CargaCTEmp.Visible = respuesta.Contains(CargaCTEmp.ValidationGroup);
                     MantPantallas.Visible = respuesta.Contains(MantPantallas.ValidationGroup);
                     GestionesEstudiantes.Visible = respuesta.Contains(GestionesEstudiantes.ValidationGroup);
+                    Confirmacion.Visible = respuesta.Contains(Confirmacion.ValidationGroup);
                 }
             }
             catch (Exception)
