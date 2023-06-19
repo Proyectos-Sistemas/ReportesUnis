@@ -39,7 +39,7 @@
         <br />
         <hr />
     </div>
-    <div id="CamposAuxiliares" runat="server" visible="false">
+    <div id="CamposAuxiliares" runat="server" visible="true">
         <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
         <asp:Label ID="UserEmplid" runat="server" Visible="false"></asp:Label>
         <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
@@ -65,15 +65,15 @@
         <%-- TXTTipoACCION se almacena el primer apellido del estudiante --%>
         <asp:Label ID="txtTipoAccion" runat="server" Visible="false"></asp:Label>
         <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
-        <asp:TextBox ID="txtInsert" runat="server" Visible="true"></asp:TextBox>
+        <asp:TextBox ID="txtInsert" runat="server" Visible="false"></asp:TextBox>
         <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
         <asp:TextBox ID="txtInsertBI" runat="server" Visible="false"></asp:TextBox>
         <%-- TXTEXISTE ALMACENA vALORES PARA HACER VALIDACIONES --%>
         <asp:Label ID="txtExiste" runat="server" Visible="false"></asp:Label>
         <%-- TXTEXISTE2 ALMACENA vALORES PARA HACER VALIDACIONES --%>
-        <asp:Label ID="txtExiste2" runat="server" Visible="true"></asp:Label>
+        <asp:Label ID="txtExiste2" runat="server" Visible="false"></asp:Label>
         <%-- TXTEXISTE3 ALMACENA vALORES PARA HACER VALIDACIONES --%>
-        <asp:TextBox ID="txtExiste3" runat="server" Visible="true"></asp:TextBox>
+        <asp:TextBox ID="txtExiste3" runat="server" Visible="false"></asp:TextBox>
         <%-- TXTMUNICIPIODPI ALMACENA EL MUNICIPIO DEL DPI --%>
         <asp:Label ID="txtMunicipioDPI" runat="server" Visible="false"></asp:Label>
         <%-- TXTDEPARTAMENTODPI ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
@@ -83,13 +83,13 @@
         <%-- TXTPath URL APEX SERVICIO --%>
         <asp:Label ID="txtApex" runat="server" Visible="false"></asp:Label>
         <%-- NOMBRE INICIAL--%>
-        <asp:Label ID="txtNInicial" runat="server" Visible="false"></asp:Label>
+        <asp:Label ID="txtNInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
         <%-- APELLIDO INICIAL --%>
-        <asp:TextBox ID="txtAInicial" runat="server" Visible="false"></asp:TextBox>
+        <asp:Label ID="txtAInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
         <%-- APELLIDO PARA APEX --%>
         <asp:TextBox ID="txtApellidoAPEX" runat="server" Visible="false"></asp:TextBox>
         <%-- NOMBRE PARA APEX --%>
-        <asp:TextBox ID="txtNombreAPEX" runat="server" Visible="true"></asp:TextBox>
+        <asp:TextBox ID="txtNombreAPEX" runat="server" Visible="false"></asp:TextBox>
         <%-- APELLIDO CASADA INICIAL --%>
         <asp:TextBox ID="txtCInicial" runat="server" Visible="false"></asp:TextBox>
         <%-- CONFIRMACION OPERADOR --%>
@@ -507,7 +507,9 @@
             <hr />
             <h5 style="text-align: center;">Información para Recibos de Pago</h5>
             <asp:Label runat="server">Utilizar el mismo nombre del registro:  </asp:Label>
-            <asp:RadioButton ID="RadioButtonNombre" runat="server" GroupName="confirmar" />
+            <br />
+            <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI" Checked="true" />
+            <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO" />
             <br />
         </div>
         <br />
@@ -533,7 +535,7 @@
 
                 <%-- 4 --%>
                 <asp:TableCell>
-                    <asp:TextBox ID="TxtNombreR" runat="server" Enabled="true" ></asp:TextBox>
+                    <asp:TextBox ID="TxtNombreR" runat="server" Enabled="false"></asp:TextBox>
                     <br />
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="TxtNombreR" ErrorMessage="Ingrese su nombre." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
@@ -555,7 +557,7 @@
                 </asp:TableCell>
                 <%-- 8 --%>
                 <asp:TableCell>
-                    <asp:TextBox ID="TxtApellidoR" runat="server" Enabled="true"></asp:TextBox>
+                    <asp:TextBox ID="TxtApellidoR" runat="server" Enabled="false"></asp:TextBox>
                     <br />
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="TxtApellidoR" ErrorMessage="Ingrese su apellido." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
@@ -579,7 +581,7 @@
 
                 <%-- 12 --%>
                 <asp:TableCell>
-                    <asp:TextBox ID="TxtCasadaR" runat="server" Enabled="true" ></asp:TextBox>
+                    <asp:TextBox ID="TxtCasadaR" runat="server" Enabled="false"></asp:TextBox>
                     <br />
                     <br />
                 </asp:TableCell>
@@ -676,6 +678,7 @@
         <br />
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // Acceder a la cámara y mostrar el video en el elemento de video
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -714,11 +717,24 @@
             var nombre = document.getElementById('<%= txtNombre.ClientID %>').value;
             var nombreR = document.getElementById('<%= TxtNombreR.ClientID %>').value;
             var apellidoR = document.getElementById('<%= TxtApellidoR.ClientID %>').value;
+            var NuevonombreR = document.getElementById('<%= TxtNombreR.ClientID %>');
+            var NuevoapellidoR = document.getElementById('<%= TxtApellidoR.ClientID %>');
             var nit = document.getElementById('<%= txtNit.ClientID %>').value;
             var direccion1 = document.getElementById('<%= txtDireccion.ClientID %>').value;
             var telefono = document.getElementById('<%= txtTelefono.ClientID %>').value;
             var foto = document.getElementById('urlPath').value;
-            //var respuesta = DivDpi();
+            var radioButtonS = document.getElementById('<%= RadioButtonNombreSi.ClientID %>');
+            var radioButtonN = document.getElementById('<%= RadioButtonNombreNo.ClientID %>');
+            /* var divInvisible = document.getElementById("CargaDPI");*/
+
+            if (radioButtonS.checked) {
+                NuevonombreR.value = nombre;
+                NuevoapellidoR.value = apellido;
+            }
+            if (radioButtonN.checked) {
+                NuevonombreR.value = "";
+                NuevoapellidoR.value = "";
+            }
 
             if (apellido.trim() === "") {
                 mensaje = "-Los Apellidos son requerido";
@@ -795,30 +811,18 @@
                 }
             }
 
-            /*if (respuesa === "1") {
-                mensaje = "1";
-            } else {
-                mensaje = "2";
-            }*/
-
-            /*if (DivDPI.style.display == "none") {
-                DivDPI.style.display = "block"
-            }*/
-
             if (mensaje.trim() !== "") {
                 mensaje = mensaje.replace("/\n/g", "<br>");
                 alert(mensaje);
                 return false;
-            }
-
-           <%-- if (confirm("¿Está seguro de que su información es correcta?")) {
+            } else if (confirm("¿Está seguro de que su información es correcta?")) {
                 // Aquí puedes agregar el código para realizar la acción deseada después de la confirmación.
                 //alert("Acción confirmada");
                 __doPostBack('<%= BtnActualizar.ClientID %>', '');
                 return true; // Permite continuar con la acción del botón
             } else {
                 return false; // Cancela la acción del botón
-            }--%>
+            }
         }
 
         function DivDpi() {
@@ -830,6 +834,48 @@
                 return 2;
             }
         }
+
+
+        $(document).ready(function () {
+            $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
+                if ($(this).is(':checked')) {
+                    $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+                    $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+                    $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
+                    $('#<%= TxtNombreR.ClientID %>').prop('disabled', true);
+                    $('#<%= TxtApellidoR.ClientID %>').prop('disabled', true);
+                    $('#<%= TxtCasadaR.ClientID %>').prop('disabled', true);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
+                if ($(this).is(':checked')) {
+                    $('#<%= TxtNombreR.ClientID %>').val("");
+                    $('#<%= TxtApellidoR.ClientID %>').val("");
+                    $('#<%= TxtCasadaR.ClientID %>').val("");
+                    $('#<%= TxtNombreR.ClientID %>').prop('disabled', false);
+                    $('#<%= TxtApellidoR.ClientID %>').prop('disabled', false);
+                    $('#<%= TxtCasadaR.ClientID %>').prop('disabled', false);
+                }
+            });
+        });        
+
+        $(document).ready(function () {
+            $('#<%= txtNombre.ClientID %> , #<%= txtApellido.ClientID %>').on('input', function () {
+                var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
+                var txtNInicial = $('#<%= txtNInicial.ClientID %>').text().trim();
+                var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
+                var txtAInicial = $('#<%= txtAInicial.ClientID %>').text().trim();
+                
+                if (txtNombre !== txtNInicial || txtApellido !== txtAInicial) {
+                    $('#<%= CargaDPI.ClientID %>').css('display', 'block');
+                 } else {
+                     $('#<%= CargaDPI.ClientID %>').css('display', 'none');
+                 }
+            });
+        });
 
         function VerificarCantidadTelefono(sender, args) {
             args.IsValid = (args.Value.length >= 7);

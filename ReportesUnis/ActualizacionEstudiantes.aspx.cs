@@ -213,7 +213,7 @@ namespace ReportesUnis
                     {
                         txtCarne.Text = reader["EMPLID"].ToString();
                         txtNombre.Text = reader["FIRST_NAME"].ToString();
-                        txtNInicial.Text = reader["FIRST_NAME"].ToString();
+                        txtNInicial.Text = reader["FIRST_NAME"].ToString().Trim();
                         txtApellido.Text = reader["LAST_NAME"].ToString();
                         txtCasada.Text = reader["SECOND_LAST_NAME"].ToString();
                         txtCInicial.Text = reader["SECOND_LAST_NAME"].ToString();
@@ -490,7 +490,7 @@ namespace ReportesUnis
                 txtAccion.Text = "1";
                 txtTipoAccion.Text = "1.1";
                 txtConfirmacion.Text = "02"; //VALIDACIÓN DE FOTOGRAFÍA
-                if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text))
+                if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text) && !String.IsNullOrEmpty(TxtNombreR.Text) && !String.IsNullOrEmpty(txtNit.Text) && !String.IsNullOrEmpty(TxtApellidoR.Text))
                 {
                     IngresoDatos();
                 }

@@ -264,7 +264,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAInicial;
+        protected global::System.Web.UI.WebControls.Label txtAInicial;
 
         /// <summary>
         /// Control txtApellidoAPEX.
@@ -537,13 +537,22 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.DropDownList CmbEstado;
 
         /// <summary>
-        /// Control RadioButtonNombre.
+        /// Control RadioButtonNombreSi.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButton RadioButtonNombre;
+        protected global::System.Web.UI.WebControls.RadioButton RadioButtonNombreSi;
+
+        /// <summary>
+        /// Control RadioButtonNombreNo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton RadioButtonNombreNo;
 
         /// <summary>
         /// Control TableNit.
