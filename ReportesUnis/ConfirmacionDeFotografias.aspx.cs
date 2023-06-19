@@ -360,9 +360,9 @@ namespace ReportesUnis
 
         protected void BtnConfirmar_Click(object sender, EventArgs e)
         {
-
+            prueba.Text = "0";
             ValidacionCheck();
-            if (Convert.ToInt16(prueba.Text) > 0)
+            if (Convert.ToInt16(prueba.Text) > 0 || prueba.Text.IsNullOrWhiteSpace())
             {
                 lblActualizacion.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
             }

@@ -73,24 +73,27 @@ namespace ReportesUnis
                     HDocumentacion.Visible = true;
                     if (i == 0)
                     {
+                        ImgDPI1.Visible = true;
                         ImgDPI1.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(1).jpg";
                     }
                     if (i == 1)
                     {
+                        ImgDPI2.Visible = true;
                         ImgDPI2.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(2).jpg";
                     }
                 }
             }
             else
             {
-                HDocumentacion.Visible = true;
+                ImgDPI1.Visible = false;
+                ImgDPI2.Visible = false;
             }
             if (!CmbCarne.Text.IsNullOrWhiteSpace())
             {
                 lblActualizacion.Text = null;
             }
             HFoto.Visible = true;
-            ImgFoto1.ImageUrl = "~/Usuarios/Fotos/" + TxtDpi.Text + ".jpg";
+            ImgFoto1.ImageUrl = "~/Usuarios/FotosConfirmacion/" + CmbCarne.Text + ".jpg";
         }
 
         private void Buscar(string confirmacion)
@@ -185,12 +188,16 @@ namespace ReportesUnis
             if (!txtCarne.Text.IsNullOrWhiteSpace())
             {
                 llenado("CARNET = '" + txtCarne.Text + "' AND CONFIRMACION = '0'");
-
-                lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
+                if (TxtPrimerNombre.Text.IsNullOrWhiteSpace())
+                {
+                    lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
+                }
             }
             else
             {
                 txtCarne.Text = null;
+                lblActualizacion.Text = "Debe de ingresar un número de carnet para poder realizar la generación.";
+
             }
         }
 
@@ -212,11 +219,11 @@ namespace ReportesUnis
             TxtTel.Text = null;
             ImgDPI2.ImageUrl = null;
             ImgDPI1.ImageUrl = null;
-            ImgFoto1.ImageUrl = null;            
+            ImgFoto1.ImageUrl = null;
             txtCantidad.Text = null;
         }
 
-        private void Rechazar()
+        private void Rechazar(string Carnet)
         {
             if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
             {
@@ -233,11 +240,16 @@ namespace ReportesUnis
                         try
                         {
                             cmd.Connection = con;
-                            cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + CmbCarne.Text + "'";
+                            cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + Carnet + "'";
                             cmd.ExecuteNonQuery();
                             transaction.Commit();
                             con.Close();
                             Buscar("1");
+                            File.Delete(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + Carnet + ".jpg");
+                            for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
+                            {
+                                File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
+                            }
                             lblActualizacion.Text = "Se ha rechazado la solicitud de carnet.";
                         }
                         catch (Exception)
@@ -258,10 +270,10 @@ namespace ReportesUnis
 
         protected void BtnRechazar_Click(object sender, EventArgs e)
         {
-            Rechazar();
+            Rechazar(CmbCarne.Text);
         }
 
-        protected void Confirmar()
+        protected void Confirmar(string Carnet)
         {
             if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
             {
@@ -278,7 +290,7 @@ namespace ReportesUnis
                     if (respuesta == "0")
                     {
                         respuesta = "";
-                        QueryUpdateApex("0", fecha, fecha, fecha, "1", CmbCarne.Text);
+                        QueryUpdateApex("0", fecha, fecha, fecha, "1", Carnet);
                         if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                         {
                             respuesta = ConsumoOracle(txtInsertApex.Text);
@@ -290,17 +302,17 @@ namespace ReportesUnis
                 {
                     lblActualizacion.Text = "Se confirmó correctamente la información";
                     Buscar("1");
-                    File.Delete(CurrentDirectory+"/Usuarios/Fotos/" + TxtDpi.Text + ".jpg");
-                    for (int i = 0; i < Convert.ToInt16(txtCantidad.Text); i++)
+                    File.Delete(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + Carnet + ".jpg");
+                    for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
                     {
-                        File.Delete(CurrentDirectory+ "/Usuarios/DPI/" + CmbCarne.Text + "(" + i + ").jpg");
+                        File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
                     }
                     LimpiarCampos();
                 }
                 else
                 {
                     lblActualizacion.Text = "Ocurrió un problema al confirmar la información";
-                    ConsumoSQL("DELETE FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CARNET ='" + CmbCarne.Text + "'");
+                    ConsumoSQL("DELETE FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CARNET ='" + Carnet + "'");
                 }
             }
             else
@@ -368,7 +380,6 @@ namespace ReportesUnis
                                    ",[Depto_Residencia] " +
                                    ",[norden] " +
                                    ",[Observaciones] " +
-                                   ",[Pais_nacionalidad] " +
                                    ",[Pais_nacionalidad] " +
                                    ",[Pais_pasaporte] " +
                                    ",[No_Pasaporte] " +
@@ -481,7 +492,7 @@ namespace ReportesUnis
 
         protected void QueryActualizaNombre()
         {
-            txtInsertName.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "," + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "'),' ',''), LAST_NAME ='" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "', FIRST_NAME='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', SECOND_LAST_NAME='" + TxtApellidoCasada.Text + "', SECOND_LAST_SRCH=(REPLACE(UPPER('" + TxtApellidoCasada.Text + "'),' ',''))||' ', NAME_DISPLAY='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_FORMAL='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtPrimerNombre.Text + TxtSegundoNombre.Text + TxtPrimerApellido.Text + TxtSegundoApellido.Text + TxtApellidoCasada.Text + "',' ',''))  WHERE PN.EMPLID = '" + CmbCarne.Text + "'";
+            txtInsertName.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "," + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "'),' ',''), LAST_NAME ='" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "', FIRST_NAME='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', SECOND_LAST_NAME='" + TxtApellidoCasada.Text + "', SECOND_LAST_SRCH=(REPLACE(UPPER('" + TxtApellidoCasada.Text + "'),' ',''))||' ', NAME_DISPLAY='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_FORMAL='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtPrimerNombre.Text + TxtSegundoNombre.Text + TxtPrimerApellido.Text + TxtSegundoApellido.Text + TxtApellidoCasada.Text + "',' ',''))  WHERE PN.EMPLID = '" + CmbCarne.Text + "' AND NAME_TYPE IN =('PRI','PRF')";
         }
         protected void QueryUpdateApex(string Confirmación, string Solicitado, string Entrega, string FechaHora, string Accion, string Carne)
         {
@@ -561,7 +572,8 @@ namespace ReportesUnis
 
         protected void BtnConfirmar_Click(object sender, EventArgs e)
         {
-            Confirmar();
+            string carne = CmbCarne.Text;
+            Confirmar(carne);
         }
 
         protected void BtnGenerar_Click(object sender, EventArgs e)
@@ -596,7 +608,7 @@ namespace ReportesUnis
             }
             else
             {
-                lblActualizacion.Text = "Debe de ingresar un número de carnet para poder realizar la generación.";
+                lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
             }
 
         }

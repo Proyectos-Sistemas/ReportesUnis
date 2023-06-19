@@ -188,7 +188,7 @@ namespace ReportesUnis
                                     DTNFin.Text =null; 
                                     DTNInicio.Text =null;
                                 }
-                                catch (Exception x)
+                                catch (Exception)
                                 {
                                     lblActualizacion.Text = "No se pudo actualizar la información a causa de un error interno.";
                                     transaction.Rollback();

@@ -501,7 +501,7 @@
 
                 <%-- ESPACIO 2--%>
                 <asp:TableCell>
-                        <asp:Image ID="ImgDPI1" runat="server" Width="350px" /> 
+                        <asp:Image ID="ImgDPI1" runat="server" Width="350px" Visible="false"/> 
                 </asp:TableCell>
                 
                 <%-- ESPACIO 3--%>
@@ -511,7 +511,7 @@
                 
                  <%-- ESPACIO 4--%>
                 <asp:TableCell Width="25%">
-                        <asp:Image ID="ImgDPI2" runat="server" Width="350px" /> 
+                        <asp:Image ID="ImgDPI2" runat="server" Width="350px" Visible="false" /> 
                 </asp:TableCell>
                     
                 <%-- ESPACIO 5--%>
