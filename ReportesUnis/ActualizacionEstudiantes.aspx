@@ -82,10 +82,6 @@
         <asp:Label ID="txtPath" runat="server" Visible="false"></asp:Label>
         <%-- TXTPath URL APEX SERVICIO --%>
         <asp:Label ID="txtApex" runat="server" Visible="false"></asp:Label>
-        <%-- NOMBRE INICIAL--%>
-        <asp:Label ID="txtNInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
-        <%-- APELLIDO INICIAL --%>
-        <asp:Label ID="txtAInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
         <%-- APELLIDO PARA APEX --%>
         <asp:TextBox ID="txtApellidoAPEX" runat="server" Visible="false"></asp:TextBox>
         <%-- NOMBRE PARA APEX --%>
@@ -101,7 +97,11 @@
     </div>
     <div id="InfePersonal" runat="server">
         <h5 id="HPersonal" style="text-align: center;">Información Personal</h5>
-        <br />
+        
+        <%-- NOMBRE INICIAL--%>
+        <asp:Label ID="txtNInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
+        <%-- APELLIDO INICIAL --%>
+        <asp:Label ID="txtAInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
         <asp:Table ID="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
             <asp:TableRow HorizontalAlign="Center">
@@ -717,24 +717,10 @@
             var nombre = document.getElementById('<%= txtNombre.ClientID %>').value;
             var nombreR = document.getElementById('<%= TxtNombreR.ClientID %>').value;
             var apellidoR = document.getElementById('<%= TxtApellidoR.ClientID %>').value;
-            var NuevonombreR = document.getElementById('<%= TxtNombreR.ClientID %>');
-            var NuevoapellidoR = document.getElementById('<%= TxtApellidoR.ClientID %>');
             var nit = document.getElementById('<%= txtNit.ClientID %>').value;
             var direccion1 = document.getElementById('<%= txtDireccion.ClientID %>').value;
             var telefono = document.getElementById('<%= txtTelefono.ClientID %>').value;
             var foto = document.getElementById('urlPath').value;
-            var radioButtonS = document.getElementById('<%= RadioButtonNombreSi.ClientID %>');
-            var radioButtonN = document.getElementById('<%= RadioButtonNombreNo.ClientID %>');
-            /* var divInvisible = document.getElementById("CargaDPI");*/
-
-            if (radioButtonS.checked) {
-                NuevonombreR.value = nombre;
-                NuevoapellidoR.value = apellido;
-            }
-            if (radioButtonN.checked) {
-                NuevonombreR.value = "";
-                NuevoapellidoR.value = "";
-            }
 
             if (apellido.trim() === "") {
                 mensaje = "-Los Apellidos son requerido";
@@ -816,25 +802,12 @@
                 alert(mensaje);
                 return false;
             } else if (confirm("¿Está seguro de que su información es correcta?")) {
-                // Aquí puedes agregar el código para realizar la acción deseada después de la confirmación.
-                //alert("Acción confirmada");
                 __doPostBack('<%= BtnActualizar.ClientID %>', '');
                 return true; // Permite continuar con la acción del botón
             } else {
                 return false; // Cancela la acción del botón
             }
         }
-
-        function DivDpi() {
-
-            var DivDPI = document.getElementById('CargaDPI');
-            if (DivDPI.style.display === "none") {
-                return 1;
-            } else {
-                return 2;
-            }
-        }
-
 
         $(document).ready(function () {
             $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
@@ -883,22 +856,7 @@
 
         function VerificarCantidadDireccion(sender, args) {
             args.IsValid = (args.Value.length >= 9 && args.Value.length >= 1);
-        }
-
-        var textoAnterior = document.getElementById('<%= txtNombre.ClientID %>').value;
-
-        function detectarCambioTexto() {
-            var textBox = document.getElementById('<%= txtNombre.ClientID %>');
-            var nuevoTexto = textBox.value;
-
-            if (nuevoTexto != textoAnterior) {
-                // El texto ha cambiado, realiza las acciones necesarias
-                alert("Texto cambiado: " + nuevoTexto);
-
-                // Actualiza el valor anterior con el nuevo valor
-                textoAnterior = nuevoTexto;
-            }
-        }
+        }        
     </script>
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>

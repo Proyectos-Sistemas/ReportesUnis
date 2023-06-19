@@ -249,24 +249,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label txtApex;
 
         /// <summary>
-        /// Control txtNInicial.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtNInicial;
-
-        /// <summary>
-        /// Control txtAInicial.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtAInicial;
-
-        /// <summary>
         /// Control txtApellidoAPEX.
         /// </summary>
         /// <remarks>
@@ -328,6 +310,24 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl InfePersonal;
+
+        /// <summary>
+        /// Control txtNInicial.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtNInicial;
+
+        /// <summary>
+        /// Control txtAInicial.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtAInicial;
 
         /// <summary>
         /// Control tabla.
