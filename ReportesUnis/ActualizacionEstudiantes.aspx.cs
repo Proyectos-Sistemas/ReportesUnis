@@ -1116,11 +1116,10 @@ namespace ReportesUnis
                                                         "LASTUPDDTTM = SYSDATE, " +
                                                         "LASTUPDOPRID = '"+ Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
                                                         "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'";
-                                    //                 "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "," + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "'),' ',''), LAST_NAME ='" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "', FIRST_NAME='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', SECOND_LAST_NAME='" + TxtApellidoCasada.Text + "', SECOND_LAST_SRCH=(REPLACE(UPPER('" + TxtApellidoCasada.Text + "'),' ',''))||' ', NAME_DISPLAY='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_FORMAL='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtPrimerNombre.Text + TxtSegundoNombre.Text + TxtPrimerApellido.Text + TxtSegundoApellido.Text + TxtApellidoCasada.Text + "',' ',''))  WHERE PN.EMPLID = '" + CmbCarne.Text + "' AND NAME_TYPE IN =('PRI','PRF')";
                                     cmd.ExecuteNonQuery();
 
                                     //ACTUALIZA NIT
-                                    cmd.CommandText = "UPDATE SYSADM.PS_PERS_NID PN SET PN.NATIONAL_ID = '"+txtNit.Text+ "'. " +
+                                    cmd.CommandText = "UPDATE SYSADM.PS_PERS_NID PN SET PN.NATIONAL_ID = '"+txtNit.Text+ "', " +
                                                         "LASTUPDDTTM = SYSDATE, " +
                                                         "LASTUPDOPRID = '"+ Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "'" +
                                                         " WHERE PN.NATIONAL_ID_TYPE = 'NITREC' AND PN.EMPLID='"+UserEmplid.Text+"'";
@@ -1139,18 +1138,6 @@ namespace ReportesUnis
                                         "VALUES ('" + UserEmplid.Text + "','GTM','NITREC','" + txtNit.Text + "',' ','N','N',SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
                                     cmd.ExecuteNonQuery();
                                 }
-
-                                /*if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
-                                {
-                                    txtExiste.Text = txtExiste3.Text + "   NO SE MODIFICA PS_NAMES";
-                                }
-                                else
-                                {
-                                    //ACTUALIZAR NOMBRES
-                                    //txtExiste2.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + txtApellido.Text + " " + txtCasada.Text + "," + txtNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + txtApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + txtNombre.Text + "'),' ',''), LAST_NAME ='" + txtApellido.Text + "', FIRST_NAME='" + txtNombre.Text + "', SECOND_LAST_NAME='" + txtCasada.Text + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + txtCasada.Text + "'),' ',''), NAME_DISPLAY='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_FORMAL='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_DISPLAY_SRCH =UPPER(REPLACE('" + txtNombre.Text + txtApellido.Text + txtCasada.Text + "',' ',''))  WHERE PN.EMPLID = '" + UserEmplid.Text + "'";
-                                    cmd.CommandText = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + txtApellido.Text + " " + txtCasada.Text + "," + txtNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + txtApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + txtNombre.Text + "'),' ',''), LAST_NAME ='" + txtApellido.Text + "', FIRST_NAME='" + txtNombre.Text + "', SECOND_LAST_NAME='" + txtCasada.Text + "', SECOND_LAST_SRCH=(REPLACE(UPPER('" + txtCasada.Text + "'),' ',''))||' ', NAME_DISPLAY='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_FORMAL='" + txtNombre.Text + " " + txtApellido.Text + " " + txtCasada.Text + "', NAME_DISPLAY_SRCH =UPPER(REPLACE('" + txtNombre.Text + txtApellido.Text + txtCasada.Text + "',' ',''))  WHERE PN.EMPLID = '" + UserEmplid.Text + "'";
-                                    cmd.ExecuteNonQuery();
-                                }*/
 
                                 if (!txtInsert.Text.IsNullOrWhiteSpace())
                                 {
