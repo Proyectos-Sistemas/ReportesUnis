@@ -97,13 +97,13 @@
     </div>
     <div id="InfePersonal" runat="server">
         <h5 id="HPersonal" style="text-align: center;">Información Personal</h5>
-        
+
         <%-- NOMBRE INICIAL--%>
         <asp:Label ID="txtNInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
         <%-- APELLIDO INICIAL --%>
         <asp:Label ID="txtAInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
-        <asp:Table ID="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
+        <asp:Table ID="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: right; align-content: center" CssClass="table-condensed table-border">
             <asp:TableRow HorizontalAlign="Center">
                 <%-- ESPACIO 1--%>
                 <asp:TableCell Width="2%">
@@ -112,7 +112,7 @@
 
                 <%-- CARNE LABEL 2--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Carné:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true" >Carné:</asp:Label> 
                 </asp:TableCell>
 
                 <%-- ESPACIO 3--%>
@@ -183,6 +183,8 @@
                 <%-- NOMBRE LABEL 2--%>
                 <asp:TableCell>
                         <asp:Label runat="server" Font-Bold="true">Nombres*:</asp:Label> 
+                    <br />  
+                    <br />
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
                 <asp:TableCell Width="2%">
@@ -190,7 +192,7 @@
                 </asp:TableCell>
                 <%-- NOMBRE  4--%>
                 <asp:TableCell>
-                    <asp:TextBox ID="txtNombre" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                    <asp:TextBox ID="txtNombre" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
                     <br />
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtNombre" ErrorMessage="Ingrese su nombre." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
@@ -200,7 +202,9 @@
                 </asp:TableCell>
                 <%-- APELLIDO LABEL 6--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Apellidos*:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">Apellidos*:</asp:Label>
+                    <br />  
+                    <br />
                 </asp:TableCell>
                 <%-- ESPACIO 7 --%>
                 <asp:TableCell Width="2%">
@@ -208,7 +212,7 @@
                 </asp:TableCell>
                 <%-- APELLIDO   8--%>
                 <asp:TableCell>
-                    <asp:TextBox ID="txtApellido" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                    <asp:TextBox ID="txtApellido" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
                     <br />
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="txtApellido" ErrorMessage="Ingrese su apellido." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
@@ -219,6 +223,8 @@
                 <%-- APELLIDO CASADA LABEL --%>
                 <asp:TableCell>
                         <asp:Label runat="server" Font-Bold="true">Apellido de Casada:</asp:Label>
+                    <br />
+                    <br />
                 </asp:TableCell>
                 <%-- ESPACIO --%>
                 <asp:TableCell Width="2%">
@@ -226,7 +232,7 @@
                 </asp:TableCell>
                 <%-- APELLIDO CASADA  --%>
                 <asp:TableCell>
-                    <asp:TextBox ID="txtCasada" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                    <asp:TextBox ID="txtCasada" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO --%>
                 <asp:TableCell Width="2%">
@@ -328,7 +334,7 @@
                 <asp:TableCell>
                     <asp:CustomValidator ID="validarDireccion" runat="server" ControlToValidate="txtDireccion" ErrorMessage="La dirección debe de tener al menos 10 caracteres" ClientValidationFunction="VerificarCantidadDireccion" ForeColor="Red" Font-Size="Small"></asp:CustomValidator>
                     <br />
-                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="3" MaxLength="55" Width="365px"></asp:TextBox>
+                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px"></asp:TextBox>
                     <br />
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtDireccion" ErrorMessage="Ingrese su dirección." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
@@ -346,7 +352,7 @@
                 </asp:TableCell>
                 <%-- DIRECCION2 TEXTBOX 8--%>
                 <asp:TableCell>
-                    <asp:TextBox ID="txtDireccion2" runat="server" TextMode="MultiLine" Rows="3" MaxLength="55" Width="220px"></asp:TextBox>
+                    <asp:TextBox ID="txtDireccion2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO 9--%>
                 <asp:TableCell Width="2%">
@@ -362,7 +368,7 @@
                 </asp:TableCell>
                 <%-- DIRECCION3 TEXTBOX 12--%>
                 <asp:TableCell>
-                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="3" MaxLength="55" Width="220px"></asp:TextBox>
+                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px"></asp:TextBox>
                 </asp:TableCell>
                 <%-- ESPACIO 13--%>
                 <asp:TableCell Width="2%">
@@ -390,7 +396,7 @@
                 </asp:TableCell>
                 <%-- PAIS DROPDOWNLIST 4--%>
                 <asp:TableCell>
-                    <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true" Width="365px">
+                    <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true" Width="275px">
                     </asp:DropDownList>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
@@ -407,7 +413,7 @@
                 </asp:TableCell>
                 <%-- DEPARTAMENTO DROPDOWNLIST 8--%>
                 <asp:TableCell>
-                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" Width="220px">
+                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" Width="275px">
                     </asp:DropDownList>
                 </asp:TableCell>
                 <%-- ESPACIO 9--%>
@@ -424,7 +430,7 @@
                 </asp:TableCell>
                 <%-- MUNICIPIO DROPDOWN 12--%>
                 <asp:TableCell>
-                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="220px">
+                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="275px">
                     </asp:DropDownList>
                 </asp:TableCell>
 
@@ -456,7 +462,7 @@
                 <asp:TableCell>
                     <asp:CustomValidator ID="validarTelefono" runat="server" ControlToValidate="txtTelefono" ErrorMessage="El número de teléfono debe de tener al menos 8 caracteres" Font-Size="Small" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red"></asp:CustomValidator>
                     <br />
-                    <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" Width="365px"></asp:TextBox>
+                    <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" Width="275px"></asp:TextBox>
                     <br />
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ControlToValidate="txtTelefono" ErrorMessage="Ingrese un número de teléfono." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
@@ -523,7 +529,7 @@
 
                 <%-- 2--%>
                 <asp:TableCell>
-                    <asp:Label runat="server" Font-Bold="true">Nombres*:</asp:Label> 
+                    <asp:Label runat="server" Font-Bold="true">Nombre 1*:</asp:Label> 
                     <br />
                     <br />
                 </asp:TableCell>
@@ -535,9 +541,9 @@
 
                 <%-- 4 --%>
                 <asp:TableCell>
-                    <asp:TextBox ID="TxtNombreR" runat="server" Enabled="false"></asp:TextBox>
+                    <asp:TextBox ID="TxtNombreR" runat="server" Enabled="false" MaxLength="30"></asp:TextBox>
                     <br />
-                    <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="TxtNombreR" ErrorMessage="Ingrese su nombre." ForeColor="Red"> </asp:RequiredFieldValidator>
+                    <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="TxtNombreR" ErrorMessage="Ingrese el nombre." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
 
                 <%-- 5 --%>
@@ -547,7 +553,7 @@
 
                 <%-- 6 --%>
                 <asp:TableCell>
-                    <asp:Label runat="server" Font-Bold="true">Apellidos*:</asp:Label> 
+                    <asp:Label runat="server" Font-Bold="true">Nombre 2:</asp:Label> 
                     <br />
                     <br />
                 </asp:TableCell>
@@ -557,9 +563,9 @@
                 </asp:TableCell>
                 <%-- 8 --%>
                 <asp:TableCell>
-                    <asp:TextBox ID="TxtApellidoR" runat="server" Enabled="false"></asp:TextBox>
+                    <asp:TextBox ID="TxtApellidoR" runat="server" Enabled="false" MaxLength="30"></asp:TextBox>
                     <br />
-                    <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" ControlToValidate="TxtApellidoR" ErrorMessage="Ingrese su apellido." ForeColor="Red"> </asp:RequiredFieldValidator>
+                    <br />
                 </asp:TableCell>
 
                 <%-- 9 --%>
@@ -569,7 +575,7 @@
 
                 <%-- 10 --%>
                 <asp:TableCell>
-                    <asp:Label runat="server" Font-Bold="true">Apellido de Casada:</asp:Label>
+                    <asp:Label runat="server" Font-Bold="true">Nombre 3:</asp:Label>
                     <br />
                     <br />
                 </asp:TableCell>
@@ -581,7 +587,7 @@
 
                 <%-- 12 --%>
                 <asp:TableCell>
-                    <asp:TextBox ID="TxtCasadaR" runat="server" Enabled="false"></asp:TextBox>
+                    <asp:TextBox ID="TxtCasadaR" runat="server" Enabled="false" MaxLength="30"></asp:TextBox>
                     <br />
                     <br />
                 </asp:TableCell>
@@ -630,7 +636,10 @@
                 </asp:TableCell>
                 <%-- FECHA DE NACIMIENTO  --%>
                 <asp:TableCell>
+                    <br />
                     <asp:TextBox ID="txtNit" runat="server" Enabled="true"></asp:TextBox>
+                    <br />
+                    <asp:Label runat="server" Font-Size="Small" ClientValidationFunction="VerificarCantidadTelefono" Text="El NIT no debe de contener guión (-)"></asp:Label>
                     <br />
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" ControlToValidate="txtNit" ErrorMessage="Ingrese su NIT." ForeColor="Red"> </asp:RequiredFieldValidator>
                 </asp:TableCell>
@@ -716,7 +725,6 @@
             var apellido = document.getElementById('<%= txtApellido.ClientID %>').value;
             var nombre = document.getElementById('<%= txtNombre.ClientID %>').value;
             var nombreR = document.getElementById('<%= TxtNombreR.ClientID %>').value;
-            var apellidoR = document.getElementById('<%= TxtApellidoR.ClientID %>').value;
             var nit = document.getElementById('<%= txtNit.ClientID %>').value;
             var direccion1 = document.getElementById('<%= txtDireccion.ClientID %>').value;
             var telefono = document.getElementById('<%= txtTelefono.ClientID %>').value;
@@ -736,16 +744,9 @@
 
             if (nombreR.trim() === "") {
                 if (mensaje.trim() == "") {
-                    mensaje = "-Los Nombres para el recibo son requeridos";
+                    mensaje = "-El Nombre 1 para el recibo es requerido";
                 } else {
-                    mensaje = mensaje + "\n-Los Nombres para el recibo son requeridos";
-                }
-            }
-            if (apellidoR.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-Los Apellidos para el recibo son requeridos";
-                } else {
-                    mensaje = mensaje + "\n-Los Apellidos para el recibo es requerido";
+                    mensaje = mensaje + "\n-El Nombre 1 para el recibo es requerido";
                 }
             }
 
@@ -833,7 +834,7 @@
                     $('#<%= TxtCasadaR.ClientID %>').prop('disabled', false);
                 }
             });
-        });        
+        });
 
         $(document).ready(function () {
             $('#<%= txtNombre.ClientID %> , #<%= txtApellido.ClientID %>').on('input', function () {
@@ -841,14 +842,34 @@
                 var txtNInicial = $('#<%= txtNInicial.ClientID %>').text().trim();
                 var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
                 var txtAInicial = $('#<%= txtAInicial.ClientID %>').text().trim();
-                
+
                 if (txtNombre !== txtNInicial || txtApellido !== txtAInicial) {
                     $('#<%= CargaDPI.ClientID %>').css('display', 'block');
-                 } else {
-                     $('#<%= CargaDPI.ClientID %>').css('display', 'none');
-                 }
+                } else {
+                    $('#<%= CargaDPI.ClientID %>').css('display', 'none');
+                }
             });
         });
+        $(document).ready(function () {
+            $('#<%= txtNit.ClientID %>').keyup(function () {
+                var text = $(this).val();
+                $(this).val(text.toUpperCase());
+            });
+        });
+
+        <%--$(document).ready(function () {
+            $('#<%= txtNit.ClientID %>').keypress(function (event) {
+                var regex = /(([1-9])+([0-9])*(-?)([0-9]|K))|(([1-9]+[0-9]){12,13})|(CF)/; // Expresión regular que permite letras y números
+                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                if (!regex.test(key)) {
+                    event.preventDefault();
+                    alert('Se ha ingresado un carácter no válido en el NIT.');
+                    return false;
+                }
+            });
+        });--%>
+
+
 
         function VerificarCantidadTelefono(sender, args) {
             args.IsValid = (args.Value.length >= 7);
@@ -856,7 +877,7 @@
 
         function VerificarCantidadDireccion(sender, args) {
             args.IsValid = (args.Value.length >= 9 && args.Value.length >= 1);
-        }        
+        }
     </script>
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
