@@ -38,6 +38,18 @@ namespace ReportesUnis
         int controlPantalla;
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Request.HttpMethod == "OPTIONS")
+            {
+                // Handle preflight request
+                Response.StatusCode = 204; // No Content
+                Response.End();
+            }
+
+            // Add CORS headers to the response
+            Response.AppendHeader("Access-Control-Allow-Origin", "*"); // Replace "*" with the specific origin if needed
+            Response.AppendHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+            Response.AppendHeader("Access-Control-Allow-Headers", "Content-Type");
+
             LeerInfoTxt();
             LeerPathApex();
             controlPantalla = PantallaHabilitada("Carnetización Masiva");
@@ -203,10 +215,10 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                                         //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
                                         "WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                                        //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
-                                        //"WHERE PN.NATIONAL_ID ='2990723550101' " + // DE LEON
-                                        //"WHERE PN.NATIONAL_ID ='4681531' " + // DE LEON
-                                        //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián  
+                                                                                   //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
+                                                                                   //"WHERE PN.NATIONAL_ID ='2990723550101' " + // DE LEON
+                                                                                   //"WHERE PN.NATIONAL_ID ='4681531' " + // DE LEON
+                                                                                   //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián  
                                        ") WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -291,6 +303,40 @@ namespace ReportesUnis
                     con.Close();
                 }
             }
+        }
+
+        public class DatosDepartamento
+        {
+            public string Texto { get; set; }
+            public string Valor { get; set; }
+        }
+
+        protected void CmbDeptos()
+        {
+            string constr = TxtURL.Text;
+            string query = "SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
+                    "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
+                    "WHERE CT.DESCR ='" + CmbPais.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL  " +
+                    "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+            using (OracleConnection con = new OracleConnection(constr))
+
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand(query, con))
+                {
+                    using (OracleDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            DatosDepartamento datosDepartamento = new DatosDepartamento();
+                            datosDepartamento.Texto = reader.GetString(0);
+                            datosDepartamento.Valor = reader.GetString(0);
+                        }
+                    }
+
+                }
+            }
+
         }
         protected void llenadoDepartamento()
         {
@@ -810,7 +856,7 @@ namespace ReportesUnis
                                     txtInsert.Text = reader["INS"].ToString();
                                 }
                                 cmd.Transaction = transaction;
-                                cmd.Connection = con;                                
+                                cmd.Connection = con;
                             };
 
                             try
@@ -887,15 +933,15 @@ namespace ReportesUnis
                                                         "NAME_FORMAL='" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "', " +
                                                         "NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "',' ',''))," +
                                                         "LASTUPDDTTM = SYSDATE, " +
-                                                        "LASTUPDOPRID = '"+ Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
+                                                        "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
                                                         "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'";
                                     cmd.ExecuteNonQuery();
 
                                     //ACTUALIZA NIT
-                                    cmd.CommandText = "UPDATE SYSADM.PS_PERS_NID PN SET PN.NATIONAL_ID = '"+txtNit.Text+ "', " +
+                                    cmd.CommandText = "UPDATE SYSADM.PS_PERS_NID PN SET PN.NATIONAL_ID = '" + txtNit.Text + "', " +
                                                         "LASTUPDDTTM = SYSDATE, " +
-                                                        "LASTUPDOPRID = '"+ Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "'" +
-                                                        " WHERE PN.NATIONAL_ID_TYPE = 'NITREC' AND PN.EMPLID='"+UserEmplid.Text+"'";
+                                                        "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "'" +
+                                                        " WHERE PN.NATIONAL_ID_TYPE = 'NITREC' AND PN.EMPLID='" + UserEmplid.Text + "'";
                                     cmd.ExecuteNonQuery();
 
                                 }
@@ -1180,9 +1226,49 @@ namespace ReportesUnis
             }
         }
 
-        protected void RadioButtonNombre_CheckedChanged(object sender, EventArgs e)
+        [WebMethod]
+        public static object GetChildDropDownData(string CmbPais)
         {
 
+            string rutaCompleta = AppDomain.CurrentDomain.BaseDirectory + "conexion.txt";
+            string line = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                line = file.ReadToEnd();
+                file.Close();
+            }
+            using (OracleConnection connection = new OracleConnection(line))
+            {
+                connection.Open();
+                OracleCommand command = new OracleCommand("SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
+                    "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
+                    "WHERE CT.DESCR ='" + CmbPais + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL  " +
+                    "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO", connection);
+                command.Parameters.Add(new OracleParameter("selectedValue", CmbPais));
+                OracleDataReader reader = command.ExecuteReader();
+
+                // Construir una lista de objetos con los datos para el segundo DropDownList
+                var dataList = new System.Collections.Generic.List<object>();
+                while (reader.Read())
+                {
+                    var dataItem = new
+                    {
+                        Value = reader["Value"].ToString(),
+                        Text = reader["Text"].ToString()
+                    };
+                    dataList.Add(dataItem);
+                }
+
+                return new { d = dataList };
+            }
         }
+        public static List<DatosDepartamento> ObtenerNuevosDatos(string selectedValue)
+        {
+            List<DatosDepartamento> datosDepartamentos = new List<DatosDepartamento> ();
+
+            return datosDepartamentos;
+        }
+
+
     }
 }

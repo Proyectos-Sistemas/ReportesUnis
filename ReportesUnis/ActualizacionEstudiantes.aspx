@@ -396,7 +396,7 @@
                 </asp:TableCell>
                 <%-- PAIS DROPDOWNLIST 4--%>
                 <asp:TableCell>
-                    <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true" Width="275px">
+                    <asp:DropDownList ID="CmbPais" runat="server" EnableViewState="true" Width="275px">
                     </asp:DropDownList>
                 </asp:TableCell>
                 <%-- ESPACIO 5--%>
@@ -413,7 +413,7 @@
                 </asp:TableCell>
                 <%-- DEPARTAMENTO DROPDOWNLIST 8--%>
                 <asp:TableCell>
-                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" Width="275px">
+                    <asp:DropDownList ID="CmbDepartamento" runat="server" EnableViewState="true" Width="275px">
                     </asp:DropDownList>
                 </asp:TableCell>
                 <%-- ESPACIO 9--%>
@@ -869,7 +869,34 @@
             });
         });--%>
 
+        $(document).ready(function () {
+            $('#<%= CmbPais.ClientID %>').change(function () {
+                var selectedValue = $(this).val();
 
+                $.ajax({
+                    type: "POST",
+                    url: "ActualizacionEstudiantes.aspx/GetChildDropDownData",
+                    data: "{CmbPais : '" + selectedValue + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        <%--var ddlChild = $('#<%= CmbDepartamento.ClientID %>');// Identificador del segundo DropDownList
+                        ddlChild.empty(); // Limpiar el DropDownList secundario
+
+                        // Agregar los nuevos elementos al DropDownList secundario
+                        $.each(response.d, function (key, value) {
+                            ddlChild.append($("<option></option>").val(value.Value).html(value.Text));
+                        });--%>
+                        alert("ingreso");
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error en la solicitud. Código de estado: ' + xhr.status + ', Estado: ' + xhr.statusText);
+                        alert('Error detallado: ' + error);
+                        alert('Respuesta del servidor: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
 
         function VerificarCantidadTelefono(sender, args) {
             args.IsValid = (args.Value.length >= 7);

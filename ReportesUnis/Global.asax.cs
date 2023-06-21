@@ -24,18 +24,28 @@ namespace ReportesUnis
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-             _strdc = Util.LeerArchivoRecursos(1, Server.MapPath(@"conf.dat"));
-             _strdc1 = Util.LeerArchivoRecursos(2, Server.MapPath(@"conf.dat"));
-             _struser = Util.LeerArchivoRecursos(3, Server.MapPath(@"conf.dat"));
-             _strdPass = Util.LeerArchivoRecursos(4, Server.MapPath(@"conf.dat"));
-
+            _strdc = Util.LeerArchivoRecursos(1, Server.MapPath(@"conf.dat"));
+            _strdc1 = Util.LeerArchivoRecursos(2, Server.MapPath(@"conf.dat"));
+            _struser = Util.LeerArchivoRecursos(3, Server.MapPath(@"conf.dat"));
+            _strdPass = Util.LeerArchivoRecursos(4, Server.MapPath(@"conf.dat"));
         }
 
-        void Session_Start(object sender, EventArgs e)
+        protected void Application_BeginRequest(object sender, EventArgs e)
         {
-           
+            // Verificar si la solicitud es una solicitud CORS preflight
+            if (Request.Headers["Origin"] != null && Request.HttpMethod == "OPTIONS")
+            {
+                // Permitir solicitudes de origen cruzado desde cualquier origen
+                Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                // Permitir los métodos HTTP especificados (GET, POST, etc.)
+                Response.Headers.Add("Access-Control-Allow-Methods", "OPTIONS, DELETE, POST, GET, PATCH, PUT");
+                // Permitir los encabezados personalizados especificados
+                Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
+                // Finalizar la respuesta
+                Response.End();
+            }
         }
-        
+
 
 
     }
