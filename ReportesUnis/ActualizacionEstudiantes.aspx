@@ -854,9 +854,43 @@
             $('#<%= txtNit.ClientID %>').keyup(function () {
                 var text = $(this).val();
                 $(this).val(text.toUpperCase());
-            });
+
+            // Datos que deseas enviar en el cuerpo de la solicitud
+            var data = {
+                Credenciales: 'd39c940b-c65f-4502-8a94-f1d9109076ab',
+                NIT: '1690558',
+            };
+            alert(JSON.stringify(data));
+
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Especifica el tipo de contenido del cuerpo
+                },
+                body: JSON.stringify(data) // Convierte el objeto de datos a una cadena JSON
+            };
+
+            // URL de la API que deseas consumir
+            const apiUrl = 'https://felaupar.azurewebsites.net/api/NIT?code=Cw1Olqw4rH0EyEgZdqLD9gQqy62AF5FpAfuBL5spyZoajzNGjhme4A==&Credenciales=d39c940b-c65f-4502-8a94-f1d9109076ab';
+
+            // Realiza la solicitud utilizando fetch()
+            fetch(apiUrl, requestOptions)
+                .then(response => response.json()) // Parsea la respuesta como JSON
+                .then(data => {
+                    // Aquí puedes trabajar con los datos de la respuesta
+                    console.log(data);
+                    alert(JSON.stringify(data));
+                })
+                .catch(error => {
+                    // Maneja cualquier error ocurrido durante la solicitud
+                    console.error('Error:', error);
+                    alert('Error:', error);
+                });
+
+                });
         });
 
+         
         <%--$(document).ready(function () {
             $('#<%= txtNit.ClientID %>').keypress(function (event) {
                 var regex = /(([1-9])+([0-9])*(-?)([0-9]|K))|(([1-9]+[0-9]){12,13})|(CF)/; // Expresión regular que permite letras y números
