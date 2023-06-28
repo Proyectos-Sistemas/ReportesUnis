@@ -94,6 +94,10 @@ namespace ReportesUnis
                         ImgDPI2.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(2).jpg";
                     }
                 }
+                if (txtCantidad.Text == "1")
+                {
+                    ImgDPI2.Visible = false;
+                }
             }
             else
             {
@@ -302,8 +306,9 @@ namespace ReportesUnis
                 string fecha = DateTime.Now.ToString("yyyy-MM-dd");
                 QueryInsertBi();
                 QueryActualizaNombre();
-                //SE INGRESA LA INFORMACIÓN EN EL BANCO
-                respuesta = ConsumoSQL(txtInsertBI.Text);
+
+                //SE INGRESA LA INFORMACIÓN DEL NIT
+                respuesta = ActualizarNIT(CmbCarne.Text);
                 if (respuesta == "0")
                 {
                     respuesta = ConsumoOracle(txtInsertName.Text);
@@ -314,10 +319,11 @@ namespace ReportesUnis
                         QueryUpdateApex("0", fecha, fecha, fecha, "1", Carnet);
                         if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                         {
-                            respuesta = ConsumoOracle(txtInsertApex.Text);
+                            //SE INGRESA LA INFORMACIÓN EN EL BANCO
+                            respuesta = ConsumoSQL(txtInsertBI.Text);
                             if (respuesta == "0")
+                                respuesta = ConsumoOracle(txtInsertApex.Text);
                             {
-                                respuesta = ActualizarNIT(CmbCarne.Text);
                             }
                         }
                     }
@@ -776,6 +782,7 @@ namespace ReportesUnis
                             "A.ADDRESS3 = '" + TxtDiRe3 + "', " +
                                 "A.COUNTRY = '" + PaisNit + "', LASTUPDOPRID ='" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
                                 "' WHERE A.EMPLID = '" + emplid + "' AND ADDRESS_TYPE ='REC'";
+                            cmd.ExecuteNonQuery();
                         }
                         else
                         {
