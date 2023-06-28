@@ -104,5 +104,29 @@ namespace ReportesUnis.API
             }
         }
 
+        public dynamic PostNit(string url, string json)
+        {
+           
+            try
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("content-type", "application/vnd.oracle.adf.resourceitem+json");
+                request.AddParameter("application/json", json, ParameterType.RequestBody);
+
+                IRestResponse response = client.Execute(request);
+
+                dynamic datos = JsonConvert.DeserializeObject(response.Content).ToString();
+
+                if (response.StatusCode.ToString() == "OK" || response.StatusCode.ToString() == "Created")
+                    return response.Content;
+                else
+                    return 1;
+            }
+            catch (Exception)
+            {
+                return 1;
+            }
+        }
     }
 }

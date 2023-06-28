@@ -32,17 +32,13 @@ namespace ReportesUnis
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            // Verificar si la solicitud es una solicitud CORS preflight
-            if (Request.Headers["Origin"] != null && Request.HttpMethod == "OPTIONS")
+            HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "https://localhost:44382");
+            if (HttpContext.Current.Request.HttpMethod == "OPTIONS")
             {
-                // Permitir solicitudes de origen cruzado desde cualquier origen
-                Response.Headers.Add("Access-Control-Allow-Origin", "*");
-                // Permitir los métodos HTTP especificados (GET, POST, etc.)
-                Response.Headers.Add("Access-Control-Allow-Methods", "OPTIONS, DELETE, POST, GET, PATCH, PUT");
-                // Permitir los encabezados personalizados especificados
-                Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
-                // Finalizar la respuesta
-                Response.End();
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, CONNECT, TRACE");
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+                HttpContext.Current.Response.AddHeader("Access-Control-Max-Age", "1728000");
+                HttpContext.Current.Response.End();
             }
         }
 

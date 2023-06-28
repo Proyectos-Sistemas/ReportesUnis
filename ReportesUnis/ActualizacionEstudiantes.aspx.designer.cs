@@ -24,6 +24,24 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl CargaFotografia;
 
         /// <summary>
+        /// Control Fotos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Table Fotos;
+
+        /// <summary>
+        /// Control ImgBase.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image ImgBase;
+
+        /// <summary>
         /// Control CargaDPI.
         /// </summary>
         /// <remarks>
@@ -76,6 +94,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label State;
+
+        /// <summary>
+        /// Control StateNIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label StateNIT;
 
         /// <summary>
         /// Control TruePhone.
@@ -573,15 +600,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox TxtNombreR;
 
         /// <summary>
-        /// Control RequiredFieldValidator5.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator5;
-
-        /// <summary>
         /// Control TxtApellidoR.
         /// </summary>
         /// <remarks>
@@ -600,6 +618,69 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox TxtCasadaR;
 
         /// <summary>
+        /// Control CustomValidator1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator CustomValidator1;
+
+        /// <summary>
+        /// Control TxtDiRe1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtDiRe1;
+
+        /// <summary>
+        /// Control TxtDiRe2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtDiRe2;
+
+        /// <summary>
+        /// Control TxtDiRe3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtDiRe3;
+
+        /// <summary>
+        /// Control CmbPaisNIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList CmbPaisNIT;
+
+        /// <summary>
+        /// Control CmbDepartamentoNIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList CmbDepartamentoNIT;
+
+        /// <summary>
+        /// Control CmbMunicipioNIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList CmbMunicipioNIT;
+
+        /// <summary>
         /// Control txtNit.
         /// </summary>
         /// <remarks>
@@ -616,6 +697,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator7;
+
+        /// <summary>
+        /// Control ValidarNIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ValidarNIT;
 
         /// <summary>
         /// Control tbactualizar.

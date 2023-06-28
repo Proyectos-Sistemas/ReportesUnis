@@ -14,12 +14,24 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Windows.Resources;
+using static System.Windows.Forms.AxHost;
+using Windows.Devices.Sensors;
+using Windows.UI.Xaml.Automation.Text;
 
 namespace ReportesUnis
 {
     public partial class ConfirmaciónDeCarne : System.Web.UI.Page
     {
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        string TxtNombreR = "";
+        string TxtApellidoR = "";
+        string TxtCasadaR = "";
+        string NIT = "";
+        string TxtDiRe1 = "";
+        string TxtDiRe2 = "";
+        string TxtDiRe3 = "";
+        string StateNit = "";
+        string PaisNit = "";
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -153,10 +165,12 @@ namespace ReportesUnis
                 {
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT ' ' CUI,' ' NOMBRE1,' ' NOMBRE2,' ' APELLIDO1,' ' APELLIDO2,' ' DECASADA,' ' CARGO," +
-                        "' ' FACULTAD,' ' CELULAR,' ' FECHANAC,' ' ESTADO_CIVIL,' ' DIRECCION,' ' DEPTO_RESIDENCIA,' ' MUNI_RESIDENCIA, ' ' TOTALFOTOS FROM DUAL UNION " +
+                        "' ' FACULTAD,' ' CELULAR,' ' FECHANAC,' ' ESTADO_CIVIL,' ' DIRECCION,' ' DEPTO_RESIDENCIA,' ' MUNI_RESIDENCIA, ' ' TOTALFOTOS, " +
+                        "' ' NOMBRE_NIT,' ' APELLIDOS_NIT,' ' CASADA_NIT,' ' DIRECCION1_NIT,' ' DIRECCION2_NIT,' ' DIRECCION3_NIT, ' ' STATE_NIT , ' ' PAIS_NIT FROM DUAL UNION " +
                         "SELECT NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, NOMBRE1, NOMBRE2, APELLIDO1, APELLIDO2, DECASADA, CARGO, FACULTAD, CELULAR, FECHANAC, " +
                         "CASE WHEN ESTADO_CIVIL = 1 THEN 'SOLTERO' WHEN ESTADO_CIVIL ='2' THEN 'CASADO' ELSE '' END ESTADO_CIVIL, DIRECCION, " +
-                        "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE " + where + " AND TIPO_PERSONA = 2";
+                        "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS, NOMBRE_NIT, APELLIDOS_NIT, CASADA_NIT, DIRECCION1_NIT, " +
+                        "DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_NIT FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE " + where + " AND TIPO_PERSONA = 2";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -175,7 +189,14 @@ namespace ReportesUnis
                         TxtMunicipio.Text = reader["MUNI_RESIDENCIA"].ToString();
                         TxtTel.Text = reader["CELULAR"].ToString();
                         txtCantidad.Text = reader["TOTALFOTOS"].ToString();
-                        txtCantidad.Text = reader["TOTALFOTOS"].ToString();
+                        TxtNombreR = reader["NOMBRE_NIT"].ToString();
+                        TxtApellidoR = reader["APELLIDOS_NIT"].ToString();
+                        TxtCasadaR = reader["CASADA_NIT"].ToString();
+                        TxtDiRe1 = reader["DIRECCION1_NIT"].ToString();
+                        TxtDiRe2 = reader["DIRECCION2_NIT"].ToString();
+                        TxtDiRe3 = reader["DIRECCION3_NIT"].ToString();
+                        StateNit = reader["STATE_NIT"].ToString();
+                        PaisNit = reader["PAIS_NIT"].ToString();
                     }
                     con.Close();
                 }
@@ -294,6 +315,10 @@ namespace ReportesUnis
                         if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                         {
                             respuesta = ConsumoOracle(txtInsertApex.Text);
+                            if (respuesta == "0")
+                            {
+                                respuesta = ActualizarNIT(CmbCarne.Text);
+                            }
                         }
                     }
                 }
@@ -492,7 +517,7 @@ namespace ReportesUnis
 
         protected void QueryActualizaNombre()
         {
-            txtInsertName.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "," + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "'),' ',''), LAST_NAME ='" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "', FIRST_NAME='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', SECOND_LAST_NAME='" + TxtApellidoCasada.Text + "', SECOND_LAST_SRCH=(REPLACE(UPPER('" + TxtApellidoCasada.Text + "'),' ',''))||' ', NAME_DISPLAY='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_FORMAL='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtPrimerNombre.Text + TxtSegundoNombre.Text + TxtPrimerApellido.Text + TxtSegundoApellido.Text + TxtApellidoCasada.Text + "',' ',''))  WHERE PN.EMPLID = '" + CmbCarne.Text + "' AND NAME_TYPE IN =('PRI','PRF')";
+            txtInsertName.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = '" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "," + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "'),' ',''), PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "'),' ',''), LAST_NAME ='" + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + "', FIRST_NAME='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + "', SECOND_LAST_NAME='" + TxtApellidoCasada.Text + "', SECOND_LAST_SRCH=(REPLACE(UPPER('" + TxtApellidoCasada.Text + "'),' ',''))||' ', NAME_DISPLAY='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_FORMAL='" + TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text + " " + TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text + "', NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtPrimerNombre.Text + TxtSegundoNombre.Text + TxtPrimerApellido.Text + TxtSegundoApellido.Text + TxtApellidoCasada.Text + "',' ',''))  WHERE PN.EMPLID = '" + CmbCarne.Text + "' AND NAME_TYPE IN ('PRI','PRF')";
         }
         protected void QueryUpdateApex(string Confirmación, string Solicitado, string Entrega, string FechaHora, string Accion, string Carne)
         {
@@ -624,6 +649,180 @@ namespace ReportesUnis
                 file.Close();
             }
         }
+
+        private string ActualizarNIT(string emplid)
+        {
+            string constr = TxtURL.Text;
+            string existeNit = "";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT APELLIDO_NIT, NOMBRE_NIT, CASADA_NIT, NIT, PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO, " +
+                                        "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, CNT FROM ( " +
+                                        "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, " +
+                                        "PD.LAST_NAME, PD.SECOND_LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
+                                        "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
+                                        "APD.DESCR CARRERA, AGT.DESCR FACULTAD, " +
+                                        "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'No Consta' END STATUS, " +
+                                        "(SELECT NATIONAL_ID FROM SYSADM.PS_PERS_NID WHERE NATIONAL_ID_TYPE= 'NITREC' AND EMPLID = PD.EMPLID) NIT," +
+                                        "(SELECT PNA.FIRST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID=PD.EMPLID) NOMBRE_NIT, " +
+                                        "(SELECT PNA.LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID=PD.EMPLID) APELLIDO_NIT, " +
+                                        "(SELECT SECOND_LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID=PD.EMPLID) CASADA_NIT, " +
+                                        "(SELECT ADDRESS1 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DIRECCION1_NIT, " +
+                                        "(SELECT ADDRESS2 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DIRECCION2_NIT, " +
+                                        "(SELECT ADDRESS3 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DIRECCION3_NIT, " +
+                                        "(SELECT C.DESCR FROM SYSADM.PS_ADDRESSES PA JOIN SYSADM.PS_COUNTRY_TBL C ON PA.COUNTRY = C.COUNTRY AND PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) PAIS_NIT, " +
+                                        "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) MUNICIPIO_NIT, " +
+                                        "(SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DEPARTAMENTO_NIT, " +
+                                        "(SELECT ST.STATE FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID ) STATE_NIT, " +
+                                        "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, " +
+                                        "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, " +
+                                        "TT.TERM_BEGIN_DT, ROW_NUMBER() OVER (PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, C.DESCR PAIS " +
+                                        "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                        "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
+                                        "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID AND ADDRESS_TYPE= 'HOME'" +
+                                        "AND A.EFFDT =( " +
+                                        "    SELECT " +
+                                        "        MAX(EFFDT) " +
+                                        "    FROM " +
+                                        "        SYSADM.PS_ADDRESSES A2 " +
+                                        "    WHERE " +
+                                        "        A.EMPLID = A2.EMPLID " +
+                                        "        AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE " +
+                                        ") " +
+                                        "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
+                                        "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
+                                        "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
+                                        "AND SE.STDNT_ENRL_STATUS = 'E' " +
+                                        "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
+                                        "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID " +
+                                        "AND CT.STRM = SE.STRM " +
+                                        "AND CT.ACAD_CAREER = SE.ACAD_CAREER " +
+                                        "AND SE.INSTITUTION = CT.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
+                                        "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
+                                        "AND CT.INSTITUTION = APD.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
+                                        "AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
+                                        "AND CT.INSTITUTION = TT.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
+                                        "AND PP.PHONE_TYPE = 'HOME' " +
+                                        "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
+                                        //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
+                                        "WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda  
+                                       ") WHERE CNT = 1";
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        existeNit = reader["NIT"].ToString();
+                    }
+
+                    try
+                    {
+                        if (!String.IsNullOrEmpty(existeNit))
+                        {
+                            cmd.Connection = con;
+                            cmd.CommandText =
+                                "SELECT NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, NOMBRE1, NOMBRE2, APELLIDO1, APELLIDO2, DECASADA, CARGO, FACULTAD, CELULAR, FECHANAC, " +
+                                "CASE WHEN ESTADO_CIVIL = 1 THEN 'SOLTERO' WHEN ESTADO_CIVIL ='2' THEN 'CASADO' ELSE '' END ESTADO_CIVIL, DIRECCION, " +
+                                "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS, NOMBRE_NIT, APELLIDOS_NIT, CASADA_NIT, DIRECCION1_NIT, " +
+                                "DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_NIT, NIT FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + emplid + "' AND TIPO_PERSONA = 2";
+                            OracleDataReader reader2 = cmd.ExecuteReader();
+                            while (reader2.Read())
+                            {
+                                TxtNombreR = reader2["NOMBRE_NIT"].ToString();
+                                TxtApellidoR = reader2["APELLIDOS_NIT"].ToString();
+                                TxtCasadaR = reader2["CASADA_NIT"].ToString();
+                                TxtDiRe1 = reader2["DIRECCION1_NIT"].ToString();
+                                TxtDiRe2 = reader2["DIRECCION2_NIT"].ToString();
+                                TxtDiRe3 = reader2["DIRECCION3_NIT"].ToString();
+                                StateNit = reader2["STATE_NIT"].ToString();
+                                PaisNit = reader2["PAIS_NIT"].ToString();
+                                NIT = reader2["NIT"].ToString();
+                            }
+
+
+                            //ACTUALIZA NOMBRE DEL NIT
+                            cmd.CommandText = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = REPLACE('" + TxtApellidoR + " " + TxtCasadaR + "," + TxtNombreR + "','  ',' ') , " +
+                                                "PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtApellidoR + "'),' ',''), " +
+                                                "PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtNombreR + "'),' ',''), " +
+                                                "LAST_NAME ='" + TxtApellidoR + "', FIRST_NAME='" + TxtNombreR + "', " +
+                                                "SECOND_LAST_NAME='" + TxtCasadaR + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + TxtCasadaR + "'),' ','')||' ', " +
+                                                "NAME_DISPLAY='" + TxtNombreR + " " + TxtApellidoR + " " + TxtCasadaR + "', " +
+                                                "NAME_FORMAL='" + TxtNombreR + " " + TxtApellidoR + " " + TxtCasadaR + "', " +
+                                                "NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR + TxtApellidoR + TxtCasadaR + "',' ',''))," +
+                                                "LASTUPDDTTM = SYSDATE, " +
+                                                "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
+                                                "WHERE PN.EMPLID = '" + emplid + "' AND NAME_TYPE IN 'REC'";
+                            cmd.ExecuteNonQuery();
+
+                            //ACTUALIZA NIT
+                            cmd.CommandText = "UPDATE SYSADM.PS_PERS_NID PN SET PN.NATIONAL_ID = '" + NIT + "', " +
+                                                "LASTUPDDTTM = SYSDATE, " +
+                                                "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "'" +
+                                                " WHERE PN.NATIONAL_ID_TYPE = 'NITREC' AND PN.EMPLID='" + emplid + "'";
+                            cmd.ExecuteNonQuery();
+
+                            //ACTUALIZA DIRECCION DEL NIT
+                            cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + StateNit + "', " +
+                                "A.ADDRESS1 = '" + TxtDiRe1 + "', " +
+                                "A.ADDRESS2 = '" + TxtDiRe2 + "', " +
+                            "A.ADDRESS3 = '" + TxtDiRe3 + "', " +
+                                "A.COUNTRY = '" + PaisNit + "', LASTUPDOPRID ='" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
+                                "' WHERE A.EMPLID = '" + emplid + "' AND ADDRESS_TYPE ='REC'";
+                        }
+                        else
+                        {
+                            //INSERTA NOMBRE DEL NIT
+                            cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES (EMPLID, NAME_TYPE, EFFDT, EFF_STATUS, COUNTRY_NM_FORMAT, NAME, NAME_INITIALS, NAME_PREFIX, NAME_SUFFIX, " +
+                                "NAME_ROYAL_PREFIX, NAME_ROYAL_SUFFIX, NAME_TITLE, LAST_NAME_SRCH, FIRST_NAME_SRCH, LAST_NAME, FIRST_NAME, MIDDLE_NAME, SECOND_LAST_NAME, " +
+                                "SECOND_LAST_SRCH, NAME_AC, PREF_FIRST_NAME, PARTNER_LAST_NAME, PARTNER_ROY_PREFIX, LAST_NAME_PREF_NLD, NAME_DISPLAY, NAME_FORMAL, NAME_DISPLAY_SRCH, " +
+                                "LASTUPDDTTM, LASTUPDOPRID) VALUES('" + emplid + "','REC','01/01/00','A','MEX', REPLACE('" + TxtApellidoR + " " + TxtCasadaR + "," + TxtNombreR + "','  ',' '),' ',' ',' ',' ',' ',' '," +
+                                "REPLACE(UPPER('" + TxtApellidoR + "'),' ',''),REPLACE(UPPER('" + TxtNombreR + "'),' ',''),'" + TxtApellidoR + "','" + TxtNombreR + "',' ','" + TxtCasadaR + "',REPLACE(UPPER('" + TxtCasadaR + "'),' ','')||' '," +
+                                "' ',' ',' ',' ','1','" + TxtNombreR + " " + TxtApellidoR + " " + TxtCasadaR + "','" + TxtNombreR + " " + TxtApellidoR + " " + TxtCasadaR + "',REPLACE(UPPER('" + TxtNombreR + TxtApellidoR + TxtCasadaR + "'),' ','')," +
+                                "SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
+                            cmd.ExecuteNonQuery();
+
+                            //INSERTA NIT
+                            cmd.CommandText = "INSERT INTO SYSADM.PS_PERS_NID (EMPLID, COUNTRY, NATIONAL_ID_TYPE, NATIONAL_ID, SSN_KEY_FRA, PRIMARY_NID, TAX_REF_ID_SGP, LASTUPDDTTM, LASTUPDOPRID) " +
+                                "VALUES ('" + emplid + "','GTM','NITREC','" + NIT + "',' ','N','N',SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
+                            cmd.ExecuteNonQuery();
+
+                            //INSERTA DIRECCION DEL NIT
+                            cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES (EMPLID, ADDRESS_TYPE,COUNTY,CITY,NUM1, NUM2, HOUSE_TYPE, ADDR_FIELD1, ADDR_FIELD2, ADDR_FIELD3,POSTAL,GEO_CODE,IN_CITY_LIMIT," +
+                                 "ADDRESS1_AC,ADDRESS2_AC,ADDRESS3_AC,CITY_AC,REG_REGION,EFFDT,EFF_STATUS,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,STATE,LASTUPDDTTM,LASTUPDOPRID) " +
+                                 "VALUES('" + emplid + "', 'REC',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', '" + DateTime.Now.ToString("dd/MM/yyyy")
+                                 + "', 'A', '" + PaisNit + "', '" + TxtDiRe1 + "', '" + TxtDiRe2 + "', '" + TxtDiRe3 + "', ' ','" + StateNit + "', '" +
+                                 DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "','" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
+                            cmd.ExecuteNonQuery();
+
+                            cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES_SA (LOC_ADDR_DATA,LOC_ADDR, LOC_ADDR_LINE, LOC_ADDR_TYPE, EXT_ORG_ID, DESCR_EXT_ORG, DESCR_ORG_LOCATION, " +
+                                "CONTACT_NAME, DATA_SOURCE, EMPLID, ADDRESS_TYPE,EFFDT,ORG_LOCATION,MAINT_ADDR_MANUAL,MAINT_OTHER_MANUAL,ORG_CONTACT,SEASONAL_ADDR) " +
+                                "VALUES(' ',' ',' ',' ',' ',' ',' ',' ',' ','" + emplid + "', 'REC', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 0, 'N','N',0,'N')";
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+                        return "0";
+                    }
+                    catch (Exception x)
+                    {
+                        transaction.Rollback();
+                        lblActualizacion.Text = "Ocurrió un problema al actualizar el NIT " + x;
+                        return "1";
+                    }
+                }
+
+                con.Close();
+            }
+        }
+
 
     }
 }
