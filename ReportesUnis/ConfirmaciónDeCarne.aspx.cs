@@ -78,7 +78,7 @@ namespace ReportesUnis
         protected void CmbTipo_SelectedIndexChanged(object sender, EventArgs e)
         {
             llenado("CARNET = '" + CmbCarne.Text + "'");
-            if (txtCantidad.Text != "0")
+            if (txtCantidad.Text != "0" && !txtCantidad.Text.IsNullOrWhiteSpace() )
             {
                 for (int i = 0; i < Convert.ToInt32(txtCantidad.Text); i++)
                 {
@@ -86,12 +86,12 @@ namespace ReportesUnis
                     if (i == 0)
                     {
                         ImgDPI1.Visible = true;
-                        ImgDPI1.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(1).jpg";
+                        ImgDPI1.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "("+(i+1)+").jpg";
                     }
                     if (i == 1)
                     {
                         ImgDPI2.Visible = true;
-                        ImgDPI2.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(2).jpg";
+                        ImgDPI2.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "("+(i+1)+").jpg";
                     }
                 }
                 if (txtCantidad.Text == "1")
@@ -103,6 +103,7 @@ namespace ReportesUnis
             {
                 ImgDPI1.Visible = false;
                 ImgDPI2.Visible = false;
+                ImgFoto1.Visible = false;
             }
             if (!CmbCarne.Text.IsNullOrWhiteSpace())
             {

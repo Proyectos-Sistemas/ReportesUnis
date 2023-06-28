@@ -493,28 +493,34 @@
     <div class="container" id="divDPI" runat="server" visible="false">  
         <h4 style="text-align: center;" runat="server" visible="true" id="HDocumentacion">Documentación Adjunta</h4>
         <asp:Table id="tabla5" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
-                <asp:TableRow>
+            <asp:TableRow>
                 <%-- ESPACIO 1--%>
                 <asp:TableCell Width="25%">
                         <br />
                 </asp:TableCell>
-
+                
                 <%-- ESPACIO 2--%>
-                <asp:TableCell>
+                <asp:TableCell Width="25%">
                         <asp:Image ID="ImgDPI1" runat="server" Width="350px" Visible="false"/> 
                 </asp:TableCell>
                 
-                <%-- ESPACIO 3--%>
+                 <%-- ESPACIO 3--%>
+                <asp:TableCell Width="25%">
+                    <br />  
+                </asp:TableCell>                                  
+            </asp:TableRow>
+            <asp:TableRow>
+                <%-- ESPACIO 1--%>
                 <asp:TableCell Width="25%">
                         <br />
                 </asp:TableCell>
                 
-                 <%-- ESPACIO 4--%>
+                <%-- ESPACIO 2--%>
                 <asp:TableCell Width="25%">
                         <asp:Image ID="ImgDPI2" runat="server" Width="350px" Visible="false" /> 
                 </asp:TableCell>
-                    
-                <%-- ESPACIO 5--%>
+                
+                 <%-- ESPACIO 3--%>
                 <asp:TableCell Width="25%">
                         <br />
                 </asp:TableCell>
