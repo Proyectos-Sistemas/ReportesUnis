@@ -92,6 +92,8 @@ namespace ReportesUnis
                         llenadoDepartamentoNit();
                         llenadoState();
                         llenadoStateNIT();
+                        /*AlmacenarFotografia();
+                        fotoAlmacenada();*/
 
                         if (String.IsNullOrEmpty(txtCarne.Text))
                         {
@@ -169,6 +171,7 @@ namespace ReportesUnis
             tbactualizar.Visible = false;
             InfePersonal.Visible = false;
         }
+        
         private void mostrarInformación()
         {
             string constr = TxtURL.Text;
@@ -181,11 +184,22 @@ namespace ReportesUnis
             int posicion2 = 0;
             int largoApellido = 0;
             int excepcionApellido = 0;
+            string emplid = "";
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
                 using (OracleCommand cmd = new OracleCommand())
                 {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT EMPLID FROM SYSADM.PS_PERS_NID PN " +
+                        //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
+                        "WHERE PN.NATIONAL_ID ='2327809510101'";
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        emplid = reader["EMPLID"].ToString();
+                    }
+
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT APELLIDO_NIT, NOMBRE_NIT, CASADA_NIT, NIT, PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO, " +
                                         "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, CNT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT FROM ( " +
@@ -194,17 +208,17 @@ namespace ReportesUnis
                                         "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
                                         "APD.DESCR CARRERA, AGT.DESCR FACULTAD, " +
                                         "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'No Consta' END STATUS, " +
-                                        "(SELECT NATIONAL_ID FROM SYSADM.PS_PERS_NID WHERE NATIONAL_ID_TYPE= 'NITREC' AND EMPLID = PD.EMPLID) NIT," +
-                                        "(SELECT PNA.FIRST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID=PD.EMPLID) NOMBRE_NIT, " +
-                                        "(SELECT PNA.LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID=PD.EMPLID) APELLIDO_NIT, " +
-                                        "(SELECT SECOND_LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID=PD.EMPLID) CASADA_NIT, " +
-                                        "(SELECT ADDRESS1 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DIRECCION1_NIT, " +
-                                        "(SELECT ADDRESS2 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DIRECCION2_NIT, " +
-                                        "(SELECT ADDRESS3 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DIRECCION3_NIT, " +
-                                        "(SELECT C.DESCR FROM SYSADM.PS_ADDRESSES PA JOIN SYSADM.PS_COUNTRY_TBL C ON PA.COUNTRY = C.COUNTRY AND PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) PAIS_NIT, " +
-                                        "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) MUNICIPIO_NIT, " +
-                                        "(SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DEPARTAMENTO_NIT, " +
-                                        "(SELECT ST.STATE FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID ) STATE_NIT, " +
+                                        "(SELECT NATIONAL_ID FROM SYSADM.PS_PERS_NID WHERE NATIONAL_ID_TYPE= 'NITREC' AND EMPLID = '" + emplid + "') NIT," +
+                                        "(SELECT PNA.FIRST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "') NOMBRE_NIT, " +
+                                        "(SELECT PNA.LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "') APELLIDO_NIT, " +
+                                        "(SELECT SECOND_LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "') CASADA_NIT, " +
+                                        "(SELECT ADDRESS1 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') DIRECCION1_NIT, " +
+                                        "(SELECT ADDRESS2 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') DIRECCION2_NIT, " +
+                                        "(SELECT ADDRESS3 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') DIRECCION3_NIT, " +
+                                        "(SELECT C.DESCR FROM SYSADM.PS_ADDRESSES PA JOIN SYSADM.PS_COUNTRY_TBL C ON PA.COUNTRY = C.COUNTRY AND PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') PAIS_NIT, " +
+                                        "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') MUNICIPIO_NIT, " +
+                                        "(SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') DEPARTAMENTO_NIT, " +
+                                        "(SELECT ST.STATE FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ) STATE_NIT, " +
                                         "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, " +
                                         "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, " +
                                         "TT.TERM_BEGIN_DT, ROW_NUMBER() OVER (PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, C.DESCR PAIS " +
@@ -239,14 +253,14 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                                        //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                                        "WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                                                                                   //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
-                                                                                   //"WHERE PN.NATIONAL_ID ='2990723550101' " + // DE LEON
-                                                                                   //"WHERE PN.NATIONAL_ID ='4681531' " + // DE LEON
-                                                                                   //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián  
+                                       //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
+                                       //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
+                                       "WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
+                                                                                  //"WHERE PN.NATIONAL_ID ='2990723550101' " + // DE LEON
+                                                                                  //"WHERE PN.NATIONAL_ID ='4681531' " + // DE LEON
+                                                                                  //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián  
                                        ") WHERE CNT = 1";
-                    OracleDataReader reader = cmd.ExecuteReader();
+                    reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
                         txtCarne.Text = reader["EMPLID"].ToString();
@@ -500,7 +514,8 @@ namespace ReportesUnis
                     }
                 }
             }
-        } protected void llenadoMunicipio()
+        }
+        protected void llenadoMunicipio()
         {
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -1085,9 +1100,9 @@ namespace ReportesUnis
                                                 "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                                 "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                                 //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                                //"WHERE PN.NATIONAL_ID ='2327809510101')" +
+                                                "WHERE PN.NATIONAL_ID ='2327809510101')" +
                                                 //"WHERE PN.NATIONAL_ID ='2990723550101')" +
-                                                "WHERE PN.NATIONAL_ID ='3682754340101')" +
+                                                //"WHERE PN.NATIONAL_ID ='3682754340101')" +
                                                 "WHERE CODIGO_BARRAS=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CODIGO_BARRAS=PASAPORTE OR CODIGO_BARRAS=CEDULA " +
                                                 "ORDER BY 1 ASC";
                                 //--4681531 PASAPORTE
@@ -1542,7 +1557,6 @@ namespace ReportesUnis
                             //Numero de Telefono
                             if (ExisteFoto > 0)
                             {
-                                //TruePhone.Text = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PP.EMPLID = '" + UserEmplid.Text + "' AND PP.PHONE_TYPE='HOME'";
                                 cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE SET FOTOGRAFIA = 'Existe'" +
                                                     "WHERE CARNET = '" + txtCarne.Text + "'";
                                 cmd.ExecuteNonQuery();
@@ -1635,7 +1649,6 @@ namespace ReportesUnis
                 }
                 else
                 {
-                    //nombreRespuesta = nombreRespuesta.Replace(",", "");
                     nombreRespuesta = nombreRespuesta.TrimEnd(',');
                     largo = nombreRespuesta.Length;
 
@@ -1671,8 +1684,5 @@ namespace ReportesUnis
                 lblActualizacion.Text = "El NIT no existe";
             }
         }
-
-
-
     }
 }

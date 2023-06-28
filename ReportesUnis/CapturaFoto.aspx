@@ -32,7 +32,6 @@
         var context = canvas.getContext('2d');
         var captureBtn = document.getElementById('captureBtn');
         const textarea = document.getElementById("urlPath");
-        const textoFoto = document.getElementById("texto");
         captureBtn.addEventListener('click', function () {
             context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
             event.preventDefault();

@@ -21,7 +21,7 @@
                         <br>
                     </asp:TableCell>
                     <asp:TableCell>
-                        <asp:Image ID="ImgBase" runat="server" Width="400" Height="300" Visible="false" />
+                        <asp:Image ID="ImgBase" runat="server" Width="400" Height="300" Visible="true" />
                     </asp:TableCell>
                 </asp:TableRow>
             </asp:Table>
@@ -529,11 +529,84 @@
             <br />
             <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI"/>
             <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO"/>
-            <br />
         </div>
-        <br />
-
+       
         <asp:Table ID="TableNit" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
+            <asp:TableRow HorizontalAlign="Center">
+
+                <%-- ESPACIO 1--%>
+                <asp:TableCell Width="2%">
+                        <br />
+                </asp:TableCell>
+
+                <%-- CARNE LABEL 2--%>
+                <asp:TableCell>
+                        <br>
+                </asp:TableCell>
+
+                <%-- ESPACIO 3--%>
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
+                </asp:TableCell>
+
+                <%-- CARNE  4--%>
+                <asp:TableCell>
+                    <br>
+                </asp:TableCell>
+
+                <%-- ESPACIO 5--%>
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
+                </asp:TableCell>
+
+                <%-- FECHA DE NACIMIENTO LABEL --%>
+                <asp:TableCell>
+                    <asp:Label runat="server" Font-Bold="true">NIT*:</asp:Label> 
+                    <br />
+                    <br />
+                </asp:TableCell>
+                <%-- ESPACIO --%>
+                <asp:TableCell Width="2%">
+                       <%--<br />--%>
+                </asp:TableCell>
+                <%-- FECHA DE NACIMIENTO  --%>
+                <asp:TableCell>
+                    <br />
+                    <asp:TextBox ID="txtNit" runat="server" Enabled="true"></asp:TextBox>
+                    <br />
+                    <asp:Label runat="server" Font-Size="Small" ClientValidationFunction="VerificarCantidadTelefono" Text="El NIT no debe de contener guión (-)"></asp:Label>
+                    <br />
+                    <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" ControlToValidate="txtNit" ErrorMessage="Ingrese su NIT." ForeColor="Red"> </asp:RequiredFieldValidator>--%>
+                </asp:TableCell>
+
+                <%-- ESPACIO 9--%>
+                <asp:TableCell Width="2%">
+                    <asp:Button ID="ValidarNIT" runat="server" Text="Validar Nit" CssClass="btn-danger-unis" Enabled="true" OnClick="txtNit_TextChanged" />
+                    <br />
+                    <br />
+                </asp:TableCell>
+
+                <%-- DPI LABEL 10--%>
+                <asp:TableCell>
+                    <br>
+                </asp:TableCell>
+
+                <%-- ESPACIO 11--%>
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
+                </asp:TableCell>
+
+                <%-- DPI  12--%>
+                <asp:TableCell>
+                    <br>
+                </asp:TableCell>
+
+                <%-- ESPACIO 13--%>
+                <asp:TableCell Width="2%">
+                        <%--<br />--%>
+                </asp:TableCell>
+
+            </asp:TableRow>
             <asp:TableRow HorizontalAlign="Center">
                 <%-- 1--%>
                 <asp:TableCell Width="2%">
@@ -673,6 +746,12 @@
                 </asp:TableCell>
             </asp:TableRow>
             <asp:TableRow HorizontalAlign="Center">
+                <%-- ESPACIO 1--%>
+                <asp:TableCell Width="2%">
+                        <br />
+                </asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow HorizontalAlign="Center">
                 <%-- 1--%>
                 <asp:TableCell Width="2%">
                         <br />
@@ -738,79 +817,6 @@
                         <%--<br />--%>
                 </asp:TableCell>
             </asp:TableRow>
-            <asp:TableRow HorizontalAlign="Center">
-
-                <%-- ESPACIO 1--%>
-                <asp:TableCell Width="2%">
-                        <br />
-                </asp:TableCell>
-
-                <%-- CARNE LABEL 2--%>
-                <asp:TableCell>
-                        <br>
-                </asp:TableCell>
-
-                <%-- ESPACIO 3--%>
-                <asp:TableCell Width="2%">
-                        <%--<br />--%>
-                </asp:TableCell>
-
-                <%-- CARNE  4--%>
-                <asp:TableCell>
-                    <br>
-                </asp:TableCell>
-
-                <%-- ESPACIO 5--%>
-                <asp:TableCell Width="2%">
-                        <%--<br />--%>
-                </asp:TableCell>
-
-                <%-- FECHA DE NACIMIENTO LABEL --%>
-                <asp:TableCell>
-                    <asp:Label runat="server" Font-Bold="true">NIT*:</asp:Label> 
-                    <br />
-                    <br />
-                </asp:TableCell>
-                <%-- ESPACIO --%>
-                <asp:TableCell Width="2%">
-                       <%--<br />--%>
-                </asp:TableCell>
-                <%-- FECHA DE NACIMIENTO  --%>
-                <asp:TableCell>
-                    <br />
-                    <asp:TextBox ID="txtNit" runat="server" Enabled="true"></asp:TextBox>
-                    <br />
-                    <asp:Label runat="server" Font-Size="Small" ClientValidationFunction="VerificarCantidadTelefono" Text="El NIT no debe de contener guión (-)"></asp:Label>
-                    <br />
-                    <asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" ControlToValidate="txtNit" ErrorMessage="Ingrese su NIT." ForeColor="Red"> </asp:RequiredFieldValidator>
-                </asp:TableCell>
-
-                <%-- ESPACIO 9--%>
-                <asp:TableCell Width="2%">
-                    <asp:Button ID="ValidarNIT" runat="server" Text="Validar Nit" CssClass="btn-danger-unis" Enabled="true" OnClick="txtNit_TextChanged" />
-                </asp:TableCell>
-
-                <%-- DPI LABEL 10--%>
-                <asp:TableCell>
-                    <br>
-                </asp:TableCell>
-
-                <%-- ESPACIO 11--%>
-                <asp:TableCell Width="2%">
-                        <%--<br />--%>
-                </asp:TableCell>
-
-                <%-- DPI  12--%>
-                <asp:TableCell>
-                    <br>
-                </asp:TableCell>
-
-                <%-- ESPACIO 13--%>
-                <asp:TableCell Width="2%">
-                        <%--<br />--%>
-                </asp:TableCell>
-
-            </asp:TableRow>
         </asp:Table>
         <br />
         <asp:Table ID="tbactualizar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
@@ -841,7 +847,6 @@
             });
 
           $(document).ready(function() {
-
               var videoElement = $('#videoElement')[0];
               var canvas = $('#canvas')[0];
               var context = canvas.getContext('2d');
@@ -849,16 +854,14 @@
               var textarea = $("#urlPath");
               var imgBase = $("#<%= ImgBase.ClientID %>");
               captureBtn.on('click', function(event) {
-                context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
                 event.preventDefault();
+                context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
                 var imageData = canvas.toDataURL('image/jpeg');
                 textarea.val(imageData);
                 imgBase.attr('src', imageData);
                 canvas.hide();
               });
             });
-
-
 
         function CambiarEstadoBoton(habilitado) {
             var boton = document.getElementById('captureBtn');
