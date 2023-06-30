@@ -26,11 +26,11 @@
                 </asp:TableRow>
             </asp:Table>
             <br />
-            <canvas id="canvas" width="400" height="300" style="display:none"></canvas>
+            <canvas id="canvas" width="400" height="300" style="display: none"></canvas>
         </div>
         <div>
             <button id="captureBtn" name="captureBtn" class="btn-danger-unis">Capturar imagen</button>
-            <textarea id="urlPath" name="urlPath" style="display:none" ></textarea>
+            <textarea id="urlPath" name="urlPath" style="display: none"></textarea>
         </div>
     </div>
     <br />
@@ -50,13 +50,13 @@
         <br />
         <hr />
     </div>
-    <div id="CamposAuxiliares" runat="server" visible="true">
+    <div id="CamposAuxiliares" runat="server" visible="false">
         <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
         <asp:Label ID="UserEmplid" runat="server" Visible="false"></asp:Label>
         <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO--%>
-        <asp:Label ID="State" runat="server" Visible="false"></asp:Label>
+        <asp:TextBox ID="State" runat="server" Visible="true"></asp:TextBox>
         <%-- TEXTBOX ALMACENA EL STATE AL MOMENTO DE SELECCIONAR EL MUNICIPIO DEL NIT--%>
-        <asp:Label ID="StateNIT" runat="server" Visible="false"></asp:Label>
+        <asp:TextBox ID="StateNIT" runat="server" Visible="true"></asp:TextBox>
         <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE TELEFONO O NO--%>
         <asp:Label ID="TruePhone" runat="server" Visible="false"></asp:Label>
         <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE NIT O NO--%>
@@ -337,7 +337,7 @@
                 </asp:TableCell>
                 <%-- DIRECION LABEL 2--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true" >Dirección 1*:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
                 <asp:TableCell Width="2%">
@@ -357,7 +357,7 @@
                 </asp:TableCell>
                 <%-- DIRECION2 LABEL 6--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">Dirección 2:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true" >Dirección 2:</asp:Label> 
                 </asp:TableCell>
                 <%-- ESPACIO 7--%>
                 <asp:TableCell Width="2%">
@@ -465,7 +465,11 @@
                 </asp:TableCell>
                 <%-- TELEFONO LABEL 2--%>
                 <asp:TableCell>
+                    <br />
+                    <br />
                         <asp:Label runat="server" Font-Bold="true">Teléfono*:</asp:Label> 
+                    <br />
+                    <br />
                 </asp:TableCell>
                 <%-- ESPACIO 3--%>
                 <asp:TableCell Width="2%">
@@ -501,7 +505,11 @@
                 </asp:TableCell>
                 <%-- ESTADO CIVIL LABEL 10--%>
                 <asp:TableCell>
+                    <br />
+                    <br />
                         <asp:Label runat="server" Font-Bold="true">Estado Civil:</asp:Label> 
+                    <br />
+                    <br />
                 </asp:TableCell>
                 <%-- ESPACIO 11--%>
                 <asp:TableCell Width="2%">
@@ -509,12 +517,16 @@
                 </asp:TableCell>
                 <%-- ESTADO CIVIL DROPDOWN 12--%>
                 <asp:TableCell>
+                    <br />
+                    <br />
                     <asp:DropDownList ID="CmbEstado" runat="server" Width="220px">
                         <asp:ListItem Selected="False" Value=""></asp:ListItem>
                         <asp:ListItem>Casado</asp:ListItem>
                         <asp:ListItem>Soltero</asp:ListItem>
                         <asp:ListItem>No Consta</asp:ListItem>
                     </asp:DropDownList>
+                    <br />
+                    <br />
                 </asp:TableCell>
                 <asp:TableCell>
                         <br />
@@ -527,10 +539,10 @@
             <h5 style="text-align: center;">Información para Recibos de Pago</h5>
             <asp:Label runat="server">Desea utilizar CF:  </asp:Label>
             <br />
-            <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI"/>
-            <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO"/>
+            <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI" />
+            <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO" />
         </div>
-       
+
         <asp:Table ID="TableNit" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
             <asp:TableRow HorizontalAlign="Center">
 
@@ -691,10 +703,13 @@
 
                 <%-- 4 --%>
                 <asp:TableCell>
-                    <asp:CustomValidator ID="CustomValidator1" runat="server" ControlToValidate="TxtDiRe1" ErrorMessage="La dirección debe de tener al menos 10 caracteres" ClientValidationFunction="VerificarCantidadDireccion" ForeColor="Red" Font-Size="Small"></asp:CustomValidator>
                     <br />
-                    <asp:TextBox ID="TxtDiRe1" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px"></asp:TextBox>
-                 <br /></asp:TableCell>
+                    <asp:CustomValidator ID="CustomValidator1" runat="server" ControlToValidate="TxtDiRe1" ErrorMessage="La dirección debe de tener al menos 6 caracteres" ClientValidationFunction="VerificarCantidadDireccionNIT" ForeColor="Red" Font-Size="Small"></asp:CustomValidator>
+                    <br />
+                    <asp:TextBox ID="TxtDiRe1" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false"></asp:TextBox>
+                    <br />
+                    <br />
+                </asp:TableCell>
 
                 <%-- 5 --%>
                 <asp:TableCell Width="2%">
@@ -705,6 +720,7 @@
                 <asp:TableCell>
                     <br />
                     <asp:Label runat="server" Font-Bold="true">Dirección 2:</asp:Label> 
+                    <br />
                 </asp:TableCell>
                 <%-- 7 --%>
                 <asp:TableCell Width="2%">
@@ -713,8 +729,8 @@
                 <%-- 8 --%>
                 <asp:TableCell>
                     <br />
+                    <asp:TextBox ID="TxtDiRe2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false"></asp:TextBox>
                     <br />
-                    <asp:TextBox ID="TxtDiRe2"  runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px"></asp:TextBox>
                 </asp:TableCell>
 
                 <%-- 9 --%>
@@ -736,8 +752,7 @@
                 <%-- 12 --%>
                 <asp:TableCell>
                     <br />
-                    <br />
-                    <asp:TextBox ID="TxtDiRe3"  runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px"></asp:TextBox>
+                    <asp:TextBox ID="TxtDiRe3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false"></asp:TextBox>
                 </asp:TableCell>
 
                 <%-- 13 --%>
@@ -751,7 +766,7 @@
                         <br />
                 </asp:TableCell>
             </asp:TableRow>
-            <asp:TableRow HorizontalAlign="Center">
+            <asp:TableRow HorizontalAlign="Center" ID="Combos">
                 <%-- 1--%>
                 <asp:TableCell Width="2%">
                         <br />
@@ -846,22 +861,22 @@
                 console.error('Error al acceder a la cámara: ', error);
             });
 
-          $(document).ready(function() {
-              var videoElement = $('#videoElement')[0];
-              var canvas = $('#canvas')[0];
-              var context = canvas.getContext('2d');
-              var captureBtn = $('#captureBtn');
-              var textarea = $("#urlPath");
-              var imgBase = $("#<%= ImgBase.ClientID %>");
-              captureBtn.on('click', function(event) {
+        $(document).ready(function () {
+            var videoElement = $('#videoElement')[0];
+            var canvas = $('#canvas')[0];
+            var context = canvas.getContext('2d');
+            var captureBtn = $('#captureBtn');
+            var textarea = $("#urlPath");
+            var imgBase = $("#<%= ImgBase.ClientID %>");
+            captureBtn.on('click', function (event) {
                 event.preventDefault();
                 context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
                 var imageData = canvas.toDataURL('image/jpeg');
                 textarea.val(imageData);
                 imgBase.attr('src', imageData);
                 canvas.hide();
-              });
             });
+        });
 
         function CambiarEstadoBoton(habilitado) {
             var boton = document.getElementById('captureBtn');
@@ -878,6 +893,9 @@
             var direccion1 = document.getElementById('<%= txtDireccion.ClientID %>').value;
             var direccionR1 = document.getElementById('<%= TxtDiRe1.ClientID %>').value;
             var telefono = document.getElementById('<%= txtTelefono.ClientID %>').value;
+            var paisNit = document.getElementById('<%= CmbPaisNIT.ClientID %>').value;
+            var deptoNit = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>').value;
+            var muniNit = document.getElementById('<%= CmbMunicipioNIT.ClientID %>').value;
             var foto = document.getElementById('urlPath').value;
 
             if (apellido.trim() === "") {
@@ -898,23 +916,7 @@
                 } else {
                     mensaje = mensaje + "\n-El Nombre 1 para el recibo es requerido.";
                 }
-            }
-
-            if (nit.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-El NIT para el recibo es requerido.";
-                } else {
-                    mensaje = mensaje + "\n-El NIT para el recibo es requerido.";
-                }
-            }
-
-            if (direccionR1.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-La Dirección 1 para el recibo es requerida.";
-                } else {
-                    mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
-                }
-            }
+            }            
 
             if (direccion1.trim() === "") {
                 if (mensaje.trim() == "") {
@@ -930,15 +932,7 @@
                 } else {
                     mensaje = mensaje + "\n-La Dirección 1 debe de tener como minimo 10 caracteres.";
                 }
-            }
-
-            if (direccionR1.length > 0 && direccion1.length < 11) {
-                if (mensaje.trim() == "") {
-                    mensaje = "-La Dirección 1 para el recibo debe de tener como minimo 10 caracteres.";
-                } else {
-                    mensaje = mensaje + "\n-La Dirección 1 para el recibo debe de tener como minimo 10 caracteres.";
-                }
-            }
+            }           
 
             if (telefono.trim() === "") {
                 if (mensaje.trim() == "") {
@@ -964,6 +958,51 @@
                 }
             }
 
+            if (nit.trim() === "") {
+                if (mensaje.trim() == "") {
+                    mensaje = "-El NIT para el recibo es requerido.";
+                } else {
+                    mensaje = mensaje + "\n-El NIT para el recibo es requerido.";
+                }
+            }
+            if (paisNit.trim() === "") {
+                if (mensaje.trim() == "") {
+                    mensaje = "-El pais de la dirección para el recibo es requerido.";
+                } else {
+                    mensaje = mensaje + "\n-El pais de la dirección para el recibo es requerido.";
+                }
+            }
+            if (deptoNit.trim() === "") {
+                if (mensaje.trim() == "") {
+                    mensaje = "-El departamento de la dirección para el recibo es requerido.";
+                } else {
+                    mensaje = mensaje + "\n-El departamento de la dirección para el recibo es requerido.";
+                }
+            }
+            if (muniNit.trim() === "") {
+                if (mensaje.trim() == "") {
+                    mensaje = "-El municipio de la dirección para el recibo es requerido.";
+                } else {
+                    mensaje = mensaje + "\n-El municipio de la dirección para el recibo es requerido.";
+                }
+            }
+
+            if (direccionR1.trim() === "") {
+                if (mensaje.trim() == "") {
+                    mensaje = "-La Dirección 1 para el recibo es requerida.";
+                } else {
+                    mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
+                }
+            }
+
+            if (direccionR1.length > 0 && direccionR1.length < 6) {
+                if (mensaje.trim() == "") {
+                    mensaje = "-La Dirección 1 para el recibo debe de tener como minimo 6 caracteres.";
+                } else {
+                    mensaje = mensaje + "\n-La Dirección 1 para el recibo debe de tener como minimo 6 caracteres.";
+                }
+            }
+
             if (mensaje.trim() !== "") {
                 mensaje = mensaje.replace("/\n/g", "<br>");
                 alert(mensaje);
@@ -974,9 +1013,9 @@
             } else {
                 return false; // Cancela la acción del botón
             }
-        }       
+        }
 
-        $(document).ready(function () {
+       <%-- $(document).ready(function () {
             $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
                 if ($(this).is(':checked')) {
                     $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
@@ -990,24 +1029,99 @@
                     $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
                 }
             });
+        });--%>
+
+        $(document).ready(function () {
+            // Function to add the code
+            function RBSi() {
+                $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+                        $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+                        $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
+                        $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
+                        $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
+                        $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
+                        $('#<%= CmbPaisNIT.ClientID %>').val($('#<%= CmbPais.ClientID %>').val());
+                        $('#<%= CmbMunicipioNIT.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
+                        $('#<%= CmbDepartamentoNIT.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
+                        $('#<%= StateNIT.ClientID %>').val($('#<%= State.ClientID %>').val());
+                        $('#<%= txtNit.ClientID %>').val('CF');
+                        $('#<%= txtNit.ClientID %>').prop('disabled', true);
+                        $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
+                        $('#<%= TxtDiRe1.ClientID %>').prop('disabled', true);
+                        $('#<%= TxtDiRe2.ClientID %>').prop('disabled', true);
+                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', true);
+
+                        // Hacer visible la fila Combos
+                        $('#<%= Combos.ClientID %>').hide();
+                    }
+                });
+            }
+
+            // Call the function
+            RBSi();
         });
 
         $(document).ready(function () {
-            $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
+            // Capturar el cambio de estado del RadioButton
+            $('#<%= RadioButtonNombreSi.ClientID %>').change(function () {
                 if ($(this).is(':checked')) {
-                    $('#<%= TxtNombreR.ClientID %>').val("");
-                    $('#<%= TxtApellidoR.ClientID %>').val("");
-                    $('#<%= TxtCasadaR.ClientID %>').val("");                    
-                    $('#<%= txtNit.ClientID %>').val("");   
-                    $('#<%= TxtDiRe1.ClientID %>').val("");
-                    $('#<%= TxtDiRe2.ClientID %>').val("");
-                    $('#<%= TxtDiRe3.ClientID %>').val("");           
-                    $('#<%= txtNit.ClientID %>').prop('disabled', false);
-                    $('#<%= ValidarNIT.ClientID %>').prop('disabled', false);
+                    // El RadioButton ha sido marcado, ocultar la fila
+                    $('#<%= Combos.ClientID %>').hide();
+                } else {
+                    // El RadioButton ha sido desmarcado, mostrar la fila
+                    $('#<%= Combos.ClientID %>').show();
                 }
             });
+
+            // Verificar el estado inicial del RadioButton al cargar la página
+            if ($('#<%= RadioButtonNombreSi.ClientID %>').is(':checked')) {
+                // El RadioButton está marcado, ocultar la fila
+                $('#<%= Combos.ClientID %>').hide();
+            } else {
+                // El RadioButton no está marcado, mostrar la fila
+                $('#<%= Combos.ClientID %>').show();
+            }
         });
-        
+
+
+
+
+        $(document).ready(function () {
+            // Function to add the code
+            function RBNo() {
+                $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        $('#<%= TxtNombreR.ClientID %>').val("");
+                        $('#<%= TxtApellidoR.ClientID %>').val("");
+                        $('#<%= TxtCasadaR.ClientID %>').val("");
+                        $('#<%= txtNit.ClientID %>').val("");
+                        $('#<%= TxtDiRe1.ClientID %>').val("");
+                        $('#<%= TxtDiRe2.ClientID %>').val("");
+                        $('#<%= TxtDiRe3.ClientID %>').val("");
+                        $('#<%= CmbPaisNIT.ClientID %>').val("");
+                        $('#<%= CmbDepartamentoNIT.ClientID %>').val("");
+                        $('#<%= CmbMunicipioNIT.ClientID %>').val("");
+                        $('#<%= StateNIT.ClientID %>').val("");
+                        $('#<%= txtNit.ClientID %>').prop('disabled', false);
+                        $('#<%= ValidarNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= TxtDiRe1.ClientID %>').prop('disabled', false);
+                        $('#<%= TxtDiRe2.ClientID %>').prop('disabled', false);
+                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', false);
+                        // Hacer visible la fila Combos
+                        $('#<%= Combos.ClientID %>').show();
+
+                    }
+                });
+            }
+
+            // Call the function
+            RBNo();
+
+        });
+
+
 
         $(document).ready(function () {
             $('#<%= txtNombre.ClientID %> , #<%= txtApellido.ClientID %>').on('input', function () {
@@ -1030,6 +1144,10 @@
 
         function VerificarCantidadDireccion(sender, args) {
             args.IsValid = (args.Value.length >= 9 && args.Value.length >= 1);
+        }
+
+        function VerificarCantidadDireccionNIT(sender, args) {
+            args.IsValid = (args.Value.length >= 5 && args.Value.length >= 1);
         }
     </script>
     <script src="Scripts/UNIS/Unis.js"></script>

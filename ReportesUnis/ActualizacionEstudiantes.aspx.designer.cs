@@ -93,7 +93,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label State;
+        protected global::System.Web.UI.WebControls.TextBox State;
 
         /// <summary>
         /// Control StateNIT.
@@ -102,7 +102,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label StateNIT;
+        protected global::System.Web.UI.WebControls.TextBox StateNIT;
 
         /// <summary>
         /// Control TruePhone.
@@ -670,6 +670,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxtDiRe3;
+
+        /// <summary>
+        /// Control Combos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TableRow Combos;
 
         /// <summary>
         /// Control CmbPaisNIT.

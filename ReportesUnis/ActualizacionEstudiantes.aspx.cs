@@ -78,20 +78,26 @@ namespace ReportesUnis
                         LeerInfoTxtPath();
                         llenadoPais();
                         llenadoPaisnit();
+                        llenadoDepartamento();
+                        llenadoDepartamentoNit();
+                        llenadoState();
+                        llenadoStateNIT();
                         mostrarInformación();
                         if (txtNit.Text == "CF")
                         {
                             txtNit.Enabled = false;
                             RadioButtonNombreSi.Checked = true;
+                            //Combos.Visible = false;
+
                         }
                         else
                         {
                             RadioButtonNombreNo.Checked = true;
+                            TxtDiRe1.Enabled = true;
+                            TxtDiRe2.Enabled = true;
+                            TxtDiRe3.Enabled = true;
                         }
-                        llenadoDepartamento();
-                        llenadoDepartamentoNit();
-                        llenadoState();
-                        llenadoStateNIT();
+
                         /*AlmacenarFotografia();
                         fotoAlmacenada();*/
 
@@ -171,7 +177,7 @@ namespace ReportesUnis
             tbactualizar.Visible = false;
             InfePersonal.Visible = false;
         }
-        
+
         private void mostrarInformación()
         {
             string constr = TxtURL.Text;
@@ -193,7 +199,9 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT EMPLID FROM SYSADM.PS_PERS_NID PN " +
                         //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                        "WHERE PN.NATIONAL_ID ='2327809510101'";
+                        "WHERE PN.NATIONAL_ID ='4681531'";
+                    //"WHERE PN.NATIONAL_ID ='2327809510101'";
+                    //"WHERE PN.NATIONAL_ID ='3682754340101' ";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -202,7 +210,7 @@ namespace ReportesUnis
 
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT APELLIDO_NIT, NOMBRE_NIT, CASADA_NIT, NIT, PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO, " +
-                                        "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, CNT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT FROM ( " +
+                                        "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, CNT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT, STATE FROM ( " +
                                         "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, " +
                                         "PD.LAST_NAME, PD.SECOND_LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
                                         "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
@@ -255,10 +263,9 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                                        //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
                                        //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                                       "WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
-                                                                                  //"WHERE PN.NATIONAL_ID ='2990723550101' " + // DE LEON
-                                                                                  //"WHERE PN.NATIONAL_ID ='4681531' " + // DE LEON
-                                                                                  //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián  
+                                       "WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
+                                                                            //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
+                                                                            //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián 
                                        ") WHERE CNT = 1";
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -275,6 +282,8 @@ namespace ReportesUnis
                         TxtCasadaR.Text = reader["CASADA_NIT"].ToString();
                         txtNit.Text = reader["NIT"].ToString();
                         TrueNit.Text = reader["NIT"].ToString();
+                        State.Text = reader["STATE"].ToString();
+                        StateNIT.Text = reader["STATE_NIT"].ToString();
                         largoApellido = txtAInicial.Text.Length;// + " " + posicion.ToString();
 
                         if ((txtApellido.Text.Substring(0, 5)).ToUpper().Equals("DE LA"))
@@ -352,6 +361,11 @@ namespace ReportesUnis
                         txtFacultad.Text = reader2["NOMBRE_COMPLETO"].ToString();
                     }
                     con.Close();
+
+                    /*if (txtNit.Text == "CF")
+                    {
+                        Combos.Visible = false;
+                    }*/
                     fotoAlmacenada();
                 }
             }
@@ -483,6 +497,36 @@ namespace ReportesUnis
                 }
             }
         }
+
+        protected void DeptoCF()
+        {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO " +
+                        "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO FROM SYSADM.PS_STATE_TBL ST  " +
+                        "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
+                        "WHERE ST=STATE ='" + State.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL  " +
+                        "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+
+                    try
+                    {
+                        CmbDepartamentoNIT.DataTextField = "DEPARTAMENTO";
+                        CmbMunicipioNIT.DataTextField = "MUNICIPIO";
+                        con.Close();
+                    }
+                    catch (Exception)
+                    {
+                        CmbDepartamentoNIT.DataTextField = "";
+                        CmbMunicipioNIT.DataValueField = "";
+                    }
+                }
+            }
+        }
         protected void llenadoMunicipioNIT()
         {
             string constr = TxtURL.Text;
@@ -493,18 +537,27 @@ namespace ReportesUnis
                 {
                     try
                     {
-                        cmd.Connection = con;
-                        cmd.CommandText = "SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
-                        "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamentoNIT.SelectedValue + "') " +
-                        "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
-                        OracleDataAdapter adapter = new OracleDataAdapter(cmd);
-                        DataSet ds = new DataSet();
-                        adapter.Fill(ds);
-                        CmbMunicipioNIT.DataSource = ds;
-                        CmbMunicipioNIT.DataTextField = "MUNICIPIO";
-                        CmbMunicipioNIT.DataValueField = "MUNICIPIO";
-                        CmbMunicipioNIT.DataBind();
-                        con.Close();
+                        if (!String.IsNullOrEmpty(CmbDepartamentoNIT.SelectedValue.ToString()))
+                        {
+                            cmd.Connection = con;
+                            cmd.CommandText = "SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
+                            "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamentoNIT.SelectedValue + "') " +
+                            "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
+                            OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                            DataSet ds = new DataSet();
+                            adapter.Fill(ds);
+                            CmbMunicipioNIT.DataSource = ds;
+                            CmbMunicipioNIT.DataTextField = "MUNICIPIO";
+                            CmbMunicipioNIT.DataValueField = "MUNICIPIO";
+                            CmbMunicipioNIT.DataBind();
+                            con.Close();
+                        }
+                        else
+                        {
+                            CmbMunicipioNIT.DataSource = "-";
+                            CmbMunicipioNIT.DataTextField = "-";
+                            CmbMunicipioNIT.DataValueField = "-";
+                        }
                     }
                     catch (Exception)
                     {
@@ -743,54 +796,64 @@ namespace ReportesUnis
         {
 
             int contador = 0;
-            if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
+            if (Combos.Visible)
             {
-                txtAccion.Text = "1";
-                txtTipoAccion.Text = "1.1";
-                txtConfirmacion.Text = "02"; //VALIDACIÓN DE FOTOGRAFÍA
-                if (String.IsNullOrEmpty(txtNit.Text))
+                if (!CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
                 {
-                    txtNit.Text = "CF";
-                }
-                if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text) && !String.IsNullOrEmpty(TxtNombreR.Text) && !String.IsNullOrEmpty(TxtApellidoR.Text))
-                {
-                    IngresoDatos();
-                }
-                else
-                {
-                    mensaje = "No puede enviarse información vacía y es necesario seleccionar el estado civil, un país y también ingresar un departamento y un muncipio";
-                }
-            }
-            else
-            {
-                if (FileUpload2.HasFile)
-                {
-                    foreach (HttpPostedFile uploadedFile in FileUpload2.PostedFiles)
+                    if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
                     {
-                        contador++;
-                        string nombreArchivo = txtCarne.Text + "(" + contador + ").jpg";
-                        string ruta = CurrentDirectory + "/Usuarios/DPI/" + nombreArchivo;
-                        uploadedFile.SaveAs(ruta);
-                    }
-                    txtAccion.Text = "1";
-                    txtTipoAccion.Text = "1.1";
-                    txtConfirmacion.Text = "01"; //Requiere confirmación de operador 
-                    txtCantidadImagenesDpi.Text = contador.ToString();
-                    IngresoDatos();
-                }
-                else
-                {
-                    if (CargaDPI.Style["display"] == "block")
-                    {
-                        mensaje = "Es necesario adjuntar sus fotografías para continuar con la actualización.";
+                        txtAccion.Text = "1";
+                        txtTipoAccion.Text = "1.1";
+                        txtConfirmacion.Text = "02"; //VALIDACIÓN DE FOTOGRAFÍA
+                        if (String.IsNullOrEmpty(txtNit.Text))
+                        {
+                            txtNit.Text = "CF";
+                        }
+                        if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text) && !String.IsNullOrEmpty(TxtNombreR.Text) && !String.IsNullOrEmpty(TxtApellidoR.Text))
+                        {
+                            IngresoDatos();
+                        }
+                        else
+                        {
+                            mensaje = "No puede enviarse información vacía y es necesario seleccionar el estado civil, un país y también ingresar un departamento y un muncipio";
+                        }
                     }
                     else
                     {
-                        mensaje = ".";
-                        CargaDPI.Style["display"] = "block";
-                        //CargaDPI.Visible = true;
-                    }
+                        if (FileUpload2.HasFile)
+                        {
+                            foreach (HttpPostedFile uploadedFile in FileUpload2.PostedFiles)
+                            {
+                                contador++;
+                                string nombreArchivo = txtCarne.Text + "(" + contador + ").jpg";
+                                string ruta = CurrentDirectory + "/Usuarios/DPI/" + nombreArchivo;
+                                uploadedFile.SaveAs(ruta);
+                            }
+                            txtAccion.Text = "1";
+                            txtTipoAccion.Text = "1.1";
+                            txtConfirmacion.Text = "01"; //Requiere confirmación de operador 
+                            txtCantidadImagenesDpi.Text = contador.ToString();
+                            IngresoDatos();
+                        }
+                        else
+                        {
+                            if (CargaDPI.Style["display"] == "block")
+                            {
+                                mensaje = "Es necesario adjuntar sus fotografías para continuar con la actualización.";
+                            }
+                            else
+                            {
+                                mensaje = ".";
+                                CargaDPI.Style["display"] = "block";
+                                //CargaDPI.Visible = true;
+                            }
 
+                        }
+                    }
+                }
+                else
+                {
+                    mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
                 }
             }
             return mensaje;
@@ -1100,7 +1163,8 @@ namespace ReportesUnis
                                                 "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                                 "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                                 //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                                "WHERE PN.NATIONAL_ID ='2327809510101')" +
+                                                "WHERE PN.NATIONAL_ID ='4681531')" +
+                                                //"WHERE PN.NATIONAL_ID ='2327809510101')" +
                                                 //"WHERE PN.NATIONAL_ID ='2990723550101')" +
                                                 //"WHERE PN.NATIONAL_ID ='3682754340101')" +
                                                 "WHERE CODIGO_BARRAS=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CODIGO_BARRAS=PASAPORTE OR CODIGO_BARRAS=CEDULA " +
@@ -1123,6 +1187,12 @@ namespace ReportesUnis
                                     txtDireccion2.Text = " ";
                                 if (String.IsNullOrEmpty(txtDireccion3.Text))
                                     txtDireccion3.Text = " ";
+                                if (String.IsNullOrEmpty(StateNIT.Text))
+                                    StateNIT.Text = " ";
+                                if (String.IsNullOrEmpty(TxtDiRe2.Text))
+                                    TxtDiRe2.Text = " ";
+                                if (String.IsNullOrEmpty(TxtDiRe3.Text))
+                                    TxtDiRe3.Text = " ";
                                 if (String.IsNullOrEmpty(txtCasada.Text))
                                     txtCasada.Text = " ";
                                 if (String.IsNullOrEmpty(TxtCasadaR.Text))
@@ -1131,6 +1201,16 @@ namespace ReportesUnis
                                     TxtApellidoR.Text = " ";
                                 if (String.IsNullOrEmpty(TxtNombreR.Text))
                                     TxtNombreR.Text = " ";
+                                if (RadioButtonNombreSi.Checked)
+                                {
+                                    TxtNombreR.Text = txtNombre.Text;
+                                    TxtApellidoR.Text = txtApellido.Text;
+                                    TxtCasadaR.Text = txtCasada.Text;
+                                    TxtDiRe1.Text = txtDireccion.Text;
+                                    TxtDiRe2.Text = txtDireccion2.Text;
+                                    TxtDiRe3.Text = txtDireccion3.Text;
+                                    txtNit.Text = "CF";
+                                }
                                 //Telefono y direccion
                                 cmd.Connection = con;
                                 cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_DATA PPD SET PPD.PHONE = '" + txtTelefono.Text + "', PPD.STATE =  '" + State.Text + "', " +
@@ -1207,6 +1287,7 @@ namespace ReportesUnis
                                         "A.ADDRESS3 = '" + TxtDiRe3.Text + "', " +
                                         "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
                                         "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='REC'";
+                                    cmd.ExecuteNonQuery();
                                 }
                                 else
                                 {
@@ -1243,6 +1324,7 @@ namespace ReportesUnis
                                 mensaje = "Su información fue actualizada correctamente";
                                 FileUpload2.Visible = false;
                                 CargaDPI.Visible = false;
+                                mostrarInformación();
                             }
                             catch (Exception x)
                             {
@@ -1271,23 +1353,34 @@ namespace ReportesUnis
         protected void BtnActualizar_Click(object sender, EventArgs e)
         {
             string informacion = actualizarInformacion();
+
             if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text))
             {
-                if ((informacion != "No puede enviarse información vacía y es necesario seleccionar el estado civil, un país, un departamento y un muncipio" || informacion != "No puede enviarse información vacía y es necesario cargar una fotografía, seleccionar el estado civil, un país, un departamento y un muncipio") && txtNInicial.Text == txtNombre.Text && txtAInicial.Text == txtApellido.Text && txtCInicial.Text == txtCasada.Text)
+                if (Combos.Visible)
                 {
-                    informacion = informacion + Upload(Request.Form["urlPath"]);
-                }
-                else if (txtNInicial.Text != txtNombre.Text || txtAInicial.Text != txtApellido.Text || txtCInicial.Text != txtCasada.Text)
-                {
-                    if (FileUpload2.HasFiles)
+                    if (!CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
                     {
-                        informacion = informacion + Upload(Request.Form["urlPath"]);
+                         if ((informacion != "No puede enviarse información vacía y es necesario seleccionar el estado civil, un país, un departamento y un muncipio" || informacion != "No puede enviarse información vacía y es necesario cargar una fotografía, seleccionar el estado civil, un país, un departamento y un muncipio") && txtNInicial.Text == txtNombre.Text && txtAInicial.Text == txtApellido.Text && txtCInicial.Text == txtCasada.Text)
+                         {
+                             informacion = informacion + Upload(Request.Form["urlPath"]);
+                         }
+                         else if (txtNInicial.Text != txtNombre.Text || txtAInicial.Text != txtApellido.Text || txtCInicial.Text != txtCasada.Text)
+                         {
+                             if (FileUpload2.HasFiles)
+                             {
+                                 informacion = informacion + Upload(Request.Form["urlPath"]);
+                             }
+                         }
+                         lblActualizacion.Text = informacion;
+                    }
+                    else
+                    {
+                        lblActualizacion.Text = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
                     }
                 }
-                lblActualizacion.Text = informacion;
             }
-
         }
+
         protected string Upload(string ImagenData)
         {
             string mensaje = "";
@@ -1524,6 +1617,7 @@ namespace ReportesUnis
 
         private string consultaNit(string nit)
         {
+            
             var credenciales = "d39c940b-c65f-4502-8a94-f1d9109076ab";
             var body = "{\"Credenciales\" : \"" + credenciales + "\",\"NIT\":\"" + nit + "\"}";
             string respuesta = api.PostNit("https://felaupar.azurewebsites.net/api/NIT?code=Cw1Olqw4rH0EyEgZdqLD9gQqy62AF5FpAfuBL5spyZoajzNGjhme4A==&Credenciales=d39c940b-c65f-4502-8a94-f1d9109076ab", body);
@@ -1563,7 +1657,7 @@ namespace ReportesUnis
                             }
                             else
                             {
-                                cmd.CommandText = "INSERT UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE (FOTOGRAFIA, CARNET) VALUES ('Existe', '" + txtCarne.Text + "')";
+                                cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE (FOTOGRAFIA, CARNET) VALUES ('Existe', '" + txtCarne.Text + "')";
                                 cmd.ExecuteNonQuery();
                             }
 
@@ -1676,6 +1770,8 @@ namespace ReportesUnis
                 }
 
                 lblActualizacion.Text = "";
+                AlmacenarFotografia();
+                fotoAlmacenada();
             }
             else
             {
@@ -1684,5 +1780,39 @@ namespace ReportesUnis
                 lblActualizacion.Text = "El NIT no existe";
             }
         }
+
+        /*protected void RadioButtonNombreSi_CheckedChanged(object sender, EventArgs e)
+        {
+            AlmacenarFotografia();
+            Thread.Sleep(1000);
+            llenadoDepartamentoNit();
+            llenadoMunicipioNIT();
+            llenadoStateNIT();
+            fotoAlmacenada();
+
+            CmbDepartamentoNIT.Text = CmbDepartamento.Text;
+            CmbMunicipioNIT.Text = CmbMunicipio.Text;
+
+            // Ejecutar código JavaScript en el lado del cliente
+            string script = @"
+                $(document).ready(function () {
+                    $('#<%= RadioButtonNombreSi.ClientID %>').prop('checked', false); // Desmarcar el radio button
+                    $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+                    $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+                    $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
+                    $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
+                    $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
+                    $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
+                    $('#<%= txtNit.ClientID %>').val('CF');
+                    $('#<%= txtNit.ClientID %>').prop('disabled', true);
+                    $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
+                });
+            ";
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "RadioButtonNombreSiScript", script, true);
+
+
+        }*/
+
     }
 }
