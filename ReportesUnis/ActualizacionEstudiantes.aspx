@@ -542,8 +542,8 @@
             <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI" OnCheckedChanged="RadioButtonNombreSi_CheckedChanged" />
             <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO" />
         </div>
-        <asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional" >
-            <ContentTemplate>
+        <%--<asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional" >
+            <ContentTemplate>--%>
                 <asp:Table ID="TableNit" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
                     <asp:TableRow HorizontalAlign="Center">
 
@@ -843,8 +843,8 @@
                         </asp:TableCell>
                     </asp:TableRow>
                 </asp:Table>
-            </ContentTemplate>
-        </asp:UpdatePanel>
+<%--            </ContentTemplate>
+        </asp:UpdatePanel>--%>
     </div>
     <div style="margin-left: auto; margin-right: auto; text-align: center;">
         <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 

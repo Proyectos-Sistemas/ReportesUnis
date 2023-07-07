@@ -1839,7 +1839,7 @@ namespace ReportesUnis
                 fotoAlmacenada();
                 CargaDPI.Visible = true;
 
-                UpdatePanel1.Update();
+                //UpdatePanel1.Update();
             }
             else
             {
