@@ -389,6 +389,7 @@
 
                 <%-- ESPACIO 6--%>
                 <asp:TableCell>
+                        <asp:Label runat="server" Font-Bold="true">ESTADO CIVIL:</asp:Label> 
                 </asp:TableCell>
 
                 <%-- ESPACIO 7--%>
@@ -397,6 +398,7 @@
 
                 <%-- ESPACIO 8 --%>
                 <asp:TableCell>
+                        <asp:TextBox ID="TxtEstado" runat="server" Enabled="false" Width="200px"></asp:TextBox>
                 </asp:TableCell>
 
                 <%-- ESPACIO 9--%>
@@ -405,7 +407,7 @@
 
                 <%-- ESPACIO 10--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">ESTADO CIVIL:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">DIRECCION:</asp:Label> 
                 </asp:TableCell>
 
                 <%-- ESPACIO 11--%>
@@ -414,7 +416,7 @@
 
                 <%-- ESPACIO  12--%>
                 <asp:TableCell>
-                        <asp:TextBox ID="TxtEstado" runat="server" Enabled="false" Width="200px"></asp:TextBox>
+                        <asp:TextBox ID="TxtDireccion" runat="server" Enabled="false" Width="200px"></asp:TextBox>
                 </asp:TableCell>
 
                 <%-- ESPACIO 13 .--%>
@@ -431,7 +433,7 @@
 
                 <%-- ESPACIO 2--%>
                 <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">DIRECCION:</asp:Label> 
+                        <asp:Label runat="server" Font-Bold="true">PAIS:</asp:Label> 
                 </asp:TableCell>
                 
                 <%-- ESPACIO 3--%>
@@ -441,7 +443,7 @@
                 
                 <%-- ESPACIO 4--%>
                 <asp:TableCell>
-                        <asp:TextBox ID="TxtDireccion" runat="server" Enabled="false" Width="200px"></asp:TextBox>
+                        <asp:TextBox ID="TxtPais" runat="server" Enabled="false" Width="200px"></asp:TextBox>
                 </asp:TableCell>
 
                 <%-- ESPACIO 5--%>
@@ -560,11 +562,11 @@
             <asp:TableRow>                
                 <%-- ESPACIO 2.1--%>
                 <asp:TableCell>
-                    <asp:Button ID="BtnConfirmar" runat="server" Text="Confirmar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnConfirmar_Click" />
+                    <asp:Button ID="BtnConfirmar" runat="server" Text="Confirmar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlertaAceptar();" OnClick="BtnConfirmar_Click" />
                 </asp:TableCell>
                 <%-- ESPACIO 2.2--%>
                 <asp:TableCell>
-                    <asp:Button ID="BtnRechazar" runat="server" Text="Rechazar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnRechazar_Click"/>
+                    <asp:Button ID="BtnRechazar" runat="server" Text="Rechazar" CssClass="btn-danger-unis" Enabled="true"  OnClientClick="return mostrarAlertaRechazo();" OnClick="BtnRechazar_Click"/>
                 </asp:TableCell>
             </asp:TableRow>
             <asp:TableRow>                
@@ -586,7 +588,7 @@
             <asp:TableRow>                
                 <%-- ESPACIO 2.1--%>
                 <asp:TableCell>
-                    <asp:Button ID="BtnGenerar" runat="server" Text="Generar Renovación" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnGenerar_Click" />
+                    <asp:Button ID="BtnGenerar" runat="server" Text="Generar Renovación" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlertaGenerar();" OnClick="BtnGenerar_Click" />
                 </asp:TableCell>
             </asp:TableRow>
             <asp:TableRow>                
@@ -601,5 +603,34 @@
             <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
             </asp:Label>
     </div>
+
+    <script>
+        function mostrarAlertaRechazo() {
+            if (confirm("¿Está seguro de que desea rechazar la información?")) {
+                __doPostBack('<%= BtnRechazar.ClientID %>', '');
+                return true; // Permite continuar con la acción del botón
+            } else {
+                return false; // Cancela la acción del botón
+            }
+        }
+
+        function mostrarAlertaAceptar() {
+            if (confirm("¿Está seguro de que desea confirmar la información?")) {
+                __doPostBack('<%= BtnConfirmar.ClientID %>', '');
+                return true; // Permite continuar con la acción del botón
+            } else {
+                return false; // Cancela la acción del botón
+            }
+        }
+        function mostrarAlertaGenerar() {
+            if (confirm("¿Está seguro de que desea generar nuevamente la información?")) {
+                __doPostBack('<%= BtnGenerar.ClientID %>', '');
+                return true; // Permite continuar con la acción del botón
+            } else {
+                return false; // Cancela la acción del botón
+            }
+        }
+
+    </script>
 
 </asp:Content>

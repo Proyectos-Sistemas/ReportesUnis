@@ -78,7 +78,7 @@ namespace ReportesUnis
         protected void CmbTipo_SelectedIndexChanged(object sender, EventArgs e)
         {
             llenado("CARNET = '" + CmbCarne.Text + "'");
-            if (txtCantidad.Text != "0" && !txtCantidad.Text.IsNullOrWhiteSpace() )
+            if (txtCantidad.Text != "0" && !txtCantidad.Text.IsNullOrWhiteSpace())
             {
                 for (int i = 0; i < Convert.ToInt32(txtCantidad.Text); i++)
                 {
@@ -86,12 +86,12 @@ namespace ReportesUnis
                     if (i == 0)
                     {
                         ImgDPI1.Visible = true;
-                        ImgDPI1.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "("+(i+1)+").jpg";
+                        ImgDPI1.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(" + (i + 1) + ").jpg";
                     }
                     if (i == 1)
                     {
                         ImgDPI2.Visible = true;
-                        ImgDPI2.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "("+(i+1)+").jpg";
+                        ImgDPI2.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(" + (i + 1) + ").jpg";
                     }
                 }
                 if (txtCantidad.Text == "1")
@@ -171,11 +171,11 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT ' ' CUI,' ' NOMBRE1,' ' NOMBRE2,' ' APELLIDO1,' ' APELLIDO2,' ' DECASADA,' ' CARGO," +
                         "' ' FACULTAD,' ' CELULAR,' ' FECHANAC,' ' ESTADO_CIVIL,' ' DIRECCION,' ' DEPTO_RESIDENCIA,' ' MUNI_RESIDENCIA, ' ' TOTALFOTOS, " +
-                        "' ' NOMBRE_NIT,' ' APELLIDOS_NIT,' ' CASADA_NIT,' ' DIRECCION1_NIT,' ' DIRECCION2_NIT,' ' DIRECCION3_NIT, ' ' STATE_NIT , ' ' PAIS_NIT FROM DUAL UNION " +
+                        "' ' NOMBRE_NIT,' ' APELLIDOS_NIT,' ' CASADA_NIT,' ' DIRECCION1_NIT,' ' DIRECCION2_NIT,' ' DIRECCION3_NIT, ' ' STATE_NIT , ' ' PAIS_NIT, ' ' PAIS_R FROM DUAL UNION " +
                         "SELECT NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, NOMBRE1, NOMBRE2, APELLIDO1, APELLIDO2, DECASADA, CARGO, FACULTAD, CELULAR, FECHANAC, " +
                         "CASE WHEN ESTADO_CIVIL = 1 THEN 'SOLTERO' WHEN ESTADO_CIVIL ='2' THEN 'CASADO' ELSE '' END ESTADO_CIVIL, DIRECCION, " +
                         "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS, NOMBRE_NIT, APELLIDOS_NIT, CASADA_NIT, DIRECCION1_NIT, " +
-                        "DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_NIT FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE " + where + " AND TIPO_PERSONA = 2";
+                        "DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_NIT, PAIS_R FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE " + where + " AND TIPO_PERSONA = 2";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -202,6 +202,7 @@ namespace ReportesUnis
                         TxtDiRe3 = reader["DIRECCION3_NIT"].ToString();
                         StateNit = reader["STATE_NIT"].ToString();
                         PaisNit = reader["PAIS_NIT"].ToString();
+                        TxtPais.Text = reader["PAIS_R"].ToString();
                     }
                     con.Close();
                 }
@@ -247,6 +248,7 @@ namespace ReportesUnis
             ImgDPI1.ImageUrl = null;
             ImgFoto1.ImageUrl = null;
             txtCantidad.Text = null;
+            TxtPais.Text = null;
         }
 
         private void Rechazar(string Carnet)
@@ -680,13 +682,13 @@ namespace ReportesUnis
                                         "(SELECT PNA.FIRST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID=PD.EMPLID) NOMBRE_NIT, " +
                                         "(SELECT PNA.LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID=PD.EMPLID) APELLIDO_NIT, " +
                                         "(SELECT SECOND_LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID=PD.EMPLID) CASADA_NIT, " +
-                                        "(SELECT ADDRESS1 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DIRECCION1_NIT, " +
-                                        "(SELECT ADDRESS2 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DIRECCION2_NIT, " +
-                                        "(SELECT ADDRESS3 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DIRECCION3_NIT, " +
-                                        "(SELECT C.DESCR FROM SYSADM.PS_ADDRESSES PA JOIN SYSADM.PS_COUNTRY_TBL C ON PA.COUNTRY = C.COUNTRY AND PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) PAIS_NIT, " +
+                                        "(SELECT ADDRESS1 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID=PD.EMPLID) DIRECCION1_NIT, " +
+                                        "(SELECT ADDRESS2 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID=PD.EMPLID) DIRECCION2_NIT, " +
+                                        "(SELECT ADDRESS3 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID=PD.EMPLID) DIRECCION3_NIT, " +
+                                        "(SELECT C.DESCR FROM SYSADM.PS_ADDRESSES PA JOIN SYSADM.PS_COUNTRY_TBL C ON PA.COUNTRY = C.COUNTRY AND PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID=PD.EMPLID) PAIS_NIT, " +
                                         "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) MUNICIPIO_NIT, " +
-                                        "(SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID) DEPARTAMENTO_NIT, " +
-                                        "(SELECT ST.STATE FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PN.EMPLID=PD.EMPLID ) STATE_NIT, " +
+                                        "(SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID=PD.EMPLID) DEPARTAMENTO_NIT, " +
+                                        "(SELECT ST.STATE FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID=PD.EMPLID ) STATE_NIT, " +
                                         "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, " +
                                         "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, " +
                                         "TT.TERM_BEGIN_DT, ROW_NUMBER() OVER (PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, C.DESCR PAIS " +
@@ -721,8 +723,8 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                                        //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                                        "WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda  
+                                        "WHERE PN.NATIONAL_ID ='" + TxtDpi.Text + "' " + //---1581737080101
+                                                                                         //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda  
                                        ") WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -732,27 +734,27 @@ namespace ReportesUnis
 
                     try
                     {
+                        cmd.Connection = con;
+                        cmd.CommandText =
+                            "SELECT NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, NOMBRE1, NOMBRE2, APELLIDO1, APELLIDO2, DECASADA, CARGO, FACULTAD, CELULAR, FECHANAC, " +
+                            "CASE WHEN ESTADO_CIVIL = 1 THEN 'SOLTERO' WHEN ESTADO_CIVIL ='2' THEN 'CASADO' ELSE '' END ESTADO_CIVIL, DIRECCION, " +
+                            "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS, NOMBRE_NIT, APELLIDOS_NIT, CASADA_NIT, DIRECCION1_NIT, " +
+                            "DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_NIT, NIT FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + emplid + "' AND TIPO_PERSONA = 2";
+                        OracleDataReader reader2 = cmd.ExecuteReader();
+                        while (reader2.Read())
+                        {
+                            TxtNombreR = reader2["NOMBRE_NIT"].ToString();
+                            TxtApellidoR = reader2["APELLIDOS_NIT"].ToString();
+                            TxtCasadaR = reader2["CASADA_NIT"].ToString();
+                            TxtDiRe1 = reader2["DIRECCION1_NIT"].ToString();
+                            TxtDiRe2 = reader2["DIRECCION2_NIT"].ToString();
+                            TxtDiRe3 = reader2["DIRECCION3_NIT"].ToString();
+                            StateNit = reader2["STATE_NIT"].ToString();
+                            PaisNit = reader2["PAIS_NIT"].ToString();
+                            NIT = reader2["NIT"].ToString();
+                        }
                         if (!String.IsNullOrEmpty(existeNit))
                         {
-                            cmd.Connection = con;
-                            cmd.CommandText =
-                                "SELECT NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, NOMBRE1, NOMBRE2, APELLIDO1, APELLIDO2, DECASADA, CARGO, FACULTAD, CELULAR, FECHANAC, " +
-                                "CASE WHEN ESTADO_CIVIL = 1 THEN 'SOLTERO' WHEN ESTADO_CIVIL ='2' THEN 'CASADO' ELSE '' END ESTADO_CIVIL, DIRECCION, " +
-                                "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS, NOMBRE_NIT, APELLIDOS_NIT, CASADA_NIT, DIRECCION1_NIT, " +
-                                "DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_NIT, NIT FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + emplid + "' AND TIPO_PERSONA = 2";
-                            OracleDataReader reader2 = cmd.ExecuteReader();
-                            while (reader2.Read())
-                            {
-                                TxtNombreR = reader2["NOMBRE_NIT"].ToString();
-                                TxtApellidoR = reader2["APELLIDOS_NIT"].ToString();
-                                TxtCasadaR = reader2["CASADA_NIT"].ToString();
-                                TxtDiRe1 = reader2["DIRECCION1_NIT"].ToString();
-                                TxtDiRe2 = reader2["DIRECCION2_NIT"].ToString();
-                                TxtDiRe3 = reader2["DIRECCION3_NIT"].ToString();
-                                StateNit = reader2["STATE_NIT"].ToString();
-                                PaisNit = reader2["PAIS_NIT"].ToString();
-                                NIT = reader2["NIT"].ToString();
-                            }
 
 
                             //ACTUALIZA NOMBRE DEL NIT
