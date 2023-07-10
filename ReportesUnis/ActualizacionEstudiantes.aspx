@@ -540,310 +540,313 @@
             <asp:Label runat="server">Desea utilizar CF:  </asp:Label>
             <br />
             <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI" OnCheckedChanged="RadioButtonNombreSi_CheckedChanged" />
-            <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO" />
+            <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO" OnCheckedChanged="RadioButtonNombreNo_CheckedChanged"/>
         </div>
         <%--<asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional" >
             <ContentTemplate>--%>
-                <asp:Table ID="TableNit" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
-                    <asp:TableRow HorizontalAlign="Center">
+        <asp:Table ID="TableNit" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
+            <asp:TableRow HorizontalAlign="Center">
 
-                        <%-- ESPACIO 1--%>
-                        <asp:TableCell Width="2%">
+                <%-- ESPACIO 1--%>
+                <asp:TableCell Width="2%">
                         <br />
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- CARNE LABEL 2--%>
-                        <asp:TableCell>
+                <%-- CARNE LABEL 2--%>
+                <asp:TableCell>
                         <br>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- ESPACIO 3--%>
-                        <asp:TableCell Width="2%">
+                <%-- ESPACIO 3--%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- CARNE  4--%>
-                        <asp:TableCell>
+                <%-- CARNE  4--%>
+                <asp:TableCell>
                     <br>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- ESPACIO 5--%>
-                        <asp:TableCell Width="2%">
+                <%-- ESPACIO 5--%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- FECHA DE NACIMIENTO LABEL --%>
-                        <asp:TableCell>
+                <%-- FECHA DE NACIMIENTO LABEL --%>
+                <asp:TableCell>
+                    <br />
+                    <br />
                     <asp:Label runat="server" Font-Bold="true">NIT*:</asp:Label> 
                     <br />
                     <br />
-                        </asp:TableCell>
-                        <%-- ESPACIO --%>
-                        <asp:TableCell Width="2%">
+                    <br />
+                </asp:TableCell>
+                <%-- ESPACIO --%>
+                <asp:TableCell Width="2%">
                        <%--<br />--%>
-                        </asp:TableCell>
-                        <%-- FECHA DE NACIMIENTO  --%>
-                        <asp:TableCell>
-                            <br />
-                            <asp:TextBox ID="txtNit" runat="server" Enabled="true" AutoPostBack="true"></asp:TextBox>
-                            <br />
-                            <asp:Label runat="server" Font-Size="Small" ClientValidationFunction="VerificarCantidadTelefono" Text="El NIT no debe de contener guión (-)"></asp:Label>
-                            <br />
-                            <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" ControlToValidate="txtNit" ErrorMessage="Ingrese su NIT." ForeColor="Red"> </asp:RequiredFieldValidator>--%>
-                        </asp:TableCell>
+                </asp:TableCell>
+                <%-- FECHA DE NACIMIENTO  --%>
+                <asp:TableCell>
+                    <br />
+                    <asp:TextBox ID="txtNit" runat="server" Enabled="true"></asp:TextBox>
+                    <br />
+                    <asp:Label runat="server" Font-Size="Small" ClientValidationFunction="VerificarCantidadTelefono" Text="El NIT no debe de contener guión (-)"></asp:Label>
+                    <br />
+                    <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator7" runat="server" ControlToValidate="txtNit" ErrorMessage="Ingrese su NIT." ForeColor="Red"> </asp:RequiredFieldValidator>--%>
+                </asp:TableCell>
 
-                        <%-- ESPACIO 9--%>
-                        <asp:TableCell Width="2%">
-                            <asp:Button ID="ValidarNIT" runat="server" Text="Validar Nit" CssClass="btn-danger-unis" Enabled="true" OnClick="txtNit_TextChanged" />
-                            <br />
-                            <br />
-                        </asp:TableCell>
+                <%-- ESPACIO 9--%>
+                <asp:TableCell Width="2%">
+                    <asp:Button ID="ValidarNIT" runat="server" Text="Validar Nit" CssClass="btn-danger-unis" Enabled="true" OnClick="txtNit_TextChanged" />
+                    <br />
+                    <br />
+                </asp:TableCell>
 
-                        <%-- DPI LABEL 10--%>
-                        <asp:TableCell>
+                <%-- DPI LABEL 10--%>
+                <asp:TableCell>
                     <br>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- ESPACIO 11--%>
-                        <asp:TableCell Width="2%">
+                <%-- ESPACIO 11--%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- DPI  12--%>
-                        <asp:TableCell>
+                <%-- DPI  12--%>
+                <asp:TableCell>
                     <br>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- ESPACIO 13--%>
-                        <asp:TableCell Width="2%">
+                <%-- ESPACIO 13--%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                    </asp:TableRow>
-                    <asp:TableRow HorizontalAlign="Center">
-                        <%-- 1--%>
-                        <asp:TableCell Width="2%">
+            </asp:TableRow>
+            <asp:TableRow HorizontalAlign="Center">
+                <%-- 1--%>
+                <asp:TableCell Width="2%">
                         <br />
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 2--%>
-                        <asp:TableCell>
+                <%-- 2--%>
+                <asp:TableCell>
                     <asp:Label runat="server" Font-Bold="true">Nombre 1*:</asp:Label> 
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 3 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 3 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 4 --%>
-                        <asp:TableCell>
-                            <asp:TextBox ID="TxtNombreR" runat="server" Enabled="false" MaxLength="30" AutoPostBack="true"></asp:TextBox>
-                        </asp:TableCell>
+                <%-- 4 --%>
+                <asp:TableCell>
+                    <asp:TextBox ID="TxtNombreR" runat="server" Enabled="false" MaxLength="30"></asp:TextBox>
+                </asp:TableCell>
 
-                        <%-- 5 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 5 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 6 --%>
-                        <asp:TableCell>
+                <%-- 6 --%>
+                <asp:TableCell>
                     <asp:Label runat="server" Font-Bold="true">Nombre 2:</asp:Label> 
                     <br />
-                        </asp:TableCell>
-                        <%-- 7 --%>
-                        <asp:TableCell Width="2%">
+                </asp:TableCell>
+                <%-- 7 --%>
+                <asp:TableCell Width="2%">
                        <%--<br />--%>
-                        </asp:TableCell>
-                        <%-- 8 --%>
-                        <asp:TableCell>
-                            <asp:TextBox ID="TxtApellidoR" runat="server" Enabled="false" MaxLength="30" AutoPostBack="true"></asp:TextBox>
-                        </asp:TableCell>
+                </asp:TableCell>
+                <%-- 8 --%>
+                <asp:TableCell>
+                    <asp:TextBox ID="TxtApellidoR" runat="server" Enabled="false" MaxLength="30"></asp:TextBox>
+                </asp:TableCell>
 
-                        <%-- 9 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 9 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 10 --%>
-                        <asp:TableCell>
+                <%-- 10 --%>
+                <asp:TableCell>
                     <asp:Label runat="server" Font-Bold="true">Nombre 3:</asp:Label>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 11 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 11 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 12 --%>
-                        <asp:TableCell>
-                            <asp:TextBox ID="TxtCasadaR" runat="server" Enabled="false" MaxLength="30" AutoPostBack="true"></asp:TextBox>
-                        </asp:TableCell>
+                <%-- 12 --%>
+                <asp:TableCell>
+                    <asp:TextBox ID="TxtCasadaR" runat="server" Enabled="false" MaxLength="30"></asp:TextBox>
+                </asp:TableCell>
 
-                        <%-- 13 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 13 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
-                    </asp:TableRow>
-                    <asp:TableRow HorizontalAlign="Center">
-                        <%-- 1--%>
-                        <asp:TableCell Width="2%">
+                </asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow HorizontalAlign="Center">
+                <%-- 1--%>
+                <asp:TableCell Width="2%">
                         <br />
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 2--%>
-                        <asp:TableCell>
+                <%-- 2--%>
+                <asp:TableCell>
                     <br />
                     <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label> 
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 3 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 3 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 4 --%>
-                        <asp:TableCell>
-                            <br />
-                            <asp:CustomValidator ID="CustomValidator1" runat="server" ControlToValidate="TxtDiRe1" ErrorMessage="La dirección debe de tener al menos 6 caracteres" ClientValidationFunction="VerificarCantidadDireccionNIT" ForeColor="Red" Font-Size="Small"></asp:CustomValidator>
-                            <br />
-                            <asp:TextBox ID="TxtDiRe1" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false" AutoPostBack="true"></asp:TextBox>
-                            <br />
-                            <br />
-                        </asp:TableCell>
+                <%-- 4 --%>
+                <asp:TableCell>
+                    <br />
+                    <asp:CustomValidator ID="CustomValidator1" runat="server" ControlToValidate="TxtDiRe1" ErrorMessage="La dirección debe de tener al menos 6 caracteres" ClientValidationFunction="VerificarCantidadDireccionNIT" ForeColor="Red" Font-Size="Small"></asp:CustomValidator>
+                    <br />
+                    <asp:TextBox ID="TxtDiRe1" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false"></asp:TextBox>
+                    <br />
+                    <br />
+                </asp:TableCell>
 
-                        <%-- 5 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 5 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 6 --%>
-                        <asp:TableCell>
+                <%-- 6 --%>
+                <asp:TableCell>
                     <br />
                     <asp:Label runat="server" Font-Bold="true">Dirección 2:</asp:Label> 
                     <br />
-                        </asp:TableCell>
-                        <%-- 7 --%>
-                        <asp:TableCell Width="2%">
+                </asp:TableCell>
+                <%-- 7 --%>
+                <asp:TableCell Width="2%">
                        <%--<br />--%>
-                        </asp:TableCell>
-                        <%-- 8 --%>
-                        <asp:TableCell>
-                            <br />
-                            <asp:TextBox ID="TxtDiRe2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false" AutoPostBack="true"></asp:TextBox>
-                            <br />
-                        </asp:TableCell>
+                </asp:TableCell>
+                <%-- 8 --%>
+                <asp:TableCell>
+                    <br />
+                    <asp:TextBox ID="TxtDiRe2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false"></asp:TextBox>
+                    <br />
+                </asp:TableCell>
 
-                        <%-- 9 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 9 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 10 --%>
-                        <asp:TableCell>
+                <%-- 10 --%>
+                <asp:TableCell>
                     <br />
                     <asp:Label runat="server" Font-Bold="true">Dirección 3:</asp:Label>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 11 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 11 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 12 --%>
-                        <asp:TableCell>
-                            <br />
-                            <asp:TextBox ID="TxtDiRe3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false" AutoPostBack="true"></asp:TextBox>
-                        </asp:TableCell>
+                <%-- 12 --%>
+                <asp:TableCell>
+                    <br />
+                    <asp:TextBox ID="TxtDiRe3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false"></asp:TextBox>
+                </asp:TableCell>
 
-                        <%-- 13 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 13 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
-                    </asp:TableRow>
-                    <asp:TableRow HorizontalAlign="Center">
-                        <%-- ESPACIO 1--%>
-                        <asp:TableCell Width="2%">
+                </asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow HorizontalAlign="Center">
+                <%-- ESPACIO 1--%>
+                <asp:TableCell Width="2%">
                         <br />
-                        </asp:TableCell>
-                    </asp:TableRow>
-                    <asp:TableRow HorizontalAlign="Center" ID="Combos">
-                        <%-- 1--%>
-                        <asp:TableCell Width="2%">
+                </asp:TableCell>
+            </asp:TableRow>
+            <asp:TableRow HorizontalAlign="Center" ID="Combos">
+                <%-- 1--%>
+                <asp:TableCell Width="2%">
                         <br />
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 2--%>
-                        <asp:TableCell>
+                <%-- 2--%>
+                <asp:TableCell>
                     <asp:Label runat="server" Font-Bold="true">País*:</asp:Label> 
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 3 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 3 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 4 --%>
-                        <asp:TableCell>
-                            <asp:DropDownList ID="CmbPaisNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPaisNIT_SelectedIndexChanged" EnableViewState="true" Width="275px"></asp:DropDownList>
-                        </asp:TableCell>
+                <%-- 4 --%>
+                <asp:TableCell>
+                    <asp:DropDownList ID="CmbPaisNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPaisNIT_SelectedIndexChanged" EnableViewState="true" Width="275px"></asp:DropDownList>
+                </asp:TableCell>
 
-                        <%-- 5 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 5 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 6 --%>
-                        <asp:TableCell>
+                <%-- 6 --%>
+                <asp:TableCell>
                     <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label> 
-                        </asp:TableCell>
-                        <%-- 7 --%>
-                        <asp:TableCell Width="2%">
+                </asp:TableCell>
+                <%-- 7 --%>
+                <asp:TableCell Width="2%">
                        <%--<br />--%>
-                        </asp:TableCell>
-                        <%-- 8 --%>
-                        <asp:TableCell>
-                            <asp:DropDownList ID="CmbDepartamentoNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamentoNIT_SelectedIndexChanged" EnableViewState="true" Width="275px">
-                            </asp:DropDownList>
-                        </asp:TableCell>
+                </asp:TableCell>
+                <%-- 8 --%>
+                <asp:TableCell>
+                    <asp:DropDownList ID="CmbDepartamentoNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamentoNIT_SelectedIndexChanged" EnableViewState="true" Width="275px">
+                    </asp:DropDownList>
+                </asp:TableCell>
 
-                        <%-- 9 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 9 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 10 --%>
-                        <asp:TableCell>
+                <%-- 10 --%>
+                <asp:TableCell>
                     <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label> 
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 11 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 11 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
+                </asp:TableCell>
 
-                        <%-- 12 --%>
-                        <asp:TableCell>
-                            <asp:DropDownList ID="CmbMunicipioNIT" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipioNIT_SelectedIndexChanged" Width="275px">
-                            </asp:DropDownList>
-                        </asp:TableCell>
+                <%-- 12 --%>
+                <asp:TableCell>
+                    <asp:DropDownList ID="CmbMunicipioNIT" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipioNIT_SelectedIndexChanged" Width="275px">
+                    </asp:DropDownList>
+                </asp:TableCell>
 
-                        <%-- 13 --%>
-                        <asp:TableCell Width="2%">
+                <%-- 13 --%>
+                <asp:TableCell Width="2%">
                         <%--<br />--%>
-                        </asp:TableCell>
-                    </asp:TableRow>
-                </asp:Table>
-                <br />
-                <asp:Table ID="tbactualizar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
-                    <asp:TableRow>
-                        <asp:TableCell>
-                            <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
-                            <%--<asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnActualizar_Click" OnClientClick="return mostrarAlerta();" />--%>
-                        </asp:TableCell>
-                    </asp:TableRow>
-                </asp:Table>
-<%--            </ContentTemplate>
+                </asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>
+        <br />
+        <asp:Table ID="tbactualizar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
+            <asp:TableRow>
+                <asp:TableCell>
+                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
+                    <%--<asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnActualizar_Click" OnClientClick="return mostrarAlerta();" />--%>
+                </asp:TableCell>
+            </asp:TableRow>
+        </asp:Table>
+        <%--            </ContentTemplate>
         </asp:UpdatePanel>--%>
     </div>
     <div style="margin-left: auto; margin-right: auto; text-align: center;">
@@ -1116,9 +1119,14 @@
                         $('#<%= TxtDiRe1.ClientID %>').prop('disabled', false);
                         $('#<%= TxtDiRe2.ClientID %>').prop('disabled', false);
                         $('#<%= TxtDiRe3.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbPaisNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbDepartamentoNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);
                         // Hacer visible la fila Combos
                         $('#<%= Combos.ClientID %>').show();
-
+                        llenadoPaisnit();                        
+                        llenadoDepartamentoNit();
+                        llenadoMunicipioNIT();
                     }
                 });
             }

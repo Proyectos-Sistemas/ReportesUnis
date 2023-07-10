@@ -75,16 +75,17 @@ namespace ReportesUnis
                         LeerInfoTxtSQL();
                         LeerInfoTxtPath();
                         llenadoPais();
-                        llenadoPaisnit();
+                        //llenadoPaisnit();
                         llenadoDepartamento();
-                        llenadoDepartamentoNit();
+                        //llenadoDepartamentoNit();
                         llenadoState();
-                        llenadoStateNIT();
+                        //llenadoStateNIT();
                         mostrarInformación();
                         if (txtNit.Text == "CF")
                         {
                             txtNit.Enabled = false;
                             RadioButtonNombreSi.Checked = true;
+                            ValidarNIT.Enabled = false;
                             //Combos.Visible = false;
 
                         }
@@ -94,6 +95,7 @@ namespace ReportesUnis
                             TxtDiRe1.Enabled = true;
                             TxtDiRe2.Enabled = true;
                             TxtDiRe3.Enabled = true;
+                            ValidarNIT.Enabled = true;
                         }
 
                         /*AlmacenarFotografia();
@@ -338,6 +340,7 @@ namespace ReportesUnis
                         CmbDepartamento.SelectedValue = reader["DEPARTAMENTO"].ToString();
                         llenadoMunicipio();
                         CmbMunicipio.SelectedValue = reader["MUNICIPIO"].ToString();
+
                         if (!String.IsNullOrEmpty(reader["PAIS_NIT"].ToString()) && RadioButtonNombreNo.Checked)
                         {
                             llenadoPaisnit();
@@ -347,7 +350,7 @@ namespace ReportesUnis
                             llenadoMunicipioNIT();
                             CmbMunicipioNIT.SelectedValue = reader["MUNICIPIO_NIT"].ToString();
                         }
-                        else
+                        else if (RadioButtonNombreSi.Checked)
                         {
                             llenadoPaisnit();
                             if (!String.IsNullOrEmpty(reader["PAIS"].ToString()))
@@ -358,6 +361,12 @@ namespace ReportesUnis
                             CmbDepartamentoNIT.SelectedValue = reader["DEPARTAMENTO"].ToString();
                             llenadoMunicipioNIT();
                             CmbMunicipioNIT.SelectedValue = reader["MUNICIPIO"].ToString();
+                        }
+                        else
+                        {
+                            llenadoPaisnit();
+                            llenadoDepartamentoNit();
+                            llenadoMunicipioNIT();
                         }
                         txtTelefono.Text = reader["PHONE"].ToString();
                         TruePhone.Text = reader["PHONE"].ToString();
@@ -482,7 +491,7 @@ namespace ReportesUnis
                 }
             }
         }
-        protected void llenadoDepartamentoNit()
+        public void llenadoDepartamentoNit()
         {
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -545,7 +554,7 @@ namespace ReportesUnis
                 }
             }
         }
-        protected void llenadoMunicipioNIT()
+        public void llenadoMunicipioNIT()
         {
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -642,7 +651,7 @@ namespace ReportesUnis
                 }
             }
         }
-        protected void llenadoPaisnit()
+        public void llenadoPaisnit()
         {
             string where = "";
             if (CmbPaisNIT.Text != " " && !String.IsNullOrEmpty(CmbPaisNIT.Text))
@@ -1295,68 +1304,71 @@ namespace ReportesUnis
                                                     " WHERE PD.EMPLID = '" + UserEmplid.Text + "'";
                                 cmd.ExecuteNonQuery();
 
-                                if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
+                                if (!String.IsNullOrEmpty(TxtNombreR.Text))
                                 {
-                                    if (!String.IsNullOrEmpty(TrueNit.Text))
+                                    if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
                                     {
-                                        //TruePhone.Text = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PP.EMPLID = '" + UserEmplid.Text + "' AND PP.PHONE_TYPE='HOME'";
-                                        //ACTUALIZA NOMBRE DEL NIT
-                                        cmd.CommandText = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = REPLACE('" + TxtApellidoR.Text + " " + TxtCasadaR.Text + "," + TxtNombreR.Text + "','  ',' ') , " +
-                                                            "PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtApellidoR.Text + "'),' ',''), " +
-                                                            "PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtNombreR.Text + "'),' ',''), " +
-                                                            "LAST_NAME ='" + TxtApellidoR.Text + "', FIRST_NAME='" + TxtNombreR.Text + "', " +
-                                                            "SECOND_LAST_NAME='" + TxtCasadaR.Text + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + TxtCasadaR.Text + "'),' ','')||' ', " +
-                                                            "NAME_DISPLAY='" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "', " +
-                                                            "NAME_FORMAL='" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "', " +
-                                                            "NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "',' ',''))," +
-                                                            "LASTUPDDTTM = SYSDATE, " +
-                                                            "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
-                                                            "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'";
-                                        cmd.ExecuteNonQuery();
+                                        if (!String.IsNullOrEmpty(TrueNit.Text))
+                                        {
+                                            //TruePhone.Text = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PP.EMPLID = '" + UserEmplid.Text + "' AND PP.PHONE_TYPE='HOME'";
+                                            //ACTUALIZA NOMBRE DEL NIT
+                                            cmd.CommandText = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = REPLACE('" + TxtApellidoR.Text + " " + TxtCasadaR.Text + "," + TxtNombreR.Text + "','  ',' ') , " +
+                                                                "PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtApellidoR.Text + "'),' ',''), " +
+                                                                "PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtNombreR.Text + "'),' ',''), " +
+                                                                "LAST_NAME ='" + TxtApellidoR.Text + "', FIRST_NAME='" + TxtNombreR.Text + "', " +
+                                                                "SECOND_LAST_NAME='" + TxtCasadaR.Text + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + TxtCasadaR.Text + "'),' ','')||' ', " +
+                                                                "NAME_DISPLAY='" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "', " +
+                                                                "NAME_FORMAL='" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "', " +
+                                                                "NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "',' ',''))," +
+                                                                "LASTUPDDTTM = SYSDATE, " +
+                                                                "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
+                                                                "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'";
+                                            cmd.ExecuteNonQuery();
 
-                                        //ACTUALIZA NIT
-                                        cmd.CommandText = "UPDATE SYSADM.PS_PERS_NID PN SET PN.NATIONAL_ID = '" + txtNit.Text + "', " +
-                                                            "LASTUPDDTTM = SYSDATE, " +
-                                                            "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "'" +
-                                                            " WHERE PN.NATIONAL_ID_TYPE = 'NITREC' AND PN.EMPLID='" + UserEmplid.Text + "'";
-                                        cmd.ExecuteNonQuery();
+                                            //ACTUALIZA NIT
+                                            cmd.CommandText = "UPDATE SYSADM.PS_PERS_NID PN SET PN.NATIONAL_ID = '" + txtNit.Text + "', " +
+                                                                "LASTUPDDTTM = SYSDATE, " +
+                                                                "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "'" +
+                                                                " WHERE PN.NATIONAL_ID_TYPE = 'NITREC' AND PN.EMPLID='" + UserEmplid.Text + "'";
+                                            cmd.ExecuteNonQuery();
 
-                                        //ACTUALIZA DIRECCION DEL NIT
-                                        cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + StateNIT.Text + "', " +
-                                            "A.ADDRESS1 = '" + TxtDiRe1.Text + "', " +
-                                            "A.ADDRESS2 = '" + TxtDiRe2.Text + "', " +
-                                            "A.ADDRESS3 = '" + TxtDiRe3.Text + "', " +
-                                            "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
-                                            "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='REC'";
-                                        cmd.ExecuteNonQuery();
+                                            //ACTUALIZA DIRECCION DEL NIT
+                                            cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + StateNIT.Text + "', " +
+                                                "A.ADDRESS1 = '" + TxtDiRe1.Text + "', " +
+                                                "A.ADDRESS2 = '" + TxtDiRe2.Text + "', " +
+                                                "A.ADDRESS3 = '" + TxtDiRe3.Text + "', " +
+                                                "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
+                                                "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='REC'";
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                        else
+                                        {
+                                            cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES (EMPLID, NAME_TYPE, EFFDT, EFF_STATUS, COUNTRY_NM_FORMAT, NAME, NAME_INITIALS, NAME_PREFIX, NAME_SUFFIX, NAME_ROYAL_PREFIX, NAME_ROYAL_SUFFIX, NAME_TITLE, LAST_NAME_SRCH, FIRST_NAME_SRCH, LAST_NAME, FIRST_NAME, MIDDLE_NAME, SECOND_LAST_NAME, SECOND_LAST_SRCH, NAME_AC, PREF_FIRST_NAME, PARTNER_LAST_NAME, PARTNER_ROY_PREFIX, LAST_NAME_PREF_NLD, NAME_DISPLAY, NAME_FORMAL, NAME_DISPLAY_SRCH, LASTUPDDTTM, LASTUPDOPRID) " +
+                                                "VALUES('" + UserEmplid.Text + "','REC','01/01/00','A','MEX',REPLACE('" + TxtApellidoR.Text + " " + TxtCasadaR.Text + "," + TxtNombreR.Text + "','  ',' '),' ',' ',' ',' ',' ',' '," +
+                                                "REPLACE(UPPER('" + TxtApellidoR.Text + "'),' ',''),REPLACE(UPPER('" + TxtNombreR.Text + "'),' ',''),'" + TxtApellidoR.Text + "','" + TxtNombreR.Text + "',' ','" + TxtCasadaR.Text + "',REPLACE(UPPER('" + TxtCasadaR.Text + "'),' ','')||' '," +
+                                                "' ',' ',' ',' ','1','" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "','" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "',REPLACE(UPPER('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "'),' ',''),SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
+                                            cmd.ExecuteNonQuery();
+
+                                            cmd.CommandText = "INSERT INTO SYSADM.PS_PERS_NID (EMPLID, COUNTRY, NATIONAL_ID_TYPE, NATIONAL_ID, SSN_KEY_FRA, PRIMARY_NID, TAX_REF_ID_SGP, LASTUPDDTTM, LASTUPDOPRID) " +
+                                                "VALUES ('" + UserEmplid.Text + "','GTM','NITREC','" + txtNit.Text + "',' ','N','N',SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
+                                            cmd.ExecuteNonQuery();
+
+                                            cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES (EMPLID, ADDRESS_TYPE,COUNTY,CITY,NUM1, NUM2, HOUSE_TYPE, ADDR_FIELD1, ADDR_FIELD2, ADDR_FIELD3,POSTAL,GEO_CODE,IN_CITY_LIMIT," +
+                                                "ADDRESS1_AC,ADDRESS2_AC,ADDRESS3_AC,CITY_AC,REG_REGION,EFFDT,EFF_STATUS,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,STATE,LASTUPDDTTM,LASTUPDOPRID) " +
+                                               "VALUES('" + UserEmplid.Text + "', 'REC',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', '" + DateTime.Now.ToString("dd/MM/yyyy")
+                                               + "', 'A', '" + codPais + "', '" + TxtDiRe1.Text + "', '" + TxtDiRe2.Text + "', '" + TxtDiRe3.Text + "', ' ','" + StateNIT.Text + "', '" +
+                                               DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "','" + TextUser.Text + "')";
+                                            cmd.ExecuteNonQuery();
+                                            cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES_SA (LOC_ADDR_DATA,LOC_ADDR, LOC_ADDR_LINE, LOC_ADDR_TYPE, EXT_ORG_ID, DESCR_EXT_ORG, DESCR_ORG_LOCATION, " +
+                                                "CONTACT_NAME, DATA_SOURCE, EMPLID, ADDRESS_TYPE,EFFDT,ORG_LOCATION,MAINT_ADDR_MANUAL,MAINT_OTHER_MANUAL,ORG_CONTACT,SEASONAL_ADDR) " +
+                                                "VALUES(' ',' ',' ',' ',' ',' ',' ',' ',' ','" + UserEmplid.Text + "', 'REC', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 0, 'N','N',0,'N')";
+                                            cmd.ExecuteNonQuery();
+                                        }
                                     }
                                     else
                                     {
-                                        cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES (EMPLID, NAME_TYPE, EFFDT, EFF_STATUS, COUNTRY_NM_FORMAT, NAME, NAME_INITIALS, NAME_PREFIX, NAME_SUFFIX, NAME_ROYAL_PREFIX, NAME_ROYAL_SUFFIX, NAME_TITLE, LAST_NAME_SRCH, FIRST_NAME_SRCH, LAST_NAME, FIRST_NAME, MIDDLE_NAME, SECOND_LAST_NAME, SECOND_LAST_SRCH, NAME_AC, PREF_FIRST_NAME, PARTNER_LAST_NAME, PARTNER_ROY_PREFIX, LAST_NAME_PREF_NLD, NAME_DISPLAY, NAME_FORMAL, NAME_DISPLAY_SRCH, LASTUPDDTTM, LASTUPDOPRID) " +
-                                            "VALUES('" + UserEmplid.Text + "','REC','01/01/00','A','MEX',REPLACE('" + TxtApellidoR.Text + " " + TxtCasadaR.Text + "," + TxtNombreR.Text + "','  ',' '),' ',' ',' ',' ',' ',' '," +
-                                            "REPLACE(UPPER('" + TxtApellidoR.Text + "'),' ',''),REPLACE(UPPER('" + TxtNombreR.Text + "'),' ',''),'" + TxtApellidoR.Text + "','" + TxtNombreR.Text + "',' ','" + TxtCasadaR.Text + "',REPLACE(UPPER('" + TxtCasadaR.Text + "'),' ','')||' '," +
-                                            "' ',' ',' ',' ','1','" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "','" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "',REPLACE(UPPER('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "'),' ',''),SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
-                                        cmd.ExecuteNonQuery();
-
-                                        cmd.CommandText = "INSERT INTO SYSADM.PS_PERS_NID (EMPLID, COUNTRY, NATIONAL_ID_TYPE, NATIONAL_ID, SSN_KEY_FRA, PRIMARY_NID, TAX_REF_ID_SGP, LASTUPDDTTM, LASTUPDOPRID) " +
-                                            "VALUES ('" + UserEmplid.Text + "','GTM','NITREC','" + txtNit.Text + "',' ','N','N',SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
-                                        cmd.ExecuteNonQuery();
-
-                                        cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES (EMPLID, ADDRESS_TYPE,COUNTY,CITY,NUM1, NUM2, HOUSE_TYPE, ADDR_FIELD1, ADDR_FIELD2, ADDR_FIELD3,POSTAL,GEO_CODE,IN_CITY_LIMIT," +
-                                            "ADDRESS1_AC,ADDRESS2_AC,ADDRESS3_AC,CITY_AC,REG_REGION,EFFDT,EFF_STATUS,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,STATE,LASTUPDDTTM,LASTUPDOPRID) " +
-                                           "VALUES('" + UserEmplid.Text + "', 'REC',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', '" + DateTime.Now.ToString("dd/MM/yyyy")
-                                           + "', 'A', '" + codPais + "', '" + TxtDiRe1.Text + "', '" + TxtDiRe2.Text + "', '" + TxtDiRe3.Text + "', ' ','" + StateNIT.Text + "', '" +
-                                           DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "','" + TextUser.Text + "')";
-                                        cmd.ExecuteNonQuery();
-                                        cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES_SA (LOC_ADDR_DATA,LOC_ADDR, LOC_ADDR_LINE, LOC_ADDR_TYPE, EXT_ORG_ID, DESCR_EXT_ORG, DESCR_ORG_LOCATION, " +
-                                            "CONTACT_NAME, DATA_SOURCE, EMPLID, ADDRESS_TYPE,EFFDT,ORG_LOCATION,MAINT_ADDR_MANUAL,MAINT_OTHER_MANUAL,ORG_CONTACT,SEASONAL_ADDR) " +
-                                            "VALUES(' ',' ',' ',' ',' ',' ',' ',' ',' ','" + UserEmplid.Text + "', 'REC', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 0, 'N','N',0,'N')";
-                                        cmd.ExecuteNonQuery();
+                                        llenadoPaisnit();
                                     }
-                                }
-                                else
-                                {
-                                    llenadoPaisnit();
                                 }
 
 
@@ -1681,7 +1693,7 @@ namespace ReportesUnis
             var body = "{\"Credenciales\" : \"" + credenciales + "\",\"NIT\":\"" + nit + "\"}";
             string respuesta = api.PostNit("https://felaupar.azurewebsites.net/api/NIT?code=Cw1Olqw4rH0EyEgZdqLD9gQqy62AF5FpAfuBL5spyZoajzNGjhme4A==&Credenciales=d39c940b-c65f-4502-8a94-f1d9109076ab", body);
             return respuesta;
-            
+
         }
 
         private void AlmacenarFotografia()
@@ -1781,76 +1793,144 @@ namespace ReportesUnis
             string respuesta;
             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
             respuesta = consultaNit(txtNit.Text);
-            string NIT = getBetween(respuesta, "\"NIT\": \"", "\",");
-            string Direccion = getBetween(respuesta, "\"Direccion\": \"", "\",");
-            string apellido1;
-            string apellido2;
-            string apellidoCasada;
-            string nombre1;
-            string nombre2;
-            int largo;
-            if (NIT != "CF")
+            string constr = TxtURL.Text;
+
+            if (respuesta == "BadRequest" || respuesta == "1")
             {
-                string nombreRespuesta = getBetween(respuesta, "\"NOMBRE\": \"", "\",") + ",";
-                string cadena = nombreRespuesta;
-                TxtDiRe1.Text = Direccion;
-                int contadorComas = cadena.Count(c => c == ',');
-                if (contadorComas >= 5)
+                TxtNombreR.Text = null;
+                TxtApellidoR.Text = null;
+                TxtCasadaR.Text = null;
+                llenadoPaisnit();
+                CmbPaisNIT.SelectedValue = " ";
+                llenadoDepartamentoNit();
+                CmbDepartamentoNIT.SelectedValue = " ";
+                llenadoMunicipioNIT();
+                //CmbMunicipioNIT.Text = "-";
+                //CmbMunicipioNIT.Enabled = false;
+                //CmbDepartamentoNIT.Enabled = false;
+                //CmbPaisNIT.Enabled = false;
+                txtNit.Enabled = true;
+                ValidarNIT.Enabled = true;
+                int ExisteNitValidacion = 0;
+
+                //ALMACENAMIENTO DE INFORMACIÓN DE NIT PARA VALIDACION POSTERIOR
+                using (OracleConnection con = new OracleConnection(constr))
                 {
-                    apellido1 = getBetween(nombreRespuesta, "", ",");
-                    apellido2 = getBetween(nombreRespuesta, apellido1 + ",", ",");
-                    apellidoCasada = getBetween(nombreRespuesta, apellido2 + ",", ",");
-                    nombre1 = getBetween(nombreRespuesta, apellido1 + "," + apellido2 + "," + apellidoCasada + ",", ",");
-                    nombre2 = getBetween(nombreRespuesta, nombre1 + ",", ",");
-                    TxtNombreR.Text = textInfo.ToTitleCase(nombre1 + " " + nombre2);
-                    TxtApellidoR.Text = apellido1 + " " + apellido2;
-                    TxtCasadaR.Text = apellidoCasada;
+                    con.Open();
+                    OracleTransaction transaction;
+                    transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        //Obtener fotografia
+                        cmd.Connection = con;
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_NIT_PENDIENTE_ST WHERE EMPLID = '" + UserEmplid.Text + "'";
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            ExisteNitValidacion = Convert.ToInt16(reader["CONTADOR"]);
+                        }
+                        cmd.Transaction = transaction;
+                        try
+                        {
+                            if (ExisteNitValidacion == 0)
+                            {
+                                cmd.Connection = con;
+                                cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_NIT_PENDIENTE_ST (NIT, EMPLID) VALUES ('" + txtNit.Text + "', '" + UserEmplid.Text + "')";
+                                cmd.ExecuteNonQuery();
+                                transaction.Commit();
+                            }
+                            else
+                            {
+                                cmd.Connection = con;
+                                cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_NIT_PENDIENTE_ST SET NIT = '" + txtNit.Text + "'";
+                                cmd.ExecuteNonQuery();
+                                transaction.Commit();
+                            }
+                        }
+                        catch (Exception x)
+                        {
+                            transaction.Rollback();
+                        }
+
+                    }
+                }
+
+                lblActualizacion.Text = "El NIT sera validado más adelante";
+            }
+            else if (respuesta != "1" && respuesta != "BadRequest")
+            {
+                string NIT = getBetween(respuesta, "\"NIT\": \"", "\",");
+                string Direccion = getBetween(respuesta, "\"Direccion\": \"", "\",");
+                string apellido1;
+                string apellido2;
+                string apellidoCasada;
+                string nombre1;
+                string nombre2;
+                int largo;
+                if (NIT != "CF")
+                {
+                    string nombreRespuesta = getBetween(respuesta, "\"NOMBRE\": \"", "\",") + ",";
+                    string cadena = nombreRespuesta;
+                    TxtDiRe1.Text = Direccion;
+                    int contadorComas = cadena.Count(c => c == ',');
+                    if (contadorComas >= 5)
+                    {
+                        apellido1 = getBetween(nombreRespuesta, "", ",");
+                        apellido2 = getBetween(nombreRespuesta, apellido1 + ",", ",");
+                        apellidoCasada = getBetween(nombreRespuesta, apellido2 + ",", ",");
+                        nombre1 = getBetween(nombreRespuesta, apellido1 + "," + apellido2 + "," + apellidoCasada + ",", ",");
+                        nombre2 = getBetween(nombreRespuesta, nombre1 + ",", ",");
+                        TxtNombreR.Text = textInfo.ToTitleCase(nombre1 + " " + nombre2);
+                        TxtApellidoR.Text = apellido1 + " " + apellido2;
+                        TxtCasadaR.Text = apellidoCasada;
+                    }
+                    else
+                    {
+                        nombreRespuesta = nombreRespuesta.TrimEnd(',');
+                        largo = nombreRespuesta.Length;
+
+                        if (largo < 31)
+                        {
+                            TxtNombreR.Text = nombreRespuesta;
+                        }
+                        else if (largo > 30 && largo < 61)
+                        {
+                            TxtNombreR.Text = nombreRespuesta.Substring(0, 30);
+                            TxtApellidoR.Text = nombreRespuesta.Substring(30, largo - 30);
+                        }
+                        else if (largo > 30 && largo < 91)
+                        {
+                            TxtNombreR.Text = nombreRespuesta.Substring(0, 30);
+                            TxtApellidoR.Text = nombreRespuesta.Substring(30, 30);
+                            TxtCasadaR.Text = nombreRespuesta.Substring(60, largo - 60);
+                        }
+                        else if (largo > 90)
+                        {
+                            TxtNombreR.Text = nombreRespuesta.Substring(0, 30);
+                            TxtApellidoR.Text = nombreRespuesta.Substring(30, 30);
+                            TxtCasadaR.Text = nombreRespuesta.Substring(60, 30);
+                        }
+                    }
+
+                    lblActualizacion.Text = "";
+                    AlmacenarFotografia();
+                    fotoAlmacenada();
+                    CargaDPI.Visible = true;
+
+                    //UpdatePanel1.Update();
                 }
                 else
                 {
-                    nombreRespuesta = nombreRespuesta.TrimEnd(',');
-                    largo = nombreRespuesta.Length;
-
-                    if (largo < 31)
-                    {
-                        TxtNombreR.Text = nombreRespuesta;
-                    }
-                    else if (largo > 30 && largo < 61)
-                    {
-                        TxtNombreR.Text = nombreRespuesta.Substring(0, 30);
-                        TxtApellidoR.Text = nombreRespuesta.Substring(30, largo - 30);
-                    }
-                    else if (largo > 30 && largo < 91)
-                    {
-                        TxtNombreR.Text = nombreRespuesta.Substring(0, 30);
-                        TxtApellidoR.Text = nombreRespuesta.Substring(30, 30);
-                        TxtCasadaR.Text = nombreRespuesta.Substring(60, largo - 60);
-                    }
-                    else if (largo > 90)
-                    {
-                        TxtNombreR.Text = nombreRespuesta.Substring(0, 30);
-                        TxtApellidoR.Text = nombreRespuesta.Substring(30, 30);
-                        TxtCasadaR.Text = nombreRespuesta.Substring(60, 30);
-                    }
+                    string nit = txtNit.Text;
+                    txtNit.Text = nit;
+                    lblActualizacion.Text = "El NIT no existe";
                 }
-
-                lblActualizacion.Text = "";
-                AlmacenarFotografia();
-                fotoAlmacenada();
-                CargaDPI.Visible = true;
-
-                //UpdatePanel1.Update();
             }
-            else
-            {
-                string nit = txtNit.Text;
-                txtNit.Text = nit;
-                lblActualizacion.Text = "El NIT no existe";
-            }
-           
+
         }
 
-        
+
         protected void RadioButtonNombreSi_CheckedChanged(object sender, EventArgs e)
         {
             TxtNombreR.Text = txtNombre.Text;
@@ -1866,7 +1946,13 @@ namespace ReportesUnis
             TxtDiRe2.Enabled = false;
             TxtDiRe3.Enabled = false;
             CargaDPI.Visible = true;
-        }   
+        }
 
+        protected void RadioButtonNombreNo_CheckedChanged(object sender, EventArgs e)
+        {
+            /*llenadoPaisnit();
+            llenadoDepartamentoNit();
+            llenadoMunicipioNIT();*/
+        }
     }
 }

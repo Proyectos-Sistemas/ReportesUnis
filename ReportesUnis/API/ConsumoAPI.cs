@@ -120,8 +120,10 @@ namespace ReportesUnis.API
 
                 if (response.StatusCode.ToString() == "OK" || response.StatusCode.ToString() == "Created")
                     return response.Content;
+                else if (response.StatusCode.ToString() == "BadRequest")
+                    return "BadRequest";
                 else
-                    return 1;
+                    return "1";
             }
             catch (Exception)
             {
