@@ -1805,10 +1805,10 @@ namespace ReportesUnis
                 llenadoDepartamentoNit();
                 CmbDepartamentoNIT.SelectedValue = " ";
                 llenadoMunicipioNIT();
-                //CmbMunicipioNIT.Text = "-";
-                //CmbMunicipioNIT.Enabled = false;
-                //CmbDepartamentoNIT.Enabled = false;
-                //CmbPaisNIT.Enabled = false;
+                CmbMunicipioNIT.Text = "-";
+                CmbMunicipioNIT.Enabled = false;
+                CmbDepartamentoNIT.Enabled = false;
+                CmbPaisNIT.Enabled = false;
                 txtNit.Enabled = true;
                 ValidarNIT.Enabled = true;
                 int ExisteNitValidacion = 0;
