@@ -199,10 +199,10 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT EMPLID FROM SYSADM.PS_PERS_NID PN " +
                     //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                    //"WHERE PN.NATIONAL_ID ='2993196360101'";
+                    "WHERE PN.NATIONAL_ID ='2993196360101'";
                     //"WHERE PN.NATIONAL_ID ='4681531'";
                     //"WHERE PN.NATIONAL_ID ='2327809510101'";
-                    "WHERE PN.NATIONAL_ID ='3682754340101' ";
+                    //"WHERE PN.NATIONAL_ID ='3682754340101' ";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -263,11 +263,11 @@ namespace ReportesUnis
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                                        //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                                       "WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                                                                                  //"WHERE PN.NATIONAL_ID ='2993196360101' " + // pasaporte
+                                       //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
+                                       "WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián
                                                                                   //"WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
                                                                                   //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
-                                                                                  //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián 
+                                                                                  //"WHERE PN.NATIONAL_ID ='2993196360101' " + // 
                                        ") WHERE CNT = 1";
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -1212,10 +1212,10 @@ namespace ReportesUnis
                                                 "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                                 //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
                                                 //"WHERE PN.NATIONAL_ID ='4681531')" +
-                                                //"WHERE PN.NATIONAL_ID ='2993196360101')" +
+                                                "WHERE PN.NATIONAL_ID ='2993196360101')" +
                                                 //"WHERE PN.NATIONAL_ID ='2327809510101')" +
                                                 //"WHERE PN.NATIONAL_ID ='2990723550101')" +
-                                                "WHERE PN.NATIONAL_ID ='3682754340101')" +
+                                                //"WHERE PN.NATIONAL_ID ='3682754340101')" +
                                                 "WHERE CODIGO_BARRAS=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CODIGO_BARRAS=PASAPORTE OR CODIGO_BARRAS=CEDULA " +
                                                 "ORDER BY 1 ASC";
                                 //--4681531 PASAPORTE

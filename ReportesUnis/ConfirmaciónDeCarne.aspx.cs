@@ -753,23 +753,46 @@ namespace ReportesUnis
                             PaisNit = reader2["PAIS_NIT"].ToString();
                             NIT = reader2["NIT"].ToString();
                         }
+
+                        if (TxtDiRe2.IsNullOrWhiteSpace())
+                            TxtDiRe2 = " ";
+                        if (TxtDiRe3.IsNullOrWhiteSpace())
+                            TxtDiRe3 = " ";
                         if (!String.IsNullOrEmpty(existeNit))
                         {
-
-
                             //ACTUALIZA NOMBRE DEL NIT
-                            cmd.CommandText = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = REPLACE('" + TxtApellidoR + " " + TxtCasadaR + "," + TxtNombreR + "','  ',' ') , " +
-                                                "PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtApellidoR + "'),' ',''), " +
-                                                "PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtNombreR + "'),' ',''), " +
-                                                "LAST_NAME ='" + TxtApellidoR + "', FIRST_NAME='" + TxtNombreR + "', " +
-                                                "SECOND_LAST_NAME='" + TxtCasadaR + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + TxtCasadaR + "'),' ','')||' ', " +
-                                                "NAME_DISPLAY='" + TxtNombreR + " " + TxtApellidoR + " " + TxtCasadaR + "', " +
-                                                "NAME_FORMAL='" + TxtNombreR + " " + TxtApellidoR + " " + TxtCasadaR + "', " +
-                                                "NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR + TxtApellidoR + TxtCasadaR + "',' ',''))," +
-                                                "LASTUPDDTTM = SYSDATE, " +
-                                                "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
-                                                "WHERE PN.EMPLID = '" + emplid + "' AND NAME_TYPE IN 'REC'";
-                            cmd.ExecuteNonQuery();
+                            if (TxtCasadaR.IsNullOrWhiteSpace())
+                            {
+                                cmd.CommandText = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = REPLACE('" + TxtApellidoR + "," + TxtNombreR + "','  ',' ') , " +
+                                                    "PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtApellidoR + "'),' ',''), " +
+                                                    "PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtNombreR + "'),' ',''), " +
+                                                    "LAST_NAME ='" + TxtApellidoR + "', FIRST_NAME='" + TxtNombreR + "', " +
+                                                    "SECOND_LAST_NAME=' ', SECOND_LAST_SRCH=' ', " +
+                                                    "NAME_DISPLAY='" + TxtNombreR + " " + TxtApellidoR + "', " +
+                                                    "NAME_FORMAL='" + TxtNombreR + " " + TxtApellidoR + "', " +
+                                                    "NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR + TxtApellidoR + "',' ',''))," +
+                                                    "LASTUPDDTTM = SYSDATE, " +
+                                                    "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
+                                                    "WHERE PN.EMPLID = '" + emplid + "' AND NAME_TYPE IN 'REC'";
+                                cmd.ExecuteNonQuery();
+
+                            }
+                            else
+                            {
+                                cmd.CommandText = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = REPLACE('" + TxtApellidoR + " " + TxtCasadaR + "," + TxtNombreR + "','  ',' ') , " +
+                                                    "PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtApellidoR + "'),' ',''), " +
+                                                    "PN.FIRST_NAME_SRCH=REPLACE(UPPER('" + TxtNombreR + "'),' ',''), " +
+                                                    "LAST_NAME ='" + TxtApellidoR + "', FIRST_NAME='" + TxtNombreR + "', " +
+                                                    "SECOND_LAST_NAME='" + TxtCasadaR + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + TxtCasadaR + "'),' ','')||' ', " +
+                                                    "NAME_DISPLAY='" + TxtNombreR + " " + TxtApellidoR + " " + TxtCasadaR + "', " +
+                                                    "NAME_FORMAL='" + TxtNombreR + " " + TxtApellidoR + " " + TxtCasadaR + "', " +
+                                                    "NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR + TxtApellidoR + TxtCasadaR + "',' ',''))," +
+                                                    "LASTUPDDTTM = SYSDATE, " +
+                                                    "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
+                                                    "WHERE PN.EMPLID = '" + emplid + "' AND NAME_TYPE IN 'REC'";
+                                cmd.ExecuteNonQuery();
+                            }
+
 
                             //ACTUALIZA NIT
                             cmd.CommandText = "UPDATE SYSADM.PS_PERS_NID PN SET PN.NATIONAL_ID = '" + NIT + "', " +
@@ -790,14 +813,28 @@ namespace ReportesUnis
                         else
                         {
                             //INSERTA NOMBRE DEL NIT
-                            cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES (EMPLID, NAME_TYPE, EFFDT, EFF_STATUS, COUNTRY_NM_FORMAT, NAME, NAME_INITIALS, NAME_PREFIX, NAME_SUFFIX, " +
+                            if (TxtCasadaR.IsNullOrWhiteSpace())
+                            {
+                                cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES (EMPLID, NAME_TYPE, EFFDT, EFF_STATUS, COUNTRY_NM_FORMAT, NAME, NAME_INITIALS, NAME_PREFIX, NAME_SUFFIX, " +
+                                "NAME_ROYAL_PREFIX, NAME_ROYAL_SUFFIX, NAME_TITLE, LAST_NAME_SRCH, FIRST_NAME_SRCH, LAST_NAME, FIRST_NAME, MIDDLE_NAME, SECOND_LAST_NAME, " +
+                                "SECOND_LAST_SRCH, NAME_AC, PREF_FIRST_NAME, PARTNER_LAST_NAME, PARTNER_ROY_PREFIX, LAST_NAME_PREF_NLD, NAME_DISPLAY, NAME_FORMAL, NAME_DISPLAY_SRCH, " +
+                                "LASTUPDDTTM, LASTUPDOPRID) VALUES('" + emplid + "','REC','01/01/00','A','MEX', REPLACE('" + TxtApellidoR + "," + TxtNombreR + "','  ',' '),' ',' ',' ',' ',' ',' '," +
+                                "REPLACE(UPPER('" + TxtApellidoR + "'),' ',''),REPLACE(UPPER('" + TxtNombreR + "'),' ',''),'" + TxtApellidoR + "','" + TxtNombreR + "',' ',' ',' ',' ','')||' '," +
+                                "' ',' ',' ',' ','1','" + TxtNombreR + " " + TxtApellidoR + "','" + TxtNombreR + " " + TxtApellidoR +"',REPLACE(UPPER('" + TxtNombreR + TxtApellidoR + "'),' ','')," +
+                                "SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
+                                cmd.ExecuteNonQuery();
+                            }
+                            else
+                            {
+                                cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES (EMPLID, NAME_TYPE, EFFDT, EFF_STATUS, COUNTRY_NM_FORMAT, NAME, NAME_INITIALS, NAME_PREFIX, NAME_SUFFIX, " +
                                 "NAME_ROYAL_PREFIX, NAME_ROYAL_SUFFIX, NAME_TITLE, LAST_NAME_SRCH, FIRST_NAME_SRCH, LAST_NAME, FIRST_NAME, MIDDLE_NAME, SECOND_LAST_NAME, " +
                                 "SECOND_LAST_SRCH, NAME_AC, PREF_FIRST_NAME, PARTNER_LAST_NAME, PARTNER_ROY_PREFIX, LAST_NAME_PREF_NLD, NAME_DISPLAY, NAME_FORMAL, NAME_DISPLAY_SRCH, " +
                                 "LASTUPDDTTM, LASTUPDOPRID) VALUES('" + emplid + "','REC','01/01/00','A','MEX', REPLACE('" + TxtApellidoR + " " + TxtCasadaR + "," + TxtNombreR + "','  ',' '),' ',' ',' ',' ',' ',' '," +
                                 "REPLACE(UPPER('" + TxtApellidoR + "'),' ',''),REPLACE(UPPER('" + TxtNombreR + "'),' ',''),'" + TxtApellidoR + "','" + TxtNombreR + "',' ','" + TxtCasadaR + "',REPLACE(UPPER('" + TxtCasadaR + "'),' ','')||' '," +
                                 "' ',' ',' ',' ','1','" + TxtNombreR + " " + TxtApellidoR + " " + TxtCasadaR + "','" + TxtNombreR + " " + TxtApellidoR + " " + TxtCasadaR + "',REPLACE(UPPER('" + TxtNombreR + TxtApellidoR + TxtCasadaR + "'),' ','')," +
                                 "SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
-                            cmd.ExecuteNonQuery();
+                                cmd.ExecuteNonQuery();
+                            }
 
                             //INSERTA NIT
                             cmd.CommandText = "INSERT INTO SYSADM.PS_PERS_NID (EMPLID, COUNTRY, NATIONAL_ID_TYPE, NATIONAL_ID, SSN_KEY_FRA, PRIMARY_NID, TAX_REF_ID_SGP, LASTUPDDTTM, LASTUPDOPRID) " +
