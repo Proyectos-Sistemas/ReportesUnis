@@ -72,6 +72,7 @@ namespace ReportesUnis
                     controlPantalla = PantallaHabilitada("Semana");
                     if (controlPantalla >= 1)
                     {
+                        Page.ClientScript.RegisterStartupScript(GetType(), "CheckCameraAccess", "checkCameraAccess();", true);
                         LeerInfoTxtSQL();
                         LeerInfoTxtPath();
                         llenadoPais();
@@ -109,13 +110,15 @@ namespace ReportesUnis
                             tabla.Visible = false;
                         }
                     }
-                    else
-                    {
-                        lblActualizacion.Text = "La pantalla de actualización está disponible únicamente de Lunes a Viernes.";
-                        controlCamposVisibles();
-                    }
+
+                }
+                else
+                {
+                    lblActualizacion.Text = "La pantalla de actualización está disponible únicamente de Lunes a Viernes.";
+                    controlCamposVisibles();
                 }
             }
+
             else
             {
                 lblActualizacion.Text = "¡IMPORTANTE! Esta página no está disponible, ¡Permanece atento a nuevas fechas para actualizar tus datos!";
@@ -826,68 +829,78 @@ namespace ReportesUnis
 
         private string actualizarInformacion()
         {
-
-            int contador = 0;
-
-            if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
+            string cameraAvailable = hdnCameraAvailable.Value;
+            if (cameraAvailable == "true")
             {
-                txtAccion.Text = "1";
-                txtTipoAccion.Text = "1.1";
-                txtConfirmacion.Text = "02"; //VALIDACIÓN DE FOTOGRAFÍA
+                int contador = 0;
 
-                if (RadioButtonNombreNo.Checked)
+                if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
                 {
-                    if (!CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
-                    {
-                        ValidacionParaIngreso();
-                    }
-                    else
-                    {
-                        mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
-                    }
-                }
-
-                if (RadioButtonNombreSi.Checked)
-                {
-                    TxtNombreR.Text = txtNombre.Text;
-                    TxtApellidoR.Text = txtApellido.Text;
-                    TxtCasadaR.Text = txtCasada.Text;
-                    TxtDiRe1.Text = txtDireccion.Text;
-                    TxtDiRe2.Text = txtDireccion2.Text;
-                    TxtDiRe3.Text = txtDireccion3.Text;
-                    txtNit.Text = "CF";
-                    ValidacionParaIngreso();
-                }
-
-            }
-            else
-            {
-                if (FileUpload2.HasFile)
-                {
-                    foreach (HttpPostedFile uploadedFile in FileUpload2.PostedFiles)
-                    {
-                        contador++;
-                        string nombreArchivo = txtCarne.Text + "(" + contador + ").jpg";
-                        string ruta = CurrentDirectory + "/Usuarios/DPI/" + nombreArchivo;
-                        uploadedFile.SaveAs(ruta);
-                    }
                     txtAccion.Text = "1";
                     txtTipoAccion.Text = "1.1";
-                    txtConfirmacion.Text = "01"; //Requiere confirmación de operador 
-                    txtCantidadImagenesDpi.Text = contador.ToString();
-                    IngresoDatos();
+                    txtConfirmacion.Text = "02"; //VALIDACIÓN DE FOTOGRAFÍA
+
+                    if (RadioButtonNombreNo.Checked)
+                    {
+                        if (!CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
+                        {
+                            ValidacionParaIngreso();
+                        }
+                        else
+                        {
+                            mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
+                        }
+                    }
+
+                    if (RadioButtonNombreSi.Checked)
+                    {
+                        TxtNombreR.Text = txtNombre.Text;
+                        TxtApellidoR.Text = txtApellido.Text;
+                        TxtCasadaR.Text = txtCasada.Text;
+                        TxtDiRe1.Text = txtDireccion.Text;
+                        TxtDiRe2.Text = txtDireccion2.Text;
+                        TxtDiRe3.Text = txtDireccion3.Text;
+                        txtNit.Text = "CF";
+                        ValidacionParaIngreso();
+                    }
+
                 }
                 else
                 {
-                    if (txtAInicial.Text != txtApellido.Text || txtNInicial.Text != txtNombre.Text || txtCInicial.Text != txtCasada.Text)
+                    if (FileUpload2.HasFile)
                     {
-                        CargaDPI.Attributes["style"] = "display: block";
-                        string script = "<script>Documentos();</script>";
-                        ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                        foreach (HttpPostedFile uploadedFile in FileUpload2.PostedFiles)
+                        {
+                            contador++;
+                            string nombreArchivo = txtCarne.Text + "(" + contador + ").jpg";
+                            string ruta = CurrentDirectory + "/Usuarios/DPI/" + nombreArchivo;
+                            uploadedFile.SaveAs(ruta);
+                        }
+                        txtAccion.Text = "1";
+                        txtTipoAccion.Text = "1.1";
+                        txtConfirmacion.Text = "01"; //Requiere confirmación de operador 
+                        txtCantidadImagenesDpi.Text = contador.ToString();
+                        IngresoDatos();
                     }
-                    fotoAlmacenada();
+                    else
+                    {
+                        if (txtAInicial.Text != txtApellido.Text || txtNInicial.Text != txtNombre.Text || txtCInicial.Text != txtCasada.Text)
+                        {
+                            CargaDPI.Attributes["style"] = "display: block";
+                            string script = "<script>Documentos();</script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                        }
+                        fotoAlmacenada();
+                    }
                 }
             }
+            else
+            {
+                lblActualizacion.Text = " La camara no tiene permisos disponibles";
+                mensaje = "0";
+                controlCamposVisibles();
+            }
+
 
             return mensaje;
         }
@@ -1414,26 +1427,31 @@ namespace ReportesUnis
         {
             string informacion = actualizarInformacion();
 
-            if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text))
+            if (informacion != "0")
             {
-                if (RadioButtonNombreNo.Checked)
+
+                if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text))
                 {
-                    if (!CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
+                    if (RadioButtonNombreNo.Checked)
+                    {
+                        if (!CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
+                        {
+                            IngresoActualizacion(informacion);
+                        }
+                        else
+                        {
+                            AlmacenarFotografia();
+                            fotoAlmacenada();
+                            lblActualizacion.Text = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
+                        }
+                    }
+
+                    if (RadioButtonNombreSi.Checked)
                     {
                         IngresoActualizacion(informacion);
                     }
-                    else
-                    {
-                        AlmacenarFotografia();
-                        fotoAlmacenada();
-                        lblActualizacion.Text = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
-                    }
                 }
 
-                if (RadioButtonNombreSi.Checked)
-                {
-                    IngresoActualizacion(informacion);
-                }
             }
         }
 

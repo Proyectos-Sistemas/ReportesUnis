@@ -10,6 +10,7 @@
 
     <div class="container2" id="CargaFotografia" runat="server" visible="true">
         <div>
+            <asp:HiddenField runat="server" ID="hdnCameraAvailable"/>
             <h5 style="text-align: center;">Toma de Fografía</h5>
             <br />
             <asp:Table ID="Fotos" runat="server" Style="margin-left: auto; margin-right: auto; text-align: right; align-content: center" CssClass="table-condensed table-border">
@@ -1021,22 +1022,6 @@
             }
         }
 
-       <%-- $(document).ready(function () {
-            $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
-                if ($(this).is(':checked')) {
-                    $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
-                    $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
-                    $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
-                    $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
-                    $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
-                    $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
-                    $('#<%= txtNit.ClientID %>').val('CF');
-                    $('#<%= txtNit.ClientID %>').prop('disabled', true);
-                    $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
-                }
-            });
-        });--%>
-
         function Documentos() {
             alert("Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.");
         }
@@ -1095,9 +1080,6 @@
             }
         });
 
-
-
-
         $(document).ready(function () {
             // Function to add the code
             function RBNo() {
@@ -1136,8 +1118,6 @@
 
         });
 
-
-
         $(document).ready(function () {
             $('#<%= txtNombre.ClientID %> , #<%= txtApellido.ClientID %>').on('input', function () {
                 var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
@@ -1163,6 +1143,19 @@
 
         function VerificarCantidadDireccionNIT(sender, args) {
             args.IsValid = (args.Value.length >= 5 && args.Value.length >= 1);
+        }
+
+        function checkCameraAccess() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'true';
+                stream.getTracks().forEach(function (track) {
+                    track.stop();
+                });
+            })
+            .catch(function (error) {
+                document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'false';
+            });
         }
     </script>
     <script src="Scripts/UNIS/Unis.js"></script>
