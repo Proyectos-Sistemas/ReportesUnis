@@ -854,6 +854,9 @@
         <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
         </asp:Label>
         <br />
+        <asp:Button ID="BtnDownload" runat="server" Text="Descargar Manual" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnDownload_Click" Visible="false" />
+        <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnReload_Click" Visible="false" />
+        <br />
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

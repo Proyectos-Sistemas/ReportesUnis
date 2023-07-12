@@ -69,6 +69,7 @@ namespace ReportesUnis
                 }
                 if (!IsPostBack)
                 {
+                    BtnReload.Visible = false;
                     controlPantalla = PantallaHabilitada("Semana");
                     if (controlPantalla >= 1)
                     {
@@ -830,6 +831,7 @@ namespace ReportesUnis
         private string actualizarInformacion()
         {
             string cameraAvailable = hdnCameraAvailable.Value;
+            bool archivoDescargado = false;
             if (cameraAvailable == "true")
             {
                 int contador = 0;
@@ -893,16 +895,35 @@ namespace ReportesUnis
                         fotoAlmacenada();
                     }
                 }
+                return mensaje;
             }
             else
             {
-                lblActualizacion.Text = " La camara no tiene permisos disponibles";
+                lblActualizacion.ForeColor = System.Drawing.Color.Black;
+                lblActualizacion.Text = "La cámara no tiene permisos disponibles. <br /> " +
+                    "Para asignar los permisos correspondientes, descargué el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página.<br />";
                 mensaje = "0";
                 controlCamposVisibles();
+                BtnDownload.Visible = true;
+                BtnReload.Visible = true;
             }
-
-
             return mensaje;
+
+        }
+
+        public void DescargaArchivo()
+        {
+            //CurrentDirectory + "/Usuarios/FotosConfirmación/
+            string rutaArchivo = CurrentDirectory + "/Manuales/";
+            string nombreArchivo = "Manual borrador.docx";
+            // Configurar las cabeceras de la respuesta
+            Response.Clear();
+            Response.ContentType = "application/octet-stream";
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + nombreArchivo);
+
+            // Descargar el archivo
+            Response.TransmitFile(rutaArchivo + nombreArchivo);
+            Response.Flush();
         }
 
         //Eventos       
@@ -1971,6 +1992,23 @@ namespace ReportesUnis
             /*llenadoPaisnit();
             llenadoDepartamentoNit();
             llenadoMunicipioNIT();*/
+        }
+
+        protected void BtnReload_Click(object sender, EventArgs e)
+        {
+            Response.Redirect(@"~/ActualizacionEstudiantes.aspx");
+        }
+
+        protected void BtnDownload_Click(object sender, EventArgs e)
+        {        
+            // Descargar el archivo
+            string archivoDescarga = CurrentDirectory + "/Manuales/Manual borrador.docx";
+            string nombreArchivo = "Manual borrador.docx";
+            Response.Clear();
+            Response.ContentType = "application/octet-stream";
+            Response.AddHeader("Content-Disposition", "attachment; filename=\"" + nombreArchivo + "\"");
+            Response.WriteFile(archivoDescarga);
+            Response.End();
         }
     }
 }
