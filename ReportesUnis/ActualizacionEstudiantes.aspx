@@ -920,14 +920,6 @@
                 }
             }
 
-            if (nombreR.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-El Nombre 1 para el recibo es requerido.";
-                } else {
-                    mensaje = mensaje + "\n-El Nombre 1 para el recibo es requerido.";
-                }
-            }
-
             if (direccion1.trim() === "") {
                 if (mensaje.trim() == "") {
                     mensaje = "-La Dirección 1 es requerida.";
