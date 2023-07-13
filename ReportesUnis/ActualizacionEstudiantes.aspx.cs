@@ -110,13 +110,13 @@ namespace ReportesUnis
                             CmbPais.SelectedValue = "Guatemala";
                             tabla.Visible = false;
                         }
-                    }
 
-                }
-                else
-                {
-                    lblActualizacion.Text = "La pantalla de actualización está disponible únicamente de Lunes a Viernes.";
-                    controlCamposVisibles();
+                    }
+                    else
+                    {
+                        lblActualizacion.Text = "La pantalla de actualización está disponible únicamente de Lunes a Viernes.";
+                        controlCamposVisibles();
+                    }
                 }
             }
 
@@ -203,9 +203,10 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT EMPLID FROM SYSADM.PS_PERS_NID PN " +
                     //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                    "WHERE PN.NATIONAL_ID ='2993196360101'";
+                    //"WHERE PN.NATIONAL_ID ='2993196360101'";
+                    "WHERE PN.NATIONAL_ID ='2695688590301'";
                     //"WHERE PN.NATIONAL_ID ='4681531'";
-                    //"WHERE PN.NATIONAL_ID ='2327809510101'";
+                    //"WHERE PN.NATIONAL_ID ='2708399090301'"; //----
                     //"WHERE PN.NATIONAL_ID ='3682754340101' ";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -221,17 +222,17 @@ namespace ReportesUnis
                                         "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
                                         "APD.DESCR CARRERA, AGT.DESCR FACULTAD, " +
                                         "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'No Consta' END STATUS, " +
-                                        "(SELECT NATIONAL_ID FROM SYSADM.PS_PERS_NID WHERE NATIONAL_ID_TYPE= 'NITREC' AND EMPLID = '" + emplid + "') NIT," +
-                                        "(SELECT PNA.FIRST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "') NOMBRE_NIT, " +
-                                        "(SELECT PNA.LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "') APELLIDO_NIT, " +
-                                        "(SELECT SECOND_LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "') CASADA_NIT, " +
-                                        "(SELECT ADDRESS1 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') DIRECCION1_NIT, " +
-                                        "(SELECT ADDRESS2 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') DIRECCION2_NIT, " +
-                                        "(SELECT ADDRESS3 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') DIRECCION3_NIT, " +
-                                        "(SELECT C.DESCR FROM SYSADM.PS_ADDRESSES PA JOIN SYSADM.PS_COUNTRY_TBL C ON PA.COUNTRY = C.COUNTRY AND PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') PAIS_NIT, " +
-                                        "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') MUNICIPIO_NIT, " +
-                                        "(SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "') DEPARTAMENTO_NIT, " +
-                                        "(SELECT ST.STATE FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ) STATE_NIT, " +
+                                        "(SELECT NATIONAL_ID FROM SYSADM.PS_PERS_NID WHERE NATIONAL_ID_TYPE= 'NITREC' AND EMPLID = '" + emplid + "' FETCH FIRST 1 ROWS ONLY) NIT," +
+                                        "(SELECT PNA.FIRST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "' ORDER BY EFFDT DESC FETCH FIRST 1 ROWS ONLY) NOMBRE_NIT, " +
+                                        "(SELECT PNA.LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "' ORDER BY EFFDT DESC FETCH FIRST 1 ROWS ONLY) APELLIDO_NIT, " +
+                                        "(SELECT SECOND_LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "' ORDER BY PNA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) CASADA_NIT, " +
+                                        "(SELECT ADDRESS1 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DIRECCION1_NIT, " +
+                                        "(SELECT ADDRESS2 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DIRECCION2_NIT, " +
+                                        "(SELECT ADDRESS3 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DIRECCION3_NIT, " +
+                                        "(SELECT C.DESCR FROM SYSADM.PS_ADDRESSES PA JOIN SYSADM.PS_COUNTRY_TBL C ON PA.COUNTRY = C.COUNTRY AND PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) PAIS_NIT, " +
+                                        "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) MUNICIPIO_NIT, " +
+                                        "(SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DEPARTAMENTO_NIT, " +
+                                        "(SELECT ST.STATE FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) STATE_NIT, " +
                                         "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, " +
                                         "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, " +
                                         "TT.TERM_BEGIN_DT, ROW_NUMBER() OVER (PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, C.DESCR PAIS " +
@@ -266,12 +267,13 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                                       //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                                       //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                                       "WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián
-                                                                                  //"WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
-                                                                                  //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
-                                                                                  //"WHERE PN.NATIONAL_ID ='2993196360101' " + // 
+                                                                                   //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
+                                                                                   //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
+                                                                                   //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián
+                                                                                   //"WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
+                                                                                   //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
+                                                                                   //"WHERE PN.NATIONAL_ID ='2708399090301' " +
+                                                                                   "WHERE PN.NATIONAL_ID ='2695688590301' " +
                                        ") WHERE CNT = 1";
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -831,7 +833,6 @@ namespace ReportesUnis
         private string actualizarInformacion()
         {
             string cameraAvailable = hdnCameraAvailable.Value;
-            bool archivoDescargado = false;
             if (cameraAvailable == "true")
             {
                 int contador = 0;
@@ -851,6 +852,7 @@ namespace ReportesUnis
                         else
                         {
                             mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
+                            lblActualizacion.Text = mensaje;
                         }
                     }
 
@@ -986,6 +988,7 @@ namespace ReportesUnis
             {
                 mensaje = "No puede enviarse información vacía y es necesario seleccionar el estado civil, un país y también ingresar un departamento y un muncipio";
             }
+            lblActualizacion.Text = mensaje;
         }
         protected string IngresoDatos()
         {
@@ -1246,8 +1249,9 @@ namespace ReportesUnis
                                                 "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                                 //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
                                                 //"WHERE PN.NATIONAL_ID ='4681531')" +
-                                                "WHERE PN.NATIONAL_ID ='2993196360101')" +
-                                                //"WHERE PN.NATIONAL_ID ='2327809510101')" +
+                                                //"WHERE PN.NATIONAL_ID ='2993196360101')" +
+                                                "WHERE PN.NATIONAL_ID ='2695688590301')" +
+                                                //"WHERE PN.NATIONAL_ID ='2708399090301')" +
                                                 //"WHERE PN.NATIONAL_ID ='2990723550101')" +
                                                 //"WHERE PN.NATIONAL_ID ='3682754340101')" +
                                                 "WHERE CODIGO_BARRAS=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CODIGO_BARRAS=PASAPORTE OR CODIGO_BARRAS=CEDULA " +
@@ -1299,7 +1303,11 @@ namespace ReportesUnis
                                 cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_DATA PPD SET PPD.PHONE = '" + txtTelefono.Text + "', PPD.STATE =  '" + State.Text + "', " +
                                     "PPD.ADDRESS1 = '" + txtDireccion.Text + "', PPD.ADDRESS2 = '" + txtDireccion2.Text + "', PPD.ADDRESS3 = '" + txtDireccion3.Text + "', PPD.COUNTRY = '" + codPais + "',LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "' WHERE PPD.EMPLID = '" + UserEmplid.Text + "'";
                                 cmd.ExecuteNonQuery();
+
                                 //Numero de Telefono
+                                int contadorPrincipales = 0;
+                                string principal = "Y";
+
                                 if (!String.IsNullOrEmpty(TruePhone.Text))
                                 {
                                     //TruePhone.Text = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PP.EMPLID = '" + UserEmplid.Text + "' AND PP.PHONE_TYPE='HOME'";
@@ -1309,28 +1317,61 @@ namespace ReportesUnis
                                 }
                                 else
                                 {
-                                    cmd.CommandText = "INSERT INTO SYSADM.PS_PERSONAL_PHONE (EMPLID, PHONE_TYPE,COUNTRY_CODE,EXTENSION,PHONE,PREF_PHONE_FLAG) VALUES ('" + UserEmplid.Text + "', 'HOME',' ',' ',  '" + txtTelefono.Text + "', 'Y')";
+                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_PERSONAL_PHONE WHERE PREF_PHONE_FLAG = 'Y' AND EMPLID = '" + UserEmplid.Text + "'";
+                                    reader = cmd.ExecuteReader();
+                                    while (reader.Read())
+                                    {
+                                        contadorPrincipales = Convert.ToInt16(reader["CONTADOR"]);
+                                    }
+                                    if (contadorPrincipales > 0)
+                                    {
+                                        principal = "N";
+                                    }
+                                    cmd.CommandText = "INSERT INTO SYSADM.PS_PERSONAL_PHONE (EMPLID, PHONE_TYPE,COUNTRY_CODE,EXTENSION,PHONE,PREF_PHONE_FLAG) VALUES ('" + UserEmplid.Text + "', 'HOME',' ',' ',  '" + txtTelefono.Text + "', '" + principal + "')";
                                     cmd.ExecuteNonQuery();
                                 }
                                 //Direccion
-                                if (!String.IsNullOrEmpty(TrueDir.Text))
+                                int ContadorDirecciones = 0;
+                                int ContadorTipoDirecciones = 0;
+                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "'";
+                                reader = cmd.ExecuteReader();
+                                while (reader.Read())
+                                {
+                                    ContadorDirecciones = Convert.ToInt16(reader["CONTADOR"]);
+                                }
+                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESS_TYPE WHERE ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "'";
+                                reader = cmd.ExecuteReader();
+                                while (reader.Read())
+                                {
+                                    ContadorTipoDirecciones = Convert.ToInt16(reader["CONTADOR"]);
+                                }
+
+                                if (ContadorDirecciones > 0)
                                 {
                                     cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + State.Text + "', " +
                                         "A.ADDRESS1 = '" + txtDireccion.Text + "', " +
                                         "A.ADDRESS2 = '" + txtDireccion2.Text + "', " +
                                         "A.ADDRESS3 = '" + txtDireccion3.Text + "', " +
-                                        "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='HOME'";
+                                        "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
+                                        "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='HOME'";
                                     cmd.ExecuteNonQuery();
                                 }
                                 else
                                 {
                                     cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES (EMPLID, ADDRESS_TYPE,COUNTY,CITY,NUM1, NUM2, HOUSE_TYPE, ADDR_FIELD1, ADDR_FIELD2, ADDR_FIELD3,POSTAL,GEO_CODE,IN_CITY_LIMIT,ADDRESS1_AC,ADDRESS2_AC,ADDRESS3_AC,CITY_AC,REG_REGION,EFFDT,EFF_STATUS,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,STATE,LASTUPDDTTM,LASTUPDOPRID) " +
-                                        "VALUES('" + UserEmplid.Text + "', 'HOME',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'A', '" + codPais + "', '" + txtDireccion.Text + "', '" + txtDireccion2.Text + "', '" + txtDireccion3.Text + "', ' ','" + State.Text + "', '" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "','" + TextUser.Text + "')";
+                                    "VALUES('" + UserEmplid.Text + "', 'HOME',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', '" + DateTime.Now.ToString("dd/MM/yy") + "', 'A', '" + codPais + "', '" + txtDireccion.Text + "', '" + txtDireccion2.Text + "', '" + txtDireccion3.Text + "', ' ','" + State.Text + "', '" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "','" + TextUser.Text + "')";
                                     cmd.ExecuteNonQuery();
                                     cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES_SA (LOC_ADDR_DATA,LOC_ADDR, LOC_ADDR_LINE, LOC_ADDR_TYPE, EXT_ORG_ID, DESCR_EXT_ORG, DESCR_ORG_LOCATION, CONTACT_NAME, DATA_SOURCE, EMPLID, ADDRESS_TYPE,EFFDT,ORG_LOCATION,MAINT_ADDR_MANUAL,MAINT_OTHER_MANUAL,ORG_CONTACT,SEASONAL_ADDR) " +
-                                        "VALUES(' ',' ',' ',' ',' ',' ',' ',' ',' ','" + UserEmplid.Text + "', 'HOME', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 0, 'N','N',0,'N')";
+                                        "VALUES(' ',' ',' ',' ',' ',' ',' ',' ',' ','" + UserEmplid.Text + "', 'HOME', '" + DateTime.Now.ToString("dd/MM/yy") + "', 0, 'N','N',0,'N')";
                                     cmd.ExecuteNonQuery();
+                                    if (ContadorTipoDirecciones == 0)
+                                    {
+                                        cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESS_TYPE (EMPLID, ADDRESS_TYPE, DESCR) " +
+                                            "VALUES('" + UserEmplid.Text + "', 'HOME', ' ')";
+                                        cmd.ExecuteNonQuery();
+                                    }
                                 }
+
                                 //Estado Civil
                                 cmd.CommandText = "UPDATE SYSADM.PS_PERS_DATA_EFFDT PD SET PD.MAR_STATUS = '" + ec + "', " +
                                                     "LASTUPDDTTM = SYSDATE , " +
@@ -1342,9 +1383,41 @@ namespace ReportesUnis
                                 {
                                     if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
                                     {
-                                        if (!String.IsNullOrEmpty(TrueNit.Text))
+                                        int ContadorNombreNit = 0;
+                                        int ContadorDirecionNit = 0;
+                                        int ContadorNit = 0;
+                                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND  NAME_TYPE = 'REC' AND EMPLID = '" + UserEmplid.Text + "'";
+                                        reader = cmd.ExecuteReader();
+                                        while (reader.Read())
                                         {
-                                            //TruePhone.Text = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "' WHERE PP.EMPLID = '" + UserEmplid.Text + "' AND PP.PHONE_TYPE='HOME'";
+                                            ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                                        }
+
+                                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND ADDRESS_TYPE = 'REC' AND EMPLID = '" + UserEmplid.Text + "'";
+                                        reader = cmd.ExecuteReader();
+                                        while (reader.Read())
+                                        {
+                                            ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                                        }
+
+                                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_PERS_NID WHERE NATIONAL_ID_TYPE = 'NITREC' AND EMPLID = '" + UserEmplid.Text + "'";
+                                        reader = cmd.ExecuteReader();
+                                        while (reader.Read())
+                                        {
+                                            ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
+                                        }
+
+                                        if (ContadorNombreNit == 0)
+                                        {
+                                            //INSERTA EL NOMBRE DEL NIT
+                                            cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES (EMPLID, NAME_TYPE, EFFDT, EFF_STATUS, COUNTRY_NM_FORMAT, NAME, NAME_INITIALS, NAME_PREFIX, NAME_SUFFIX, NAME_ROYAL_PREFIX, NAME_ROYAL_SUFFIX, NAME_TITLE, LAST_NAME_SRCH, FIRST_NAME_SRCH, LAST_NAME, FIRST_NAME, MIDDLE_NAME, SECOND_LAST_NAME, SECOND_LAST_SRCH, NAME_AC, PREF_FIRST_NAME, PARTNER_LAST_NAME, PARTNER_ROY_PREFIX, LAST_NAME_PREF_NLD, NAME_DISPLAY, NAME_FORMAL, NAME_DISPLAY_SRCH, LASTUPDDTTM, LASTUPDOPRID) " +
+                                                "VALUES('" + UserEmplid.Text + "','REC','" + DateTime.Now.ToString("dd/MM/yyyy") + "','A','MEX',REPLACE('" + TxtApellidoR.Text + " " + TxtCasadaR.Text + "," + TxtNombreR.Text + "','  ',' '),' ',' ',' ',' ',' ',' '," +
+                                                "REPLACE(UPPER('" + TxtApellidoR.Text + "'),' ',''),REPLACE(UPPER('" + TxtNombreR.Text + "'),' ',''),'" + TxtApellidoR.Text + "','" + TxtNombreR.Text + "',' ','" + TxtCasadaR.Text + "',REPLACE(UPPER('" + TxtCasadaR.Text + "'),' ','')||' '," +
+                                                "' ',' ',' ',' ','1','" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "','" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "',REPLACE(UPPER('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "'),' ',''),SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                        else
+                                        {
                                             //ACTUALIZA NOMBRE DEL NIT
                                             cmd.CommandText = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = REPLACE('" + TxtApellidoR.Text + " " + TxtCasadaR.Text + "," + TxtNombreR.Text + "','  ',' ') , " +
                                                                 "PN.LAST_NAME_SRCH =REPLACE(UPPER('" + TxtApellidoR.Text + "'),' ',''), " +
@@ -1358,35 +1431,27 @@ namespace ReportesUnis
                                                                 "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
                                                                 "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'";
                                             cmd.ExecuteNonQuery();
-
+                                        }
+                                        if (ContadorNit == 0)
+                                        {
+                                            //INSERTA EL NIT
+                                            cmd.CommandText = "INSERT INTO SYSADM.PS_PERS_NID (EMPLID, COUNTRY, NATIONAL_ID_TYPE, NATIONAL_ID, SSN_KEY_FRA, PRIMARY_NID, TAX_REF_ID_SGP, LASTUPDDTTM, LASTUPDOPRID) " +
+                                            "VALUES ('" + UserEmplid.Text + "','GTM','NITREC','" + txtNit.Text + "',' ','N','N',SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                        else
+                                        {
                                             //ACTUALIZA NIT
                                             cmd.CommandText = "UPDATE SYSADM.PS_PERS_NID PN SET PN.NATIONAL_ID = '" + txtNit.Text + "', " +
                                                                 "LASTUPDDTTM = SYSDATE, " +
                                                                 "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "'" +
                                                                 " WHERE PN.NATIONAL_ID_TYPE = 'NITREC' AND PN.EMPLID='" + UserEmplid.Text + "'";
                                             cmd.ExecuteNonQuery();
-
-                                            //ACTUALIZA DIRECCION DEL NIT
-                                            cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + StateNIT.Text + "', " +
-                                                "A.ADDRESS1 = '" + TxtDiRe1.Text + "', " +
-                                                "A.ADDRESS2 = '" + TxtDiRe2.Text + "', " +
-                                                "A.ADDRESS3 = '" + TxtDiRe3.Text + "', " +
-                                                "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
-                                                "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='REC'";
-                                            cmd.ExecuteNonQuery();
                                         }
-                                        else
+
+                                        if (ContadorDirecionNit == 0)
                                         {
-                                            cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES (EMPLID, NAME_TYPE, EFFDT, EFF_STATUS, COUNTRY_NM_FORMAT, NAME, NAME_INITIALS, NAME_PREFIX, NAME_SUFFIX, NAME_ROYAL_PREFIX, NAME_ROYAL_SUFFIX, NAME_TITLE, LAST_NAME_SRCH, FIRST_NAME_SRCH, LAST_NAME, FIRST_NAME, MIDDLE_NAME, SECOND_LAST_NAME, SECOND_LAST_SRCH, NAME_AC, PREF_FIRST_NAME, PARTNER_LAST_NAME, PARTNER_ROY_PREFIX, LAST_NAME_PREF_NLD, NAME_DISPLAY, NAME_FORMAL, NAME_DISPLAY_SRCH, LASTUPDDTTM, LASTUPDOPRID) " +
-                                                "VALUES('" + UserEmplid.Text + "','REC','01/01/00','A','MEX',REPLACE('" + TxtApellidoR.Text + " " + TxtCasadaR.Text + "," + TxtNombreR.Text + "','  ',' '),' ',' ',' ',' ',' ',' '," +
-                                                "REPLACE(UPPER('" + TxtApellidoR.Text + "'),' ',''),REPLACE(UPPER('" + TxtNombreR.Text + "'),' ',''),'" + TxtApellidoR.Text + "','" + TxtNombreR.Text + "',' ','" + TxtCasadaR.Text + "',REPLACE(UPPER('" + TxtCasadaR.Text + "'),' ','')||' '," +
-                                                "' ',' ',' ',' ','1','" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "','" + TxtNombreR.Text + " " + TxtApellidoR.Text + " " + TxtCasadaR.Text + "',REPLACE(UPPER('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "'),' ',''),SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
-                                            cmd.ExecuteNonQuery();
-
-                                            cmd.CommandText = "INSERT INTO SYSADM.PS_PERS_NID (EMPLID, COUNTRY, NATIONAL_ID_TYPE, NATIONAL_ID, SSN_KEY_FRA, PRIMARY_NID, TAX_REF_ID_SGP, LASTUPDDTTM, LASTUPDOPRID) " +
-                                                "VALUES ('" + UserEmplid.Text + "','GTM','NITREC','" + txtNit.Text + "',' ','N','N',SYSDATE,'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";
-                                            cmd.ExecuteNonQuery();
-
+                                            //INSERTA LA DIRECCION DEL NIT
                                             cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES (EMPLID, ADDRESS_TYPE,COUNTY,CITY,NUM1, NUM2, HOUSE_TYPE, ADDR_FIELD1, ADDR_FIELD2, ADDR_FIELD3,POSTAL,GEO_CODE,IN_CITY_LIMIT," +
                                                 "ADDRESS1_AC,ADDRESS2_AC,ADDRESS3_AC,CITY_AC,REG_REGION,EFFDT,EFF_STATUS,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,STATE,LASTUPDDTTM,LASTUPDOPRID) " +
                                                "VALUES('" + UserEmplid.Text + "', 'REC',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', '" + DateTime.Now.ToString("dd/MM/yyyy")
@@ -1398,6 +1463,17 @@ namespace ReportesUnis
                                                 "VALUES(' ',' ',' ',' ',' ',' ',' ',' ',' ','" + UserEmplid.Text + "', 'REC', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 0, 'N','N',0,'N')";
                                             cmd.ExecuteNonQuery();
                                         }
+                                        else
+                                        {
+                                            //ACTUALIZA DIRECCION DEL NIT
+                                            cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + StateNIT.Text + "', " +
+                                                "A.ADDRESS1 = '" + TxtDiRe1.Text + "', " +
+                                                "A.ADDRESS2 = '" + TxtDiRe2.Text + "', " +
+                                                "A.ADDRESS3 = '" + TxtDiRe3.Text + "', " +
+                                                "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
+                                                "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='REC'";
+                                            cmd.ExecuteNonQuery();
+                                        }
                                     }
                                     else
                                     {
@@ -1406,23 +1482,35 @@ namespace ReportesUnis
                                 }
 
 
-                                if (!txtInsert.Text.IsNullOrWhiteSpace() && RegistroCarne == "0")
+                                if (!txtInsert.Text.IsNullOrWhiteSpace())
                                 {
-                                    cmd.CommandText = txtInsert.Text;
-                                    cmd.ExecuteNonQuery();
+                                    if ((txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text))
+                                    {
+                                        cmd.Connection = con;
+                                        cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + txtCarne.Text + "'";
+                                        cmd.ExecuteNonQuery();
+
+                                        cmd.CommandText = txtInsert.Text;
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                    if (RegistroCarne == "0" )
+                                    {
+                                        cmd.CommandText = txtInsert.Text;
+                                        cmd.ExecuteNonQuery();
+                                    }
                                 }
 
-                                mensaje = "Su información fue actualizada correctamente";
                                 FileUpload2.Visible = false;
                                 CargaDPI.Visible = false;
-                                mostrarInformación();
                                 transaction.Commit();
                                 con.Close();
+                                mostrarInformación();
+                                mensaje = "Su información fue actualizada correctamente";
                             }
                             catch (Exception x)
                             {
                                 transaction.Rollback();
-                                mensaje = "-Ocurrió un problema al actualizar su información " + x;
+                                mensaje = "Ocurrió un problema al actualizar su información.";
                                 fotoAlmacenada();
                             }
                         }
@@ -1430,7 +1518,7 @@ namespace ReportesUnis
                 }
                 catch (Exception X)
                 {
-                    mensaje = "Ocurrió un problema al actualizar su información" + X;
+                    mensaje = "Ocurrió un problema al actualizar su información";
                 }
                 AlmacenarFotografia();
                 Thread.Sleep(1000);
@@ -1955,9 +2043,6 @@ namespace ReportesUnis
                     lblActualizacion.Text = "";
                     AlmacenarFotografia();
                     fotoAlmacenada();
-                    CargaDPI.Visible = true;
-
-                    //UpdatePanel1.Update();
                 }
                 else
                 {
@@ -2000,7 +2085,7 @@ namespace ReportesUnis
         }
 
         protected void BtnDownload_Click(object sender, EventArgs e)
-        {        
+        {
             // Descargar el archivo
             string archivoDescarga = CurrentDirectory + "/Manuales/Manual borrador.docx";
             string nombreArchivo = "Manual borrador.docx";

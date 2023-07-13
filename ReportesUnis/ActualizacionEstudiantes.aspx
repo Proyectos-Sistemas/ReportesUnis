@@ -346,7 +346,7 @@
                 </asp:TableCell>
                 <%-- DIRECCION TEXTBOX 4--%>
                 <asp:TableCell>
-                    <asp:CustomValidator ID="validarDireccion" runat="server" ControlToValidate="txtDireccion" ErrorMessage="La dirección debe de tener al menos 10 caracteres" ClientValidationFunction="VerificarCantidadDireccion" ForeColor="Red" Font-Size="Small"></asp:CustomValidator>
+                    <br />
                     <br />
                     <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px"></asp:TextBox>
                     <br />
@@ -709,7 +709,7 @@
                 <%-- 4 --%>
                 <asp:TableCell>
                     <br />
-                    <asp:CustomValidator ID="CustomValidator1" runat="server" ControlToValidate="TxtDiRe1" ErrorMessage="La dirección debe de tener al menos 6 caracteres" ClientValidationFunction="VerificarCantidadDireccionNIT" ForeColor="Red" Font-Size="Small"></asp:CustomValidator>
+                    <br />
                     <br />
                     <asp:TextBox ID="TxtDiRe1" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false"></asp:TextBox>
                     <br />
@@ -903,9 +903,9 @@
             var direccion1 = document.getElementById('<%= txtDireccion.ClientID %>').value;
             var direccionR1 = document.getElementById('<%= TxtDiRe1.ClientID %>').value;
             var telefono = document.getElementById('<%= txtTelefono.ClientID %>').value;
-            var paisNit = document.getElementById('<%= CmbPaisNIT.ClientID %>').value;
-            var deptoNit = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>').value;
-            var muniNit = document.getElementById('<%= CmbMunicipioNIT.ClientID %>').value;
+            var pais = document.getElementById('<%= CmbPais.ClientID %>').value;
+            var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
+            var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
             var foto = document.getElementById('urlPath').value;
 
             if (apellido.trim() === "") {
@@ -926,13 +926,27 @@
                 } else {
                     mensaje = mensaje + "\n-La Dirección 1 es requerida.";
                 }
-            }
+            }            
 
-            if (direccion1.length > 0 && direccion1.length < 11) {
+            if (pais.trim() === "") {
                 if (mensaje.trim() == "") {
-                    mensaje = "-La Dirección 1 debe de tener como minimo 10 caracteres.";
+                    mensaje = "-El país es requerido.";
                 } else {
-                    mensaje = mensaje + "\n-La Dirección 1 debe de tener como minimo 10 caracteres.";
+                    mensaje = mensaje + "\n-El país es requerido.";
+                }
+            }
+            if (depto.trim() === "") {
+                if (mensaje.trim() == "") {
+                    mensaje = "-El departamento es requerido.";
+                } else {
+                    mensaje = mensaje + "\n-El departamento es requerido.";
+                }
+            }
+            if (muni.trim() === "") {
+                if (mensaje.trim() == "") {
+                    mensaje = "-El municipio es requerido.";
+                } else {
+                    mensaje = mensaje + "\n-El municipio es requerido.";
                 }
             }
 
@@ -994,14 +1008,6 @@
                     mensaje = "-La Dirección 1 para el recibo es requerida.";
                 } else {
                     mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
-                }
-            }
-
-            if (direccionR1.length > 0 && direccionR1.length < 6) {
-                if (mensaje.trim() == "") {
-                    mensaje = "-La Dirección 1 para el recibo debe de tener como minimo 6 caracteres.";
-                } else {
-                    mensaje = mensaje + "\n-La Dirección 1 para el recibo debe de tener como minimo 6 caracteres.";
                 }
             }
 
@@ -1132,13 +1138,6 @@
             args.IsValid = (args.Value.length >= 7);
         }
 
-        function VerificarCantidadDireccion(sender, args) {
-            args.IsValid = (args.Value.length >= 9 && args.Value.length >= 1);
-        }
-
-        function VerificarCantidadDireccionNIT(sender, args) {
-            args.IsValid = (args.Value.length >= 5 && args.Value.length >= 1);
-        }
 
         function checkCameraAccess() {
             navigator.mediaDevices.getUserMedia({ video: true })

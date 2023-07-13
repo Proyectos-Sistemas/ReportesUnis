@@ -16,11 +16,19 @@ namespace ReportesUnis
     public partial class MantenimientoPantallas : System.Web.UI.Page
     {
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            LoadData();
-            LeerInfoTxt();
-            Buscar();
+            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("ACCESO_CARNETIZACION") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
+            {
+                Response.Redirect(@"~/Default.aspx");
+            }
+            if (!IsPostBack)
+            {
+                LoadData();
+                LeerInfoTxt();
+                Buscar();
+            }
         }
 
         private void LoadData()

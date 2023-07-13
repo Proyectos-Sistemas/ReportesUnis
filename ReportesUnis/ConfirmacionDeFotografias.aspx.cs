@@ -29,7 +29,7 @@ namespace ReportesUnis
             LeerInfoTxtSQL();
             LeerInfoTxt();
             rutaFisica = Server.MapPath("~" + txtPath.Text);
-            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("DATOS_FOTOGRAFIAS") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
+            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("ACCESO_CARNETIZACION") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
             {
                 Response.Redirect(@"~/Default.aspx");
             }
