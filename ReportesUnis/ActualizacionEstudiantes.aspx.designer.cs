@@ -69,6 +69,24 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label Label3;
 
         /// <summary>
+        /// Control Label4.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label4;
+
+        /// <summary>
+        /// Control Label5.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label5;
+
+        /// <summary>
         /// Control FileUpload2.
         /// </summary>
         /// <remarks>
@@ -303,15 +321,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox txtNombreAPEX;
 
         /// <summary>
-        /// Control txtCInicial.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCInicial;
-
-        /// <summary>
         /// Control txtConfirmacion.
         /// </summary>
         /// <remarks>
@@ -364,6 +373,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label txtAInicial;
+
+        /// <summary>
+        /// Control txtCInicial.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtCInicial;
 
         /// <summary>
         /// Control tabla.

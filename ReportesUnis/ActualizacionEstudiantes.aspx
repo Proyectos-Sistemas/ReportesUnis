@@ -41,10 +41,14 @@
         <div>
             <h5 style="text-align: center;">Carga de Documento de identificación</h5>
         </div>
-        <asp:Label ID="Label3" runat="server" Font-Bold="false">Para realizar un cambio en su nombre es necesario adjuntar fotografia de su DPI(ambos lados)/Pasaporte</asp:Label>
+        <asp:Label ID="Label3" runat="server" Font-Bold="false">Para realizar un cambio en su nombre es necesario adjuntar según sea el caso:</asp:Label>
+        <br />
+        <asp:Label ID="Label4" runat="server" Font-Bold="false" Font-Size="Small">a.) Fotografia de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
+        <br />
+        <asp:Label ID="Label5" runat="server" Font-Bold="false" Font-Size="Small">b.) Fotografia de su Pasaporte</asp:Label>
         <br />
         <br />
-        <asp:FileUpload ID="FileUpload2" runat="server" AllowMultiple="true" accept="image/jpeg" onchange="validateFileSize();" />
+        <asp:FileUpload ID="FileUpload2" runat="server" AllowMultiple="true" accept="image/jpeg" onchange="validarCargaArchivos();" />
         <div id="dvMsge" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
             El tamaño máximo permitido es de 1 GB
         </div>
@@ -100,8 +104,6 @@
         <asp:TextBox ID="txtApellidoAPEX" runat="server" Visible="false"></asp:TextBox>
         <%-- NOMBRE PARA APEX --%>
         <asp:TextBox ID="txtNombreAPEX" runat="server" Visible="false"></asp:TextBox>
-        <%-- APELLIDO CASADA INICIAL --%>
-        <asp:TextBox ID="txtCInicial" runat="server" Visible="false"></asp:TextBox>
         <%-- CONFIRMACION OPERADOR --%>
         <asp:Label ID="txtConfirmacion" runat="server" Visible="false"></asp:Label>
         <%-- ¡tiene pasaporte? --%>
@@ -116,6 +118,8 @@
         <asp:Label ID="txtNInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
         <%-- APELLIDO INICIAL --%>
         <asp:Label ID="txtAInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
+        <%-- APELLIDO CASADA INICIAL --%>
+        <asp:Label ID="txtCInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
         <asp:Table ID="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: right; align-content: center" CssClass="table-condensed table-border">
             <asp:TableRow HorizontalAlign="Center">
@@ -247,6 +251,8 @@
                 <%-- APELLIDO CASADA  --%>
                 <asp:TableCell>
                     <asp:TextBox ID="txtCasada" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
+                    <br />
+                    <br />
                 </asp:TableCell>
                 <%-- ESPACIO --%>
                 <asp:TableCell Width="2%">
@@ -1120,17 +1126,35 @@
         });
 
         $(document).ready(function () {
-            $('#<%= txtNombre.ClientID %> , #<%= txtApellido.ClientID %>').on('input', function () {
+            $('#<%= txtNombre.ClientID %> , #<%= txtApellido.ClientID %>, #<%= txtCasada.ClientID %>').on('input', function () {
                 var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
                 var txtNInicial = $('#<%= txtNInicial.ClientID %>').text().trim();
                 var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
                 var txtAInicial = $('#<%= txtAInicial.ClientID %>').text().trim();
+                var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
+                var txtCInicial = $('#<%= txtCInicial.ClientID %>').text().trim();
 
-                if (txtNombre !== txtNInicial || txtApellido !== txtAInicial) {
+                if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) {
                     $('#<%= CargaDPI.ClientID %>').css('display', 'block');
                 } else {
                     $('#<%= CargaDPI.ClientID %>').css('display', 'none');
                 }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#<%= txtNombre.ClientID %> ').on('input', function () {
+                $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+            });
+        });
+        $(document).ready(function () {
+            $('#<%= txtApellido.ClientID %> ').on('input', function () {
+                $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+            });
+        });
+        $(document).ready(function () {
+            $('#<%= txtCasada.ClientID %> ').on('input', function () {
+                $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
             });
         });
 
@@ -1151,6 +1175,20 @@
                 document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'false';
             });
         }
+
+        function validarCargaArchivos() {
+            var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
+            var files = fileUpload.files;
+
+            if (files.length > 2) {
+                alert("Solo se permiten cargar 2 archivos.");
+                // Eliminar los archivos adicionales
+                while (files.length > 2) {
+                    fileUpload.remove(files.length - 1);
+                }
+            }
+        }
+
     </script>
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
