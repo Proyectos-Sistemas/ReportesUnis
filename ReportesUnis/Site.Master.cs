@@ -40,24 +40,6 @@ namespace ReportesUnis
 
                 }
 
-                //if (respuesta.Contains("RLI_VistaAlumnos"))
-                //{
-                //    ActEstudiantes.Visible = true;
-                //}
-                //else
-                //{
-                //    ActEstudiantes.Visible = respuesta.Contains(ActEstudiantes.ValidationGroup);
-                //}
-                
-                //if (respuesta.Contains("RLI_VistaEmpleados"))
-                //{
-                //    ActEmpleados.Visible = true;
-                //}
-                //else
-                //{
-                //    ActEmpleados.Visible = respuesta.Contains(ActEmpleados.ValidationGroup);
-                //}
-
                 if (respuesta.Contains("DATOS_FOTOGRAFIAS"))
                 {
                     RepEstudiantes.Visible = RepEmpleados.Visible = RepCamarasEst.Visible = RepCamarasEmp.Visible = CargaCTEst.Visible = CargaCTEmp.Visible = true;
@@ -93,7 +75,7 @@ namespace ReportesUnis
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
         {
             // Redireccionar a ~/Account/SignOut después de cerrar sesión.
-            string callbackUrl = Request.Url.GetLeftPart(UriPartial.Authority) + Response.ApplyAppPathModifier("~/Account/SignOut");
+            string callbackUrl = Request.Url.GetLeftPart(UriPartial.Authority) + Response.ApplyAppPathModifier("~/Default");
 
             HttpContext.Current.GetOwinContext().Authentication.SignOut(
                 new AuthenticationProperties { RedirectUri = callbackUrl },

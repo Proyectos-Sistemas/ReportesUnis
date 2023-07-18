@@ -10,7 +10,7 @@
 
     <div class="container2" id="CargaFotografia" runat="server" visible="true">
         <div>
-            <asp:HiddenField runat="server" ID="hdnCameraAvailable"/>
+            <asp:HiddenField runat="server" ID="hdnCameraAvailable" />
             <h5 style="text-align: center;">Toma de Fografía</h5>
             <br />
             <asp:Table ID="Fotos" runat="server" Style="margin-left: auto; margin-right: auto; text-align: right; align-content: center" CssClass="table-condensed table-border">
@@ -120,6 +120,8 @@
         <asp:Label ID="txtAInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
         <%-- APELLIDO CASADA INICIAL --%>
         <asp:Label ID="txtCInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
+        <%-- CONTROL DE VALIDACION DE NIT--%>
+        <asp:Label ID="ValidacionNit" runat="server" Visible="true" ForeColor="White">0</asp:Label>
         <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
         <asp:Table ID="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: right; align-content: center" CssClass="table-condensed table-border">
             <asp:TableRow HorizontalAlign="Center">
@@ -547,7 +549,7 @@
             <asp:Label runat="server">Desea utilizar CF:  </asp:Label>
             <br />
             <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI" OnCheckedChanged="RadioButtonNombreSi_CheckedChanged" />
-            <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO" OnCheckedChanged="RadioButtonNombreNo_CheckedChanged"/>
+            <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO" OnCheckedChanged="RadioButtonNombreNo_CheckedChanged" />
         </div>
         <%--<asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional" >
             <ContentTemplate>--%>
@@ -913,124 +915,129 @@
             var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
             var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
             var foto = document.getElementById('urlPath').value;
+            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').text().trim();
 
-            if (apellido.trim() === "") {
-                mensaje = "-Los Apellidos son requerido.";
-            }
-
-            if (nombre.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-Los Nombres son requeridos.";
-                } else {
-                    mensaje = mensaje + "\n-Los Nombres son requeridos.";
-                }
-            }
-
-            if (direccion1.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-La Dirección 1 es requerida.";
-                } else {
-                    mensaje = mensaje + "\n-La Dirección 1 es requerida.";
-                }
-            }            
-
-            if (pais.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-El país es requerido.";
-                } else {
-                    mensaje = mensaje + "\n-El país es requerido.";
-                }
-            }
-            if (depto.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-El departamento es requerido.";
-                } else {
-                    mensaje = mensaje + "\n-El departamento es requerido.";
-                }
-            }
-            if (muni.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-El municipio es requerido.";
-                } else {
-                    mensaje = mensaje + "\n-El municipio es requerido.";
-                }
-            }
-
-            if (telefono.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-El Teléfono es requerido.";
-                } else {
-                    mensaje = mensaje + "\n-El Teléfono es requerido.";
-                }
-            }
-
-            if (telefono.length > 0 && telefono.length <= 7) {
-                if (mensaje.trim() == "") {
-                    mensaje = "-El Teléfono debe de tener 8 carácteres";
-                } else {
-                    mensaje = mensaje + "\n-El Teléfono debe de tener 8 carácteres";
-                }
-            }
-
-            if (foto.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-La fotografía es requerida";
-                } else {
-                    mensaje = mensaje + "\n-La fotografía es requerida";
-                }
-            }
-
-            if (nit.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-El NIT para el recibo es requerido.";
-                } else {
-                    mensaje = mensaje + "\n-El NIT para el recibo es requerido.";
-                }
-            }
-            //if (paisNit.trim() === "") {
-            //    if (mensaje.trim() == "") {
-            //        mensaje = "-El pais de la dirección para el recibo es requerido.";
-            //    } else {
-            //        mensaje = mensaje + "\n-El pais de la dirección para el recibo es requerido.";
-            //    }
-            //}
-            //if (deptoNit.trim() === "") {
-            //    if (mensaje.trim() == "") {
-            //        mensaje = "-El departamento de la dirección para el recibo es requerido.";
-            //    } else {
-            //        mensaje = mensaje + "\n-El departamento de la dirección para el recibo es requerido.";
-            //    }
-            //}
-            //if (muniNit.trim() === "") {
-            //    if (mensaje.trim() == "") {
-            //        mensaje = "-El municipio de la dirección para el recibo es requerido.";
-            //    } else {
-            //        mensaje = mensaje + "\n-El municipio de la dirección para el recibo es requerido.";
-            //    }
-            //}
-
-            if (direccionR1.trim() === "") {
-                if (mensaje.trim() == "") {
-                    mensaje = "-La Dirección 1 para el recibo es requerida.";
-                } else {
-                    mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
-                }
-            }
-
-            if (mensaje.trim() !== "") {
-                mensaje = mensaje.replace("/\n/g", "<br>");
-                alert(mensaje);
+            if (ValidacionNit !== "0") {
+                // Realiza las acciones necesarias si el valor es diferente de cero
+                alert("El NIT ha cambiado, es necesario validar");
                 return false;
-            } else if (confirm("¿Está seguro de que su información es correcta?")) {
-                __doPostBack('<%= BtnActualizar.ClientID %>', '');
-                return true; // Permite continuar con la acción del botón
             } else {
-                return false; // Cancela la acción del botón
+
+                if (apellido.trim() === "") {
+                    mensaje = "-Los Apellidos son requerido.";
+                }
+
+                if (nombre.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Los Nombres son requeridos.";
+                    } else {
+                        mensaje = mensaje + "\n-Los Nombres son requeridos.";
+                    }
+                }
+
+                if (direccion1.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-La Dirección 1 es requerida.";
+                    } else {
+                        mensaje = mensaje + "\n-La Dirección 1 es requerida.";
+                    }
+                }
+
+                if (pais.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El país es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El país es requerido.";
+                    }
+                }
+                if (depto.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El departamento es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El departamento es requerido.";
+                    }
+                }
+                if (muni.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El municipio es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El municipio es requerido.";
+                    }
+                }
+
+                if (telefono.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El Teléfono es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El Teléfono es requerido.";
+                    }
+                }
+
+                if (telefono.length > 0 && telefono.length <= 7) {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El Teléfono debe de tener 8 carácteres";
+                    } else {
+                        mensaje = mensaje + "\n-El Teléfono debe de tener 8 carácteres";
+                    }
+                }
+
+                if (foto.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-La fotografía es requerida";
+                    } else {
+                        mensaje = mensaje + "\n-La fotografía es requerida";
+                    }
+                }
+
+                if (nit.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El NIT para el recibo es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El NIT para el recibo es requerido.";
+                    }
+                }
+
+                if (direccionR1.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-La Dirección 1 para el recibo es requerida.";
+                    } else {
+                        mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
+                    }
+                }
+
+                if (mensaje.trim() !== "") {
+                    mensaje = mensaje.replace("/\n/g", "<br>");
+                    alert(mensaje);
+                    return false;
+                } else if (confirm("¿Está seguro de que su información es correcta?")) {
+                    __doPostBack('<%= BtnActualizar.ClientID %>', '');
+                    return true; // Permite continuar con la acción del botón
+                } else {
+                    return false; // Cancela la acción del botón
+                }
             }
         }
 
         function Documentos() {
             alert("Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.");
+        }
+
+        function NoExisteNit() {
+            alert("El NIT no existe. Intente de nuevo");
+        }
+
+
+        function ConfirmacionActualizacionSensible() {
+            mensaje = "Su información fue almacenada correctamente. \nLa información ingresada debe ser aprobada antes de ser confirmada.\nActualmente, solo se muestran los datos que han sido previamente confirmados.";
+            mensaje = mensaje.replace("/\n/g", "<br>");
+            alert(mensaje);
+            window.location.href = "ActualizacionEstudiantes.aspx";
+        }
+        function ConfirmacionActualizacion() {
+            mensaje = "Su información fue actualizada correctamente.";
+            mensaje = mensaje.replace("/\n/g", "<br>");
+            alert(mensaje);
+            window.location.href = "ActualizacionEstudiantes.aspx";
         }
         $(document).ready(function () {
             // Function to add the code
@@ -1113,7 +1120,7 @@
                         $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);
                         // Hacer visible la fila Combos
                         $('#<%= Combos.ClientID %>').show();
-                        llenadoPaisnit();                        
+                        llenadoPaisnit();
                         llenadoDepartamentoNit();
                         llenadoMunicipioNIT();
                     }
@@ -1142,19 +1149,30 @@
             });
         });
 
+        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
         $(document).ready(function () {
-            $('#<%= txtNombre.ClientID %> ').on('input', function () {
-                $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+            $('#<%= txtNombre.ClientID %>').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                    $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+                }
             });
         });
+
+        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtApellido.ClientID %> ').on('input', function () {
-                $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                    $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+                }
             });
         });
+
+        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO DE CASADA EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtCasada.ClientID %> ').on('input', function () {
-                $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                    $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
+                }
             });
         });
 
@@ -1167,13 +1185,13 @@
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'true';
-                stream.getTracks().forEach(function (track) {
-                    track.stop();
+                    stream.getTracks().forEach(function (track) {
+                        track.stop();
+                    });
+                })
+                .catch(function (error) {
+                    document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'false';
                 });
-            })
-            .catch(function (error) {
-                document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'false';
-            });
         }
 
         function validarCargaArchivos() {
@@ -1188,6 +1206,63 @@
                 }
             }
         }
+
+        //FUNCION PARA EVITAR QUE SEA INGRESADO EL -
+        $(document).ready(function () {
+            $('#<%= txtNit.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+                if (character === '-') {
+                    event.preventDefault();
+                    alert('No se permite el ingreso del guín (-)');
+                }
+            });
+        });
+
+        //Valdar Numeros de telefono
+        $(document).ready(function () {
+            $('#<%= txtTelefono.ClientID %>').on('input', function () {
+                var inputValue = $(this).val();
+                var numericValue = inputValue.replace(/[^0-9]/g, '');
+                $(this).val(numericValue);
+            });
+
+            $('#<%= txtTelefono.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+
+                if (!/^[0-9]+$/.test(character)) {
+                    event.preventDefault();
+                    alert('Solo se permiten ingresar números.');
+                }
+            });
+        });
+
+        //Validar que se haya validado el nit
+        $(document).ready(function () {
+            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').text().trim();
+
+            if (ValidacionNit !== "0") {
+                // Realiza las acciones necesarias si el valor es diferente de cero
+                alert("El NIT ha cambiado, es necesario validar");
+            }
+        });
+
+        //Detectar cambio de nit
+        $(document).ready(function () {
+            $('#<%= txtNit.ClientID %>').on('input', function () {
+                var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
+                var TrueNit = $('#<%= TrueNit.ClientID %>').text().trim();
+                var labelValidacion = $('#<%= ValidacionNit.ClientID %>');
+
+                if (txtNit !== TrueNit) {
+                    labelValidacion.text("1");
+                } else {
+                    labelValidacion.text("0");
+                }
+            });
+        });
+
 
     </script>
     <script src="Scripts/UNIS/Unis.js"></script>
