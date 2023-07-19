@@ -33,13 +33,13 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.HiddenField hdnCameraAvailable;
 
         /// <summary>
-        /// Control Fotos.
+        /// Control Label1.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table Fotos;
+        protected global::System.Web.UI.WebControls.Label Label1;
 
         /// <summary>
         /// Control ImgBase.
@@ -399,7 +399,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table tabla;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tabla;
 
         /// <summary>
         /// Control txtCarne.
@@ -427,6 +427,24 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label txtDPI;
+
+        /// <summary>
+        /// Control txtCarrera.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtCarrera;
+
+        /// <summary>
+        /// Control txtFacultad.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtFacultad;
 
         /// <summary>
         /// Control txtNombre.
@@ -472,24 +490,6 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCasada;
-
-        /// <summary>
-        /// Control txtCarrera.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtCarrera;
-
-        /// <summary>
-        /// Control txtFacultad.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtFacultad;
 
         /// <summary>
         /// Control txtDireccion.
@@ -609,15 +609,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.RadioButton RadioButtonNombreNo;
 
         /// <summary>
-        /// Control TableNit.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Table TableNit;
-
-        /// <summary>
         /// Control txtNit.
         /// </summary>
         /// <remarks>
@@ -696,7 +687,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TableRow Combos;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Combos;
 
         /// <summary>
         /// Control CmbPaisNIT.
