@@ -32,6 +32,9 @@ namespace ReportesUnis
         string TxtDiRe3 = "";
         string StateNit = "";
         string PaisNit = "";
+        string Direccion1 = "";
+        string Direccion2 = "";
+        string Direccion3 = "";
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -171,11 +174,13 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT ' ' CUI,' ' NOMBRE1,' ' NOMBRE2,' ' APELLIDO1,' ' APELLIDO2,' ' DECASADA,' ' CARGO," +
                         "' ' FACULTAD,' ' CELULAR,' ' FECHANAC,' ' ESTADO_CIVIL,' ' DIRECCION,' ' DEPTO_RESIDENCIA,' ' MUNI_RESIDENCIA, ' ' TOTALFOTOS, " +
-                        "' ' NOMBRE_NIT,' ' APELLIDOS_NIT,' ' CASADA_NIT,' ' DIRECCION1_NIT,' ' DIRECCION2_NIT,' ' DIRECCION3_NIT, ' ' STATE_NIT , ' ' PAIS_NIT, ' ' PAIS_R, ' ' NO_PASAPORTE FROM DUAL UNION " +
+                        "' ' NOMBRE_NIT,' ' APELLIDOS_NIT,' ' CASADA_NIT,' ' DIRECCION1_NIT,' ' DIRECCION2_NIT,' ' DIRECCION3_NIT, ' ' STATE_NIT , ' ' PAIS_NIT, ' ' PAIS_R, ' ' NO_PASAPORTE,  " +
+                        "' ' ADDRESS1, ' ' ADDRESS2, ' ' ADDRESS3 FROM DUAL UNION " +
                         "SELECT NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, NOMBRE1, NOMBRE2, APELLIDO1, APELLIDO2, DECASADA, CARGO, FACULTAD, CELULAR, FECHANAC, " +
                         "CASE WHEN ESTADO_CIVIL = 1 THEN 'SOLTERO' WHEN ESTADO_CIVIL ='2' THEN 'CASADO' ELSE '' END ESTADO_CIVIL, DIRECCION, " +
                         "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS, NOMBRE_NIT, APELLIDOS_NIT, CASADA_NIT, DIRECCION1_NIT, " +
-                        "DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_NIT, PAIS_R, NO_PASAPORTE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE " + where + " AND TIPO_PERSONA = 2";
+                        "DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_NIT, PAIS_R, NO_PASAPORTE,  ADDRESS1, ADDRESS2, ADDRESS3 " +
+                        "FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE " + where + " AND TIPO_PERSONA = 2";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -207,6 +212,9 @@ namespace ReportesUnis
                         StateNit = reader["STATE_NIT"].ToString();
                         PaisNit = reader["PAIS_NIT"].ToString();
                         TxtPais.Text = reader["PAIS_R"].ToString();
+                        Direccion1 = reader["ADDRESS1"].ToString();
+                        Direccion2 = reader["ADDRESS2"].ToString();
+                        Direccion3 = reader["ADDRESS3"].ToString();
                     }
                     con.Close();
                 }
@@ -664,68 +672,6 @@ namespace ReportesUnis
                                                     "SYSDATE," + // LASTUPDDTTM
                                                     "'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";  // LASTUPDOPRID                                                                    
                             cmd.ExecuteNonQuery();
-
-                            cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES ( " +
-                                                "EMPLID, " +
-                                                "NAME_TYPE, " +
-                                                "EFFDT, " +
-                                                "EFF_STATUS, " +
-                                                "COUNTRY_NM_FORMAT, " +
-                                                "NAME, " +
-                                                "NAME_INITIALS, " +
-                                                "NAME_PREFIX, " +
-                                                "NAME_SUFFIX, " +
-                                                "NAME_ROYAL_PREFIX, " +
-                                                "NAME_ROYAL_SUFFIX, " +
-                                                "NAME_TITLE, " +
-                                                "LAST_NAME_SRCH, " +
-                                                "FIRST_NAME_SRCH, " +
-                                                "LAST_NAME, " +
-                                                "FIRST_NAME, " +
-                                                "MIDDLE_NAME, " +
-                                                "SECOND_LAST_NAME, " +
-                                                "SECOND_LAST_SRCH, " +
-                                                "NAME_AC, " +
-                                                "PREF_FIRST_NAME, " +
-                                                "PARTNER_LAST_NAME, " +
-                                                "PARTNER_ROY_PREFIX, " +
-                                                "LAST_NAME_PREF_NLD, " +
-                                                "NAME_DISPLAY, " +
-                                                "NAME_FORMAL, " +
-                                                "NAME_DISPLAY_SRCH, " +
-                                                "LASTUPDDTTM, " +
-                                                "LASTUPDOPRID " +
-                                                ") VALUES(" +
-                                                    "'" + emplid + "'," + // EMPLID
-                                                    "'PRI','" + // NAME_TYPE
-                                                    DateTime.Now.ToString("dd/MM/yyyy") + "'," + // EFFDT
-                                                    "'A'," + // EFF_STATUS
-                                                    "'MEX'," + // COUNTRY_NM_FORMAT
-                                                    "'" + vchrApellidosCompletos + "," + TxtNombre + "'," + // NAME
-                                                    "' '," + // NAME_INITIALS
-                                                    "' '," + // NAME_PREFIX
-                                                    "' '," + // NAME_SUFFIX
-                                                    "' '," + // NAME_ROYAL_PREFIX
-                                                    "' '," + // NAME_ROYAL_SUFFIX
-                                                    "' '," + // NAME_TITLE
-                                                    "'" + vchrLNameNS1 + "'," + // LAST_NAME_SRCH
-                                                    "'" + vchrFNameNS1 + "'," +// FIRST_NAME_SRCH
-                                                    "'" + TxtApellidos + "'," + // LAST_NAME
-                                                    "'" + TxtNombre + "'," + // FIRST_NAME
-                                                    "' '," + // MIDDLE_NAME
-                                                    "'" + TxtCasada + "'," + // SECOND_LAST_NAME
-                                                    "'" + vchrCNameNS1 + " '," + // SECOND_LAST_SRCH
-                                                    "' '," + // NAME_AC
-                                                    "' '," + // PREF_FIRST_NAME
-                                                    "' '," + // PARTNER_LAST_NAME
-                                                    "' '," + // PARTNER_ROY_PREFIX
-                                                    "'1'," + // LAST_NAME_PREF_NLD
-                                                    "'" + TxtNombre + " " + vchrApellidosCompletos + "'," + // NAME_DISPLAY
-                                                    "'" + TxtNombre + " " + vchrApellidosCompletos + "'," + // NAME_FORMAL
-                                                    "'" + (vchrFNameNS1 + vchrLNameNS1 + vchrCNameNS1).TrimEnd() + "'," + // NAME_DISPLAY_SRCH
-                                                    "SYSDATE," + // LASTUPDDTTM
-                                                    "'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";  // LASTUPDOPRID                                                                    
-                            cmd.ExecuteNonQuery();
                         }
                         else
                         {
@@ -754,7 +700,10 @@ namespace ReportesUnis
                                                                    "            SECOND_LAST_SRCH		='" + vchrCNameNS1 + " '," +
                                                                    "            NAME_DISPLAY			='" + TxtNombre + " " + vchrApellidosCompletos + "'," +
                                                                    "            NAME_FORMAL				='" + TxtNombre + " " + vchrApellidosCompletos + "'," +
-                                                                   "            LASTUPDDTTM				=SYSDATE" +
+                                                                   "            ADDRESS1				='" + Direccion1 + "'," +
+                                                                   "            ADDRESS2				='" + Direccion2 + "'," +
+                                                                   "            ADDRESS3				='" + Direccion3 + "'," +
+                                                                   "            LASTUPDDTTM				= SYSDATE" +
                                                                    "        WHERE EMPLID='" + emplid + "'";
 
                             cmd.ExecuteNonQuery();
@@ -875,6 +824,10 @@ namespace ReportesUnis
                     if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                     {
                         respuesta = ConsumoOracle(txtInsertApex.Text);
+                        if (respuesta == "0")
+                        {
+                            Upload(txtCarne.Text);
+                        }
                     }
                 }
 
@@ -1213,6 +1166,186 @@ namespace ReportesUnis
             }
         }
 
+        protected string Upload(string Carnet)
+        {
+            string ImagenData = "";
+            string constr = TxtURL.Text;
+            int contador;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT COUNT(*) CONTADOR FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET ='" + Carnet + "'";
+                    OracleDataReader reader3 = cmd.ExecuteReader();
+                    while (reader3.Read())
+                    {
+                        contador = Convert.ToInt32(reader3["CONTADOR"].ToString());
+                        if (contador > 0)
+                        {
+                            byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + Carnet + ".jpg");
+                            string base64String = Convert.ToBase64String(imageBytes);
+                            ImagenData = base64String;
+                        }
+                    }
+                    con.Close();
 
+                }
+            }
+            string mensaje = "";
+            try
+            {
+                string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                int ContadorArchivos = 0;
+                int ContadorArchivosCorrectos = 0;
+                int ContadorArchivosConError = 0;
+
+                bool Error = false;
+
+                //Ruta del archivo que guarda la bitácora
+                string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
+                //Nombre del archiov que guarda la bitácora
+                string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
+
+
+                //Se crea un nuevo archivo para guardar la bitacora de la ejecución
+                CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
+
+                //Guadar encabezado de la bitácora
+                GuardarBitacora(ArchivoBitacora, "                              Informe de ejecución de importación de fotografías Campus Fecha: " + FechaHoraInicioEjecución + "              ");
+                GuardarBitacora(ArchivoBitacora, "");
+                GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    EMPLID                      Estado                 Descripción                                    ");
+                GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
+
+
+                string EmplidFoto = Carnet;
+                string EmplidExisteFoto = "";
+                string mensajeValidacion = "";
+                //Nombre de la fotografía cargada (Sin extensión)
+                string NombreFoto = "2990723550101";//Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
+                                                    //string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+
+                //Busca si la persona ya tiene fotografía registrada para proceder a actualizar
+                using (OracleConnection conEmplid = new OracleConnection(constr))
+                {
+                    try
+                    {
+                        OracleCommand cmdEmplid = new OracleCommand();
+                        cmdEmplid.CommandText = "SELECT DISTINCT EMPLID FROM SYSADM.PS_EMPL_PHOTO WHERE EMPLID = '" + EmplidFoto + "'";
+                        cmdEmplid.Connection = conEmplid;
+                        conEmplid.Open();
+                        OracleDataReader reader = cmdEmplid.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            EmplidExisteFoto = reader["EMPLID"].ToString();
+                        }
+                        conEmplid.Close();
+                    }
+                    catch (OracleException ex)
+                    {
+                        mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
+                        GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                        if (Error == false)
+                        {
+                            ContadorArchivosConError++;
+                        }
+                    }
+                }
+
+                //if (Request.Form["urlPath"].Contains("data:image/jpeg;base64,"))
+                //{
+                //    int largo = 0;
+                //    largo = ImagenData.Length;
+                //    ImagenData = ImagenData.Substring(23, largo - 23).ToString();
+                //}
+                byte[] bytes = Convert.FromBase64String(ImagenData);
+
+                using (OracleConnection con = new OracleConnection(constr))
+                {
+                    string query = "";
+
+                    using (OracleCommand cmd = new OracleCommand(query))
+                    {
+
+                        if (EmplidExisteFoto != "") //Se actualiza la fotografía
+                        {
+                            cmd.CommandText = "UPDATE SYSADM.PS_EMPL_PHOTO SET PSIMAGEVER=(TO_NUMBER((TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY-MM-DD') - TO_DATE(TO_CHAR('1999-12-31'), 'YYYY-MM-DD'))* 86400) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP,'hh24missff2'))), EMPLOYEE_PHOTO=:Fotografia WHERE EMPLID = '" + EmplidFoto + "'";
+                            mensajeValidacion = "La fotografía se actualizó correctamente en Campus.";
+                            mensaje = " y la fotografía fue almacenada correctamente.";
+                        }
+                        else //Se registra la nueva fotografía
+                        {
+                            cmd.CommandText = "INSERT INTO SYSADM.PS_EMPL_PHOTO VALUES ('" + EmplidFoto + "', (TO_NUMBER((TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY-MM-DD') - TO_DATE(TO_CHAR('1999-12-31'), 'YYYY-MM-DD'))* 86400) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP,'hh24missff2'))), :Fotografia)";
+                            mensajeValidacion = "La fotografía se registró correctamente en Campus.";
+                            mensaje = "<br/>La fotografía fue almacenada correctamente.";
+                        }
+
+                        cmd.Connection = con;
+                        cmd.Parameters.Add(new OracleParameter("Fotografia", bytes));
+                        try
+                        {
+                            con.Open();
+
+                            int FilasAfectadas = cmd.ExecuteNonQuery();
+                            con.Close();
+                            if (FilasAfectadas == 0)
+                            {
+                                mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus";
+                                GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                if (Error == false)
+                                {
+                                    ContadorArchivosConError++;
+                                    Error = true;
+                                }
+                            }
+                            else
+                            {
+                                GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "  " + EmplidFoto.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
+                                ContadorArchivosCorrectos++;
+                            }
+                        }
+                        catch (OracleException ex)
+                        {
+                            mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
+                            GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                            if (Error == false)
+                            {
+                                ContadorArchivosConError++;
+                            }
+                        }
+                    }
+                }
+
+                GuardarBitacora(ArchivoBitacora, "");
+                GuardarBitacora(ArchivoBitacora, "");
+                GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
+                GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
+                GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
+                GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
+                mensaje = "0";
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error");
+                mensaje = ". Ocurrió un error al cargar la imagen";
+                mensaje = "1";
+            }
+            return mensaje;
+        }
+
+        //Función para guardar bitacora en el archivo .txt
+        public void GuardarBitacora(string ArchivoBitacora, string DescripcionBitacora)
+        {
+            //Guarda nueva línea para el registro de bitácora en el serividor
+            File.AppendAllText(ArchivoBitacora, DescripcionBitacora + Environment.NewLine);
+        }
+
+        //Crea un archivo .txt para guardar bitácora
+        public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
+        {
+            using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
+        }
     }
 }
