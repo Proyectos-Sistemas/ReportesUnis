@@ -15,12 +15,12 @@
         <div class="container">
             <div class="row">
                 <div class="form-group  col-md">
-                    <asp:HiddenField runat="server" ID="hdnCameraAvailable" />
                     <h5 style="text-align: center;">Toma de Fografía</h5>
                 </div>
             </div>
         </div>
         <br />
+        <asp:HiddenField runat="server" ID="hdnCameraAvailable" />
 
         <div class="container">
             <div class="row">
@@ -28,18 +28,18 @@
                 </div>
 
                 <div class="form-group col-md-4">
-                    <video id="videoElement" width="350" height="250" autoplay></video>
+                    <video id="videoElement" width="375" height="275" autoplay></video>
                 </div>
                 <div class="form-group col-md-2">
                     <asp:Label ID="Label1" runat="server" Visible="true" ForeColor="White"> </asp:Label>
                 </div>
 
                 <div class="form-group col-md-4">
-                    <asp:Image ID="ImgBase" runat="server" Width="350" Height="250" Visible="true" />
+                    <asp:Image ID="ImgBase" runat="server" Width="375" Height="275" Visible="true" />
                 </div>
 
                 <div class="form-group col-md-1">
-                    <canvas id="canvas" width="350" height="250" style="display: none"></canvas>
+                    <canvas id="canvas" width="375" height="275" style="display: none"></canvas>
                 </div>
             </div>
         </div>
@@ -47,14 +47,14 @@
         <textarea id="urlPath" name="urlPath" style="display: none"></textarea>
         <div class="container">
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-4">
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
                     <button id="captureBtn" name="captureBtn" class="btn-danger-unis">Capturar imagen</button>
                 </div>
 
-                <div class="col-md-5">
+                <div class="col-md-4">
                 </div>
             </div>
         </div>
@@ -137,10 +137,15 @@
             <asp:Label ID="txtCantidadImagenesDpi" runat="server" Visible="false">0</asp:Label>
         </div>
         <div id="InfePersonal" runat="server">
+
             <div class="container">
                 <div class="row">
-                    <div class="form-group  col-md">
-                        <h5 id="HPersonal" style="text-align: center;">Información Personal</h5>
+                    <div class="col-md-4 mx-auto text-center">
+                    </div>
+                    <div class="col-md-4 mx-auto text-center">
+                        <h5 style="text-align: center;">Información Personal</h5>
+                    </div>
+                    <div class="col-md-4 mx-auto text-center">
                     </div>
                 </div>
             </div>
@@ -199,21 +204,21 @@
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Nombres*:</asp:Label>
-                                    <asp:TextBox ID="txtNombre" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtNombre" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <br />
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtNombre" ErrorMessage="Ingrese su nombre." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Apellidos*:</asp:Label>
-                                    <asp:TextBox ID="txtApellido" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtApellido" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <br />
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="txtApellido" ErrorMessage="Ingrese su apellido." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Apellido de Casada:</asp:Label>
-                                    <asp:TextBox ID="txtCasada" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtCasada" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <br />
                                     <br />
                                 </div>
@@ -222,7 +227,7 @@
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label>
-                                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <br />
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtDireccion" ErrorMessage="Ingrese su dirección." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
@@ -230,32 +235,32 @@
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Dirección 2:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtDireccion2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtDireccion2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control"></asp:TextBox>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Dirección 3:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control"></asp:TextBox>
                                 </div>
 
 
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">País*:</asp:Label><br />
-                                    <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true" Width="275px">
+                                    <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control">
                                     </asp:DropDownList>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label>
-                                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" EnableViewState="true" Width="275px">
+                                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control">
                                     </asp:DropDownList>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label>
-                                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="275px">
+                                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="275px" CssClass="form-control">
                                     </asp:DropDownList>
                                 </div>
 
@@ -265,7 +270,7 @@
                                     <asp:Label runat="server" Font-Bold="true">Teléfono*:</asp:Label>
                                     <br />
                                     <asp:CustomValidator ID="validarTelefono" runat="server" ControlToValidate="txtTelefono" ErrorMessage="El número de teléfono debe de tener al menos 8 caracteres" Font-Size="Small" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red"></asp:CustomValidator>
-                                    <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" CssClass="form-control" Width="275px"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ControlToValidate="txtTelefono" ErrorMessage="Ingrese un número de teléfono." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
 
@@ -276,7 +281,7 @@
                                     <asp:Label runat="server" Font-Bold="true">Estado Civil:</asp:Label>
                                     <br />
                                     <br />
-                                    <asp:DropDownList ID="CmbEstado" runat="server" Width="220px">
+                                    <asp:DropDownList ID="CmbEstado" runat="server" Width="275px" CssClass="form-control">
                                         <asp:ListItem Selected="False" Value=""></asp:ListItem>
                                         <asp:ListItem>Casado</asp:ListItem>
                                         <asp:ListItem>Soltero</asp:ListItem>
@@ -290,8 +295,12 @@
                         <hr />
                         <div class="container">
                             <div class="row">
-                                <div class="col-md align-content-center">
+                                <div class="col-md-4 mx-auto text-center">
+                                </div>
+                                <div class="col-md-4 mx-auto text-center">
                                     <h5 style="text-align: center;">Información para Recibos de Pago</h5>
+                                </div>
+                                <div class="col-md-4 mx-auto text-center">
                                 </div>
                             </div>
                         </div>
@@ -305,7 +314,6 @@
                                     <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI" OnCheckedChanged="RadioButtonNombreSi_CheckedChanged" />
                                     <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO" OnCheckedChanged="RadioButtonNombreNo_CheckedChanged" />
                                 </div>
-
                                 <div class="col-md-4 mx-auto text-center">
                                 </div>
                             </div>
@@ -313,16 +321,37 @@
                         <div id="TableNit">
                             <div class="container">
                                 <div class="row">
+
+                                    <div class="col-md-4 mx-auto text-center">
+                                    </div>
+
                                     <div class="col-md-4 mx-auto text-center">
                                         <asp:Label runat="server" Font-Bold="true">NIT*:</asp:Label>
-                                        <asp:TextBox ID="txtNit" runat="server" Enabled="true"></asp:TextBox>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="container">
-                                <div class="row">
+
+                                    <div class="col-md-4 mx-auto text-center">
+                                    </div>
+
+
+                                    <div class="col-md-4 mx-auto text-center">
+                                    </div>
+
+                                    <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
+                                        <asp:TextBox ID="txtNit" runat="server" Enabled="true" Width="275px" CssClass="form-control"></asp:TextBox>
+                                    </div>
+
+                                    <div class="col-md-4 mx-auto text-center">
+                                    </div>
+
+
+                                    <div class="col-md-4 mx-auto text-center">
+                                    </div>
+
                                     <div class="col-md-4 mx-auto text-center">
                                         <asp:Label runat="server" Font-Size="Small" Text="El NIT no debe de contener guión (-)"></asp:Label>
+                                    </div>
+
+                                    <div class="col-md-4 mx-auto text-center">
                                     </div>
                                 </div>
                             </div>
@@ -330,7 +359,11 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-md-4 mx-auto text-center">
+                                    </div>
+                                    <div class="col-md-4 mx-auto text-center">
                                         <asp:Button ID="ValidarNIT" runat="server" Text="Validar Nit" CssClass="btn-danger-unis" Enabled="true" OnClick="txtNit_TextChanged" />
+                                    </div>
+                                    <div class="col-md-4 mx-auto text-center">
                                     </div>
                                 </div>
                             </div>
@@ -339,37 +372,40 @@
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Nombre 1*:</asp:Label>
-                                        <asp:TextBox ID="TxtNombreR" runat="server" Enabled="false" MaxLength="30"></asp:TextBox>
+                                        <br />
+                                        <asp:TextBox ID="TxtNombreR" runat="server" Enabled="false" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                         <br />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Nombre 2:</asp:Label>
-                                        <asp:TextBox ID="TxtApellidoR" runat="server" Enabled="false" MaxLength="30"></asp:TextBox>
+                                        <br />
+                                        <asp:TextBox ID="TxtApellidoR" runat="server" Enabled="false" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                         <br />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Nombre 3:</asp:Label>
-                                        <asp:TextBox ID="TxtCasadaR" runat="server" Enabled="false" MaxLength="30"></asp:TextBox>
+                                        <br />
+                                        <asp:TextBox ID="TxtCasadaR" runat="server" Enabled="false" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                         <br />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label>
-                                        <asp:TextBox ID="TxtDiRe1" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false"></asp:TextBox>
+                                        <asp:TextBox ID="TxtDiRe1" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false"></asp:TextBox>
                                         <br />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Dirección 2:</asp:Label>
-                                        <asp:TextBox ID="TxtDiRe2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false"></asp:TextBox>
+                                        <asp:TextBox ID="TxtDiRe2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false"></asp:TextBox>
                                         <br />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Dirección 3:</asp:Label>
-                                        <asp:TextBox ID="TxtDiRe3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" Enabled="false"></asp:TextBox>
+                                        <asp:TextBox ID="TxtDiRe3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false"></asp:TextBox>
                                         <br />
                                     </div>
 
@@ -378,21 +414,21 @@
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">País*:</asp:Label>
                                                 <br />
-                                                <asp:DropDownList ID="CmbPaisNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPaisNIT_SelectedIndexChanged" EnableViewState="true" Width="275px"></asp:DropDownList>
+                                                <asp:DropDownList ID="CmbPaisNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPaisNIT_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control"></asp:DropDownList>
                                                 <br />
                                             </div>
 
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label>
                                                 <br />
-                                                <asp:DropDownList ID="CmbDepartamentoNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamentoNIT_SelectedIndexChanged" EnableViewState="true" Width="275px"></asp:DropDownList>
+                                                <asp:DropDownList ID="CmbDepartamentoNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamentoNIT_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control"></asp:DropDownList>
                                                 <br />
                                             </div>
 
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label>
                                                 <br />
-                                                <asp:DropDownList ID="CmbMunicipioNIT" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipioNIT_SelectedIndexChanged" Width="275px"></asp:DropDownList>
+                                                <asp:DropDownList ID="CmbMunicipioNIT" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipioNIT_SelectedIndexChanged" Width="275px" CssClass="form-control"></asp:DropDownList>
                                                 <br />
                                             </div>
                                         </div>
@@ -426,7 +462,6 @@
         <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnReload_Click" Visible="false" />
         <br />
     </div>
-    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // Acceder a la cámara y mostrar el video en el elemento de video
@@ -456,12 +491,12 @@
             });
         });
 
-        function CambiarEstadoBoton(habilitado) {
-            var boton = document.getElementById('captureBtn');
-            var videoElement = document.getElementById('videoElement');
-            boton.disabled = !habilitado;
-            videoElement.disabled = !habilitado;
-        }
+        //function CambiarEstadoBoton(habilitado) {
+        //    var boton = document.getElementById('captureBtn');
+        //    var videoElement = document.getElementById('videoElement');
+        //    boton.disabled = !habilitado;
+        //    videoElement.disabled = !habilitado;
+        //}
         function mostrarAlerta() {
             var mensaje = "";
             var apellido = document.getElementById('<%= txtApellido.ClientID %>').value;

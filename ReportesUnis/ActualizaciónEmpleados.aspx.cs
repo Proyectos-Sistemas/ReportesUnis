@@ -57,9 +57,9 @@ namespace ReportesUnis
                     {
                         matrizDatos();
                         aux = 2;
-                        listadoMunicipios();
+                        /*listadoMunicipios();
                         aux = 3;
-                        listadoZonas();
+                        listadoZonas();*/
                         aux = 4;
                         PaisInicial.Text = Pais.Text;
                         if (String.IsNullOrEmpty(txtdPI.Text))
@@ -67,8 +67,8 @@ namespace ReportesUnis
                             BtnActualizar.Visible = false;
                             lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como empleados";
                             tabla.Visible = false;
-                            FileUpload1.Visible = false;
-                            lblfoto.Visible = false;
+                            //FileUpload1.Visible = false;
+                            //lblfoto.Visible = false;
                         }
                     }
                     else
@@ -610,7 +610,7 @@ namespace ReportesUnis
             int valor = 18;
 
             aux = 4;
-            listaPaises();
+            //listaPaises();
 
             registros = result.Count() / valor;
             count = Math.Round(registros, 0);
@@ -643,6 +643,8 @@ namespace ReportesUnis
                             //DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
                             txtNombre1.Text = (arrlist[i, 1] ?? "").ToString();
                             txtApellido1.Text = (arrlist[i, 2] ?? "").ToString();
+                            txtNInicial1.Text = (arrlist[i, 1] ?? "").ToString();
+                            txtAInicial1.Text = (arrlist[i, 2] ?? "").ToString();
                             txtdPI.Text = (arrlist[i, 3] ?? "").ToString();
                             txtFacultad.Text = (arrlist[i, 4] ?? "").ToString();
                             txtTelefono.Text = (arrlist[i, 5] ?? "").ToString();
@@ -682,7 +684,7 @@ namespace ReportesUnis
 
                             txtDireccion.Text = arrlist[i, 8].ToString();
                             aux = 1;
-                            listaDepartamentos();
+                            //listaDepartamentos();
                             aux = 0;
                             CmbMunicipio.SelectedValue = (arrlist[i, 9] ?? "").ToString();
                             CmbDepartamento.SelectedValue = (arrlist[i, 10] ?? "").ToString();
@@ -691,8 +693,11 @@ namespace ReportesUnis
                             txtZona.Text = (arrlist[i, 13] ?? "").ToString();
                             UserEmplid.Text = (arrlist[i, 14] ?? "").ToString();
                             txtNombre2.Text = (arrlist[i, 15] ?? "").ToString();
-                            txtApellido2.Text = (arrlist[i, 16] ?? "").ToString();
+                            txtApellido2.Text = (arrlist[i, 16] ?? "").ToString(); 
+                            txtNInicial2.Text = (arrlist[i, 15] ?? "").ToString();
+                            txtAInicial2.Text = (arrlist[i, 16] ?? "").ToString();
                             txtApellidoCasada.Text = (arrlist[i, 17] ?? "").ToString().Replace('-',' ');
+                            txtCInicial.Text = (arrlist[i, 17] ?? "").ToString().Replace('-',' ');
                             txtPuesto.Text = (arrlist[i, 18] ?? "").ToString();
                             //dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                         }
@@ -915,10 +920,10 @@ namespace ReportesUnis
         protected void CmbDepartamento_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            aux = 2;
+           /* aux = 2;
             listadoMunicipios();
             aux = 3;
-            listadoZonas();
+            listadoZonas();*/
         }
 
         /// CONSUMO DE API
@@ -1053,7 +1058,7 @@ namespace ReportesUnis
                 string PhotoId = getBetween(consulta, "\"PhotoId\" : ", ",\n");
 
                 //ACTUALIZACION-CREACION DE IMAGEN
-                if (FileUpload1.HasFile)
+               /* if (FileUpload1.HasFile)
                 {
                     foreach (HttpPostedFile uploadedFile in FileUpload1.PostedFiles)
                     {
@@ -1089,7 +1094,7 @@ namespace ReportesUnis
                 else
                 {
                     mensajeValidacion = " , no se encontró ninguna fotografía para almacenar.";
-                }
+                }*/
 
                 effective = effective.Replace("\"", "");
                 string departamento = CmbDepartamento.Text;
@@ -1247,7 +1252,7 @@ namespace ReportesUnis
 
         protected void cMBpAIS_SelectedIndexChanged(object sender, EventArgs e)
         {
-            aux = 1;
+           /* aux = 1;
             listaDepartamentos();
             if (!String.IsNullOrWhiteSpace(CmbDepartamento.Text) || CmbDepartamento.Text != "")
             {
@@ -1272,7 +1277,7 @@ namespace ReportesUnis
                 CmbDepartamento.DataTextField = "";
                 CmbDepartamento.DataValueField = "";
                 CmbDepartamento.DataBind();
-            }
+            }*/
         }
 
         public void GuardarBitacora(string ArchivoBitacora, string DescripcionBitacora)
