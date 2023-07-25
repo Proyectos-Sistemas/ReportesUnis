@@ -8,18 +8,18 @@
     <div class="container2">
         <hr />
         <div>
-            <a>Busqueda por: </a>
+            <a>Busqueda por fecha de actualización: </a>
             <%-- DROPDOWLIST CON OPCIONES DE BUSQUEDA --%>
-            <asp:DropDownList ID="LbxBusqueda" SelectionMode="Single" runat="server">
+            <%--<asp:DropDownList ID="LbxBusqueda" SelectionMode="Single" runat="server">
                 <asp:ListItem>Nombre</asp:ListItem>
                 <asp:ListItem>Apellido</asp:ListItem>
                 <asp:ListItem>ID</asp:ListItem>
                 <asp:ListItem>Género</asp:ListItem>
                 <asp:ListItem>Departamento</asp:ListItem>
-            </asp:DropDownList>
+            </asp:DropDownList>--%>
 
             <%-- TXTBUSCADOR DONDE SE INGRESA EL TEXTO A BUSCAR --%>
-            <asp:TextBox ID="TxtBuscador" runat="server" Width="235px"></asp:TextBox>
+<%--            <asp:TextBox ID="TxtBuscador" runat="server" Width="235px"></asp:TextBox>--%>
 
             <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
             <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>

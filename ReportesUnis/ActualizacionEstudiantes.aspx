@@ -2,15 +2,15 @@
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <div id="CargaFotografia" runat="server" visible="true">
-        <br />
-        <div class="container">
-            <div class="row">
-                <div class="form-group col">
-                    <h2 style="text-align: center;">ACTUALIZACIÓN DE INFORMACIÓN</h2>
-                </div>
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="form-group col">
+                <h2 style="text-align: center;">ACTUALIZACIÓN DE INFORMACIÓN</h2>
             </div>
         </div>
+    </div>
+    <div id="CargaFotografia" runat="server" visible="true">
         <hr />
         <div class="container">
             <div class="row">
@@ -35,11 +35,11 @@
                 </div>
 
                 <div class="form-group col-md-4">
-                    <asp:Image ID="ImgBase" runat="server" Width="375" Height="275" Visible="true" />
+                    <asp:Image ID="ImgBase" runat="server" Visible="true" Style="max-width: 375px; max-height: 275px;" />
                 </div>
 
                 <div class="form-group col-md-1">
-                    <canvas id="canvas" width="375" height="275" style="display: none"></canvas>
+                    <canvas id="canvas" style="max-width: 375px; max-height: 275px;"></canvas>
                 </div>
             </div>
         </div>
@@ -151,13 +151,14 @@
             </div>
 
             <%-- NOMBRE INICIAL--%>
-            <asp:Label ID="txtNInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
+            <input type="hidden" id="txtNInicial" runat="server" />
             <%-- APELLIDO INICIAL --%>
-            <asp:Label ID="txtAInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
+            <input type="hidden" id="txtAInicial" runat="server" />
             <%-- APELLIDO CASADA INICIAL --%>
-            <asp:Label ID="txtCInicial" runat="server" Visible="true" ForeColor="White"></asp:Label>
+            <input type="hidden" id="txtCInicial" runat="server" />
             <%-- CONTROL DE VALIDACION DE NIT--%>
-            <asp:Label ID="ValidacionNit" runat="server" Visible="true" ForeColor="White">0</asp:Label>
+            <input type="hidden" id="ValidacionNit" runat="server" value="0" />
+            <%--<asp ID="ValidacionNit" runat="server" Visible="true" ForeColor="White">0</asp>--%>
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
 
             <div class="container" id="tabla" runat="server">
@@ -491,6 +492,8 @@
             });
         });
 
+
+
         //function CambiarEstadoBoton(habilitado) {
         //    var boton = document.getElementById('captureBtn');
         //    var videoElement = document.getElementById('videoElement');
@@ -510,9 +513,9 @@
             var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
             var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
             var foto = document.getElementById('urlPath').value;
-            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').text().trim();
+            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
 
-            if (ValidacionNit !== "0") {
+            if (ValidacionNit !== "0" && ValidacionNit !== "CF") {
                 // Realiza las acciones necesarias si el valor es diferente de cero
                 alert("El NIT ha cambiado, es necesario validar");
                 return false;
@@ -730,11 +733,11 @@
         $(document).ready(function () {
             $('#<%= txtNombre.ClientID %> , #<%= txtApellido.ClientID %>, #<%= txtCasada.ClientID %>').on('input', function () {
                 var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
-                var txtNInicial = $('#<%= txtNInicial.ClientID %>').text().trim();
+                var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
                 var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
-                var txtAInicial = $('#<%= txtAInicial.ClientID %>').text().trim();
+                var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
                 var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
-                var txtCInicial = $('#<%= txtCInicial.ClientID %>').text().trim();
+                var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
 
                 if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) {
                     $('#<%= CargaDPI.ClientID %>').css('display', 'block');
@@ -771,6 +774,33 @@
             });
         });
 
+        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 1 EN EL RECIBO 
+        $(document).ready(function () {
+            $('#<%= txtDireccion.ClientID %> ').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                    $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
+                }
+            });
+        });
+
+        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 2 EN EL RECIBO 
+        $(document).ready(function () {
+            $('#<%= txtDireccion2.ClientID %> ').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                    $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
+                }
+            });
+        });
+
+        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 3 EN EL RECIBO 
+        $(document).ready(function () {
+            $('#<%= txtDireccion3.ClientID %> ').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                    $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
+                }
+            });
+        });
+
         function VerificarCantidadTelefono(sender, args) {
             args.IsValid = (args.Value.length >= 7);
         }
@@ -789,16 +819,15 @@
                 });
         }
 
+
+
         function validarCargaArchivos() {
             var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
             var files = fileUpload.files;
-
             if (files.length > 2) {
                 alert("Solo se permiten cargar 2 archivos.");
-                // Eliminar los archivos adicionales
-                while (files.length > 2) {
-                    fileUpload.remove(files.length - 1);
-                }
+                //fileUpload.remove(files.length - 1);
+                fileUpload.value = ""; 
             }
         }
 
@@ -835,7 +864,7 @@
 
         //Validar que se haya validado el nit
         $(document).ready(function () {
-            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').text().trim();
+            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
 
             if (ValidacionNit !== "0") {
                 // Realiza las acciones necesarias si el valor es diferente de cero
@@ -858,8 +887,107 @@
             });
         });
 
+        $(document).ready(function () {
+            // Verificar si el navegador es compatible con enumerateDevices
+            if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+                // Obtener la lista de dispositivos multimedia
+                navigator.mediaDevices
+                    .enumerateDevices()
+                    .then(function (devices) {
+                        // Verificar si hay al menos una cámara en la lista
+                        const hasCamera = devices.some(function (device) {
+                            return device.kind === "videoinput";
+                        });
+
+                        if (hasCamera) {
+                            console.log("La cámara está conectada.");
+                        } else {
+                            console.log("La cámara no está conectada.");
+                            $('#<%= CargaFotografia.ClientID %>').hide();
+                            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                            lblActualizacion.text("Es necesario que su dispositivo cuente con una cámara para poder actualizar su información.");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error("Error al enumerar los dispositivos:", error);
+                    });
+            } else {
+                console.error("enumerateDevices no es compatible con este navegador.");
+                // Aquí podrías mostrar un mensaje o realizar alguna acción específica.
+            }
+        });
+
+
 
     </script>
+    <script>
+        // Obtenemos el elemento de video y la imagen en JavaScript
+        const videoElement = document.getElementById("videoElement");
+        const imgBase = document.getElementById("<%= ImgBase.ClientID %>");
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Cuando el video esté listo, obtenemos las dimensiones y las aplicamos a la imagen y el canvas
+        videoElement.onloadedmetadata = function () {
+            const videoWidth = videoElement.videoWidth;
+            const videoHeight = videoElement.videoHeight;
+
+            const maxWidth = 375;
+            const maxHeight = 275;
+
+            // Calculamos las dimensiones para la imagen considerando la relación de aspecto
+            let newWidth, newHeight;
+            if (videoWidth / videoHeight > maxWidth / maxHeight) {
+                newWidth = maxWidth;
+                newHeight = videoHeight * (maxWidth / videoWidth);
+            } else {
+                newHeight = maxHeight;
+                newWidth = videoWidth * (maxHeight / videoHeight);
+            }
+
+            // Aplicamos las dimensiones a la imagen
+            imgBase.style.width = newWidth + "px";
+            imgBase.style.height = newHeight + "px";
+
+            // Aplicamos las dimensiones al canvas
+            canvas.style.width = newWidth + "px";
+            canvas.style.height = newHeight + "px";
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+        };
+    </script>
+
+    <%--<script>
+        // Verificar si el navegador es compatible con enumerateDevices
+        if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+            // Obtener la lista de dispositivos multimedia
+            navigator.mediaDevices
+                .enumerateDevices()
+                .then(function (devices) {
+                    // Verificar si hay al menos una cámara en la lista
+                    const hasCamera = devices.some(function (device) {
+                        return device.kind === "videoinput";
+                    });
+
+                    if (hasCamera) {
+                        console.log("La cámara está conectada.");
+                    } else {
+                        console.log("La cámara no está conectada.");
+                        //alert("Es necesario que su dispositivo cuente con una cámara para poder actualizar su información.");
+                        var lblActualizacion = document.getElementById("<%= lblActualizacion.ClientID %>");
+                        lblActualizacion.innerText = "Es necesario que su dispositivo cuente con una cámara para poder actualizar su información.";
+
+                    }
+                })
+                .catch(function (error) {
+                    console.error("Error al enumerar los dispositivos:", error);
+                });
+        } else {
+            console.error("enumerateDevices no es compatible con este navegador.");
+            // Aquí podrías mostrar un mensaje o realizar alguna acción específica.
+        }
+    </script>--%>
+
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>

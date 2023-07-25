@@ -121,16 +121,15 @@ namespace ReportesUnis
         {
             string where = stringWhere();
             string constr = TxtURL.Text;
-            int largo = TxtBuscador.Text.Length;
-            int contador = contadorEspacios(largo, TxtBuscador.Text);
+            //int largo = TxtBuscador.Text.Length;
+            //int contador = contadorEspacios(largo, TxtBuscador.Text);
             try
             {
                 if ((!String.IsNullOrEmpty(CldrCiclosInicio.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text)))
                 {
                     if (Convert.ToDateTime(CldrCiclosInicio.Text) < Convert.ToDateTime(CldrCiclosFin.Text))
                     {
-                        if (contador != largo)
-                        {
+                        
                             if (!String.IsNullOrWhiteSpace(where))
                             {
                                 //if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
@@ -216,20 +215,20 @@ namespace ReportesUnis
                                                 else
                                                 {
                                                     lblBusqueda.Text = "No se encontró la información solicitada";
-                                                    if (LbxBusqueda.Text == "Género")
-                                                        lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búsqueda por género intente ingresando Male o Female";
+                                                    //if (LbxBusqueda.Text == "Género")
+                                                    //    lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búsqueda por género intente ingresando Male o Female";
                                                 }
                                                 con.Close();
                                             }
                                         }
-                                        TxtBuscador.Enabled = false;
+                                        //TxtBuscador.Enabled = false;
                                         CldrCiclosInicio.Enabled = false;
                                         CldrCiclosFin.Enabled = false;
                                         BtnImg.Enabled = true;
                                         BtnTxt.Enabled = true;
                                         BtnNBusqueda.Enabled = true;
                                         BtnBuscar2.Enabled = false;
-                                        LbxBusqueda.Enabled = false;
+                                        //LbxBusqueda.Enabled = false;
                                     }
                                 //}
                                 //else
@@ -239,13 +238,9 @@ namespace ReportesUnis
                             }
                             else
                             {
-                                lblBusqueda.Text = "Ingrese un valor a buscar";
+                                lblBusqueda.Text = "Ingrese un rago de fechas.";
                             }
-                        }
-                        else
-                        {
-                            lblBusqueda.Text = "Ingrese un valor a buscar";
-                        }
+                       
                     }
                     else
                     {
@@ -293,13 +288,12 @@ namespace ReportesUnis
         //Llenado de informacion a las columnas correspondientes del excel
         protected void GenerarExcel(object sender, EventArgs e)
         {
-            int largo = TxtBuscador.Text.Length;
-            int contadorEspacio = contadorEspacios(largo, TxtBuscador.Text);
+            //int largo = TxtBuscador.Text.Length;
+            //int contadorEspacio = contadorEspacios(largo, TxtBuscador.Text);
             if (Convert.ToDateTime(CldrCiclosInicio.Text) < Convert.ToDateTime(CldrCiclosFin.Text))
             {
-                if (contadorEspacio != largo)
-                {
-                    if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
+                
+                    if (!String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
 
                     {
                         SLDocument sl = new SLDocument();
@@ -494,11 +488,7 @@ namespace ReportesUnis
                     {
                         lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
                     }
-                }
-                else
-                {
-                    lblBusqueda.Text = "Realice una búsqueda para poder realizar una descarga del archivo";
-                }
+                
             }
             else
             {
@@ -571,7 +561,7 @@ namespace ReportesUnis
         {
 
             string ret = "0";
-            if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
+            if (!String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
             {
                 string nombre = "ImagenesEstudiantes" + DateTime.Now.ToString("dd MM yyyy hh_mm_ss t") + ".zip";
                 string constr = TxtURL.Text;
@@ -713,10 +703,10 @@ namespace ReportesUnis
         public string stringWhere()
         {
             var where = "";
-            if (!String.IsNullOrEmpty(TxtBuscador.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrWhiteSpace(TxtBuscador.Text))
+            if (!String.IsNullOrEmpty(CldrCiclosFin.Text) && !String.IsNullOrEmpty(CldrCiclosFin.Text))
 
             {
-                string busqueda = LbxBusqueda.Text;
+                //string busqueda = LbxBusqueda.Text;
                 var fechaI = CldrCiclosInicio.Text;
                 var anioI = fechaI.Substring(2, 2);
                 var mesI = fechaI.Substring(5, 2);
@@ -728,7 +718,7 @@ namespace ReportesUnis
                 var inicio = diaI + "/" + mesI + "/" + anioI;
                 var fin = diaF + "/" + mesF + "/" + anioF;
 
-                if (busqueda.Equals("Nombre"))
+                /*if (busqueda.Equals("Nombre"))
                 {
                     where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                 }
@@ -756,7 +746,8 @@ namespace ReportesUnis
                         where = "WHERE PD.SEX LIKE ('%%%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
                     else
                         where = "WHERE PD.SEX LIKE ('%Mujer%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
-                }
+                }*/
+                where = "WHERE (PPD.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "' OR PPD.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "') OR (PPD.LASTUPDDTTM <= '" + inicio + "'  AND PPD.LASTUPDDTTM >= '" + fin + "' )";
             }
             return where;
         }
@@ -769,12 +760,12 @@ namespace ReportesUnis
             BtnTxt.Enabled = false;
             BtnImg.Enabled = false;
             BtnNBusqueda.Enabled = false;
-            TxtBuscador.Enabled = true;
+            //TxtBuscador.Enabled = true;
             CldrCiclosFin.Enabled = true;
             CldrCiclosInicio.Enabled = true;
             lblBusqueda.Text = "";
             lblDescarga.Text = "";
-            LbxBusqueda.Enabled = true;
+            //LbxBusqueda.Enabled = true;
         }
 
         public int contadorEspacios(int largo, string cadena)

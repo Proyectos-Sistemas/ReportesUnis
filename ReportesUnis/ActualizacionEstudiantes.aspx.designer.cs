@@ -363,7 +363,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtNInicial;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtNInicial;
 
         /// <summary>
         /// Control txtAInicial.
@@ -372,7 +372,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtAInicial;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtAInicial;
 
         /// <summary>
         /// Control txtCInicial.
@@ -381,7 +381,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtCInicial;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtCInicial;
 
         /// <summary>
         /// Control ValidacionNit.
@@ -390,7 +390,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ValidacionNit;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden ValidacionNit;
 
         /// <summary>
         /// Control tabla.

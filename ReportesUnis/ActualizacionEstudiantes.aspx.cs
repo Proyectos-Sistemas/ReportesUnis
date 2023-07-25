@@ -174,14 +174,13 @@ namespace ReportesUnis
                 file.Close();
             }
         }
-        void controlCamposVisibles()
+        public void controlCamposVisibles()
         {
             CargaFotografia.Visible = false;
             tabla.Visible = false;
             tbactualizar.Visible = false;
             InfePersonal.Visible = false;
         }
-
         private void mostrarInformación()
         {
             string constr = TxtURL.Text;
@@ -282,11 +281,11 @@ namespace ReportesUnis
                     {
                         txtCarne.Text = reader["EMPLID"].ToString();
                         txtNombre.Text = reader["FIRST_NAME"].ToString();
-                        txtNInicial.Text = reader["FIRST_NAME"].ToString().Trim();
+                        txtNInicial.Value = reader["FIRST_NAME"].ToString().Trim();
                         txtApellido.Text = reader["LAST_NAME"].ToString();
                         txtCasada.Text = reader["SECOND_LAST_NAME"].ToString();
-                        txtCInicial.Text = reader["SECOND_LAST_NAME"].ToString();
-                        txtAInicial.Text = reader["LAST_NAME"].ToString();
+                        txtCInicial.Value = reader["SECOND_LAST_NAME"].ToString();
+                        txtAInicial.Value = reader["LAST_NAME"].ToString();
                         TxtApellidoR.Text = reader["APELLIDO_NIT"].ToString();
                         TxtNombreR.Text = reader["NOMBRE_NIT"].ToString();
                         TxtCasadaR.Text = reader["CASADA_NIT"].ToString();
@@ -294,12 +293,12 @@ namespace ReportesUnis
                         TrueNit.Text = reader["NIT"].ToString();
                         State.Text = reader["STATE"].ToString();
                         StateNIT.Text = reader["STATE_NIT"].ToString();
-                        largoApellido = txtAInicial.Text.Length;// + " " + posicion.ToString();
+                        largoApellido = txtAInicial.Value.Length;// + " " + posicion.ToString();
 
                         if ((txtApellido.Text.Substring(0, 5)).ToUpper().Equals("DE LA"))
                         {
                             posicion = txtApellido.Text.Substring(6, largoApellido - 6).IndexOf(" ");
-                            txtContaador.Text = txtAInicial.Text.Length.ToString() + " " + posicion.ToString();
+                            txtContaador.Text = txtAInicial.Value.Length.ToString() + " " + posicion.ToString();
                             txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 6);
                         }
                         else
@@ -850,7 +849,7 @@ namespace ReportesUnis
             {
                 int contador = 0;
 
-                if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
+                if (txtAInicial.Value == txtApellido.Text && txtNInicial.Value == txtNombre.Text && txtCInicial.Value == txtCasada.Text)
                 {
                     txtAccion.Text = "1";
                     txtTipoAccion.Text = "1.1";
@@ -884,6 +883,7 @@ namespace ReportesUnis
                 }
                 else
                 {
+
                     if (FileUpload2.HasFile)
                     {
                         int txtCantidad = 0;
@@ -926,7 +926,7 @@ namespace ReportesUnis
                     }
                     else
                     {
-                        if (txtAInicial.Text != txtApellido.Text || txtNInicial.Text != txtNombre.Text || txtCInicial.Text != txtCasada.Text)
+                        if (txtAInicial.Value != txtApellido.Text || txtNInicial.Value != txtNombre.Text || txtCInicial.Value != txtCasada.Text)
                         {
                             CargaDPI.Attributes["style"] = "display: block";
                             string script = "<script>Documentos();</script>";
@@ -1057,7 +1057,7 @@ namespace ReportesUnis
                     if ((txtApellido.Text.Substring(0, 5)).ToUpper().Equals("DE LA"))
                     {
                         posicion = txtApellido.Text.Substring(6, largoApellido - 6).IndexOf(" ");
-                        txtContaador.Text = txtAInicial.Text.Length.ToString() + " " + posicion.ToString();
+                        txtContaador.Text = txtAInicial.Value.Length.ToString() + " " + posicion.ToString();
                         txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 6);
                     }
                     else
@@ -1243,8 +1243,8 @@ namespace ReportesUnis
                                             "||'''" + TxtDiRe3.Text + "'''||','" +
                                             "||'''" + StateNIT.Text + "'''||','" +
                                             "||'''" + CmbPais.Text + "'''||','" +
-                                            "||'''" + txtDireccion.Text + "'''||')'" +
-                                            "||'''" + txtDireccion2.Text + "'''||')'" +
+                                            "||'''" + txtDireccion.Text + "'''||','" +
+                                            "||'''" + txtDireccion2.Text + "'''||','" +
                                             "||'''" + txtDireccion3.Text + "'''||')'" +
                                             " AS INS " +
                                             "FROM ( SELECT " +
@@ -1397,7 +1397,7 @@ namespace ReportesUnis
                                         "A.ADDRESS2 = '" + txtDireccion2.Text + "', " +
                                         "A.ADDRESS3 = '" + txtDireccion3.Text + "', " +
                                         "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
-                                        "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='HOME'";
+                                        "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='HOME' AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
                                     cmd.ExecuteNonQuery();
                                 }
                                 else
@@ -1425,7 +1425,7 @@ namespace ReportesUnis
 
                                 if (!String.IsNullOrEmpty(TxtNombreR.Text))
                                 {
-                                    if (txtAInicial.Text == txtApellido.Text && txtNInicial.Text == txtNombre.Text && txtCInicial.Text == txtCasada.Text)
+                                    if (txtAInicial.Value == txtApellido.Text && txtNInicial.Value == txtNombre.Text && txtCInicial.Value == txtCasada.Text)
                                     {
                                         int ContadorNombreNit = 0;
                                         int ContadorDirecionNit = 0;
@@ -1561,7 +1561,7 @@ namespace ReportesUnis
                                                                 "NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "',' ',''))," +
                                                                 "LASTUPDDTTM = SYSDATE, " +
                                                                 "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
-                                                                "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'  AND EFFDT ='"+ DateTime.Now.ToString("dd/MM/yyyy")+"'";
+                                                                "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'  AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
                                             cmd.ExecuteNonQuery();
 
                                         }
@@ -1584,7 +1584,7 @@ namespace ReportesUnis
                                         {
                                             //ACTUALIZA NIT
                                             cmd.CommandText = "UPDATE SYSADM.PS_EXTERNAL_SYSTEM SET EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' " +
-                                                                " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + UserEmplid.Text + "' AND EFFDT ='"+ DateTime.Now.ToString("dd/MM/yyyy")+"'";
+                                                                " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + UserEmplid.Text + "' AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
                                             cmd.ExecuteNonQuery();
                                         }
 
@@ -1610,7 +1610,7 @@ namespace ReportesUnis
                                                 "A.ADDRESS2 = '" + TxtDiRe2.Text + "', " +
                                                 "A.ADDRESS3 = '" + TxtDiRe3.Text + "', " +
                                                 "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
-                                                "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='REC' AND EFFDT ='"+ DateTime.Now.ToString("dd/MM/yyyy")+"'";
+                                                "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='REC' AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
                                             cmd.ExecuteNonQuery();
                                         }
                                     }
@@ -1620,7 +1620,7 @@ namespace ReportesUnis
                                     }
                                 }
 
-                                if ((txtAInicial.Text != txtApellido.Text || txtNInicial.Text != txtNombre.Text || txtCInicial.Text != txtCasada.Text))
+                                if ((txtAInicial.Value != txtApellido.Text || txtNInicial.Value != txtNombre.Text || txtCInicial.Value != txtCasada.Text))
                                 {
                                     cmd.Connection = con;
                                     cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + txtCarne.Text + "'";
@@ -1639,8 +1639,11 @@ namespace ReportesUnis
                                     string script = "<script>ConfirmacionActualizacionSensible();</script>";
                                     ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                                 }
-                                cmd.CommandText = txtInsert.Text;
-                                cmd.ExecuteNonQuery();
+                                if (RegistroCarne == "0")
+                                {
+                                    cmd.CommandText = txtInsert.Text;
+                                    cmd.ExecuteNonQuery();
+                                }
                                 FileUpload2.Visible = false;
                                 CargaDPI.Visible = false;
                                 transaction.Commit();
@@ -1653,6 +1656,7 @@ namespace ReportesUnis
                             {
                                 transaction.Rollback();
                                 mensaje = "Ocurrió un problema al actualizar su información.";
+                                AlmacenarFotografia();
                                 fotoAlmacenada();
                             }
                         }
@@ -1928,13 +1932,6 @@ namespace ReportesUnis
                 imageData = imageData.Substring(23, largo - 23);
                 try
                 {
-                    // Nombre del archivo de imagen
-                    //string NombreFoto = "3682754340101";//Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
-                    //string fileName = Context.User.Identity.Name.Replace("@unis.edu.gt", "") + ".jpg";
-
-                    // Ruta de la carpeta donde se almacenará la imagen
-                    //string fileName = Context.User.Identity.Name.Replace("@unis.edu.gt", "") + ".jpg";
-
                     // Ruta completa del archivo
                     string filePath = Path.Combine(folderPath, fileName);
 
@@ -1962,7 +1959,7 @@ namespace ReportesUnis
 
         }
 
-        private void AlmacenarFotografia()
+        public void AlmacenarFotografia()
         {
             //lblActualizacion.Text = "";
             if (!Request.Form["urlPath"].IsNullOrWhiteSpace())

@@ -46,14 +46,14 @@
         <textarea id="urlPath" name="urlPath" style="display: none"></textarea>
         <div class="container">
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-4">
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
                     <button id="captureBtn" name="captureBtn" class="btn-danger-unis">Capturar imagen</button>
                 </div>
 
-                <div class="col-md-5">
+                <div class="col-md-4">
                 </div>
             </div>
         </div>
@@ -144,13 +144,13 @@
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Facultad o Dependencia:</asp:Label>
                                     <br />
-                                    <asp:Label ID="txtFacultad" runat="server" Enabled="false" TextMode="MultiLine" Rows="2" Width="275px"></asp:Label>
+                                    <asp:Label ID="txtFacultad" runat="server" Enabled="false" TextMode="MultiLine" Rows="2"></asp:Label>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Puesto:</asp:Label>
                                     <br />
-                                    <asp:Label ID="txtPuesto" runat="server" Enabled="true" TextMode="MultiLine" Rows="2" Width="275px"></asp:Label>
+                                    <asp:Label ID="txtPuesto" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:Label>
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -160,7 +160,7 @@
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Primer Nombre:</asp:Label>
-                                    <asp:TextBox ID="txtNombre1" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtNombre1" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <br />
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtNombre1" ErrorMessage="Ingrese su nombre." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
@@ -168,7 +168,7 @@
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Segundo Nombre:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtNombre2" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtNombre2" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -178,7 +178,7 @@
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Primer Apellido:</asp:Label>
-                                    <asp:TextBox ID="txtApellido1" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtApellido1" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <br />
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="txtApellido1" ErrorMessage="Ingrese su apellido." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
@@ -186,20 +186,20 @@
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Segundo Apellido:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtApellido2" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtApellido2" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Apellido de Casada:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtApellidoCasada" runat="server" Enabled="true" MaxLength="30" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtApellidoCasada" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                 </div>
 
 
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Dirección*:</asp:Label>
-                                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="2" MaxLength="240" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="2" MaxLength="240" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <br />
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtDireccion" ErrorMessage="Ingrese su dirección." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
@@ -207,10 +207,10 @@
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Dirección2:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtDireccion2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="240" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtDireccion2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="240" Width="275px" CssClass="form-control"></asp:TextBox>
                                 </div>
 
-                                <div class="form-group col-md-4">                                    
+                                <div class="form-group col-md-4">
                                 </div>
 
 
@@ -218,33 +218,33 @@
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">País*:</asp:Label>
                                     <br />
-                                    <asp:DropDownList ID="cMBpAIS" runat="server" AutoPostBack="true" OnSelectedIndexChanged="cMBpAIS_SelectedIndexChanged" EnableViewState="true" Width="275px">
+                                    <asp:DropDownList ID="cMBpAIS" runat="server" AutoPostBack="true" OnSelectedIndexChanged="cMBpAIS_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control">
                                     </asp:DropDownList>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label>
                                     <br />
-                                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" Width="275px">
+                                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" Width="275px" CssClass="form-control">
                                     </asp:DropDownList>
                                 </div>
 
-                                <div class="form-group col-md-4">                                    
+                                <div class="form-group col-md-4">
                                 </div>
 
 
-                                
+
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label>
                                     <br />
-                                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="275px">
+                                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="275px" CssClass="form-control">
                                     </asp:DropDownList>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Zona:</asp:Label>
                                     <br />
-                                    <asp:DropDownList ID="txtZona" runat="server" AutoPostBack="true" EnableViewState="true" Width="275px">
+                                    <asp:DropDownList ID="txtZona" runat="server" AutoPostBack="true" EnableViewState="true" Width="275px" CssClass="form-control">
                                     </asp:DropDownList>
                                 </div>
 
@@ -257,7 +257,7 @@
                                     <asp:Label runat="server" Font-Bold="true">Estado Civil:</asp:Label>
                                     <br />
                                     <br />
-                                    <asp:DropDownList ID="CmbEstado" runat="server" Width="275px">
+                                    <asp:DropDownList ID="CmbEstado" runat="server" Width="275px" CssClass="form-control">
                                         <asp:ListItem Selected="False" Value=""></asp:ListItem>
                                         <asp:ListItem>Casado</asp:ListItem>
                                         <asp:ListItem>Soltero</asp:ListItem>
@@ -269,7 +269,7 @@
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Teléfono:</asp:Label>
                                     <asp:CustomValidator ID="validarTelefono" runat="server" ControlToValidate="txtTelefono" ErrorMessage="El número de teléfono debe de tener al menos 8 caracteres" Font-Size="Small" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red"></asp:CustomValidator>
-                                    <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ControlToValidate="txtTelefono" ErrorMessage="Ingrese un número de teléfono." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
 
@@ -278,13 +278,12 @@
 
                             </div>
                         </div>
-                        <hr />
                     </div>
                 </div>
             </div>
         </div>
         <asp:Table ID="tbactualizar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
-           <asp:TableRow>
+            <asp:TableRow>
                 <asp:TableCell>
                     <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
                 </asp:TableCell>
@@ -298,7 +297,6 @@
             <%--<asp:Button ID="BtnDownload" runat="server" Text="Descargar Manual" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnDownload_Click" Visible="false" />
             <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnReload_Click" Visible="false" />--%>
             <br />
-
         </div>
     </div>
 
@@ -326,48 +324,48 @@
             var captureBtn = $('#captureBtn');
             var textarea = $("#urlPath");
             var imgBase = $("#<%= ImgBase.ClientID %>");
-             captureBtn.on('click', function (event) {
-                 event.preventDefault();
-                 context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-                 var imageData = canvas.toDataURL('image/jpeg');
-                 textarea.val(imageData);
-                 imgBase.attr('src', imageData);
-                 canvas.hide();
-             });
-         });
+            captureBtn.on('click', function (event) {
+                event.preventDefault();
+                context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                var imageData = canvas.toDataURL('image/jpeg');
+                textarea.val(imageData);
+                imgBase.attr('src', imageData);
+                canvas.hide();
+            });
+        });
 
         $(document).ready(function () {
             $('#<%= txtNombre1.ClientID %> , #<%= txtNombre2.ClientID %> , #<%= txtApellido1.ClientID %>, #<%= txtApellido2.ClientID %>, #<%= txtApellidoCasada.ClientID %>').on('input', function () {
-                 var txtNombre1 = $('#<%= txtNombre1.ClientID %>').val().trim();
-                 var txtNInicial1 = $('#<%= txtNInicial1.ClientID %>').text().trim();
-                 var txtNombre2 = $('#<%= txtNombre2.ClientID %>').val().trim();
-                 var txtNInicial2 = $('#<%= txtNInicial2.ClientID %>').text().trim();
-                 var txtApellido1 = $('#<%= txtApellido1.ClientID %>').val().trim();
-                 var txtAInicial1 = $('#<%= txtAInicial1.ClientID %>').text().trim();
-                 var txtApellido2 = $('#<%= txtApellido2.ClientID %>').val().trim();
-                 var txtAInicial2 = $('#<%= txtAInicial2.ClientID %>').text().trim();
-                 var txtApellidoCasada = $('#<%= txtApellidoCasada.ClientID %>').val().trim();
-                 var txtCInicial = $('#<%= txtCInicial.ClientID %>').text().trim();
+                var txtNombre1 = $('#<%= txtNombre1.ClientID %>').val().trim();
+                var txtNInicial1 = $('#<%= txtNInicial1.ClientID %>').text().trim();
+                var txtNombre2 = $('#<%= txtNombre2.ClientID %>').val().trim();
+                var txtNInicial2 = $('#<%= txtNInicial2.ClientID %>').text().trim();
+                var txtApellido1 = $('#<%= txtApellido1.ClientID %>').val().trim();
+                var txtAInicial1 = $('#<%= txtAInicial1.ClientID %>').text().trim();
+                var txtApellido2 = $('#<%= txtApellido2.ClientID %>').val().trim();
+                var txtAInicial2 = $('#<%= txtAInicial2.ClientID %>').text().trim();
+                var txtApellidoCasada = $('#<%= txtApellidoCasada.ClientID %>').val().trim();
+                var txtCInicial = $('#<%= txtCInicial.ClientID %>').text().trim();
 
-                 if (txtNombre1 !== txtNInicial1 || txtNombre2 !== txtNInicial2 || txtApellido1 !== txtAInicial1 || txtApellido2 !== txtAInicial2 || txtApellidoCasada !== txtCInicial) {
-                     $('#<%= CargaDPI.ClientID %>').css('display', 'block');
-                        } else {
-                            $('#<%= CargaDPI.ClientID %>').css('display', 'none');
-                 }
-             });
-         });
+                if (txtNombre1 !== txtNInicial1 || txtNombre2 !== txtNInicial2 || txtApellido1 !== txtAInicial1 || txtApellido2 !== txtAInicial2 || txtApellidoCasada !== txtCInicial) {
+                    $('#<%= CargaDPI.ClientID %>').css('display', 'block');
+                } else {
+                    $('#<%= CargaDPI.ClientID %>').css('display', 'none');
+                }
+            });
+        });
 
         function checkCameraAccess() {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'true';
-                     stream.getTracks().forEach(function (track) {
-                         track.stop();
-                     });
-                 })
-                 .catch(function (error) {
-                     document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'false';
-                        });
+                    stream.getTracks().forEach(function (track) {
+                        track.stop();
+                    });
+                })
+                .catch(function (error) {
+                    document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'false';
+                });
         }
 
         function validarCargaArchivos() {
@@ -385,20 +383,20 @@
         //Validar Numeros de telefono
         $(document).ready(function () {
             $('#<%= txtTelefono.ClientID %>').on('input', function () {
-                 var inputValue = $(this).val();
-                 var numericValue = inputValue.replace(/[^0-9]/g, '');
-                 $(this).val(numericValue);
-             });
+                var inputValue = $(this).val();
+                var numericValue = inputValue.replace(/[^0-9]/g, '');
+                $(this).val(numericValue);
+            });
 
-             $('#<%= txtTelefono.ClientID %>').on('keypress', function (event) {
-                 var keyCode = event.which || event.keyCode;
-                 var character = String.fromCharCode(keyCode);
+            $('#<%= txtTelefono.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
 
-                 if (!/^[0-9]+$/.test(character)) {
-                     event.preventDefault();
-                     alert('Solo se permiten ingresar números.');
-                 }
-             });
+                if (!/^[0-9]+$/.test(character)) {
+                    event.preventDefault();
+                    alert('Solo se permiten ingresar números.');
+                }
+            });
         });
 
         function mostrarAlerta() {
@@ -505,7 +503,7 @@
             mensaje = mensaje.replace("/\n/g", "<br>");
             alert(mensaje);
             window.location.href = "ActualizacionEstudiantes.aspx";
-        }    
+        }
 
 
     </script>

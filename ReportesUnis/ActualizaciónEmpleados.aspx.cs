@@ -17,6 +17,7 @@ using Microsoft.Win32;
 using NPOI.SS.Formula.Functions;
 using System.Drawing.Printing;
 using Oracle.ManagedDataAccess.Client;
+using Microsoft.Ajax.Utilities;
 
 namespace ReportesUnis
 {
@@ -1006,29 +1007,7 @@ namespace ReportesUnis
         {
             if (!cMBpAIS.Text.Equals("-") && !CmbMunicipio.Text.Equals("-") && !CmbDepartamento.Text.Equals("-") && !String.IsNullOrEmpty(CmbEstado.Text))
             {
-                string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                int ContadorArchivos = 0;
-                int ContadorArchivosCorrectos = 0;
-                int ContadorArchivosConError = 0;
-
-                //Ruta del archivo que guarda la bitácora
-                string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
-                //Nombre del archiov que guarda la bitácora
-                string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
-
-
-                //Se crea un nuevo archivo para guardar la bitacora de la ejecución
-                CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
-
-                //Guadar encabezado de la bitácora
-                GuardarBitacora(ArchivoBitacora, "                              Informe de ejecución de importación de fotografías HCM Fecha: " + FechaHoraInicioEjecución + "              ");
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    DPI                         Estado                 Descripción                                    ");
-                GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
-
-
                 string constr = TxtURL.Text;
-                string mensajeValidacion = "";
                 //Obtener se obtiene toda la información del empleado
                 string expand = "legislativeInfo,phones,addresses,photos";
                 string consulta = consultaGetworkers(expand, "nationalIdentifiers");
@@ -1056,6 +1035,8 @@ namespace ReportesUnis
                 string consultaImagenes = consultaGetImagenes(comIm);
                 string ImageId = getBetween(consultaImagenes, "\"ImageId\" : ", ",\n");
                 string PhotoId = getBetween(consulta, "\"PhotoId\" : ", ",\n");
+
+                AlmacenarFotografia();
 
                 //ACTUALIZACION-CREACION DE IMAGEN
                /* if (FileUpload1.HasFile)
@@ -1164,30 +1145,8 @@ namespace ReportesUnis
                         mensajeError = mensajeError + "y dirección ";
                         au = au + 1;
                     }
-
                 }
-                if (au == 0)
-                {
-                    lblActualizacion.Text = "Su información fue actualizada correctamente " + mensajeValidacion;
-                    PaisInicial.Text = Pais.Text;
-                    if (mensajeValidacion == " . No se encontró ninguna fotografía para almacenar.")
-                        GuardarBitacora(ArchivoBitacora, "---".PadRight(36) + "  " + Context.User.Identity.Name.Replace("@unis.edu.gt", "").PadRight(26) + "  No se ingresó ninguna imagen               ".PadRight(60));
-                    else
-                    {
-                        ContadorArchivos++;
-                    }
-                }
-                else
-                {
-                        lblActualizacion.Text = mensajeError +", la demás información se actualizó correctamente. "+ mensajeValidacion;
-                }
-
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
-                GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
-                GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
-                GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
+               
             }
             else
             {
@@ -1387,5 +1346,120 @@ namespace ReportesUnis
             }
             return RegistroCarne;
         }
+
+        private void AlmacenarFotografia()
+        {
+            //lblActualizacion.Text = "";
+            if (!Request.Form["urlPath"].IsNullOrWhiteSpace())
+            {
+                //SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "/Usuarios/UltimasCargas/", txtCarne.Text + ".jpg");
+                int ExisteFoto;
+                string constr = TxtURL.Text;
+                using (OracleConnection con = new OracleConnection(constr))
+                {
+                    con.Open();
+                    OracleTransaction transaction;
+                    transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        //Obtener fotografia
+                        cmd.Connection = con;
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET = '" + UserEmplid.Text + "'";
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            ExisteFoto = Convert.ToInt16(reader["CONTADOR"]);
+
+                            try
+                            {
+                                cmd.Connection = con;
+                                //Numero de Telefono
+                                if (ExisteFoto > 0)
+                                {
+                                    cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE SET FOTOGRAFIA = 'Existe'" +
+                                                        "WHERE CARNET = '" + UserEmplid.Text + "'";
+                                    cmd.ExecuteNonQuery();
+                                }
+                                else
+                                {
+                                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE (FOTOGRAFIA, CARNET) VALUES ('Existe', '" + UserEmplid.Text + "')";
+                                    cmd.ExecuteNonQuery();
+                                }
+
+                                SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "/Usuarios/UltimasCargas/", UserEmplid.Text + ".jpg");
+                                transaction.Commit();
+                            }
+                            catch (Exception x)
+                            {
+                                transaction.Rollback();
+                                fotoAlmacenada();
+                            }
+                        }
+                    }
+                }
+            }
+            //lblActualizacion.Text = "Debe de tomar una fotografía.";
+        }
+
+        private void fotoAlmacenada()
+        {
+            string constr = TxtURL.Text;
+            int contador;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT COUNT(*) CONTADOR FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET ='" + UserEmplid.Text + "'";
+                    OracleDataReader reader3 = cmd.ExecuteReader();
+                    while (reader3.Read())
+                    {
+                        contador = Convert.ToInt32(reader3["CONTADOR"].ToString());
+                        if (contador > 0)
+                        {
+                            ImgBase.Visible = true;
+                            ImgBase.ImageUrl = "~/Usuarios/UltimasCargas/" + UserEmplid.Text + ".jpg";
+                            byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + UserEmplid.Text + ".jpg");
+                            string base64String = Convert.ToBase64String(imageBytes);
+                            string script = $@"<script type='text/javascript'>
+                                            document.getElementById('urlPath').value = '{base64String}';
+                                            </script>";
+                            ClientScript.RegisterStartupScript(this.GetType(), "SetUrlPathValue", script);
+                        }
+                    }
+                    con.Close();
+
+                }
+            }
+        }
+
+        public string SaveCanvasImage(string imageData, string folderPath, string fileName)
+        {
+            if (!String.IsNullOrEmpty(imageData))
+            {
+                int largo = 0;
+                largo = imageData.Length;
+                imageData = imageData.Substring(23, largo - 23);
+                try
+                {
+                    // Ruta completa del archivo
+                    string filePath = Path.Combine(folderPath, fileName);
+
+                    // Guardar la imagen en el servidor
+                    byte[] imageBytes = Convert.FromBase64String(Convert.ToString(imageData));
+                    File.WriteAllBytes(filePath, imageBytes);
+
+                    return "Imagen guardada correctamente.";
+                }
+                catch (Exception ex)
+                {
+                    return "Error al guardar la imagen: " + ex.Message;
+                }
+            }
+            return "";
+        }
+
     }
 }
