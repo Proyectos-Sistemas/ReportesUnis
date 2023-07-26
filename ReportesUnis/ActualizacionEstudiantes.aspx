@@ -24,27 +24,31 @@
 
         <div class="container">
             <div class="row">
-                <div class="form-group col-md-1">
+                <div >
+
                 </div>
 
-                <div class="form-group col-md-4">
-                    <video id="videoElement" width="375" height="275" autoplay></video>
-                </div>
-                <div class="form-group col-md-2">
-                    <asp:Label ID="Label1" runat="server" Visible="true" ForeColor="White"> </asp:Label>
+                <div class="form-group  col-md-5" style="align-content: center; justify-content: center;display: flex;">
+                        <video id="videoElement" width="375" height="275" autoplay playsinline="true"></video>
                 </div>
 
-                <div class="form-group col-md-4">
+                
+                <div class="form-group  col-md-2">
+
+                </div>
+
+                <div class="form-group  col-md-5" style="align-content: center; justify-content: center;display: flex;">                                        
                     <asp:Image ID="ImgBase" runat="server" Visible="true" Style="max-width: 375px; max-height: 275px;" />
                 </div>
+                                
+                <div>
 
-                <div class="form-group col-md-1">
-                    <canvas id="canvas" style="max-width: 375px; max-height: 275px;"></canvas>
                 </div>
             </div>
         </div>
 
         <textarea id="urlPath" name="urlPath" style="display: none"></textarea>
+        <canvas id="canvas" style="max-width: 375px; max-height: 275px; display: none"></canvas>
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
@@ -819,15 +823,16 @@
                 });
         }
 
-
-
         function validarCargaArchivos() {
             var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
             var files = fileUpload.files;
+
             if (files.length > 2) {
                 alert("Solo se permiten cargar 2 archivos.");
-                //fileUpload.remove(files.length - 1);
-                fileUpload.value = ""; 
+                // Eliminar los archivos adicionales
+                while (files.length > 2) {
+                    fileUpload.remove(files.length - 1);
+                }
             }
         }
 
@@ -900,7 +905,7 @@
                         });
 
                         if (hasCamera) {
-                            console.log("La cámara está conectada.");
+                            console.log("La cámara está conectada.");    
                         } else {
                             console.log("La cámara no está conectada.");
                             $('#<%= CargaFotografia.ClientID %>').hide();
