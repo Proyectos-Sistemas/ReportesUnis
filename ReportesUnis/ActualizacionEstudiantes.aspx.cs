@@ -61,8 +61,8 @@ namespace ReportesUnis
             txtExiste.Text = controlPantalla.ToString();
             if (controlPantalla >= 1)
             {
-                //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
-                TextUser.Text = "2676467470101";
+                TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                //TextUser.Text = "2676467470101";
                 if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
                 {
                     Response.Redirect(@"~/Default.aspx");
@@ -109,6 +109,8 @@ namespace ReportesUnis
                             lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
                             CmbPais.SelectedValue = "Guatemala";
                             tabla.Visible = false;
+                            CargaFotografia.Visible = false;
+                            InfePersonal.Visible = false;
                         }
 
                     }
@@ -201,9 +203,9 @@ namespace ReportesUnis
                 {
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT EMPLID FROM SYSADM.PS_PERS_NID PN " +
-                    //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
+                    "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' "; //---1581737080101
                     //"WHERE PN.NATIONAL_ID ='2993196360101'";
-                    "WHERE PN.NATIONAL_ID ='2464538930108'";
+                    //"WHERE PN.NATIONAL_ID ='2464538930108'";
                     //"WHERE PN.NATIONAL_ID ='2695688590301'";
                     //"WHERE PN.NATIONAL_ID ='4681531'";
                     //"WHERE PN.NATIONAL_ID ='2708399090301'"; //----
@@ -267,14 +269,14 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                                                                                   //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                                                                                   //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                                                                                   //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián
-                                                                                   //"WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
-                                                                                   //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
-                                                                                   //"WHERE PN.NATIONAL_ID ='2708399090301' " +
-                                                                                   //"WHERE PN.NATIONAL_ID ='2695688590301' " +
-                                                                                   "WHERE PN.NATIONAL_ID ='2464538930108' " +
+                                                                                   "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
+                                                                                                                                      //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
+                                                                                                                                      //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián
+                                                                                                                                      //"WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
+                                                                                                                                      //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
+                                                                                                                                      //"WHERE PN.NATIONAL_ID ='2708399090301' " +
+                                                                                                                                      //"WHERE PN.NATIONAL_ID ='2695688590301' " +
+                                                                                                                                      //"WHERE PN.NATIONAL_ID ='2464538930108' " +
                                        ") WHERE CNT = 1";
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -844,6 +846,10 @@ namespace ReportesUnis
 
         private string actualizarInformacion()
         {
+            if (String.IsNullOrEmpty(txtNit.Text))
+            {
+                txtNit.Text = "CF";
+            }
             string cameraAvailable = hdnCameraAvailable.Value;
             if (cameraAvailable == "true")
             {
@@ -863,6 +869,7 @@ namespace ReportesUnis
                         }
                         else
                         {
+
                             mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
                             lblActualizacion.Text = mensaje;
                         }
@@ -955,7 +962,7 @@ namespace ReportesUnis
         {
             //CurrentDirectory + "/Usuarios/FotosConfirmación/
             string rutaArchivo = CurrentDirectory + "/Manuales/";
-            string nombreArchivo = "Manual borrador.docx";
+            string nombreArchivo = "ManualActivacionCamara.pdf";
             // Configurar las cabeceras de la respuesta
             Response.Clear();
             Response.ContentType = "application/octet-stream";
@@ -1212,7 +1219,7 @@ namespace ReportesUnis
                                             "NULL," + //TELEFONO
                                             "NULL," + //ZONA
                                             "" + txtAccion.Text + ",'" + //ACCION
-                                            "||''''||SUBSTR(PHONE,0,8)||''''||','" + //CELULAR
+                                            "||'''" + txtTelefono.Text + "'''||','" +// CELULAR
                                             "||CODIGO_BARRAS||','" + //CODIGO DE BARRAS
                                             "||''''||CONDMIG||''''||','" + //CONDICION MIGRANTE
                                             "||'2022,'" + //ID  UNIVERSIDAD
@@ -1279,7 +1286,7 @@ namespace ReportesUnis
                                             "AGT.DESCR FACULTAD, " +
                                             "CASE WHEN PD.SEX = 'M' THEN '1' WHEN PD.SEX = 'F' THEN '2' ELSE '' END SEX, " +
                                             "CASE WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'PAS' OR PN.NATIONAL_ID_TYPE = 'EXT') ) THEN 'Condición Migrante' WHEN (C.DESCR = ' ' OR C.DESCR IS NULL AND (PN.NATIONAL_ID_TYPE = 'DPI' OR PN.NATIONAL_ID_TYPE = 'CED') )THEN 'Guatemala' ELSE C.DESCR END PLACE," +
-                                            "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '' END STATUS, " +
+                                            "CASE WHEN PD.MAR_STATUS = 'M' THEN '2' WHEN PD.MAR_STATUS = 'S' THEN '1' ELSE '1' END STATUS, " +
                                             "(select REPLACE(A1.ADDRESS1,'|' , ' ') || ' ' ||  REPLACE(A1.ADDRESS2,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) DIRECCION, " +
                                             " (select REPLACE(A1.ADDRESS3,'|' , ' ') from SYSADM.PS_ADDRESSES A1 where PD.EMPLID = A1.EMPLID ORDER BY CASE WHEN A1.ADDRESS_TYPE = 'HOME' THEN 1 ELSE 2 END FETCH FIRST 1 ROWS ONLY) ZONA, " +
                                             "REGEXP_SUBSTR(ST.DESCR, '[^-]+') MUNICIPIO, " +
@@ -1300,11 +1307,11 @@ namespace ReportesUnis
                                             "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
                                             "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                             "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
-                                            //"--WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
+                                            "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "') " +
                                             //"WHERE PN.NATIONAL_ID ='4681531')" +
                                             //"WHERE PN.NATIONAL_ID ='2993196360101')" +
                                             //"WHERE PN.NATIONAL_ID ='2695688590301')" +
-                                            "WHERE PN.NATIONAL_ID ='2464538930108')" +
+                                            //"WHERE PN.NATIONAL_ID ='2464538930108')" +
                                             //"WHERE PN.NATIONAL_ID ='2708399090301')" +
                                             //"WHERE PN.NATIONAL_ID ='2990723550101')" +
                                             //"WHERE PN.NATIONAL_ID ='3682754340101')" +
@@ -1463,21 +1470,21 @@ namespace ReportesUnis
                                         string vchrLNameNS = " ";
                                         string vchrCNameNS = " ";
 
-                                        cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + vchrApellidosCompletos + "') AS CADENA FROM DUAL";
+                                        cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + vchrApellidosCompletos + "') AS CADENA FROM DUAL";
                                         reader = cmd.ExecuteReader();
                                         while (reader.Read())
                                         {
-                                            vchrLNameNS = reader["CADENA"].ToString().TrimStart().TrimEnd(); ;
+                                            vchrLNameNS = reader["CADENA"].ToString().TrimStart().TrimEnd(); 
                                         }
 
-                                        cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + TxtNombreR.Text + "') AS CADENA FROM DUAL";
+                                        cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + TxtNombreR.Text + "') AS CADENA FROM DUAL";
                                         reader = cmd.ExecuteReader();
                                         while (reader.Read())
                                         {
                                             vchrFNameNS = reader["CADENA"].ToString().TrimStart().TrimEnd(); ;
                                         }
 
-                                        cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + TxtCasadaR.Text + "') AS CADENA FROM DUAL";
+                                        cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + TxtCasadaR.Text + "') AS CADENA FROM DUAL";
                                         reader = cmd.ExecuteReader();
                                         while (reader.Read())
                                         {
@@ -1693,7 +1700,8 @@ namespace ReportesUnis
                         {
                             AlmacenarFotografia();
                             fotoAlmacenada();
-                            lblActualizacion.Text = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
+                            mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
+                            lblActualizacion.Text = mensaje;
                         }
                     }
 
@@ -2251,8 +2259,8 @@ namespace ReportesUnis
         protected void BtnDownload_Click(object sender, EventArgs e)
         {
             // Descargar el archivo
-            string archivoDescarga = CurrentDirectory + "/Manuales/Manual borrador.docx";
-            string nombreArchivo = "Manual borrador.docx";
+            string archivoDescarga = CurrentDirectory + "/Manuales/ManualActivacionCamara.pdf";
+            string nombreArchivo = "ManualActivacionCamara.pdf";
             Response.Clear();
             Response.ContentType = "application/octet-stream";
             Response.AddHeader("Content-Disposition", "attachment; filename=\"" + nombreArchivo + "\"");

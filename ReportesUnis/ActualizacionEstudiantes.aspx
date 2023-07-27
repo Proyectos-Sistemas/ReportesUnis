@@ -24,25 +24,22 @@
 
         <div class="container">
             <div class="row">
-                <div >
-
+                <div>
                 </div>
 
-                <div class="form-group  col-md-5" style="align-content: center; justify-content: center;display: flex;">
-                        <video id="videoElement" width="375" height="275" autoplay playsinline="true"></video>
+                <div class="form-group  col-md-5" style="align-content: center; justify-content: center; display: flex;">
+                    <video id="videoElement" width="375" height="275" autoplay playsinline="true"></video>
                 </div>
 
-                
+
                 <div class="form-group  col-md-2">
-
                 </div>
 
-                <div class="form-group  col-md-5" style="align-content: center; justify-content: center;display: flex;">                                        
+                <div class="form-group  col-md-5" style="align-content: center; justify-content: center; display: flex;">
                     <asp:Image ID="ImgBase" runat="server" Visible="true" Style="max-width: 375px; max-height: 275px;" />
                 </div>
-                                
-                <div>
 
+                <div>
                 </div>
             </div>
         </div>
@@ -161,8 +158,7 @@
             <%-- APELLIDO CASADA INICIAL --%>
             <input type="hidden" id="txtCInicial" runat="server" />
             <%-- CONTROL DE VALIDACION DE NIT--%>
-            <input type="hidden" id="ValidacionNit" runat="server" value="0" />
-            <%--<asp ID="ValidacionNit" runat="server" Visible="true" ForeColor="White">0</asp>--%>
+            <asp:Label ID="ValidacionNit" runat="server" Visible="true" ForeColor="White">0</asp:Label>
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
 
             <div class="container" id="tabla" runat="server">
@@ -517,11 +513,11 @@
             var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
             var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
             var foto = document.getElementById('urlPath').value;
-            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
+            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').text().trim();
 
-            if (ValidacionNit !== "0" && ValidacionNit !== "CF") {
+            if (nit !== "CF" && nit !== null) {
                 // Realiza las acciones necesarias si el valor es diferente de cero
-                alert("El NIT ha cambiado, es necesario validar");
+                alert("El NIT ha cambiado, es necesario validar.");
                 return false;
             } else {
 
@@ -628,7 +624,7 @@
             alert("El NIT no existe. Intente de nuevo");
         }
 
-
+        
         function ConfirmacionActualizacionSensible() {
             mensaje = "Su información fue almacenada correctamente. \nLa información ingresada debe ser aprobada antes de ser confirmada.\nActualmente, solo se muestran los datos que han sido previamente confirmados.";
             mensaje = mensaje.replace("/\n/g", "<br>");
@@ -832,6 +828,7 @@
                 // Eliminar los archivos adicionales
                 while (files.length > 2) {
                     fileUpload.remove(files.length - 1);
+                    fileUpload.value = ""; 
                 }
             }
         }
@@ -866,32 +863,22 @@
                 }
             });
         });
-
-        //Validar que se haya validado el nit
-        $(document).ready(function () {
-            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
-
-            if (ValidacionNit !== "0") {
-                // Realiza las acciones necesarias si el valor es diferente de cero
-                alert("El NIT ha cambiado, es necesario validar");
-            }
-        });
+       
 
         //Detectar cambio de nit
         $(document).ready(function () {
             $('#<%= txtNit.ClientID %>').on('input', function () {
-                var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
+               var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
                 var TrueNit = $('#<%= TrueNit.ClientID %>').text().trim();
                 var labelValidacion = $('#<%= ValidacionNit.ClientID %>');
-
-                if (txtNit !== TrueNit) {
+                if (txtNit !== TrueNit || txtNit !== 'CF') {
                     labelValidacion.text("1");
                 } else {
                     labelValidacion.text("0");
                 }
             });
         });
-
+        
         $(document).ready(function () {
             // Verificar si el navegador es compatible con enumerateDevices
             if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
