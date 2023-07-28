@@ -17,6 +17,8 @@ using System.Windows.Resources;
 using static System.Windows.Forms.AxHost;
 using Windows.Devices.Sensors;
 using Windows.UI.Xaml.Automation.Text;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Vml;
 
 namespace ReportesUnis
 {
@@ -286,6 +288,7 @@ namespace ReportesUnis
                             con.Close();
                             Buscar("1");
                             File.Delete(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + Carnet + ".jpg");
+                            File.Delete(txtPath.Text + Carnet + ".jpg");
                             for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
                             {
                                 File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
@@ -339,8 +342,8 @@ namespace ReportesUnis
                                 //SE INGRESA LA INFORMACIÓN EN EL BANCO
                                 respuesta = ConsumoSQL(txtInsertBI.Text);
                                 if (respuesta == "0")
-                                    respuesta = ConsumoOracle(txtInsertApex.Text);
                                 {
+                                    respuesta = ConsumoOracle(txtInsertApex.Text);
                                 }
                             }
                         }
@@ -350,11 +353,11 @@ namespace ReportesUnis
                     {
                         lblActualizacion.Text = "Se confirmó correctamente la información";
                         Buscar("1");
-                        //File.Delete(CurrentDirectory + txtPath.Text + Carnet + ".jpg");
                         for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
                         {
                             File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
                         }
+                        File.Delete(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + Carnet + ".jpg");
                         LimpiarCampos();
                     }
                     else
@@ -1032,7 +1035,7 @@ namespace ReportesUnis
                                                 "NAME_DISPLAY_SRCH ='" + (vchrFNameNS + vchrLNameNS + vchrCNameNS).TrimEnd() + "'," +
                                                 "LASTUPDDTTM = SYSDATE, " +
                                                 "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
-                                                "WHERE PN.EMPLID = '" + emplid + "' AND NAME_TYPE IN 'REC'  AND EFFDT ='"+ DateTime.Now.ToString("dd/MM/yyyy")+"'";
+                                                "WHERE PN.EMPLID = '" + emplid + "' AND NAME_TYPE IN 'REC'  AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
                             cmd.ExecuteNonQuery();
                         }
                         else
@@ -1106,7 +1109,7 @@ namespace ReportesUnis
                         {
                             //INSERTA EL NIT
                             cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSTEM (EMPLID, EXTERNAL_SYSTEM, EFFDT, EXTERNAL_SYSTEM_ID) " +
-                            "VALUES ('" + emplid + "','NRE','" + DateTime.Now.ToString("dd/MM/yyyy") + "','" + NIT + "' AND EFFDT ='"+ DateTime.Now.ToString("dd/MM/yyyy")+"')";
+                            "VALUES ('" + emplid + "','NRE','" + DateTime.Now.ToString("dd/MM/yyyy") + "','" + NIT + "' AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "')";
                             cmd.ExecuteNonQuery();
 
 
@@ -1147,7 +1150,7 @@ namespace ReportesUnis
                                 "A.ADDRESS2 = '" + TxtDiRe2 + "', " +
                                 "A.ADDRESS3 = '" + TxtDiRe3 + "', " +
                                 "A.COUNTRY = '" + PaisNit + "', LASTUPDOPRID ='" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
-                                "' WHERE A.EMPLID = '" + emplid + "' AND ADDRESS_TYPE ='REC' AND EFFDT ='"+ DateTime.Now.ToString("dd/MM/yyyy")+"'";
+                                "' WHERE A.EMPLID = '" + emplid + "' AND ADDRESS_TYPE ='REC' AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
                             cmd.ExecuteNonQuery();
                         }
 

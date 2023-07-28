@@ -42,6 +42,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label txtPath;
 
         /// <summary>
+        /// Control txtPath2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtPath2;
+
+        /// <summary>
         /// Control TxtURL.
         /// </summary>
         /// <remarks>

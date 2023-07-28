@@ -1655,7 +1655,10 @@ namespace ReportesUnis
                                 CargaDPI.Visible = false;
                                 transaction.Commit();
                                 con.Close();
-                                mostrarInformación();
+                                Thread.Sleep(1000);
+                                AlmacenarFotografia();
+                                fotoAlmacenada();
+                                Thread.Sleep(1000);
                                 mensaje = "Su información fue actualizada correctamente";
 
                             }

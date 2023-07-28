@@ -27,6 +27,7 @@ namespace ReportesUnis
         protected void Page_Load(object sender, EventArgs e)
         {
             LeerInfoTxtPath();
+            LeerInfoTxtPathGrid();
             LeerInfoTxtSQL();
             LeerInfoTxt();
             rutaFisica = Server.MapPath("~" + txtPath.Text);
@@ -62,6 +63,17 @@ namespace ReportesUnis
         }
 
         void LeerInfoTxtPath()
+        {
+            string rutaCompleta = CurrentDirectory + "PathAlmacenamiento.txt";
+            string line = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                line = file.ReadToEnd();
+                txtPath2.Text = line;
+                file.Close();
+            }
+        }
+        void LeerInfoTxtPathGrid()
         {
             string rutaCompleta = CurrentDirectory + "PathConfirmacion.txt";
             string line = "";
@@ -176,9 +188,10 @@ namespace ReportesUnis
                     string respuesta = ConsumoOracle(cadena);
                     if (respuesta == "0")
                     {
+                        File.Delete(txtPath2.Text + row.Cells[1].Text);
                         File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
                         llenadoGrid();
-
+                        lblActualizacion.Text = "Se rechazaron las fotos seleccionadas.";
                     }
                     else
                     {
@@ -396,7 +409,7 @@ namespace ReportesUnis
                     if (respuesta == "0")
                     {
                         lblActualizacion.Text = "Se confirmó correctamente la información";
-                        //File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
+                        File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
                         llenadoGrid();
                     }
                     else

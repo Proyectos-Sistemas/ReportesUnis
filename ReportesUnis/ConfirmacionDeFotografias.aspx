@@ -15,6 +15,7 @@
     <div id="CamposAuxiliares" runat="server" visible="false">
         <%-- TXTPath ALMACENA EL PATH DONDE SE ALMACENARA LA IMAGEN --%>
         <asp:Label ID="txtPath" runat="server" Visible="false"></asp:Label>
+        <asp:Label ID="txtPath2" runat="server" Visible="false"></asp:Label>
         <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
         <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
         <%-- TXTURLSQL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
