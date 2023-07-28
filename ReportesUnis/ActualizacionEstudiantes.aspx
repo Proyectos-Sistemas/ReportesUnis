@@ -90,8 +90,6 @@
             <asp:TextBox ID="StateNIT" runat="server" Visible="true"></asp:TextBox>
             <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE TELEFONO O NO--%>
             <asp:Label ID="TruePhone" runat="server" Visible="false"></asp:Label>
-            <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE NIT O NO--%>
-            <asp:Label ID="TrueNit" runat="server" Visible="false"></asp:Label>
             <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE DIRECCION O NO--%>
             <asp:Label ID="TrueDir" runat="server" Visible="false"></asp:Label>
             <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
@@ -158,7 +156,11 @@
             <%-- APELLIDO CASADA INICIAL --%>
             <input type="hidden" id="txtCInicial" runat="server" />
             <%-- CONTROL DE VALIDACION DE NIT--%>
-            <asp:Label ID="ValidacionNit" runat="server" Visible="true" ForeColor="White">0</asp:Label>
+            <input type="hidden" ID="ValidacionNit" runat="server"/>            
+            <%--<asp:Label ID="ValidacionNit" runat="server" Visible="true" ForeColor="White">0</asp:Label>--%>            
+            <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE NIT O NO--%>
+            <input type="hidden" ID="TrueNit" runat="server"/>
+            <%--<asp:Label ID="TrueNit" runat="server" Visible="false"></asp:Label>--%>
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
 
             <div class="container" id="tabla" runat="server">
@@ -513,12 +515,15 @@
             var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
             var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
             var foto = document.getElementById('urlPath').value;
-            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').text().trim();
+            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
+            var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
 
-            if (nit !== "CF" && nit !== null) {
+            if (TrueNit !== nit) {
                 // Realiza las acciones necesarias si el valor es diferente de cero
-                alert("El NIT ha cambiado, es necesario validar.");
-                return false;
+                if (nit !== "CF"){
+                    alert("El NIT ha cambiado, es necesario validar.");
+                    return false;
+                }
             } else {
 
                 if (apellido.trim() === "") {
@@ -869,12 +874,13 @@
         $(document).ready(function () {
             $('#<%= txtNit.ClientID %>').on('input', function () {
                var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
-                var TrueNit = $('#<%= TrueNit.ClientID %>').text().trim();
-                var labelValidacion = $('#<%= ValidacionNit.ClientID %>');
+                var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
+                var labelValidacion = $('#<%= ValidacionNit.ClientID %>').val().trim();
                 if (txtNit !== TrueNit || txtNit !== 'CF') {
                     labelValidacion.text("1");
                 } else {
                     labelValidacion.text("0");
+                    TrueNit.text(txtNit);
                 }
             });
         });
@@ -948,38 +954,6 @@
             canvas.height = newHeight;
         };
     </script>
-
-    <%--<script>
-        // Verificar si el navegador es compatible con enumerateDevices
-        if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-            // Obtener la lista de dispositivos multimedia
-            navigator.mediaDevices
-                .enumerateDevices()
-                .then(function (devices) {
-                    // Verificar si hay al menos una cámara en la lista
-                    const hasCamera = devices.some(function (device) {
-                        return device.kind === "videoinput";
-                    });
-
-                    if (hasCamera) {
-                        console.log("La cámara está conectada.");
-                    } else {
-                        console.log("La cámara no está conectada.");
-                        //alert("Es necesario que su dispositivo cuente con una cámara para poder actualizar su información.");
-                        var lblActualizacion = document.getElementById("<%= lblActualizacion.ClientID %>");
-                        lblActualizacion.innerText = "Es necesario que su dispositivo cuente con una cámara para poder actualizar su información.";
-
-                    }
-                })
-                .catch(function (error) {
-                    console.error("Error al enumerar los dispositivos:", error);
-                });
-        } else {
-            console.error("enumerateDevices no es compatible con este navegador.");
-            // Aquí podrías mostrar un mensaje o realizar alguna acción específica.
-        }
-    </script>--%>
-
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>

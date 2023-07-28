@@ -292,7 +292,7 @@ namespace ReportesUnis
                         TxtNombreR.Text = reader["NOMBRE_NIT"].ToString();
                         TxtCasadaR.Text = reader["CASADA_NIT"].ToString();
                         txtNit.Text = reader["NIT"].ToString();
-                        TrueNit.Text = reader["NIT"].ToString();
+                        TrueNit.Value = reader["NIT"].ToString();
                         State.Text = reader["STATE"].ToString();
                         StateNIT.Text = reader["STATE_NIT"].ToString();
                         largoApellido = txtAInicial.Value.Length;// + " " + posicion.ToString();
@@ -1146,11 +1146,11 @@ namespace ReportesUnis
                             SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
                             if (txtConfirmacion.Text == "01")
                             {
-                                SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "/Usuarios/FotosConfirmación/", txtCarne.Text + ".jpg");
+                                SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "\\Usuarios\\FotosConfirmación\\", txtCarne.Text + ".jpg");
                             }
                             else
                             {
-                                SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "/Usuarios/Fotos/", txtCarne.Text + ".jpg");
+                                SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "\\Usuarios\\Fotos\\", txtCarne.Text + ".jpg");
                             }
 
                             cmd.Transaction = transaction;
@@ -2199,6 +2199,7 @@ namespace ReportesUnis
                     lblActualizacion.Text = "";
                     AlmacenarFotografia();
                     fotoAlmacenada();
+                    ValidacionNit.Value = "0";
                 }
                 else
                 {
@@ -2223,7 +2224,7 @@ namespace ReportesUnis
                     ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                 }
             }
-
+            TrueNit.Value = txtNit.Text;
         }
 
 
@@ -2249,6 +2250,9 @@ namespace ReportesUnis
             /*llenadoPaisnit();
             llenadoDepartamentoNit();
             llenadoMunicipioNIT();*/
+            TxtDiRe1.Enabled = true;
+            TxtDiRe2.Enabled = true;
+            TxtDiRe3.Enabled = true;
         }
 
         protected void BtnReload_Click(object sender, EventArgs e)

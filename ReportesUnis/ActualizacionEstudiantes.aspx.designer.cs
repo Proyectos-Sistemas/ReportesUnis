@@ -132,15 +132,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label TruePhone;
 
         /// <summary>
-        /// Control TrueNit.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label TrueNit;
-
-        /// <summary>
         /// Control TrueDir.
         /// </summary>
         /// <remarks>
@@ -381,7 +372,16 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ValidacionNit;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden ValidacionNit;
+
+        /// <summary>
+        /// Control TrueNit.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden TrueNit;
 
         /// <summary>
         /// Control tabla.
