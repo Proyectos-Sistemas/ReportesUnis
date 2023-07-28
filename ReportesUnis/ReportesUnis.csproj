@@ -548,13 +548,6 @@
     <Content Include="Usuarios\00000000965%282%29.jpg" />
     <Content Include="Usuarios\DPI\00000000965%281%29.jpg" />
     <Content Include="Usuarios\DPI\00000000965%282%29.jpg" />
-    <Content Include="Usuarios\FotosConfirmacion\00000000965.jpg" />
-    <Content Include="Usuarios\Fotos\00000000965.jpg" />
-    <Content Include="Usuarios\UltimasCargas\00000000965.jpg" />
-    <Content Include="Usuarios\UltimasCargas\00000000987.jpg" />
-    <Content Include="Usuarios\UltimasCargas\00000001021.jpg" />
-    <Content Include="Usuarios\UltimasCargas\00000001147.jpg" />
-    <Content Include="Usuarios\UltimasCargas\00000015059.jpg" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -781,6 +774,9 @@
     <Folder Include="App_Data\" />
     <Folder Include="CapturedImages\" />
     <Folder Include="Files\" />
+    <Folder Include="Usuarios\FotosConfirmacion\" />
+    <Folder Include="Usuarios\Fotos\" />
+    <Folder Include="Usuarios\UltimasCargas\" />
     <Folder Include="Zips\" />
   </ItemGroup>
   <ItemGroup>

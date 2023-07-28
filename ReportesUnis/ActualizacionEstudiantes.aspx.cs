@@ -1146,7 +1146,7 @@ namespace ReportesUnis
                             SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
                             if (txtConfirmacion.Text == "01")
                             {
-                                SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "\\Usuarios\\FotosConfirmación\\", txtCarne.Text + ".jpg");
+                                SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "\\Usuarios\\FotosConfirmacion\\", txtCarne.Text + ".jpg");
                             }
                             else
                             {
