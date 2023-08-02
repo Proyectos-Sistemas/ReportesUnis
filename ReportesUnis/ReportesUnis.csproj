@@ -466,6 +466,7 @@
     </Content>
     <EmbeddedResource Include="rptLogInterfazHCMCS.rdlc" />
     <Content Include="Manuales\Manual borrador.docx" />
+    <Content Include="Manuales\ManualActivacionCamara.pdf" />
     <None Include="Oracle.DataAccess.Common.Configuration.Section.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -548,6 +549,7 @@
     <Content Include="Usuarios\00000000965%282%29.jpg" />
     <Content Include="Usuarios\DPI\00000000965%281%29.jpg" />
     <Content Include="Usuarios\DPI\00000000965%282%29.jpg" />
+    <Content Include="Usuarios\Fotos\00000004433.jpg" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -775,7 +777,6 @@
     <Folder Include="CapturedImages\" />
     <Folder Include="Files\" />
     <Folder Include="Usuarios\FotosConfirmacion\" />
-    <Folder Include="Usuarios\Fotos\" />
     <Folder Include="Usuarios\UltimasCargas\" />
     <Folder Include="Zips\" />
   </ItemGroup>

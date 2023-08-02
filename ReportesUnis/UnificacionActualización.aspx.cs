@@ -17,10 +17,10 @@ namespace ReportesUnis
             }
             else
             {
-                if (((List<string>)Session["Grupos"]).Contains("RLI_VistaEmpleados") && ((List<string>)Session["Grupos"]).Contains("RLI_Admin"))
-                {
-                    Response.Redirect(@"~/ActualizaciónEmpleados.aspx");
-                }
+                //if (((List<string>)Session["Grupos"]).Contains("RLI_VistaEmpleados") && ((List<string>)Session["Grupos"]).Contains("RLI_Admin"))
+                //{
+                //    Response.Redirect(@"~/ActualizaciónEmpleados.aspx");
+                //}  DESCOMENTAR EN LA FASE 2
                 if (((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos"))
                 {
                     Response.Redirect(@"~/ActualizacionEstudiantes.aspx");

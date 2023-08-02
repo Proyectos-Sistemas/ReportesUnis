@@ -18,7 +18,8 @@ using static System.Windows.Forms.AxHost;
 using Windows.Devices.Sensors;
 using Windows.UI.Xaml.Automation.Text;
 using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Vml;
+//using DocumentFormat.OpenXml.Vml;
+using System.Net;
 
 namespace ReportesUnis
 {
@@ -280,24 +281,62 @@ namespace ReportesUnis
                     using (OracleCommand cmd = new OracleCommand())
                     {
                         try
-                        {
-                            cmd.Connection = con;
-                            cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + Carnet + "'";
-                            cmd.ExecuteNonQuery();
-                            transaction.Commit();
-                            con.Close();
-                            Buscar("1");
-                            File.Delete(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + Carnet + ".jpg");
-                            File.Delete(txtPath.Text + Carnet + ".jpg");
-                            for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
+                        {                            
+                            //File.Delete(txtPath.Text + Carnet + ".jpg");
+                            string username = "SRVCarnets\\carnetuser";
+                            string password = "C@rn3tSrV#2023";
+                            int cargaFt = 0;
+                            NetworkCredential credentials = new NetworkCredential(username, password);
+
+                            try
                             {
-                                File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
+                                // Crear una instancia de WebClient y establecer las credenciales
+                                using (WebClient client = new WebClient())
+                                {
+                                    client.Credentials = credentials;
+
+                                    // Construir la ruta completa de la imagen en la ruta remota
+                                    string remoteImagePath = Path.Combine(txtPath.Text, Carnet + ".jpg");
+
+                                    // Convertir la imagen Base64 nuevamente a bytes y cargarla en la ruta remota
+                                    client.UploadString(remoteImagePath, "DELETE", "");
+
+                                    //SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
+                                    Console.WriteLine("Imagen eliminada exitosamente en la ruta remota.");
+                                    cargaFt = 0;
+                                }
                             }
-                            lblActualizacion.Text = "Se ha rechazado la solicitud de carnet.";
+                            catch (Exception ex)
+                            {
+                                // Si hay un error, imprimir el mensaje
+                                Console.WriteLine("Error al eliminar la imagen en la ruta remota: " + ex.Message);
+                                cargaFt = 1;
+                            }
+                            if (cargaFt == 0)
+                            {
+                                cmd.Connection = con;
+                                cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + Carnet + "'";
+                                cmd.ExecuteNonQuery();
+                                transaction.Commit();
+                                con.Close();
+                                Buscar("1");
+                                File.Delete(txtPath.Text + Carnet + ".jpg");
+                                File.Delete(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + Carnet + ".jpg");
+                                for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
+                                {
+                                    File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
+                                }
+                                lblActualizacion.Text = "Se ha rechazado la solicitud de carnet.";
+                            }
+                            else
+                            {
+                                lblActualizacion.Text = "Ocurrió un error al rechazar la solicitud";
+                            }
+
                         }
                         catch (Exception)
                         {
-                            lblActualizacion.Text = "No se pudo eliminar la información a causa de un error interno." + "  DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + CmbCarne.Text + "'";
+                            lblActualizacion.Text = "No se pudo eliminar la información a causa de un error interno.";
                             transaction.Rollback();
                         }
 

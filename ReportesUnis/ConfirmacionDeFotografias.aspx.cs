@@ -17,6 +17,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Resources;
 using NPOI.Util;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using System.Net;
+using System.Text;
 
 namespace ReportesUnis
 {
@@ -183,15 +185,53 @@ namespace ReportesUnis
                 if (checkBox.Checked)
                 {
                     // Obtener el nombre de la imagen seleccionada sin extension
-                    string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
-                    string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
-                    string respuesta = ConsumoOracle(cadena);
-                    if (respuesta == "0")
+
+
+                    string username = "SRVCarnets\\carnetuser";
+                    string password = "C@rn3tSrV#2023";
+                    int cargaFt = 0;
+                    NetworkCredential credentials = new NetworkCredential(username, password);
+
+                    try
                     {
-                        File.Delete(txtPath2.Text + row.Cells[1].Text);
-                        File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
-                        llenadoGrid();
-                        lblActualizacion.Text = "Se rechazaron las fotos seleccionadas.";
+                        // Crear una instancia de WebClient y establecer las credenciales
+                        using (WebClient client = new WebClient())
+                        {
+                            client.Credentials = credentials;
+
+                            // Construir la ruta completa de la imagen en la ruta remota
+                            string remoteImagePath = Path.Combine(txtPath2.Text, row.Cells[1].Text);
+
+                            // Convertir la imagen Base64 nuevamente a bytes y cargarla en la ruta remota
+                            client.UploadString(remoteImagePath, "DELETE", "");
+
+                            //SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
+                            Console.WriteLine("Imagen eliminada exitosamente en la ruta remota.");
+                            cargaFt = 0;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Si hay un error, imprimir el mensaje
+                        Console.WriteLine("Error al eliminar la imagen en la ruta remota: " + ex.Message);
+                        cargaFt = 1;
+                    }
+                    if (cargaFt == 0)
+                    {
+                        string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                        string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
+                        string respuesta = ConsumoOracle(cadena);
+                        if (respuesta == "0")
+                        {
+                            File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
+                            File.Delete(txtPath2.Text + row.Cells[1].Text);
+                            llenadoGrid();
+                            lblActualizacion.Text = "Se rechazaron las fotos seleccionadas.";
+                        }
+                        else
+                        {
+                            lblActualizacion.Text = "Ocurrió un error al eliminar los registros";
+                        }
                     }
                     else
                     {
