@@ -109,36 +109,42 @@ namespace ReportesUnis
                         {
                             contador = Convert.ToInt32(reader["CONTADOR"]);
                         }
+                        if(!String.IsNullOrEmpty(DTInicio.Text) && (!String.IsNullOrEmpty(DTFin.Text))){
 
-                        if ((!String.IsNullOrEmpty(DTInicio.Text)) && (!String.IsNullOrEmpty(DTFin.Text)) && contador == 0)
-                        {
-                            if (Convert.ToDateTime(DTInicio.Text) < Convert.ToDateTime(DTFin.Text))
+                            if (contador == 0)
                             {
-                                try
+                                if (Convert.ToDateTime(DTInicio.Text) < Convert.ToDateTime(DTFin.Text))
                                 {
-                                    cmd.Connection = con;
-                                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_PANTALLA_CARNE (FECHA_INICIO, FECHA_FIN, PANTALLA) VALUES('" + DTInicio.Text + "','" + DTFin.Text + "','" + CmbTipo.Text + "')";
-                                    cmd.ExecuteNonQuery();
-                                    transaction.Commit();
-                                    con.Close();
-                                    Buscar();
-                                    lblActualizacion.Text = "La información fue almacenada correctamente.";
+                                    try
+                                    {
+                                        cmd.Connection = con;
+                                        cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_PANTALLA_CARNE (FECHA_INICIO, FECHA_FIN, PANTALLA) VALUES('" + DTInicio.Text + "','" + DTFin.Text + "','" + CmbTipo.Text + "')";
+                                        cmd.ExecuteNonQuery();
+                                        transaction.Commit();
+                                        con.Close();
+                                        Buscar();
+                                        lblActualizacion.Text = "La información fue almacenada correctamente.";
+                                    }
+                                    catch (Exception)
+                                    {
+                                        lblActualizacion.Text = "No se pudo insertar la información a causa de un error interno.";
+                                        transaction.Rollback();
+                                    }
                                 }
-                                catch (Exception)
+                                else
                                 {
-                                    lblActualizacion.Text = "No se pudo insertar la información a causa de un error interno.";
-                                    transaction.Rollback();
+                                    lblActualizacion.Text = "La fecha de inicio debe de ser menor a la final.";
+
                                 }
                             }
                             else
                             {
-                                lblActualizacion.Text = "La fecha de inicio debe de ser menor a la final.";
-
+                                lblActualizacion.Text = "Las fechas ya han sido registradas para ese tipo";
                             }
                         }
                         else
                         {
-                            lblActualizacion.Text = "Las fechas ya han sido registradas para ese tipo";
+                            lblActualizacion.Text = "Es necesario ingresar fechas para poder realizar la inserción.";
                         }
                     }
                     catch (Exception x)

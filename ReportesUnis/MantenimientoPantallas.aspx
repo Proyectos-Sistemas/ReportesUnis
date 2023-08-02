@@ -28,7 +28,7 @@
 
                 <%-- FECHA INICIO  4--%>
                 <asp:TableCell>
-                    <asp:TextBox ID="DTInicio" runat="server"  TextMode="Date" placeholder="yyyy-mm-dd" AutoPostBack="true" OnTextChanged="DTInicio_TextChanged" ></asp:TextBox>
+                    <asp:TextBox ID="DTInicio" runat="server"  TextMode="Date" AutoPostBack="true" OnTextChanged="DTInicio_TextChanged" ></asp:TextBox>
                 </asp:TableCell>
 
                 <%-- ESPACIO 5--%>
