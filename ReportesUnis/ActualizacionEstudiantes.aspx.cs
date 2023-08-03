@@ -1160,6 +1160,7 @@ namespace ReportesUnis
                                 // Si hay un error, imprimir el mensaje
                                 Console.WriteLine("Error al cargar la imagen en la ruta remota: " + ex.Message);
                                 cargaFt = 1;
+                                mensaje = ex.ToString();
                             }
 
                             /**/

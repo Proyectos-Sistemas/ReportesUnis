@@ -682,7 +682,7 @@ namespace ReportesUnis
             }
             catch (Exception)
             {
-                lblBusqueda.Text = "Ha ocurido un error";
+                lblBusqueda.Text = "Ha ocurrido un error";
             }
         }
 

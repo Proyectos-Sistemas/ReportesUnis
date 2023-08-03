@@ -545,11 +545,6 @@
     <Content Include="Styles\fontawesome\all.css" />
     <Content Include="UnificacionActualización.aspx" />
     <Content Include="urlApex.txt" />
-    <Content Include="Usuarios\00000000965%281%29.jpg" />
-    <Content Include="Usuarios\00000000965%282%29.jpg" />
-    <Content Include="Usuarios\DPI\00000000965%281%29.jpg" />
-    <Content Include="Usuarios\DPI\00000000965%282%29.jpg" />
-    <Content Include="Usuarios\Fotos\00000004433.jpg" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -776,7 +771,9 @@
     <Folder Include="App_Data\" />
     <Folder Include="CapturedImages\" />
     <Folder Include="Files\" />
+    <Folder Include="Usuarios\DPI\" />
     <Folder Include="Usuarios\FotosConfirmacion\" />
+    <Folder Include="Usuarios\Fotos\" />
     <Folder Include="Usuarios\UltimasCargas\" />
     <Folder Include="Zips\" />
   </ItemGroup>
