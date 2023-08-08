@@ -57,9 +57,10 @@ namespace ReportesUnis
                 if (!IsPostBack)
                 {
                     BtnReload.Visible = false;
-                    controlPantalla = PantallaHabilitada("Semana");
+                    /*controlPantalla = PantallaHabilitada("Semana");
                     if (controlPantalla >= 1)
-                    {
+                    {*/
+
                         Page.ClientScript.RegisterStartupScript(GetType(), "CheckCameraAccess", "checkCameraAccess();", true);
                         LeerInfoTxtSQL();
                         LeerInfoTxtPath();
@@ -70,39 +71,49 @@ namespace ReportesUnis
                         llenadoState();
                         //llenadoStateNIT();
                         emplid = mostrarInformación();
-                        /*controlRenovacion = ControlRenovacion(emplid);
+                        controlRenovacion = ControlRenovacion(emplid);
                         if (controlRenovacion < 2)
-                        {*/
-                        if (txtNit.Text == "CF")
                         {
-                            txtNit.Enabled = false;
-                            RadioButtonNombreSi.Checked = true;
-                            ValidarNIT.Enabled = false;
-                            //Combos.Visible = false;
+                            if (txtNit.Text == "CF")
+                            {
+                                txtNit.Enabled = false;
+                                RadioButtonNombreSi.Checked = true;
+                                ValidarNIT.Enabled = false;
+                                //Combos.Visible = false;
 
-                        }
+                            }
+                            else
+                            {
+                                RadioButtonNombreNo.Checked = true;
+                                TxtDiRe1.Enabled = true;
+                                TxtDiRe2.Enabled = true;
+                                TxtDiRe3.Enabled = true;
+                                ValidarNIT.Enabled = true;
+                            }
+
+                            if (Request.Form["urlPathControl"] == "1")
+                            {
+                                AlmacenarFotografia();
+                            }
+                            fotoAlmacenada();
+
+                            if (String.IsNullOrEmpty(txtCarne.Text))
+                            {
+                                BtnActualizar.Visible = false;
+                                lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
+                                CmbPais.SelectedValue = "Guatemala";
+                                tabla.Visible = false;
+                                CargaFotografia.Visible = false;
+                                InfePersonal.Visible = false;
+                            }
+                       /* }
                         else
                         {
-                            RadioButtonNombreNo.Checked = true;
-                            TxtDiRe1.Enabled = true;
-                            TxtDiRe2.Enabled = true;
-                            TxtDiRe3.Enabled = true;
-                            ValidarNIT.Enabled = true;
-                        }
-
-                        /*AlmacenarFotografia();
-                        fotoAlmacenada();*/
-
-                        if (String.IsNullOrEmpty(txtCarne.Text))
-                        {
-                            BtnActualizar.Visible = false;
-                            lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
-                            CmbPais.SelectedValue = "Guatemala";
-                            tabla.Visible = false;
-                            CargaFotografia.Visible = false;
-                            InfePersonal.Visible = false;
-                        }
-
+                            controlCamposVisibles();
+                            lblActualizacion.ForeColor = System.Drawing.Color.Black;
+                            lblActualizacion.Text = "Ha llegado al límite de las renovaciones. <br /> " +
+                                "Si desea generar una nueva renovación pongase en contacto en soporte@unis.edu.gt.";
+                        }*/
                     }
 
                     /* }
@@ -182,7 +193,7 @@ namespace ReportesUnis
             tbactualizar.Visible = false;
             InfePersonal.Visible = false;
         }
-        private void mostrarInformación()
+        private string mostrarInformación()
         {
             string constr = TxtURL.Text;
             var dia = "";
@@ -404,6 +415,7 @@ namespace ReportesUnis
                     fotoAlmacenada();
                 }
             }
+            return emplid;
         }
 
         private void fotoAlmacenada()
@@ -2469,38 +2481,39 @@ namespace ReportesUnis
                 lblActualizacion.Text = mensaje;
             }
         }
-    }
-    /*protected int ControlRenovacion(string emplid)
-            {
-                txtExiste4.Text = "SELECT COUNT(*) AS CONTADOR " +
-                            "FROM UNIS_INTERFACES.TBL_CONTROL_CARNET " +
-                            "WHERE EMPLID  ='" + emplid + "'";
-                string constr = TxtURL.Text;
-                string control = "0";
-                using (OracleConnection con = new OracleConnection(constr))
-                {
-                    con.Open();
-                    using (OracleCommand cmd = new OracleCommand())
-                    {
-                        try
-                        {
-                            cmd.Connection = con;
-                            cmd.CommandText = txtExiste4.Text;
-                            OracleDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                control = reader["CONTADOR"].ToString();
-                            }
 
-                            con.Close();
-                        }
-                        catch (Exception x)
+        /*protected int ControlRenovacion(string emplid)
+        {
+            txtExiste4.Text = "SELECT COUNT(*) AS CONTADOR " +
+                        "FROM UNIS_INTERFACES.TBL_CONTROL_CARNET " +
+                        "WHERE EMPLID  ='" + emplid + "'";
+            string constr = TxtURL.Text;
+            string control = "0";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        cmd.Connection = con;
+                        cmd.CommandText = txtExiste4.Text;
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
                         {
-                            control = x.ToString();
+                            control = reader["CONTADOR"].ToString();
                         }
+
+                        con.Close();
+                    }
+                    catch (Exception x)
+                    {
+                        control = x.ToString();
                     }
                 }
-                return Convert.ToInt32(control);
             }
-            */
+            return Convert.ToInt32(control);
+        }
+        */
+    }
 }
