@@ -1205,6 +1205,7 @@ namespace ReportesUnis
                                     else
                                     {
                                         cargaFt = 1;
+                                        mensaje = ex.ToString();
                                     }
                                 }
                             }

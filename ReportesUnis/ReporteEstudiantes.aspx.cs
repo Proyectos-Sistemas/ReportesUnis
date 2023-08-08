@@ -295,7 +295,7 @@ namespace ReportesUnis
             catch (Exception)
             {
 
-                lblBusqueda.Text = "Ha ocurrido un error";
+                lblBusqueda.Text = "Ha ocurido un error";
             }
         }
 
