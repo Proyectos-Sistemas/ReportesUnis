@@ -45,6 +45,7 @@
         </div>
 
         <textarea id="urlPath" name="urlPath" style="display: none"></textarea>
+        <textarea id="urlPathControl" name="urlPathControl" style="display: none"></textarea>
         <canvas id="canvas" style="max-width: 375px; max-height: 275px; display: none"></canvas>
         <div class="container">
             <div class="row">
@@ -63,9 +64,8 @@
         <hr />
 
         <div class="container" id="CargaDPI" runat="server" style="display: none">
-
             <div>
-                <h5 style="text-align: center;">Carga de Documento de identificación</h5>
+                <h5 style="text-align: center; color: darkred;"><strong>Carga de Documento de identificación</strong></h5>
             </div>
             <asp:Label ID="Label3" runat="server" Font-Bold="false">Para realizar un cambio en su nombre es necesario adjuntar según sea el caso:</asp:Label>
             <br />
@@ -74,10 +74,7 @@
             <asp:Label ID="Label5" runat="server" Font-Bold="false" Font-Size="Small">b.) Fotografia de su Pasaporte</asp:Label>
             <br />
             <br />
-            <asp:FileUpload ID="FileUpload2" runat="server" AllowMultiple="true" accept="image/jpeg" onchange="validarCargaArchivos();" />
-            <div id="dvMsge" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
-                El tamaño máximo permitido es de 1 GB
-            </div>
+
             <br />
             <hr />
         </div>
@@ -90,6 +87,8 @@
             <asp:TextBox ID="StateNIT" runat="server" Visible="true"></asp:TextBox>
             <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE TELEFONO O NO--%>
             <asp:Label ID="TruePhone" runat="server" Visible="false"></asp:Label>
+            <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE EMAIL O NO--%>
+            <asp:Label ID="TrueEmail" runat="server" Visible="false"></asp:Label>
             <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE DIRECCION O NO--%>
             <asp:Label ID="TrueDir" runat="server" Visible="false"></asp:Label>
             <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
@@ -114,6 +113,8 @@
             <asp:Label ID="txtExiste" runat="server" Visible="false"></asp:Label>
             <%-- TXTEXISTE2 ALMACENA vALORES PARA HACER VALIDACIONES --%>
             <asp:Label ID="txtExiste2" runat="server" Visible="false"></asp:Label>
+            <%-- TXTEXISTE2 ALMACENA vALORES PARA HACER VALIDACIONES --%>
+            <asp:Label ID="txtExiste4" runat="server" Visible="false"></asp:Label>
             <%-- TXTEXISTE3 ALMACENA vALORES PARA HACER VALIDACIONES --%>
             <asp:TextBox ID="txtExiste3" runat="server" Visible="false"></asp:TextBox>
             <%-- TXTMUNICIPIODPI ALMACENA EL MUNICIPIO DEL DPI --%>
@@ -156,10 +157,10 @@
             <%-- APELLIDO CASADA INICIAL --%>
             <input type="hidden" id="txtCInicial" runat="server" />
             <%-- CONTROL DE VALIDACION DE NIT--%>
-            <input type="hidden" ID="ValidacionNit" runat="server"/>            
-            <%--<asp:Label ID="ValidacionNit" runat="server" Visible="true" ForeColor="White">0</asp:Label>--%>            
+            <input type="hidden" id="ValidacionNit" runat="server" />
+            <%--<asp:Label ID="ValidacionNit" runat="server" Visible="true" ForeColor="White">0</asp:Label>--%>
             <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE NIT O NO--%>
-            <input type="hidden" ID="TrueNit" runat="server"/>
+            <input type="hidden" id="TrueNit" runat="server" />
             <%--<asp:Label ID="TrueNit" runat="server" Visible="false"></asp:Label>--%>
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
 
@@ -189,12 +190,15 @@
 
 
                                 <div class="form-group col-md-4">
-                                    <asp:Label runat="server" Font-Bold="true">Carrera:</asp:Label>
+                                    <asp:Label runat="server" Font-Bold="true">Correo Institucional:</asp:Label>
                                     <br />
-                                    <asp:Label ID="txtCarrera" runat="server" Enabled="false"></asp:Label>
+                                    <asp:Label ID="EmailUnis" runat="server" Enabled="false"></asp:Label>
                                 </div>
 
                                 <div class="form-group col-md-4">
+                                    <asp:Label runat="server" Font-Bold="true">Carrera:</asp:Label>
+                                    <br />
+                                    <asp:Label ID="txtCarrera" runat="server" Enabled="false"></asp:Label>
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -278,6 +282,11 @@
                                 </div>
 
                                 <div class="form-group col-md-4">
+                                    <asp:Label runat="server" Font-Bold="true">Correo Personal*:</asp:Label>
+                                    <br />
+                                    <br />
+                                    <asp:TextBox ID="TxtCorreoPersonal" runat="server" MaxLength="24" CssClass="form-control" Width="275px"></asp:TextBox>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="TxtCorreoPersonal" ErrorMessage="Ingrese su correo personal." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -465,7 +474,68 @@
         <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnReload_Click" Visible="false" />
         <br />
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <div id="myModal" class="modal">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 style="text-align: center; color: darkred; text-align: center"><strong>Carga de Documento de Identificación</strong></h4>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <contenttemplate>
+                        <div class="container emp-profile">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="profile-head">
+                                        <div class="row">
+                                            <div class="form-group col-md">
+                                                <asp:Label ID="Label1" runat="server" Font-Bold="true" ForeColor="Blue">Para realizar un cambio en su nombre es necesario adjuntar según sea el caso:</asp:Label>
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md">
+                                                <asp:Label ID="Label2" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">&nbsp;&nbsp;&nbsp;&nbsp;a.) Fotografia de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md">
+                                                <asp:Label ID="Label6" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">&nbsp;&nbsp;&nbsp;&nbsp;b.) Fotografia de su Pasaporte</asp:Label>
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md">
+                                                <asp:FileUpload ID="FileUpload2" runat="server" AllowMultiple="true" accept="image/jpeg" onchange="validarCargaArchivos();" />
+                                                <div id="dvMsge1" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
+                                                    El tamaño máximo permitido es de 1 GB
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-5">
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <asp:Button ID="BtnAceptarCarga" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnAceptarCarga_Click" />
+                                            </div>
+                                            <div class="form-group col-md-5">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </contenttemplate>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--%>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
     <script>
         // Acceder a la cámara y mostrar el video en el elemento de video
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -484,24 +554,19 @@
             var captureBtn = $('#captureBtn');
             var textarea = $("#urlPath");
             var imgBase = $("#<%= ImgBase.ClientID %>");
+            var urlPathControl = $("#urlPathControl");
             captureBtn.on('click', function (event) {
                 event.preventDefault();
                 context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
                 var imageData = canvas.toDataURL('image/jpeg');
                 textarea.val(imageData);
+                urlPathControl.val('1');
                 imgBase.attr('src', imageData);
                 canvas.hide();
             });
         });
 
 
-
-        //function CambiarEstadoBoton(habilitado) {
-        //    var boton = document.getElementById('captureBtn');
-        //    var videoElement = document.getElementById('videoElement');
-        //    boton.disabled = !habilitado;
-        //    videoElement.disabled = !habilitado;
-        //}
         function mostrarAlerta() {
             var mensaje = "";
             var apellido = document.getElementById('<%= txtApellido.ClientID %>').value;
@@ -514,17 +579,27 @@
             var pais = document.getElementById('<%= CmbPais.ClientID %>').value;
             var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
             var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
+            var Correo = document.getElementById('<%= TxtCorreoPersonal.ClientID %>').value;
             var foto = document.getElementById('urlPath').value;
             var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
             var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
+            var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
+                var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
+                var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
+                var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
+                var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
+                var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
 
-            if (TrueNit !== nit) {
+                if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) {
+                    $('#myModal').css('display', 'block');
+                    return false;
+                } else if (TrueNit !== nit) {
                 // Realiza las acciones necesarias si el valor es diferente de cero
                 if (nit !== "CF"){
                     alert("El NIT ha cambiado, es necesario validar.");
                     return false;
                 }
-            } else {
+                } else {
 
                 if (apellido.trim() === "") {
                     mensaje = "-Los Apellidos son requerido.";
@@ -568,11 +643,11 @@
                     }
                 }
 
-                if (telefono.trim() === "") {
+                if (Correo.trim() === "") {
                     if (mensaje.trim() == "") {
-                        mensaje = "-El Teléfono es requerido.";
+                        mensaje = "-El Correo Personal es requerido.";
                     } else {
-                        mensaje = mensaje + "\n-El Teléfono es requerido.";
+                        mensaje = mensaje + "\n-El Correo Personal es requerido.";
                     }
                 }
 
@@ -581,6 +656,14 @@
                         mensaje = "-El Teléfono debe de tener 8 carácteres";
                     } else {
                         mensaje = mensaje + "\n-El Teléfono debe de tener 8 carácteres";
+                    }
+                }
+
+                if (foto.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-La fotografía es requerida";
+                    } else {
+                        mensaje = mensaje + "\n-La fotografía es requerida";
                     }
                 }
 
@@ -735,7 +818,7 @@
 
         });
 
-        $(document).ready(function () {
+<%--        $(document).ready(function () {
             $('#<%= txtNombre.ClientID %> , #<%= txtApellido.ClientID %>, #<%= txtCasada.ClientID %>').on('input', function () {
                 var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
                 var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
@@ -745,12 +828,19 @@
                 var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
 
                 if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) {
-                    $('#<%= CargaDPI.ClientID %>').css('display', 'block');
+                    $('#myModal').css('display', 'block');
                 } else {
-                    $('#<%= CargaDPI.ClientID %>').css('display', 'none');
+                    $('#myModal').css('display', 'none');
                 }
             });
-        });
+        });--%>
+
+        $('.close').click(function() {
+                $('#<%= txtNombre.ClientID %>').val($('#<%= txtNInicial.ClientID %>').val());
+                $('#<%= txtApellido.ClientID %>').val($('#<%= txtAInicial.ClientID %>').val());
+                $('#<%= txtCasada.ClientID %>').val($('#<%= txtCInicial.ClientID %>').val());
+                $('#myModal').css('display', 'none');
+            });
 
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
         $(document).ready(function () {
@@ -915,6 +1005,37 @@
             }
         });
 
+
+        window.addEventListener('load', function () {
+            ValidarEstadoCamara();
+        });
+
+
+        function ValidarEstadoCamara() {
+            const date = new Date();
+            var mensaje = "";
+            navigator.getMedia = (navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia ||
+                navigator.msGetUserMedia);
+            navigator.getMedia({ video: true }, function () {
+                $('#<%= CargaFotografia.ClientID %>').show();
+                $('#<%= BtnDownload.ClientID %>').hide();
+                $('#<%= BtnReload.ClientID %>').hide();
+            }, function () {
+                $('#<%= CargaFotografia.ClientID %>').hide();
+                $('#<%= tabla.ClientID %>').hide();
+                $('#<%= tbactualizar.ClientID %>').hide();
+                $('#<%= InfePersonal.ClientID %>').hide();
+                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                mensaje = "La cámara no tiene permisos disponibles. <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones. <br>";
+                lblActualizacion.css("color", "black");
+                lblActualizacion.html(mensaje);
+                $('#<%= BtnReload.ClientID %>').show();
+                $('#<%= BtnDownload.ClientID %>').show();
+            });
+            setTimeout(function () { startTime() }, 1000);
+        };
 
 
     </script>

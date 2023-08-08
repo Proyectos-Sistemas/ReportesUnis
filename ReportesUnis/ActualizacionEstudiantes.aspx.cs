@@ -25,6 +25,8 @@ namespace ReportesUnis
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
         string mensaje = "";
         int controlPantalla;
+        int controlRenovacion;
+        string emplid;
         ConsumoAPI api = new ConsumoAPI();
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -46,8 +48,8 @@ namespace ReportesUnis
             txtExiste.Text = controlPantalla.ToString();
             if (controlPantalla >= 1)
             {
-                TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
-                //TextUser.Text = "2676467470101";
+                //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                TextUser.Text = "2993196360101";
                 if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
                 {
                     Response.Redirect(@"~/Default.aspx");
@@ -67,7 +69,10 @@ namespace ReportesUnis
                         //llenadoDepartamentoNit();
                         llenadoState();
                         //llenadoStateNIT();
-                        mostrarInformación();
+                        emplid = mostrarInformación();
+                        /*controlRenovacion = ControlRenovacion(emplid);
+                        if (controlRenovacion < 2)
+                        {*/
                         if (txtNit.Text == "CF")
                         {
                             txtNit.Enabled = false;
@@ -99,6 +104,15 @@ namespace ReportesUnis
                         }
 
                     }
+
+                    /* }
+                    else
+                    {
+                        controlCamposVisibles();
+                        lblActualizacion.ForeColor = System.Drawing.Color.Black;
+                        lblActualizacion.Text = "Ha llegado al límite de las renovaciones. <br /> " +
+                            "Si desea generar una nueva renovación pongase en contacto en soporte@unis.edu.gt.";
+                    }*/
                     else
                     {
                         lblActualizacion.Text = "La pantalla de actualización está disponible únicamente de Lunes a Viernes.";
@@ -188,8 +202,8 @@ namespace ReportesUnis
                 {
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT EMPLID FROM SYSADM.PS_PERS_NID PN " +
-                    "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' "; //---1581737080101
-                    //"WHERE PN.NATIONAL_ID ='2993196360101'";
+                    //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' "; //---1581737080101
+                    "WHERE PN.NATIONAL_ID ='2993196360101'";
                     //"WHERE PN.NATIONAL_ID ='2464538930108'";
                     //"WHERE PN.NATIONAL_ID ='2695688590301'";
                     //"WHERE PN.NATIONAL_ID ='4681531'";
@@ -203,7 +217,7 @@ namespace ReportesUnis
 
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT APELLIDO_NIT, NOMBRE_NIT, CASADA_NIT, NIT, PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO, " +
-                                        "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, CNT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT, STATE FROM ( " +
+                                        "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, CNT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT, STATE, EMAILUNIS,EMAILPERSONAL FROM ( " +
                                         "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, " +
                                         "PD.LAST_NAME, PD.SECOND_LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
                                         "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
@@ -220,6 +234,8 @@ namespace ReportesUnis
                                         "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) MUNICIPIO_NIT, " +
                                         "(SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DEPARTAMENTO_NIT, " +
                                         "(SELECT ST.STATE FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) STATE_NIT, " +
+                                        "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = '" + emplid + "' AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAILUNIS , " +
+                                        "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = '" + emplid + "' AND UPPER(EMAIL.EMAIL_ADDR) NOT LIKE '%UNIS.EDU.GT%' AND EMAIL.E_ADDR_TYPE IN ('HOM1') FETCH FIRST 1 ROWS ONLY) EMAILPERSONAL , " +
                                         "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, " +
                                         "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, " +
                                         "TT.TERM_BEGIN_DT, ROW_NUMBER() OVER (PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, C.DESCR PAIS " +
@@ -254,9 +270,9 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                                                                                   "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
+                                                                                                                                      //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
                                                                                                                                       //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                                                                                                                                      //"WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián
+                                                                                                                                      "WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián
                                                                                                                                       //"WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
                                                                                                                                       //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
                                                                                                                                       //"WHERE PN.NATIONAL_ID ='2708399090301' " +
@@ -281,6 +297,9 @@ namespace ReportesUnis
                         State.Text = reader["STATE"].ToString();
                         StateNIT.Text = reader["STATE_NIT"].ToString();
                         largoApellido = txtAInicial.Value.Length;// + " " + posicion.ToString();
+                        EmailUnis.Text = reader["EMAILUNIS"].ToString();
+                        TxtCorreoPersonal.Text = reader["EMAILPERSONAL"].ToString();
+                        TrueEmail.Text = reader["EMAILPERSONAL"].ToString();
 
                         if ((txtApellido.Text.Substring(0, 5)).ToUpper().Equals("DE LA"))
                         {
@@ -923,6 +942,7 @@ namespace ReportesUnis
                             CargaDPI.Attributes["style"] = "display: block";
                             string script = "<script>Documentos();</script>";
                             ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                            mensaje = "Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.";
                         }
                         fotoAlmacenada();
                     }
@@ -961,21 +981,30 @@ namespace ReportesUnis
         //Eventos       
         protected void CmbMunicipio_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AlmacenarFotografia();
+            if (Request.Form["urlPathControl"] == "1")
+            {
+                AlmacenarFotografia();
+            }
             Thread.Sleep(1000);
             llenadoState();
             fotoAlmacenada();
         }
         protected void CmbMunicipioNIT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AlmacenarFotografia();
+            if (Request.Form["urlPathControl"] == "1")
+            {
+                AlmacenarFotografia();
+            }
             Thread.Sleep(1000);
             llenadoStateNIT();
             fotoAlmacenada();
         }
         protected void CmbDepartamento_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AlmacenarFotografia();
+            if (Request.Form["urlPathControl"] == "1")
+            {
+                AlmacenarFotografia();
+            }
             Thread.Sleep(1000);
             llenadoMunicipio();
             llenadoState();
@@ -983,7 +1012,10 @@ namespace ReportesUnis
         }
         protected void CmbDepartamentoNIT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AlmacenarFotografia();
+            if (Request.Form["urlPathControl"] == "1")
+            {
+                AlmacenarFotografia();
+            }
             Thread.Sleep(1000);
             llenadoMunicipioNIT();
             llenadoStateNIT();
@@ -1133,6 +1165,8 @@ namespace ReportesUnis
                             string username = "SRVCarnets\\carnetuser";
                             string password = "C@rn3tSrV#2023";
                             string urlPath = Request.Form["urlPath"];
+                            NetworkCredential credentials = new NetworkCredential(username, password);
+
                             int cargaFt = 0;
                             NetworkCredential credentials = new NetworkCredential(username, password);
 
@@ -1150,9 +1184,16 @@ namespace ReportesUnis
                                     byte[] imageBytesBase64 = Encoding.UTF8.GetBytes(urlPath);
                                     client.UploadData(remoteImagePath, imageBytesBase64);
 
-                                    SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
+                                    mensaje = SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
                                     Console.WriteLine("Imagen cargada exitosamente en la ruta remota.");
-                                    cargaFt = 0;
+                                    if (mensaje.Equals("Imagen guardada correctamente."))
+                                    {
+                                        cargaFt = 0;
+                                    }
+                                    else
+                                    {
+                                        cargaFt = 1;
+                                    }
                                 }
                             }
                             catch (Exception ex)
@@ -1332,9 +1373,9 @@ namespace ReportesUnis
                                                 "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
                                                 "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                                 "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
-                                                "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "') " +
+                                                //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "') " +
                                                 //"WHERE PN.NATIONAL_ID ='4681531')" +
-                                                //"WHERE PN.NATIONAL_ID ='2993196360101')" +
+                                                "WHERE PN.NATIONAL_ID ='2993196360101')" +
                                                 //"WHERE PN.NATIONAL_ID ='2695688590301')" +
                                                 //"WHERE PN.NATIONAL_ID ='2464538930108')" +
                                                 //"WHERE PN.NATIONAL_ID ='2708399090301')" +
@@ -1404,6 +1445,32 @@ namespace ReportesUnis
                                             principal = "N";
                                         }
                                         cmd.CommandText = "INSERT INTO SYSADM.PS_PERSONAL_PHONE (EMPLID, PHONE_TYPE,COUNTRY_CODE,EXTENSION,PHONE,PREF_PHONE_FLAG) VALUES ('" + UserEmplid.Text + "', 'HOME',' ',' ',  '" + txtTelefono.Text + "', '" + principal + "')";
+                                        cmd.ExecuteNonQuery();
+                                    }
+
+                                    //EMAIL PERSONAL
+                                    int contadorEPrincipal = 0;
+                                    principal = "Y";
+                                    if (!String.IsNullOrEmpty(TrueEmail.Text))
+                                    {
+
+                                        cmd.CommandText = "UPDATE SYSADM.PS_EMAIL_ADDRESSES EA SET EA.EMAIL_ADDR = '" + TxtCorreoPersonal.Text + "'" +
+                                                            "WHERE EA.EMPLID = '" + UserEmplid.Text + "' AND EA.E_ADDR_TYPE='HOM1'";
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                    else
+                                    {
+                                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EMAIL_ADDRESSES WHERE PREF_EMAIL_FLAG = 'Y' AND EMPLID = '" + UserEmplid.Text + "'";
+                                        reader = cmd.ExecuteReader();
+                                        while (reader.Read())
+                                        {
+                                            contadorEPrincipal = Convert.ToInt16(reader["CONTADOR"]);
+                                        }
+                                        if (contadorEPrincipal > 0)
+                                        {
+                                            principal = "N";
+                                        }
+                                        cmd.CommandText = "INSERT INTO SYSADM.PS_EMAIL_ADDRESSES (EMPLID, EMAIL_ADDR_TYPE,EMAIL_ADDR,PREF_EMAIL_FLAG) VALUES ('" + UserEmplid.Text + "', 'HOM1',' ',' ',  '" + TxtCorreoPersonal.Text + "', '" + principal + "')";
                                         cmd.ExecuteNonQuery();
                                     }
                                     //Direccion
@@ -1495,21 +1562,24 @@ namespace ReportesUnis
                                             string vchrLNameNS = " ";
                                             string vchrCNameNS = " ";
 
-                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + vchrApellidosCompletos + "') AS CADENA FROM DUAL";
+                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + vchrApellidosCompletos + "') AS CADENA FROM DUAL";
+                                            //cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + vchrApellidosCompletos + "') AS CADENA FROM DUAL";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
                                                 vchrLNameNS = reader["CADENA"].ToString().TrimStart().TrimEnd();
                                             }
 
-                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + TxtNombreR.Text + "') AS CADENA FROM DUAL";
+                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + TxtNombreR.Text + "') AS CADENA FROM DUAL";
+                                            //cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + TxtNombreR.Text + "') AS CADENA FROM DUAL";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
                                                 vchrFNameNS = reader["CADENA"].ToString().TrimStart().TrimEnd(); ;
                                             }
 
-                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + TxtCasadaR.Text + "') AS CADENA FROM DUAL";
+                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + TxtCasadaR.Text + "') AS CADENA FROM DUAL";
+                                            //cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + TxtCasadaR.Text + "') AS CADENA FROM DUAL";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
@@ -1676,8 +1746,8 @@ namespace ReportesUnis
                                         cmd.CommandText = txtInsert.Text;
                                         cmd.ExecuteNonQuery();
                                     }
-                                    FileUpload2.Visible = false;
-                                    CargaDPI.Visible = false;
+                                    //FileUpload2.Visible = false;
+                                    //CargaDPI.Visible = false;
                                     transaction.Commit();
                                     con.Close();
                                     Thread.Sleep(1000);
@@ -1691,7 +1761,10 @@ namespace ReportesUnis
                                 {
                                     transaction.Rollback();
                                     mensaje = "Ocurrió un problema al actualizar su información.";
-                                    AlmacenarFotografia();
+                                    if (Request.Form["urlPathControl"] == "1")
+                                    {
+                                        AlmacenarFotografia();
+                                    }
                                     fotoAlmacenada();
                                 }
                             }
@@ -1706,7 +1779,10 @@ namespace ReportesUnis
                 {
                     mensaje = "Ocurrió un problema al actualizar su información";
                 }
-                AlmacenarFotografia();
+                if (Request.Form["urlPathControl"] == "1")
+                {
+                    AlmacenarFotografia();
+                }
                 Thread.Sleep(1000);
                 fotoAlmacenada();
             }
@@ -1731,7 +1807,10 @@ namespace ReportesUnis
                     {
                         if (CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() || CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() || CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
                         {
-                            AlmacenarFotografia();
+                            if (Request.Form["urlPathControl"] == "1")
+                            {
+                                AlmacenarFotografia();
+                            }
                             fotoAlmacenada();
                             mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
                             lblActualizacion.Text = mensaje;
@@ -1740,7 +1819,10 @@ namespace ReportesUnis
 
                     if (RadioButtonNombreSi.Checked)
                     {
-                        AlmacenarFotografia();
+                        if (Request.Form["urlPathControl"] == "1")
+                        {
+                            AlmacenarFotografia();
+                        }
                         fotoAlmacenada();
                     }
                 }
@@ -1922,16 +2004,22 @@ namespace ReportesUnis
 
         protected void CmbPais_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AlmacenarFotografia();
-            Thread.Sleep(1000);
+            if (Request.Form["urlPathControl"] == "1")
+            {
+                AlmacenarFotografia();
+            }
             llenadoDepartamento();
             llenadoMunicipio();
             llenadoState();
+            Thread.Sleep(2000);
             fotoAlmacenada();
         }
         protected void CmbPaisNIT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AlmacenarFotografia();
+            if (Request.Form["urlPathControl"] == "1")
+            {
+                AlmacenarFotografia();
+            }
             Thread.Sleep(1000);
             llenadoDepartamentoNit();
             llenadoMunicipioNIT();
@@ -2042,6 +2130,10 @@ namespace ReportesUnis
 
                                 SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "/Usuarios/UltimasCargas/", txtCarne.Text + ".jpg");
                                 transaction.Commit();
+                                string script = $@"<script type='text/javascript'>
+                                            document.getElementById('urlPathControl').value = '';
+                                            </script>";
+                                ClientScript.RegisterStartupScript(this.GetType(), "SetUrlPathValue", script);
                             }
                             catch (Exception x)
                             {
@@ -2230,7 +2322,10 @@ namespace ReportesUnis
                     }
 
                     lblActualizacion.Text = "";
-                    AlmacenarFotografia();
+                    if (Request.Form["urlPathControl"] == "1")
+                    {
+                        AlmacenarFotografia();
+                    }
                     fotoAlmacenada();
                     ValidacionNit.Value = "0";
                 }
@@ -2335,5 +2430,77 @@ namespace ReportesUnis
             return retorno;
         }
 
+        protected void BtnAceptarCarga_Click(object sender, EventArgs e)
+        {
+            string informacion = actualizarInformacion();
+
+            if (informacion != "0" && informacion != "")
+            {
+
+                if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text))
+                {
+                    if (RadioButtonNombreNo.Checked)
+                    {
+                        if (CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() || CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() || CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
+                        {
+                            if (Request.Form["urlPathControl"] == "1")
+                            {
+                                AlmacenarFotografia();
+                            }
+                            fotoAlmacenada();
+                            mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
+                            lblActualizacion.Text = mensaje;
+                        }
+                    }
+
+                    if (RadioButtonNombreSi.Checked)
+                    {
+                        if (Request.Form["urlPathControl"] == "1")
+                        {
+                            AlmacenarFotografia();
+                        }
+                        fotoAlmacenada();
+                    }
+                }
+
+            }
+            else
+            {
+                lblActualizacion.Text = mensaje;
+            }
+        }
     }
+    /*protected int ControlRenovacion(string emplid)
+            {
+                txtExiste4.Text = "SELECT COUNT(*) AS CONTADOR " +
+                            "FROM UNIS_INTERFACES.TBL_CONTROL_CARNET " +
+                            "WHERE EMPLID  ='" + emplid + "'";
+                string constr = TxtURL.Text;
+                string control = "0";
+                using (OracleConnection con = new OracleConnection(constr))
+                {
+                    con.Open();
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        try
+                        {
+                            cmd.Connection = con;
+                            cmd.CommandText = txtExiste4.Text;
+                            OracleDataReader reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                control = reader["CONTADOR"].ToString();
+                            }
+
+                            con.Close();
+                        }
+                        catch (Exception x)
+                        {
+                            control = x.ToString();
+                        }
+                    }
+                }
+                return Convert.ToInt32(control);
+            }
+            */
 }
