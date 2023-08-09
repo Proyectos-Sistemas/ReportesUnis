@@ -67,11 +67,11 @@
             <div>
                 <h5 style="text-align: center; color: darkred;"><strong>Carga de Documento de identificación</strong></h5>
             </div>
-            <asp:Label ID="Label3" runat="server" Font-Bold="false">Para realizar un cambio en su nombre es necesario adjuntar según sea el caso:</asp:Label>
+            <asp:Label ID="Label3" runat="server" Font-Bold="false" ForeColor="Blue">Para realizar un cambio en su nombre es necesario adjuntar según sea el caso:</asp:Label>
             <br />
-            <asp:Label ID="Label4" runat="server" Font-Bold="false" Font-Size="Small">a.) Fotografia de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
+            <asp:Label ID="Label4" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">a.) Fotografia de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
             <br />
-            <asp:Label ID="Label5" runat="server" Font-Bold="false" Font-Size="Small">b.) Fotografia de su Pasaporte</asp:Label>
+            <asp:Label ID="Label5" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">b.) Fotografia de su Pasaporte</asp:Label>
             <br />
             <br />
 
@@ -285,7 +285,7 @@
                                     <asp:Label runat="server" Font-Bold="true">Correo Personal*:</asp:Label>
                                     <br />
                                     <br />
-                                    <asp:TextBox ID="TxtCorreoPersonal" runat="server" MaxLength="24" CssClass="form-control" Width="275px"></asp:TextBox>
+                                    <asp:TextBox ID="TxtCorreoPersonal" runat="server" MaxLength="75" CssClass="form-control" Width="275px"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="TxtCorreoPersonal" ErrorMessage="Ingrese su correo personal." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
 
@@ -470,8 +470,8 @@
         <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
         </asp:Label>
         <br />
-        <asp:Button ID="BtnDownload" runat="server" Text="Descargar Manual" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnDownload_Click" Visible="false" />
-        <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnReload_Click" Visible="false" />
+        <asp:Button ID="BtnDownload" runat="server" Text="Descargar Manual" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnDownload_Click" />
+        <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnReload_Click" />
         <br />
     </div>
 
@@ -581,6 +581,7 @@
             var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
             var Correo = document.getElementById('<%= TxtCorreoPersonal.ClientID %>').value;
             var foto = document.getElementById('urlPath').value;
+            var foto2 = document.getElementById('urlPathControl').value;
             var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
             var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
             var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
@@ -659,15 +660,7 @@
                     }
                 }
 
-                if (foto.trim() === "") {
-                    if (mensaje.trim() == "") {
-                        mensaje = "-La fotografía es requerida";
-                    } else {
-                        mensaje = mensaje + "\n-La fotografía es requerida";
-                    }
-                }
-
-                if (foto.trim() === "") {
+                if (foto.trim() === "" && foto2 === "") {
                     if (mensaje.trim() == "") {
                         mensaje = "-La fotografía es requerida";
                     } else {
@@ -991,9 +984,9 @@
                             console.log("La cámara está conectada.");    
                         } else {
                             console.log("La cámara no está conectada.");
-                            $('#<%= CargaFotografia.ClientID %>').hide();
+                            ////////$('#<%= CargaFotografia.ClientID %>').hide();
                             var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                            lblActualizacion.text("Es necesario que su dispositivo cuente con una cámara para poder actualizar su información.");
+                            //lblActualizacion.text("Es necesario que su dispositivo cuente con una cámara para poder actualizar su información.");
                         }
                     })
                     .catch(function (error) {

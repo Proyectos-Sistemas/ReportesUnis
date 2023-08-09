@@ -38,6 +38,8 @@ namespace ReportesUnis
         string Direccion1 = "";
         string Direccion2 = "";
         string Direccion3 = "";
+        int controlRenovacion = 0;
+        int controlRenovacionFecha = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -50,36 +52,46 @@ namespace ReportesUnis
                 LeerInfoTxt();
                 LeerInfoTxtSQL();
                 LeerInfoTxtPath();
+                LimpiarCampos();
+                //divConfirmar.Visible = true;
+                //divGenerar.Visible = false;
+                divCampos.Visible = true;
+                divDPI.Visible = true;
+                divFotografia.Visible = true;
+                divBtnConfirmar.Visible = true;
+                //divBtnGenerar.Visible = false;
+                Buscar("1");
+                lblActualizacion.Text = null;
             }
         }
 
-        protected void RadioButtonConfirmar_CheckedChanged(object sender, EventArgs e)
-        {
-            LimpiarCampos();
-            divConfirmar.Visible = true;
-            divGenerar.Visible = false;
-            divCampos.Visible = true;
-            divDPI.Visible = true;
-            divFotografia.Visible = true;
-            divBtnConfirmar.Visible = true;
-            divBtnGenerar.Visible = false;
-            Buscar("1");
-            lblActualizacion.Text = null;
-        }
+        //protected void RadioButtonConfirmar_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    LimpiarCampos();
+        //    divConfirmar.Visible = true;
+        //    divGenerar.Visible = false;
+        //    divCampos.Visible = true;
+        //    divDPI.Visible = true;
+        //    divFotografia.Visible = true;
+        //    divBtnConfirmar.Visible = true;
+        //    divBtnGenerar.Visible = false;
+        //    Buscar("1");
+        //    lblActualizacion.Text = null;
+        //}
 
-        protected void RadioButtonGenerar_CheckedChanged(object sender, EventArgs e)
-        {
-            LimpiarCampos();
-            divConfirmar.Visible = false;
-            divGenerar.Visible = true;
-            divCampos.Visible = true;
-            divDPI.Visible = false;
-            divFotografia.Visible = false;
-            divBtnConfirmar.Visible = false;
-            divBtnGenerar.Visible = true;
-            txtCarne.Text = null;
-            lblActualizacion.Text = null;
-        }
+        //protected void RadioButtonGenerar_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    LimpiarCampos();
+        //    divConfirmar.Visible = false;
+        //    divGenerar.Visible = true;
+        //    divCampos.Visible = true;
+        //    divDPI.Visible = false;
+        //    divFotografia.Visible = false;
+        //    divBtnConfirmar.Visible = false;
+        //    divBtnGenerar.Visible = true;
+        //    txtCarne.Text = null;
+        //    lblActualizacion.Text = null;
+        //}
 
         protected void CmbTipo_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -178,11 +190,11 @@ namespace ReportesUnis
                     cmd.CommandText = "SELECT ' ' CUI,' ' NOMBRE1,' ' NOMBRE2,' ' APELLIDO1,' ' APELLIDO2,' ' DECASADA,' ' CARGO," +
                         "' ' FACULTAD,' ' CELULAR,' ' FECHANAC,' ' ESTADO_CIVIL,' ' DIRECCION,' ' DEPTO_RESIDENCIA,' ' MUNI_RESIDENCIA, ' ' TOTALFOTOS, " +
                         "' ' NOMBRE_NIT,' ' APELLIDOS_NIT,' ' CASADA_NIT,' ' DIRECCION1_NIT,' ' DIRECCION2_NIT,' ' DIRECCION3_NIT, ' ' STATE_NIT , ' ' PAIS_NIT, ' ' PAIS_R, ' ' NO_PASAPORTE,  " +
-                        "' ' ADDRESS1, ' ' ADDRESS2, ' ' ADDRESS3 FROM DUAL UNION " +
+                        "' ' ADDRESS1, ' ' ADDRESS2, ' ' ADDRESS3, ' ' EMAIL_PERSONAL, ' ' EMAIL FROM DUAL UNION " +
                         "SELECT NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, NOMBRE1, NOMBRE2, APELLIDO1, APELLIDO2, DECASADA, CARGO, FACULTAD, CELULAR, FECHANAC, " +
                         "CASE WHEN ESTADO_CIVIL = 1 THEN 'SOLTERO' WHEN ESTADO_CIVIL ='2' THEN 'CASADO' ELSE '' END ESTADO_CIVIL, DIRECCION, " +
                         "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS, NOMBRE_NIT, APELLIDOS_NIT, CASADA_NIT, DIRECCION1_NIT, " +
-                        "DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_NIT, PAIS_R, NO_PASAPORTE,  ADDRESS1, ADDRESS2, ADDRESS3 " +
+                        "DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_NIT, PAIS_R, NO_PASAPORTE,  ADDRESS1, ADDRESS2, ADDRESS3, EMAIL_PERSONAL, EMAIL " +
                         "FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE " + where + " AND TIPO_PERSONA = 2 AND CONFIRMACION = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -218,30 +230,32 @@ namespace ReportesUnis
                         Direccion1 = reader["ADDRESS1"].ToString();
                         Direccion2 = reader["ADDRESS2"].ToString();
                         Direccion3 = reader["ADDRESS3"].ToString();
+                        TxtCorreoInstitucional.Text = reader["EMAIL"].ToString();
+                        TxtCorreoPersonal.Text = reader["EMAIL_PERSONAL"].ToString();
                     }
                     con.Close();
                 }
             }
         }
 
-        protected void BtnBuscar_Click(object sender, EventArgs e)
-        {
-            lblActualizacion.Text = null;
-            if (!txtCarne.Text.IsNullOrWhiteSpace())
-            {
-                llenado("CARNET = '" + txtCarne.Text + "' AND CONFIRMACION = '0'");
-                if (TxtPrimerNombre.Text.IsNullOrWhiteSpace())
-                {
-                    lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
-                }
-            }
-            else
-            {
-                txtCarne.Text = null;
-                lblActualizacion.Text = "Debe de ingresar un número de carnet para poder realizar la generación.";
+        //protected void BtnBuscar_Click(object sender, EventArgs e)
+        //{
+        //    lblActualizacion.Text = null;
+        //    if (!txtCarne.Text.IsNullOrWhiteSpace())
+        //    {
+        //        llenado("CARNET = '" + txtCarne.Text + "' AND CONFIRMACION = '0'");
+        //        if (TxtPrimerNombre.Text.IsNullOrWhiteSpace())
+        //        {
+        //            lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        txtCarne.Text = null;
+        //        lblActualizacion.Text = "Debe de ingresar un número de carnet para poder realizar la generación.";
 
-            }
-        }
+        //    }
+        //}
 
         private void LimpiarCampos()
         {
@@ -281,7 +295,7 @@ namespace ReportesUnis
                     using (OracleCommand cmd = new OracleCommand())
                     {
                         try
-                        {                            
+                        {
                             //File.Delete(txtPath.Text + Carnet + ".jpg");
                             string username = "SRVCarnets\\carnetuser";
                             string password = "C@rn3tSrV#2023";
@@ -363,6 +377,8 @@ namespace ReportesUnis
                 string fecha = DateTime.Now.ToString("yyyy-MM-dd");
                 QueryInsertBi();
                 respuesta = QueryActualizaNombre(Carnet);
+                controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + Carnet + "' AND FECHA_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
+                controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + Carnet + "'");
 
                 if (respuesta == "0")
                 {
@@ -383,6 +399,30 @@ namespace ReportesUnis
                                 if (respuesta == "0")
                                 {
                                     respuesta = ConsumoOracle(txtInsertApex.Text);
+                                    if (respuesta == "0")
+                                    {
+                                        if (controlRenovacion < 2 || (controlRenovacion == 2 && controlRenovacionFecha == 1))
+                                        {
+                                            if (controlRenovacion == 0)
+                                            {
+                                                //INSERTA INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
+                                                respuesta = ConsumoOracle("INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECHA_ULTIMO_REGISTRO) VALUES ('" + Carnet + "','1','" + DateTime.Now.ToString("dd/MM/yyyy") + "')");
+                                            }
+                                            else
+                                            {
+                                                if (controlRenovacionFecha < 1)
+                                                {
+                                                    //ACTUALIZA INFORMACIÓN DE LA RENOVACION
+                                                    respuesta= ConsumoOracle("UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECHA_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "' WHERE EMPLID='" + Carnet + "'");
+                                                }
+                                                else
+                                                {
+                                                    respuesta = "0";
+                                                }
+                                            }
+                                            
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -570,21 +610,21 @@ namespace ReportesUnis
             }
         }
 
-        protected string QueryActualizaBi()
-        {
-            string consulta = null;
-            string fecha = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        //protected string QueryActualizaBi()
+        //{
+        //    string consulta = null;
+        //    string fecha = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            consulta = "UPDATE [dbo].[Tarjeta_Identificacion_prueba] SET " +
-                "[Fecha_Solicitado] = '" + fecha + "' , " +
-                "[Fecha_Entrega] = '" + fecha + "', " +
-                "[Accion] = '2', " +
-                "[Fecha_Hora] = '" + fecha + "', " +
-                "[Fec_Emision] = '" + fecha + "', " +
-                "[Validar_Envio] = '1'  " +
-                "WHERE CARNET ='" + txtCarne.Text + "'";
-            return consulta;
-        }
+        //    consulta = "UPDATE [dbo].[Tarjeta_Identificacion_prueba] SET " +
+        //        "[Fecha_Solicitado] = '" + fecha + "' , " +
+        //        "[Fecha_Entrega] = '" + fecha + "', " +
+        //        "[Accion] = '2', " +
+        //        "[Fecha_Hora] = '" + fecha + "', " +
+        //        "[Fec_Emision] = '" + fecha + "', " +
+        //        "[Validar_Envio] = '1'  " +
+        //        "WHERE CARNET ='" + txtCarne.Text + "'";
+        //    return consulta;
+        //}
 
         protected string QueryActualizaNombre(string emplid)
         {
@@ -849,46 +889,46 @@ namespace ReportesUnis
             Confirmar(carne);
         }
 
-        protected void BtnGenerar_Click(object sender, EventArgs e)
-        {
-            if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
-            {
-                string respuesta = null;
-                string fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                string consultaBi = QueryActualizaBi();
-                txtExiste.Text = consultaBi;
-                //SE INGRESA LA INFORMACIÓN EN EL BANCO
-                respuesta = ConsumoSQL(consultaBi);
-                if (respuesta == "0")
-                {
-                    respuesta = "";
-                    QueryUpdateApex("0", fecha, fecha, fecha, "2", txtCarne.Text);
-                    if (!txtInsertApex.Text.IsNullOrWhiteSpace())
-                    {
-                        respuesta = ConsumoOracle(txtInsertApex.Text);
-                        if (respuesta == "0")
-                        {
-                            Upload(txtCarne.Text);
-                        }
-                    }
-                }
+        //protected void BtnGenerar_Click(object sender, EventArgs e)
+        //{
+        //    if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
+        //    {
+        //        string respuesta = null;
+        //        string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+        //        string consultaBi = QueryActualizaBi();
+        //        txtExiste.Text = consultaBi;
+        //        //SE INGRESA LA INFORMACIÓN EN EL BANCO
+        //        respuesta = ConsumoSQL(consultaBi);
+        //        if (respuesta == "0")
+        //        {
+        //            respuesta = "";
+        //            QueryUpdateApex("0", fecha, fecha, fecha, "2", txtCarne.Text);
+        //            if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+        //            {
+        //                respuesta = ConsumoOracle(txtInsertApex.Text);
+        //                if (respuesta == "0")
+        //                {
+        //                    Upload(txtCarne.Text);
+        //                }
+        //            }
+        //        }
 
-                if (respuesta == "0")
-                {
-                    lblActualizacion.Text = "Se almacenó correctamente la información para la renovación del carné";
-                    LimpiarCampos();
-                }
-                else
-                {
-                    lblActualizacion.Text = "Ocurrió un problema al almacenar la información";
-                }
-            }
-            else
-            {
-                lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
-            }
+        //        if (respuesta == "0")
+        //        {
+        //            lblActualizacion.Text = "Se almacenó correctamente la información para la renovación del carné";
+        //            LimpiarCampos();
+        //        }
+        //        else
+        //        {
+        //            lblActualizacion.Text = "Ocurrió un problema al almacenar la información";
+        //        }
+        //    }
+        //    else
+        //    {
+        //        lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
+        //    }
 
-        }
+        //}
 
         void LeerInfoTxtPath()
         {
@@ -1388,6 +1428,36 @@ namespace ReportesUnis
         public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
         {
             using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
+        }
+
+        protected int ControlRenovacion(string cadena)
+        {
+            string constr = TxtURL.Text;
+            string control = "0";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        cmd.Connection = con;
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_CONTROL_CARNET " + cadena;
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            control = reader["CONTADOR"].ToString();
+                        }
+
+                        con.Close();
+                    }
+                    catch (Exception x)
+                    {
+                        control = "3";
+                    }
+                }
+            }
+            return Convert.ToInt32(control);
         }
     }
 }

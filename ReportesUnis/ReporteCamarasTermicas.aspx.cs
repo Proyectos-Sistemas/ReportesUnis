@@ -576,7 +576,7 @@ namespace ReportesUnis
                                             "SELECT P.*, CASE WHEN dbms_lob.substr(EMPLOYEE_PHOTO,3,1) = hextoraw('FFD8FF') THEN 'JPG' END Extension, " +
                                             "ROW_NUMBER() OVER(PARTITION BY P.EMPLID ORDER BY P.EMPLID) AS CNT, PN.NATIONAL_ID DPI " +
                                             "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
-                                            "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
+                                            "INNER JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                             "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
                                             "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
                                             "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +

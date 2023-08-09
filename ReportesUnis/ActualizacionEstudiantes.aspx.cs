@@ -25,8 +25,10 @@ namespace ReportesUnis
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
         string mensaje = "";
         int controlPantalla;
-        int controlRenovacion;
+        int controlRenovacion = 0;
+        int controlRenovacionFecha = 0;
         string emplid;
+        string tiempoSleep = "";
         ConsumoAPI api = new ConsumoAPI();
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -41,7 +43,7 @@ namespace ReportesUnis
             Response.AppendHeader("Access-Control-Allow-Origin", "*"); // Replace "*" with the specific origin if needed
             Response.AppendHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
             Response.AppendHeader("Access-Control-Allow-Headers", "Content-Type");
-
+            LeerTiempo();
             LeerInfoTxt();
             LeerPathApex();
             controlPantalla = PantallaHabilitada("Carnetización Masiva");
@@ -70,49 +72,50 @@ namespace ReportesUnis
                         llenadoState();
                         //llenadoStateNIT();
                         emplid = mostrarInformación();
-                        /*controlRenovacion = ControlRenovacion(emplid);
-                        if (controlRenovacion < 2)
-                        {*/
-                        if (txtNit.Text == "CF")
+                        controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + emplid + "' AND FECHA_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
+                        controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + emplid + "'");
+                        if (controlRenovacion < 2 || (controlRenovacionFecha <3 && controlRenovacionFecha > 0))
                         {
-                            txtNit.Enabled = false;
-                            RadioButtonNombreSi.Checked = true;
-                            ValidarNIT.Enabled = false;
-                            //Combos.Visible = false;
+                            if (txtNit.Text == "CF")
+                            {
+                                txtNit.Enabled = false;
+                                RadioButtonNombreSi.Checked = true;
+                                ValidarNIT.Enabled = false;
+                                //Combos.Visible = false;
+                            }
+                            else
+                            {
+                                RadioButtonNombreNo.Checked = true;
+                                TxtDiRe1.Enabled = true;
+                                TxtDiRe2.Enabled = true;
+                                TxtDiRe3.Enabled = true;
+                                ValidarNIT.Enabled = true;
+                            }
 
-                        }
-                        else
-                        {
-                            RadioButtonNombreNo.Checked = true;
-                            TxtDiRe1.Enabled = true;
-                            TxtDiRe2.Enabled = true;
-                            TxtDiRe3.Enabled = true;
-                            ValidarNIT.Enabled = true;
-                        }
+                            if (Request.Form["urlPathControl"] == "1")
+                            {
+                                AlmacenarFotografia();
+                            }
+                            Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                            fotoAlmacenada();
 
-                        if (Request.Form["urlPathControl"] == "1")
-                        {
-                            AlmacenarFotografia();
+                            if (String.IsNullOrEmpty(txtCarne.Text))
+                            {
+                                BtnActualizar.Visible = false;
+                                lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
+                                CmbPais.SelectedValue = "Guatemala";
+                                tabla.Visible = false;
+                                CargaFotografia.Visible = false;
+                                InfePersonal.Visible = false;
+                            }
                         }
-                        fotoAlmacenada();
-
-                        if (String.IsNullOrEmpty(txtCarne.Text))
-                        {
-                            BtnActualizar.Visible = false;
-                            lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
-                            CmbPais.SelectedValue = "Guatemala";
-                            tabla.Visible = false;
-                            CargaFotografia.Visible = false;
-                            InfePersonal.Visible = false;
-                        }
-                        /* }
                         else
                         {
                             controlCamposVisibles();
                             lblActualizacion.ForeColor = System.Drawing.Color.Black;
                             lblActualizacion.Text = "Ha llegado al límite de las renovaciones. <br /> " +
-                                "Si desea generar una nueva renovación pongase en contacto en soporte@unis.edu.gt.";
-                        }*/
+                                "Si desea generar una nueva renovación pongase en contacto con soporte@unis.edu.gt.";
+                        }
 
                     }
                     else
@@ -139,6 +142,18 @@ namespace ReportesUnis
             {
                 line = file.ReadToEnd();
                 TxtURL.Text = line;
+                file.Close();
+            }
+        }
+
+        void LeerTiempo()
+        {
+            string rutaCompleta = CurrentDirectory + "sleep.txt";
+            string line = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                line = file.ReadToEnd();
+                tiempoSleep = line;
                 file.Close();
             }
         }
@@ -272,14 +287,14 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                                                                                                                                      //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
-                                                                                                                                      //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                                                                                                                                      "WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián
-                                                                                                                                                                                 //"WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
-                                                                                                                                                                                 //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
-                                                                                                                                                                                 //"WHERE PN.NATIONAL_ID ='2708399090301' " +
-                                                                                                                                                                                 //"WHERE PN.NATIONAL_ID ='2695688590301' " +
-                                                                                                                                                                                 //"WHERE PN.NATIONAL_ID ='2464538930108' " +
+                                        //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
+                                        //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
+                                        "WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián
+                                                                                   //"WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
+                                                                                   //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
+                                                                                   //"WHERE PN.NATIONAL_ID ='2708399090301' " +
+                                                                                   //"WHERE PN.NATIONAL_ID ='2695688590301' " +
+                                                                                   //"WHERE PN.NATIONAL_ID ='2464538930108' " +
                                        ") WHERE CNT = 1";
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -403,6 +418,8 @@ namespace ReportesUnis
                     {
                         Combos.Visible = false;
                     }*/
+
+                    Thread.Sleep(Convert.ToInt16(tiempoSleep));
                     fotoAlmacenada();
                 }
             }
@@ -432,6 +449,7 @@ namespace ReportesUnis
                             string base64String = Convert.ToBase64String(imageBytes);
                             string script = $@"<script type='text/javascript'>
                                             document.getElementById('urlPath').value = '{base64String}';
+                                            document.getElementById('urlPathControl').value = '0';
                                             </script>";
                             ClientScript.RegisterStartupScript(this.GetType(), "SetUrlPathValue", script);
                         }
@@ -852,7 +870,7 @@ namespace ReportesUnis
         }
 
         private string actualizarInformacion()
-        {
+        {            
             if (String.IsNullOrEmpty(txtNit.Text))
             {
                 txtNit.Text = "CF";
@@ -897,7 +915,6 @@ namespace ReportesUnis
                 }
                 else
                 {
-
                     if (FileUpload2.HasFile)
                     {
                         int txtCantidad = 0;
@@ -947,6 +964,7 @@ namespace ReportesUnis
                             ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                             mensaje = "Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.";
                         }
+                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
                         fotoAlmacenada();
                     }
                 }
@@ -988,7 +1006,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(Convert.ToInt16(tiempoSleep));
             llenadoState();
             fotoAlmacenada();
         }
@@ -998,7 +1016,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(Convert.ToInt16(tiempoSleep));
             llenadoStateNIT();
             fotoAlmacenada();
         }
@@ -1008,7 +1026,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(Convert.ToInt16(tiempoSleep));
             llenadoMunicipio();
             llenadoState();
             fotoAlmacenada();
@@ -1019,7 +1037,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(Convert.ToInt16(tiempoSleep));
             llenadoMunicipioNIT();
             llenadoStateNIT();
             fotoAlmacenada();
@@ -1171,38 +1189,41 @@ namespace ReportesUnis
                             NetworkCredential credentials = new NetworkCredential(username, password);
 
                             int cargaFt = 0;
-                            try
+                            if (Request.Form["urlPathControl"] == "1")
                             {
-                                // Crear una instancia de WebClient y establecer las credenciales
-                                using (WebClient client = new WebClient())
+                                try
                                 {
-                                    client.Credentials = credentials;
-
-                                    // Construir la ruta completa de la imagen en la ruta remota
-                                    string remoteImagePath = Path.Combine(txtPath.Text, nombreArchivo);
-
-                                    // Convertir la imagen Base64 nuevamente a bytes y cargarla en la ruta remota
-                                    byte[] imageBytesBase64 = Encoding.UTF8.GetBytes(urlPath);
-                                    client.UploadData(remoteImagePath, imageBytesBase64);
-
-                                    mensaje = SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
-                                    Console.WriteLine("Imagen cargada exitosamente en la ruta remota.");
-                                    if (mensaje.Equals("Imagen guardada correctamente."))
+                                    // Crear una instancia de WebClient y establecer las credenciales
+                                    using (WebClient client = new WebClient())
                                     {
-                                        cargaFt = 0;
-                                    }
-                                    else
-                                    {
-                                        cargaFt = 1;
+                                        client.Credentials = credentials;
+
+                                        // Construir la ruta completa de la imagen en la ruta remota
+                                        string remoteImagePath = Path.Combine(txtPath.Text, nombreArchivo);
+
+                                        // Convertir la imagen Base64 nuevamente a bytes y cargarla en la ruta remota
+                                        byte[] imageBytesBase64 = Encoding.UTF8.GetBytes(urlPath);
+                                        client.UploadData(remoteImagePath, imageBytesBase64);
+
+                                        mensaje = SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
+                                        Console.WriteLine("Imagen cargada exitosamente en la ruta remota.");
+                                        if (mensaje.Equals("Imagen guardada correctamente."))
+                                        {
+                                            cargaFt = 0;
+                                        }
+                                        else
+                                        {
+                                            cargaFt = 1;
+                                        }
                                     }
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                // Si hay un error, imprimir el mensaje
-                                Console.WriteLine("Error al cargar la imagen en la ruta remota: " + ex.Message);
-                                cargaFt = 1;
-                                mensaje = ex.ToString();
+                                catch (Exception ex)
+                                {
+                                    // Si hay un error, imprimir el mensaje
+                                    Console.WriteLine("Error al cargar la imagen en la ruta remota: " + ex.Message);
+                                    cargaFt = 1;
+                                    mensaje = ex.ToString();
+                                }
                             }
 
                             /**/
@@ -1716,6 +1737,26 @@ namespace ReportesUnis
                                                     "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='REC' AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
                                                 cmd.ExecuteNonQuery();
                                             }
+
+                                            controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "' AND FECHA_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
+                                            controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "'");
+
+                                            if (controlRenovacion == 0)
+                                            {
+                                                //INSERTA INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
+                                                cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECHA_ULTIMO_REGISTRO) " +
+                                                "VALUES ('" + UserEmplid.Text + "','1','" + DateTime.Now.ToString("dd/MM/yyyy") + "')";
+                                                cmd.ExecuteNonQuery();
+                                            }
+                                            else
+                                            {
+                                                if (controlRenovacionFecha < 2)
+                                                {
+                                                    cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECHA_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy")+"'" +
+                                                                        " WHERE EMPLID='" + UserEmplid.Text + "'";
+                                                    cmd.ExecuteNonQuery();
+                                                }
+                                            }
                                         }
                                         else
                                         {
@@ -1751,13 +1792,12 @@ namespace ReportesUnis
                                     //CargaDPI.Visible = false;
                                     transaction.Commit();
                                     con.Close();
-                                    Thread.Sleep(1000);
                                     if (Request.Form["urlPathControl"] == "1")
                                     {
                                         AlmacenarFotografia();
                                     }
+                                    Thread.Sleep(Convert.ToInt16(tiempoSleep));
                                     fotoAlmacenada();
-                                    Thread.Sleep(1000);
                                     mensaje = "Su información fue actualizada correctamente";
 
                                 }
@@ -1769,6 +1809,7 @@ namespace ReportesUnis
                                     {
                                         AlmacenarFotografia();
                                     }
+                                    Thread.Sleep(Convert.ToInt16(tiempoSleep));
                                     fotoAlmacenada();
                                 }
                             }
@@ -1787,7 +1828,7 @@ namespace ReportesUnis
                 {
                     AlmacenarFotografia();
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(Convert.ToInt16(tiempoSleep));
                 fotoAlmacenada();
             }
             else
@@ -1815,6 +1856,7 @@ namespace ReportesUnis
                             {
                                 AlmacenarFotografia();
                             }
+                            Thread.Sleep(Convert.ToInt16(tiempoSleep));
                             fotoAlmacenada();
                             mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
                             lblActualizacion.Text = mensaje;
@@ -1827,6 +1869,8 @@ namespace ReportesUnis
                         {
                             AlmacenarFotografia();
                         }
+
+                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
                         fotoAlmacenada();
                     }
                 }
@@ -2015,7 +2059,7 @@ namespace ReportesUnis
             llenadoDepartamento();
             llenadoMunicipio();
             llenadoState();
-            Thread.Sleep(2000);
+            Thread.Sleep(Convert.ToInt16(tiempoSleep));
             fotoAlmacenada();
         }
         protected void CmbPaisNIT_SelectedIndexChanged(object sender, EventArgs e)
@@ -2024,7 +2068,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(Convert.ToInt16(tiempoSleep));
             llenadoDepartamentoNit();
             llenadoMunicipioNIT();
             llenadoStateNIT();
@@ -2142,6 +2186,7 @@ namespace ReportesUnis
                             catch (Exception x)
                             {
                                 transaction.Rollback();
+                                Thread.Sleep(Convert.ToInt16(tiempoSleep));
                                 fotoAlmacenada();
                             }
                         }
@@ -2330,6 +2375,8 @@ namespace ReportesUnis
                     {
                         AlmacenarFotografia();
                     }
+
+                    Thread.Sleep(Convert.ToInt16(tiempoSleep));
                     fotoAlmacenada();
                     ValidacionNit.Value = "0";
                 }
@@ -2451,6 +2498,7 @@ namespace ReportesUnis
                             {
                                 AlmacenarFotografia();
                             }
+                            Thread.Sleep(Convert.ToInt16(tiempoSleep));
                             fotoAlmacenada();
                             mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
                             lblActualizacion.Text = mensaje;
@@ -2463,6 +2511,7 @@ namespace ReportesUnis
                         {
                             AlmacenarFotografia();
                         }
+                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
                         fotoAlmacenada();
                     }
                 }
@@ -2473,39 +2522,39 @@ namespace ReportesUnis
                 lblActualizacion.Text = mensaje;
             }
         }
-        /*protected int ControlRenovacion(string emplid)
-            {
-                txtExiste4.Text = "SELECT COUNT(*) AS CONTADOR " +
-                            "FROM UNIS_INTERFACES.TBL_CONTROL_CARNET " +
-                            "WHERE EMPLID  ='" + emplid + "'";
-                string constr = TxtURL.Text;
-                string control = "0";
-                using (OracleConnection con = new OracleConnection(constr))
-                {
-                    con.Open();
-                    using (OracleCommand cmd = new OracleCommand())
-                    {
-                        try
-                        {
-                            cmd.Connection = con;
-                            cmd.CommandText = txtExiste4.Text;
-                            OracleDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                control = reader["CONTADOR"].ToString();
-                            }
 
-                            con.Close();
-                        }
-                        catch (Exception x)
+        protected int ControlRenovacion(string cadena)
+        {
+            txtExiste4.Text = "SELECT CONTADOR " +
+                        "FROM UNIS_INTERFACES.TBL_CONTROL_CARNET " + cadena;
+            //"WHERE EMPLID  ='" + emplid + "'";
+            string constr = TxtURL.Text;
+            string control = "0";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        cmd.Connection = con;
+                        cmd.CommandText = txtExiste4.Text;
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
                         {
-                            control = x.ToString();
+                            control = reader["CONTADOR"].ToString();
                         }
+
+                        con.Close();
+                    }
+                    catch (Exception x)
+                    {
+                        control = x.ToString();
                     }
                 }
-                return Convert.ToInt32(control);
             }
-            */
+            return Convert.ToInt32(control);
+        }
 
     }
 }

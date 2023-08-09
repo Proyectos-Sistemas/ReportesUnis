@@ -26,472 +26,163 @@
         <%-- txtInsertApexI ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
         <asp:TextBox ID="txtInsertApex" runat="server" Visible="false"></asp:TextBox>  
     </div>
-    <div>
-        <asp:Table id="tabla" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
-            <asp:TableRow HorizontalAlign="Center">
-                <%-- ESPACIO 1--%>
-                <asp:TableCell Width="25%">
-                        <%--<br />--%>
-                </asp:TableCell>
-
-                <%-- ESPACIO 2--%>
-                <asp:TableCell>
-                        <%--<br />--%>
-                </asp:TableCell>
-
-                <%-- ESPACIO 3--%>
-                <asp:TableCell >
-                        <%--<br />--%>
-                </asp:TableCell>
-
-                <%-- ESPACIO 4--%>
-                <asp:TableCell>
-                        <%--<br />--%>
-                </asp:TableCell>
-
-                <%-- ESPACIO 5--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">CONFIRMAR CARNETS  </asp:Label> 
-                        <asp:RadioButton id="RadioButtonConfirmar" runat="server" AutoPostBack="True" OnCheckedChanged="RadioButtonConfirmar_CheckedChanged" GroupName="confirmar"/>
-                </asp:TableCell>
-
-                <%-- ESPACIO 6--%>
-                <asp:TableCell>
-                </asp:TableCell>
-
-                <%-- ESPACIO 7--%>
-                <asp:TableCell >
-                        <%--<br />--%>
-                </asp:TableCell>
-
-                <%-- ESPACIO 8 --%>
-                <asp:TableCell>                        
-                        <asp:Label runat="server" Font-Bold="true">GENERAR CARNETS  </asp:Label> 
-                        <asp:RadioButton id="RadioButtonGenerar" runat="server"  AutoPostBack="True" OnCheckedChanged="RadioButtonGenerar_CheckedChanged" GroupName="confirmar"/>                        
-                </asp:TableCell>
-
-                <%-- ESPACIO 9--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 10--%>
-                <asp:TableCell>
-                        <%--<br />--%>
-                </asp:TableCell>
-
-                <%-- ESPACIO 11--%>
-                <asp:TableCell >
-                        <%--<br />--%>
-                </asp:TableCell>
-
-                <%-- ESPACIO  12--%>
-                <asp:TableCell>
-                        <%--<br />--%>
-                </asp:TableCell>
-
-                <%-- ESPACIO 13 .--%>
-                <asp:TableCell Width="25%">
-                       <%-- <br />--%>
-                </asp:TableCell>
-        </asp:TableRow>
-        </asp:Table>     
-    </div>
-    <hr />
-    <div class="container" id="divGenerar" runat="server" visible="false">
-        <asp:Table id="tabla2" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
-            <asp:TableRow HorizontalAlign="Center">
-                <%-- ESPACIO 1--%>
-                <asp:TableCell Width="10%">
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 2--%>
-                <asp:TableCell >
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 3--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">CARNE:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- COMBOBOX 4--%>
-                <asp:TableCell>
-                        <asp:TextBox ID="txtCarne" runat="server" MaxLength="13" Width="150px" ></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 5--%>
-                <asp:TableCell > 
-                    <asp:Button ID="BtnBuscar" runat="server" Text="Buscar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnBuscar_Click" />
-                </asp:TableCell>
-
-                <%-- ESPACIO 6--%>
-                <asp:TableCell > 
-                </asp:TableCell>
-
-                <%-- ESPACIO 7--%>
-                <asp:TableCell Width="10"> 
-                </asp:TableCell>
-        </asp:TableRow>                       
-        </asp:Table>
-        <br />
-    </div>
-
-    <div class="container" id="divConfirmar" runat="server" visible="false">
-        <asp:Table id="tabla3" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
-            <asp:TableRow HorizontalAlign="Center">
-                <%-- ESPACIO 1--%>
-                <asp:TableCell Width="2%">
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 2--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">CARNE:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- ESPACIO 3--%>
-                <asp:TableCell >
-                        <br />
-                </asp:TableCell>
-
-                <%-- COMBOBOX 4--%>
-                <asp:TableCell>
-                        <asp:DropDownList ID="CmbCarne" runat="server" AutoPostBack="true" OnTextChanged="CmbTipo_SelectedIndexChanged" EnableViewState="true" Width="150">
-                        </asp:DropDownList>
-                </asp:TableCell>
-
-                <%-- ESPACIO 5--%>
-                <asp:TableCell Width="2%"> 
-                </asp:TableCell>
-        </asp:TableRow>
-        </asp:Table>
-        <br />
-    </div>
-
-    <div class="container" id="divCampos" runat="server" visible="false">     
-        <asp:Table id="tabla4" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
-            <asp:TableRow HorizontalAlign="Center">
-                <%-- ESPACIO 1--%>
-                <asp:TableCell Width="2%">
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 2--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">DPI/PASAPORTE:</asp:Label> 
-                </asp:TableCell>
-                
-                <%-- ESPACIO 3--%>
-                <asp:TableCell >
-                        <br />
-                </asp:TableCell>
-                
-                <%-- ESPACIO 4--%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtDpi" runat="server" Enabled="false"  Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 5--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 6--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">PRIMER NOMBRE:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- ESPACIO 7--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 8 --%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtPrimerNombre" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 9--%>
-                <asp:TableCell >
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 10--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">SEGUNDO NOMBRE:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- ESPACIO 11--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO  12--%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtSegundoNombre" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 13 .--%>
-                <asp:TableCell >
-                        <br />
-                </asp:TableCell>
-            </asp:TableRow>
-
-            <asp:TableRow HorizontalAlign="Center">
-                <%-- ESPACIO 1--%>
-                <asp:TableCell Width="2%">
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 2--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">APELLIDO 1:</asp:Label> 
-                </asp:TableCell>
-                
-                <%-- ESPACIO 3--%>
-                <asp:TableCell >
-                        <br />
-                </asp:TableCell>
-                
-                <%-- ESPACIO 4--%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtPrimerApellido" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 5--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 6--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">APELLIDO 2:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- ESPACIO 7--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 8 --%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtSegundoApellido" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 9--%>
-                <asp:TableCell >
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 10--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">APELLIDO DE CASADA:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- ESPACIO 11--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO  12--%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtApellidoCasada" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 13 .--%>
-                <asp:TableCell Width="2%">
-                        <br />
-                </asp:TableCell>
-            </asp:TableRow>
-
-            <asp:TableRow HorizontalAlign="Center">
-                <%-- ESPACIO 1--%>
-                <asp:TableCell Width="2%">
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 2--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">CARRERA:</asp:Label> 
-                </asp:TableCell>
-                
-                <%-- ESPACIO 3--%>
-                <asp:TableCell >
-                        <br />
-                </asp:TableCell>
-                
-                <%-- ESPACIO 4--%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtCarrera" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 5--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 6--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">FACULTAD:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- ESPACIO 7--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 8 --%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtFacultad" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 9--%>
-                <asp:TableCell >
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 10--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">TELEFONO:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- ESPACIO 11--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO  12--%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtTel" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 13 .--%>
-                <asp:TableCell Width="2%">
-                        <br />
-                </asp:TableCell>
-            </asp:TableRow>
-
-            <asp:TableRow HorizontalAlign="Center">
-                <%-- ESPACIO 1--%>
-                <asp:TableCell Width="2%">
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 2--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">FECHA DE NACIMIENTO:</asp:Label> 
-                </asp:TableCell>
-                
-                <%-- ESPACIO 3--%>
-                <asp:TableCell >
-                </asp:TableCell>
-                
-                <%-- ESPACIO 4--%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtFechaNac" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 5--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 6--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">ESTADO CIVIL:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- ESPACIO 7--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 8 --%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtEstado" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 9--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 10--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">DIRECCION:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- ESPACIO 11--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO  12--%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtDireccion" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 13 .--%>
-                <asp:TableCell Width="2%">
-                        <br />
-                </asp:TableCell>
-            </asp:TableRow>
-
-            <asp:TableRow HorizontalAlign="Center">
-                <%-- ESPACIO 1--%>
-                <asp:TableCell Width="2%">
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 2--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">PAIS:</asp:Label> 
-                </asp:TableCell>
-                
-                <%-- ESPACIO 3--%>
-                <asp:TableCell >
-                        <br />
-                </asp:TableCell>
-                
-                <%-- ESPACIO 4--%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtPais" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 5--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 6--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">DEPARTAMENTO:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- ESPACIO 7--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO 8 --%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtDepartamento" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 9--%>
-                <asp:TableCell >
-                        <br />
-                </asp:TableCell>
-
-                <%-- ESPACIO 10--%>
-                <asp:TableCell>
-                        <asp:Label runat="server" Font-Bold="true">MUNICIPIO:</asp:Label> 
-                </asp:TableCell>
-
-                <%-- ESPACIO 11--%>
-                <asp:TableCell >
-                </asp:TableCell>
-
-                <%-- ESPACIO  12--%>
-                <asp:TableCell>
-                        <asp:TextBox ID="TxtMunicipio" runat="server" Enabled="false" Width="200px"></asp:TextBox>
-                </asp:TableCell>
-
-                <%-- ESPACIO 13 .--%>
-                <asp:TableCell Width="2%">
-                        <br />
-                </asp:TableCell>
-            </asp:TableRow>           
-        </asp:Table>
-        <br />
+   
+    
+    <div class="container" id="divConfirmar" runat="server">
+        <div class="row">
+            <div class="col-md">
+                <div class="container">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4 mx-auto text-center">
+                            </div>
+                            <div class="col-md-4 mx-auto text-center">
+                                <asp:Label runat="server" Font-Bold="true">CARNE:</asp:Label>
+                                <br />
+                                <asp:DropDownList ID="CmbCarne" runat="server" AutoPostBack="true" OnTextChanged="CmbTipo_SelectedIndexChanged" EnableViewState="true" Width="150">
+                                </asp:DropDownList>
+                                <br />
+                            </div>
+                            <div class="col-md-4 mx-auto text-center">
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <br />
+    
+     <div class="container" id="divCampos" runat="server">
+        <div class="row">
+            <div class="col-md">
+                <div class="container">
+                    <div class="container">
+
+                    <div class="row">
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">DPI/PASAPORTE:</asp:Label> 
+                            <br />
+                            <asp:TextBox ID="TxtDpi" runat="server" Enabled="false"  Width="300px"></asp:TextBox>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">PRIMER NOMBRE:</asp:Label> 
+                            <br />
+                            <asp:TextBox ID="TxtPrimerNombre" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">SEGUNDO NOMBRE:</asp:Label> 
+                            <br />
+                            <asp:TextBox ID="TxtSegundoNombre" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">APELLIDO 1:</asp:Label> 
+                            <br />
+                            <asp:TextBox ID="TxtPrimerApellido" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">APELLIDO 2:</asp:Label>
+                            <br />
+                            <asp:TextBox ID="TxtSegundoApellido" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">APELLIDO DE CASADA:</asp:Label> 
+                            <br />
+                            <asp:TextBox ID="TxtApellidoCasada" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">CARRERA:</asp:Label>         
+                            <br />
+                            <asp:TextBox ID="TxtCarrera" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">FACULTAD:</asp:Label> 
+                            <br />
+                            <asp:TextBox ID="TxtFacultad" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">TELEFONO:</asp:Label> 
+                            <br />
+                            <asp:TextBox ID="TxtTel" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">FECHA DE NACIMIENTO:</asp:Label> 
+                            <br />
+                            <asp:TextBox ID="TxtFechaNac" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">ESTADO CIVIL:</asp:Label> 
+                            <br />
+                            <asp:TextBox ID="TxtEstado" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">DIRECCION:</asp:Label> 
+                            <br />
+                            <asp:TextBox ID="TxtDireccion" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">PAIS:</asp:Label>
+                            <br />
+                            <asp:TextBox ID="TxtPais" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">DEPARTAMENTO:</asp:Label>   
+                            <br />
+                            <asp:TextBox ID="TxtDepartamento" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">MUNICIPIO:</asp:Label> 
+                            <br />
+                            <asp:TextBox ID="TxtMunicipio" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">CORREO PERSONAL:</asp:Label>
+                            <br />
+                            <asp:TextBox ID="TxtCorreoPersonal" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <br />
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <asp:Label runat="server" Font-Bold="true">CORREO INSTITUCIONAL:</asp:Label>
+                            <br />
+                            <asp:TextBox ID="TxtCorreoInstitucional" runat="server" Enabled="false" Width="300px"></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    </div>
     <div class="container" id="divDPI" runat="server" visible="false">  
         <h4 style="text-align: center;" runat="server" visible="true" id="HDocumentacion">Documentación Adjunta</h4>
         <asp:Table id="tabla5" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center" CssClass="table-condensed table-border">
@@ -577,28 +268,6 @@
         </asp:Table>
     </div>
 
-    <div class="container" id="divBtnGenerar" runat="server" visible="false">
-        <asp:Table id="TbBtnsGenerar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
-            <asp:TableRow>
-                <%-- ESPACIO 1--%>
-                <asp:TableCell>
-                        <br />
-                </asp:TableCell>
-            </asp:TableRow>
-            <asp:TableRow>                
-                <%-- ESPACIO 2.1--%>
-                <asp:TableCell>
-                    <asp:Button ID="BtnGenerar" runat="server" Text="Generar Renovación" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlertaGenerar();" OnClick="BtnGenerar_Click" />
-                </asp:TableCell>
-            </asp:TableRow>
-            <asp:TableRow>                
-                <%-- ESPACIO 3--%>
-                <asp:TableCell HorizontalAlign="Center">
-                </asp:TableCell>
-            </asp:TableRow>
-        </asp:Table>
-    </div>
-
     <div visible="false" style="margin-left: auto; margin-right: auto; text-align: center;",>
             <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
             </asp:Label>
@@ -617,14 +286,6 @@
         function mostrarAlertaAceptar() {
             if (confirm("¿Está seguro de que desea confirmar la información?")) {
                 __doPostBack('<%= BtnConfirmar.ClientID %>', '');
-                return true; // Permite continuar con la acción del botón
-            } else {
-                return false; // Cancela la acción del botón
-            }
-        }
-        function mostrarAlertaGenerar() {
-            if (confirm("¿Está seguro de que desea generar nuevamente la información?")) {
-                __doPostBack('<%= BtnGenerar.ClientID %>', '');
                 return true; // Permite continuar con la acción del botón
             } else {
                 return false; // Cancela la acción del botón
