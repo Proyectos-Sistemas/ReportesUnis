@@ -1,17 +1,16 @@
 /* Modal cargando */
 .overlay {
-  position: fixed;
-  /*display: none;*/
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 9999;
-  background-color: white;
-  z-index: 2;
-
+	position: fixed;
+	/*display: none;*/
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 9999;
+	background-color: white;
+	z-index: 2;
 }
 
 .loading {
@@ -47,59 +46,56 @@
 .dataTable tr:nth-child(odd) {
 	background: #fff;
 }
+
 .dataTable tr:hover {
 	background-color: #ddd;
 }
 
 /* Botón con color personalizado UNIS */
 .btn-danger-unis {
-
 	color: #fff;
 	background-color: #911f3b;
 	border-color: #911f3b;
 }
-.btn-danger-unis:hover,
-.btn-danger-unis:focus,
-.btn-danger-unis:active {
-	background-color: #7B001E;
-	color: #FFF;
-	border-color: #7B001E;
-}
+
+	.btn-danger-unis:hover,
+	.btn-danger-unis:focus,
+	.btn-danger-unis:active {
+		background-color: #7B001E;
+		color: #FFF;
+		border-color: #7B001E;
+	}
 
 .btn:focus {
-  outline: none;
-  box-shadow: none;
+	outline: none;
+	box-shadow: none;
 }
 
 /*Paginación con color personalizado UNIS */
-.pagination > li > a
-{
+.pagination > li > a {
 	background-color: white;
 	color: #7B001E;
 }
 
-.pagination > li > a:focus,
-.pagination > li > a:hover,
-.pagination > li > span:focus,
-.pagination > li > span:hover
-{
-	color: #5a5a5a;
-	background-color: #eee;
-	border-color: #ddd;
-}
+	.pagination > li > a:focus,
+	.pagination > li > a:hover,
+	.pagination > li > span:focus,
+	.pagination > li > span:hover {
+		color: #5a5a5a;
+		background-color: #eee;
+		border-color: #ddd;
+	}
 
-.pagination > .active > a
-{
+.pagination > .active > a {
 	color: white;
 	background-color: #7B001E !Important;
 	border: solid 1px #7B001E !Important;
 }
 
-.pagination > .active > a:hover
-{
-	background-color: #7B001E !Important;
-	border: solid 1px #7B001E;
-}
+	.pagination > .active > a:hover {
+		background-color: #7B001E !Important;
+		border: solid 1px #7B001E;
+	}
 
 .page-link:focus {
 	box-shadow: none !important;
@@ -107,43 +103,46 @@
 }
 
 
- /*Etiquetas a con color personalizado UNIS */
+/*Etiquetas a con color personalizado UNIS */
 a {
-  color: #7B001E;
-  text-decoration: none;
-  background-color: transparent;
+	color: #7B001E;
+	text-decoration: none;
+	background-color: transparent;
 }
 
-a:hover {
-  color: #7B001E;
-  text-decoration: none;
-  background-color: transparent;
-}
+	a:hover {
+		color: #7B001E;
+		text-decoration: none;
+		background-color: transparent;
+	}
 
 /*Icono que simula la carga de la página*/
 .lds-dual-ring {
-  display: inline-block;
-  width: 80px;
-  height: 80px;
+	display: inline-block;
+	width: 80px;
+	height: 80px;
 }
-.lds-dual-ring:after {
-  content: " ";
-  display: block;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border-radius: 50%;
-  border: 6px solid #7B001E;
-  border-color: #7B001E transparent #fff transparent;
-  animation: lds-dual-ring 1.2s linear infinite;
-}
+
+	.lds-dual-ring:after {
+		content: " ";
+		display: block;
+		width: 64px;
+		height: 64px;
+		margin: 8px;
+		border-radius: 50%;
+		border: 6px solid #7B001E;
+		border-color: #7B001E transparent #fff transparent;
+		animation: lds-dual-ring 1.2s linear infinite;
+	}
+
 @keyframes lds-dual-ring {
-  0% {
-	transform: rotate(0deg);
-  }
-  100% {
-	transform: rotate(360deg);
-  }
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 
@@ -159,7 +158,7 @@ element.style {
 
 .container2 {
 	justify-content: center;
-	text-align:center;
+	text-align: center;
 }
 /*.container {
 	justify-content: center;
@@ -171,21 +170,21 @@ element.style {
 
 #GVContainer {
 	overflow-x: auto;
-	text-align:left !important;
+	text-align: left !important;
 }
 
-#BtnTxt{
+#BtnTxt {
 	margin: 25px;
 }
 
 .centrado {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .centrado-horizontal {
-    text-align: center;
+	text-align: center;
 }
 
 .modal {

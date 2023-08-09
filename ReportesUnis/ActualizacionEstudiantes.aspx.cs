@@ -57,10 +57,9 @@ namespace ReportesUnis
                 if (!IsPostBack)
                 {
                     BtnReload.Visible = false;
-                    /*controlPantalla = PantallaHabilitada("Semana");
+                    controlPantalla = PantallaHabilitada("Semana");
                     if (controlPantalla >= 1)
-                    {*/
-
+                    {
                         Page.ClientScript.RegisterStartupScript(GetType(), "CheckCameraAccess", "checkCameraAccess();", true);
                         LeerInfoTxtSQL();
                         LeerInfoTxtPath();
@@ -71,42 +70,42 @@ namespace ReportesUnis
                         llenadoState();
                         //llenadoStateNIT();
                         emplid = mostrarInformación();
-                        controlRenovacion = ControlRenovacion(emplid);
+                        /*controlRenovacion = ControlRenovacion(emplid);
                         if (controlRenovacion < 2)
+                        {*/
+                        if (txtNit.Text == "CF")
                         {
-                            if (txtNit.Text == "CF")
-                            {
-                                txtNit.Enabled = false;
-                                RadioButtonNombreSi.Checked = true;
-                                ValidarNIT.Enabled = false;
-                                //Combos.Visible = false;
+                            txtNit.Enabled = false;
+                            RadioButtonNombreSi.Checked = true;
+                            ValidarNIT.Enabled = false;
+                            //Combos.Visible = false;
 
-                            }
-                            else
-                            {
-                                RadioButtonNombreNo.Checked = true;
-                                TxtDiRe1.Enabled = true;
-                                TxtDiRe2.Enabled = true;
-                                TxtDiRe3.Enabled = true;
-                                ValidarNIT.Enabled = true;
-                            }
+                        }
+                        else
+                        {
+                            RadioButtonNombreNo.Checked = true;
+                            TxtDiRe1.Enabled = true;
+                            TxtDiRe2.Enabled = true;
+                            TxtDiRe3.Enabled = true;
+                            ValidarNIT.Enabled = true;
+                        }
 
-                            if (Request.Form["urlPathControl"] == "1")
-                            {
-                                AlmacenarFotografia();
-                            }
-                            fotoAlmacenada();
+                        if (Request.Form["urlPathControl"] == "1")
+                        {
+                            AlmacenarFotografia();
+                        }
+                        fotoAlmacenada();
 
-                            if (String.IsNullOrEmpty(txtCarne.Text))
-                            {
-                                BtnActualizar.Visible = false;
-                                lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
-                                CmbPais.SelectedValue = "Guatemala";
-                                tabla.Visible = false;
-                                CargaFotografia.Visible = false;
-                                InfePersonal.Visible = false;
-                            }
-                       /* }
+                        if (String.IsNullOrEmpty(txtCarne.Text))
+                        {
+                            BtnActualizar.Visible = false;
+                            lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
+                            CmbPais.SelectedValue = "Guatemala";
+                            tabla.Visible = false;
+                            CargaFotografia.Visible = false;
+                            InfePersonal.Visible = false;
+                        }
+                        /* }
                         else
                         {
                             controlCamposVisibles();
@@ -114,16 +113,8 @@ namespace ReportesUnis
                             lblActualizacion.Text = "Ha llegado al límite de las renovaciones. <br /> " +
                                 "Si desea generar una nueva renovación pongase en contacto en soporte@unis.edu.gt.";
                         }*/
-                    }
 
-                    /* }
-                    else
-                    {
-                        controlCamposVisibles();
-                        lblActualizacion.ForeColor = System.Drawing.Color.Black;
-                        lblActualizacion.Text = "Ha llegado al límite de las renovaciones. <br /> " +
-                            "Si desea generar una nueva renovación pongase en contacto en soporte@unis.edu.gt.";
-                    }*/
+                    }
                     else
                     {
                         lblActualizacion.Text = "La pantalla de actualización está disponible únicamente de Lunes a Viernes.";
@@ -284,11 +275,11 @@ namespace ReportesUnis
                                                                                                                                       //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
                                                                                                                                       //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
                                                                                                                                       "WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián
-                                                                                                                                      //"WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
-                                                                                                                                      //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
-                                                                                                                                      //"WHERE PN.NATIONAL_ID ='2708399090301' " +
-                                                                                                                                      //"WHERE PN.NATIONAL_ID ='2695688590301' " +
-                                                                                                                                      //"WHERE PN.NATIONAL_ID ='2464538930108' " +
+                                                                                                                                                                                 //"WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
+                                                                                                                                                                                 //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
+                                                                                                                                                                                 //"WHERE PN.NATIONAL_ID ='2708399090301' " +
+                                                                                                                                                                                 //"WHERE PN.NATIONAL_ID ='2695688590301' " +
+                                                                                                                                                                                 //"WHERE PN.NATIONAL_ID ='2464538930108' " +
                                        ") WHERE CNT = 1";
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -1180,8 +1171,6 @@ namespace ReportesUnis
                             NetworkCredential credentials = new NetworkCredential(username, password);
 
                             int cargaFt = 0;
-                            NetworkCredential credentials = new NetworkCredential(username, password);
-
                             try
                             {
                                 // Crear una instancia de WebClient y establecer las credenciales
@@ -1205,7 +1194,6 @@ namespace ReportesUnis
                                     else
                                     {
                                         cargaFt = 1;
-                                        mensaje = ex.ToString();
                                     }
                                 }
                             }
@@ -1764,7 +1752,10 @@ namespace ReportesUnis
                                     transaction.Commit();
                                     con.Close();
                                     Thread.Sleep(1000);
-                                    AlmacenarFotografia();
+                                    if (Request.Form["urlPathControl"] == "1")
+                                    {
+                                        AlmacenarFotografia();
+                                    }
                                     fotoAlmacenada();
                                     Thread.Sleep(1000);
                                     mensaje = "Su información fue actualizada correctamente";
@@ -1783,7 +1774,7 @@ namespace ReportesUnis
                             }
                             else
                             {
-                                mensaje = "Ocurrió un problema al actualizar su información y su fotografía.";
+                                mensaje = mensaje + " *-*-*- Ocurrió un problema al actualizar su información y su fotografía.";
                             }
                         }
                     }
@@ -2482,39 +2473,39 @@ namespace ReportesUnis
                 lblActualizacion.Text = mensaje;
             }
         }
-
         /*protected int ControlRenovacion(string emplid)
-        {
-            txtExiste4.Text = "SELECT COUNT(*) AS CONTADOR " +
-                        "FROM UNIS_INTERFACES.TBL_CONTROL_CARNET " +
-                        "WHERE EMPLID  ='" + emplid + "'";
-            string constr = TxtURL.Text;
-            string control = "0";
-            using (OracleConnection con = new OracleConnection(constr))
             {
-                con.Open();
-                using (OracleCommand cmd = new OracleCommand())
+                txtExiste4.Text = "SELECT COUNT(*) AS CONTADOR " +
+                            "FROM UNIS_INTERFACES.TBL_CONTROL_CARNET " +
+                            "WHERE EMPLID  ='" + emplid + "'";
+                string constr = TxtURL.Text;
+                string control = "0";
+                using (OracleConnection con = new OracleConnection(constr))
                 {
-                    try
+                    con.Open();
+                    using (OracleCommand cmd = new OracleCommand())
                     {
-                        cmd.Connection = con;
-                        cmd.CommandText = txtExiste4.Text;
-                        OracleDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
+                        try
                         {
-                            control = reader["CONTADOR"].ToString();
-                        }
+                            cmd.Connection = con;
+                            cmd.CommandText = txtExiste4.Text;
+                            OracleDataReader reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                control = reader["CONTADOR"].ToString();
+                            }
 
-                        con.Close();
-                    }
-                    catch (Exception x)
-                    {
-                        control = x.ToString();
+                            con.Close();
+                        }
+                        catch (Exception x)
+                        {
+                            control = x.ToString();
+                        }
                     }
                 }
+                return Convert.ToInt32(control);
             }
-            return Convert.ToInt32(control);
-        }
-        */
+            */
+
     }
 }
