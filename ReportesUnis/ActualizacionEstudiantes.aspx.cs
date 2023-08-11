@@ -51,7 +51,7 @@ namespace ReportesUnis
             if (controlPantalla >= 1)
             {
                 //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
-                TextUser.Text = "2993196360101";
+                TextUser.Text = "2734677940101";
                 if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
                 {
                     Response.Redirect(@"~/Default.aspx");
@@ -74,7 +74,7 @@ namespace ReportesUnis
                         emplid = mostrarInformación();
                         controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + emplid + "' AND FECHA_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
                         controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + emplid + "'");
-                        if (controlRenovacion < 2 || (controlRenovacionFecha <3 && controlRenovacionFecha > 0))
+                        if (controlRenovacion < 2 || (controlRenovacionFecha < 3 && controlRenovacionFecha > 0))
                         {
                             if (txtNit.Text == "CF")
                             {
@@ -220,7 +220,7 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT EMPLID FROM SYSADM.PS_PERS_NID PN " +
                     //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' "; //---1581737080101
-                    "WHERE PN.NATIONAL_ID ='2993196360101'";
+                    "WHERE PN.NATIONAL_ID ='2734677940101'";
                     //"WHERE PN.NATIONAL_ID ='2464538930108'";
                     //"WHERE PN.NATIONAL_ID ='2695688590301'";
                     //"WHERE PN.NATIONAL_ID ='4681531'";
@@ -289,7 +289,7 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                                         //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " + //---1581737080101
                                         //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda
-                                        "WHERE PN.NATIONAL_ID ='2993196360101' " + // De Tezanos Rustrián
+                                        "WHERE PN.NATIONAL_ID ='2734677940101' " + // De Tezanos Rustrián
                                                                                    //"WHERE PN.NATIONAL_ID ='4681531' " + // pasaporte
                                                                                    //"WHERE PN.NATIONAL_ID ='2327809510101' " + // DE LEON
                                                                                    //"WHERE PN.NATIONAL_ID ='2708399090301' " +
@@ -870,7 +870,7 @@ namespace ReportesUnis
         }
 
         private string actualizarInformacion()
-        {            
+        {
             if (String.IsNullOrEmpty(txtNit.Text))
             {
                 txtNit.Text = "CF";
@@ -1180,53 +1180,53 @@ namespace ReportesUnis
                             {*/
                             string nombreArchivo = txtCarne.Text + ".jpg";
                             string ruta = txtPath.Text + nombreArchivo;
+                            int cargaFt = 0;
                             //string fileName = Context.User.Identity.Name.Replace("@unis.edu.gt", "") + ".jpg";
 
-                            /**/
+                            /*
                             string username = "SRVCarnets\\carnetuser";
                             string password = "C@rn3tSrV#2023";
                             string urlPath = Request.Form["urlPath"];
-                            NetworkCredential credentials = new NetworkCredential(username, password);
+                            NetworkCredential credentials = new NetworkCredential(username, password);*/
 
-                            int cargaFt = 0;
-                            if (Request.Form["urlPathControl"] == "1")
+                            /* if (Request.Form["urlPathControl"] == "1")
+                             {
+                                 try
+                                 {
+                                     // Crear una instancia de WebClient y establecer las credenciales
+                                     using (WebClient client = new WebClient())
+                                     {
+                                         client.Credentials = credentials;
+
+                                         // Construir la ruta completa de la imagen en la ruta remota
+                                         string remoteImagePath = Path.Combine(txtPath.Text, nombreArchivo);
+
+                                         // Convertir la imagen Base64 nuevamente a bytes y cargarla en la ruta remota
+                                         byte[] imageBytesBase64 = Encoding.UTF8.GetBytes(urlPath);
+                                         client.UploadData(remoteImagePath, imageBytesBase64);*/
+
+                            mensaje = SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
+                            Console.WriteLine("Imagen cargada exitosamente en la ruta remota.");
+                            if (mensaje.Equals("Imagen guardada correctamente."))
                             {
-                                try
-                                {
-                                    // Crear una instancia de WebClient y establecer las credenciales
-                                    using (WebClient client = new WebClient())
-                                    {
-                                        client.Credentials = credentials;
-
-                                        // Construir la ruta completa de la imagen en la ruta remota
-                                        string remoteImagePath = Path.Combine(txtPath.Text, nombreArchivo);
-
-                                        // Convertir la imagen Base64 nuevamente a bytes y cargarla en la ruta remota
-                                        byte[] imageBytesBase64 = Encoding.UTF8.GetBytes(urlPath);
-                                        client.UploadData(remoteImagePath, imageBytesBase64);
-
-                                        mensaje = SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
-                                        Console.WriteLine("Imagen cargada exitosamente en la ruta remota.");
-                                        if (mensaje.Equals("Imagen guardada correctamente."))
-                                        {
-                                            cargaFt = 0;
-                                        }
-                                        else
-                                        {
-                                            cargaFt = 1;
-                                        }
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    // Si hay un error, imprimir el mensaje
-                                    Console.WriteLine("Error al cargar la imagen en la ruta remota: " + ex.Message);
-                                    cargaFt = 1;
-                                    mensaje = ex.ToString();
-                                }
+                                cargaFt = 0;
                             }
+                            else
+                            {
+                                cargaFt = 1;
+                            }
+                            /* }
+                         }
+                         catch (Exception ex)
+                         {
+                             // Si hay un error, imprimir el mensaje
+                             Console.WriteLine("Error al cargar la imagen en la ruta remota: " + ex.Message);
+                             cargaFt = 1;
+                             mensaje = ex.ToString();
+                         }
+                     }
 
-                            /**/
+                     /**/
 
                             if (cargaFt == 0)
                             {
@@ -1397,7 +1397,7 @@ namespace ReportesUnis
                                                 "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                                 //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "') " +
                                                 //"WHERE PN.NATIONAL_ID ='4681531')" +
-                                                "WHERE PN.NATIONAL_ID ='2993196360101')" +
+                                                "WHERE PN.NATIONAL_ID ='2734677940101')" +
                                                 //"WHERE PN.NATIONAL_ID ='2695688590301')" +
                                                 //"WHERE PN.NATIONAL_ID ='2464538930108')" +
                                                 //"WHERE PN.NATIONAL_ID ='2708399090301')" +
@@ -1405,7 +1405,6 @@ namespace ReportesUnis
                                                 //"WHERE PN.NATIONAL_ID ='3682754340101')" +
                                                 "WHERE CODIGO_BARRAS=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CODIGO_BARRAS=PASAPORTE OR CODIGO_BARRAS=CEDULA " +
                                                 "ORDER BY 1 ASC";
-                                //--4681531 PASAPORTE
                                 reader = cmd.ExecuteReader();
                                 while (reader.Read())
                                 {
@@ -1499,8 +1498,8 @@ namespace ReportesUnis
                                     int ContadorDirecciones = 0;
                                     int ContadorTipoDirecciones = 0;
                                     string EFFDT_Addres = "";
-                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS1 = '"+txtDireccion.Text +"' AND ADDRESS2 = '" + txtDireccion2.Text + "' AND ADDRESS3 = '" + txtDireccion3.Text + "' " +
-                                        "AND COUNTRY ='"+codPais+"' AND STATE = '"+State.Text+"' AND ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "'";
+                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS1 = '" + txtDireccion.Text + "' AND ADDRESS2 = '" + txtDireccion2.Text + "' AND ADDRESS3 = '" + txtDireccion3.Text + "' " +
+                                        "AND COUNTRY ='" + codPais + "' AND STATE = '" + State.Text + "' AND ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "'";
                                     reader = cmd.ExecuteReader();
                                     while (reader.Read())
                                     {
@@ -1526,7 +1525,7 @@ namespace ReportesUnis
                                             "A.ADDRESS2 = '" + txtDireccion2.Text + "', " +
                                             "A.ADDRESS3 = '" + txtDireccion3.Text + "', " +
                                             "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
-                                            "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='HOME' AND EFFDT ='" + EFFDT_Addres.Substring(0,10).TrimEnd()+"'";
+                                            "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='HOME' AND EFFDT ='" + EFFDT_Addres.Substring(0, 10).TrimEnd() + "'";
                                         cmd.ExecuteNonQuery();
                                     }
                                     else
@@ -1562,7 +1561,7 @@ namespace ReportesUnis
                                             int ContadorNit2 = 0;
                                             string EFFDT_AddressNit = "";
                                             string EFFDT_SYSTEM = "";
-                                           
+
 
                                             cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS1 = '" + TxtDiRe1.Text + "' AND ADDRESS2 = '" + TxtDiRe2.Text + "' AND ADDRESS3 = '" + TxtDiRe3.Text + "' " +
                                                 "AND COUNTRY ='" + codPaisNIT + "' AND STATE = '" + StateNIT.Text + "' AND ADDRESS_TYPE ='REC' AND  EMPLID = '" + UserEmplid.Text + "'";
@@ -1606,7 +1605,7 @@ namespace ReportesUnis
                                             string EFFDT_NameR = " ";
 
                                             cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_NAMES WHERE NAME_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                            reader = cmd.ExecuteReader(); 
+                                            reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
                                                 EFFDT_NameR = reader["EFFDT"].ToString();
@@ -1727,7 +1726,7 @@ namespace ReportesUnis
                                                                     "NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "',' ',''))," +
                                                                     "LASTUPDDTTM = SYSDATE, " +
                                                                     "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
-                                                                    "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'  AND EFFDT ='" + EFFDT_NameR.Substring(0,10).TrimEnd() + "'";
+                                                                    "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'  AND EFFDT ='" + EFFDT_NameR.Substring(0, 10).TrimEnd() + "'";
                                                 cmd.ExecuteNonQuery();
 
                                             }
@@ -1750,7 +1749,7 @@ namespace ReportesUnis
                                             {
                                                 //ACTUALIZA NIT
                                                 cmd.CommandText = "UPDATE SYSADM.PS_EXTERNAL_SYSTEM SET EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' " +
-                                                                    " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + UserEmplid.Text + "' AND EFFDT ='" +EFFDT_SYSTEM + "'";
+                                                                    " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + UserEmplid.Text + "' AND EFFDT ='" + EFFDT_SYSTEM + "'";
                                                 cmd.ExecuteNonQuery();
                                             }
 
@@ -1794,7 +1793,7 @@ namespace ReportesUnis
                                             {
                                                 if (controlRenovacionFecha < 2)
                                                 {
-                                                    cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECHA_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy")+"'" +
+                                                    cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECHA_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'" +
                                                                         " WHERE EMPLID='" + UserEmplid.Text + "'";
                                                     cmd.ExecuteNonQuery();
                                                 }
