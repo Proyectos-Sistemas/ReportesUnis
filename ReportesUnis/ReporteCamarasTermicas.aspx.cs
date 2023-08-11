@@ -414,6 +414,7 @@ namespace ReportesUnis
                                                         "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE '' END PASAPORTE " +
                                                         "FROM " +
                                                         "SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                                        "INNER JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                                         "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
                                                         "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
                                                         "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
@@ -433,7 +434,6 @@ namespace ReportesUnis
                                                         "AND APD.INSTITUTION = AGT.INSTITUTION " +
                                                         "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
                                                         "AND CT.INSTITUTION = TT.INSTITUTION " +
-                                                        "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                                         where +
                                                         ") " +
                                                         "WHERE  " +
@@ -579,6 +579,7 @@ namespace ReportesUnis
                                             "INNER JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
                                             "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
                                             "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID " +
+                                            "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
                                             "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
                                             "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
                                             "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
@@ -595,7 +596,6 @@ namespace ReportesUnis
                                             "AND APD.INSTITUTION = AGT.INSTITUTION " +
                                             "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
                                             "AND CT.INSTITUTION = TT.INSTITUTION " +
-                                            "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
                                             where +
                                             "AND employee_photo IS NOT NULL " +
                                             ")" +
@@ -718,36 +718,38 @@ namespace ReportesUnis
                 var inicio = diaI + "/" + mesI + "/" + anioI;
                 var fin = diaF + "/" + mesF + "/" + anioF;
 
-                /*if (busqueda.Equals("Nombre"))
+                if (LbxBusqueda.Text.Equals("Nombre"))
                 {
-                    where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE UPPER(PD.FIRST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((A.LASTUPDDTTM'" + inicio + "' AND '" + fin + "' OR A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "') OR (A.LASTUPDDTTM <= '" + inicio + "'  AND A.LASTUPDDTTM >= '" + fin + "' ))";
                 }
                 else if (LbxBusqueda.Text.Equals("Apellido"))
                 {
-                    where = "WHERE (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') ) AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE (UPPER(PD.LAST_NAME) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') ) AND ((A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "' OR A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "') OR (A.LASTUPDDTTM <= '" + inicio + "'  AND A.LASTUPDDTTM >= '" + fin + "' ))";
                 }
                 else if (LbxBusqueda.Text.Equals("ID"))
                 {
-                    where = "WHERE UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE UPPER(PN.NATIONAL_ID) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "' OR A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "') OR (A.LASTUPDDTTM <= '" + inicio + "'  AND A.LASTUPDDTTM >= '" + fin + "' ))";
                 }
-                else if (LbxBusqueda.Text.Equals("Departamento"))
+                else if (LbxBusqueda.Text.Equals("Facultad"))
                 {
-                    where = "WHERE UPPER(AGT.DESCR) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                    where = "WHERE UPPER(AGT.DESCR) LIKE('%" + TxtBuscador.Text.ToUpper() + "%') AND ((A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "' OR A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "') OR (A.LASTUPDDTTM <= '" + inicio + "'  AND A.LASTUPDDTTM >= '" + fin + "' ))";
                 }
                 else if (LbxBusqueda.Text.Equals("Género"))
                 {
                     string buscar = TxtBuscador.Text;
                     string min = buscar.ToLower();
                     if (min.Equals("male"))
-                        where = "WHERE PD.SEX LIKE('M%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                        where = "WHERE PD.SEX LIKE('M%') AND ((A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "' OR A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "') OR (A.LASTUPDDTTM <= '" + inicio + "'  AND A.LASTUPDDTTM >= '" + fin + "' ))";
                     else if (min.Equals("female"))
-                        where = "WHERE PD.SEX LIKE ('F%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                        where = "WHERE PD.SEX LIKE ('F%') AND ((A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "' OR A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "') OR (A.LASTUPDDTTM <= '" + inicio + "'  AND A.LASTUPDDTTM >= '" + fin + "' ))";
                     else if (buscar == "%")
-                        where = "WHERE PD.SEX LIKE ('%%%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
+                        where = "WHERE PD.SEX LIKE ('%%%') AND ((A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "' OR A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "') OR (A.LASTUPDDTTM <= '" + inicio + "'  AND A.LASTUPDDTTM >= '" + fin + "' ))";
                     else
-                        where = "WHERE PD.SEX LIKE ('%Mujer%') AND ((TT.TERM_BEGIN_DT BETWEEN '" + inicio + "' AND '" + fin + "' OR TT.TERM_END_DT BETWEEN '" + inicio + "' AND '" + fin + "') OR (TT.TERM_BEGIN_DT <= '" + inicio + "'  AND TT.TERM_END_DT >= '" + fin + "' ))";
-                }*/
-                where = "WHERE (PPD.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "' OR PPD.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "') OR (PPD.LASTUPDDTTM <= '" + inicio + "'  AND PPD.LASTUPDDTTM >= '" + fin + "' )";
+                        where = "WHERE PD.SEX LIKE ('%Mujer%') AND ((A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "' OR A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "') OR (A.LASTUPDDTTM <= '" + inicio + "'  AND A.LASTUPDDTTM >= '" + fin + "' ))";
+                }else if (LbxBusqueda.Text.Equals("Fecha de Actualización"))
+                {
+                    where = "WHERE (A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "' OR A.LASTUPDDTTM BETWEEN '" + inicio + "' AND '" + fin + "') OR (A.LASTUPDDTTM <= '" + inicio + "'  AND A.LASTUPDDTTM >= '" + fin + "' )";
+                }
             }
             return where;
         }
@@ -783,6 +785,18 @@ namespace ReportesUnis
                 }
             }
             return contador;
+        }
+
+        protected void LbxBusqueda_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LbxBusqueda.Text.Equals("Nombre") || LbxBusqueda.Text.Equals("Apellido") || LbxBusqueda.Text.Equals("ID") ||LbxBusqueda.Text.Equals("Facultad") ||LbxBusqueda.Text.Equals("Género"))
+            {
+                TxtBuscador.Visible = true;
+            }
+            else if (LbxBusqueda.Text.Equals("Fecha de Actualización"))
+            {
+                TxtBuscador.Visible = false;
+            }
         }
     }
 }

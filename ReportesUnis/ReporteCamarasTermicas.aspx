@@ -8,18 +8,19 @@
     <div class="container2">
         <hr />
         <div>
-            <a>Busqueda por fecha de actualización: </a>
+            <a>Busqueda por: </a>
             <%-- DROPDOWLIST CON OPCIONES DE BUSQUEDA --%>
-            <%--<asp:DropDownList ID="LbxBusqueda" SelectionMode="Single" runat="server">
+            <asp:DropDownList ID="LbxBusqueda" SelectionMode="Single" runat="server" OnSelectedIndexChanged="LbxBusqueda_SelectedIndexChanged" AutoPostBack="true">
                 <asp:ListItem>Nombre</asp:ListItem>
                 <asp:ListItem>Apellido</asp:ListItem>
                 <asp:ListItem>ID</asp:ListItem>
                 <asp:ListItem>Género</asp:ListItem>
-                <asp:ListItem>Departamento</asp:ListItem>
-            </asp:DropDownList>--%>
+                <asp:ListItem>Facultad</asp:ListItem>
+                <asp:ListItem>Fecha de Actualización</asp:ListItem>
+            </asp:DropDownList>
 
             <%-- TXTBUSCADOR DONDE SE INGRESA EL TEXTO A BUSCAR --%>
-<%--            <asp:TextBox ID="TxtBuscador" runat="server" Width="235px"></asp:TextBox>--%>
+            <asp:TextBox ID="TxtBuscador" runat="server" Width="235px" Visible="true" ></asp:TextBox>
 
             <%-- TXTURL SE UTILIZA PARA ALMACENAR LA URL PARA LA CONSULTA DEL WS --%>
             <asp:TextBox ID="TxtURL" runat="server" Visible="false"></asp:TextBox>
@@ -28,10 +29,10 @@
         <div style="text-align: center">
 
             <%-- CALENDARIO PARA BUSQUEDA --%>
-            <asp:Label ID="FInicio" runat="server">Fecha inicio:</asp:Label>
+            <asp:Label ID="FInicio" runat="server">Actualizado desde:</asp:Label>
             <asp:TextBox ID="CldrCiclosInicio" runat="server" TextMode="Date"> </asp:TextBox>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:Label ID="FFin" runat="server">Fecha fin:</asp:Label>
+            <asp:Label ID="FFin" runat="server">Actualizado hasta:</asp:Label>
             <asp:TextBox ID="CldrCiclosFin" runat="server" TextMode="Date"></asp:TextBox>
 
         </div>

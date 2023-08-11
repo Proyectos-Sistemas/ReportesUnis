@@ -1498,7 +1498,9 @@ namespace ReportesUnis
                                     //Direccion
                                     int ContadorDirecciones = 0;
                                     int ContadorTipoDirecciones = 0;
-                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "'";
+                                    string EFFDT_Addres = "";
+                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS1 = '"+txtDireccion.Text +"' AND ADDRESS2 = '" + txtDireccion2.Text + "' AND ADDRESS3 = '" + txtDireccion3.Text + "' " +
+                                        "AND COUNTRY ='"+codPais+"' AND STATE = '"+State.Text+"' AND ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "'";
                                     reader = cmd.ExecuteReader();
                                     while (reader.Read())
                                     {
@@ -1510,6 +1512,12 @@ namespace ReportesUnis
                                     {
                                         ContadorTipoDirecciones = Convert.ToInt16(reader["CONTADOR"]);
                                     }
+                                    cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                    reader = cmd.ExecuteReader();
+                                    while (reader.Read())
+                                    {
+                                        EFFDT_Addres = reader["EFFDT"].ToString();
+                                    }
 
                                     if (ContadorDirecciones > 0)
                                     {
@@ -1518,7 +1526,7 @@ namespace ReportesUnis
                                             "A.ADDRESS2 = '" + txtDireccion2.Text + "', " +
                                             "A.ADDRESS3 = '" + txtDireccion3.Text + "', " +
                                             "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
-                                            "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='HOME' AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
+                                            "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='HOME' AND EFFDT ='" + EFFDT_Addres.Substring(0,10).TrimEnd()+"'";
                                         cmd.ExecuteNonQuery();
                                     }
                                     else
@@ -1552,25 +1560,37 @@ namespace ReportesUnis
                                             int ContadorDirecionNit = 0;
                                             int ContadorNit = 0;
                                             int ContadorNit2 = 0;
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND  NAME_TYPE = 'REC' AND EMPLID = '" + UserEmplid.Text + "'";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
-                                            }
+                                            string EFFDT_AddressNit = "";
+                                            string EFFDT_SYSTEM = "";
+                                           
 
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND ADDRESS_TYPE = 'REC' AND EMPLID = '" + UserEmplid.Text + "'";
+                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS1 = '" + TxtDiRe1.Text + "' AND ADDRESS2 = '" + TxtDiRe2.Text + "' AND ADDRESS3 = '" + TxtDiRe3.Text + "' " +
+                                                "AND COUNTRY ='" + codPaisNIT + "' AND STATE = '" + StateNIT.Text + "' AND ADDRESS_TYPE ='REC' AND  EMPLID = '" + UserEmplid.Text + "'";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
                                                 ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
                                             }
 
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND EMPLID = '" + UserEmplid.Text + "'";
+                                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                            reader = cmd.ExecuteReader();
+                                            while (reader.Read())
+                                            {
+                                                EFFDT_AddressNit = reader["EFFDT"].ToString();
+                                            }
+
+                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND  EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + UserEmplid.Text + "'";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
                                                 ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
+                                            }
+
+                                            cmd.CommandText = "SELECT EFFDT AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                            reader = cmd.ExecuteReader();
+                                            while (reader.Read())
+                                            {
+                                                EFFDT_SYSTEM = reader["CONTADOR"].ToString();
                                             }
 
                                             cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSKEY WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + UserEmplid.Text + "'";
@@ -1583,6 +1603,14 @@ namespace ReportesUnis
                                             string vchrFNameNS = " ";
                                             string vchrLNameNS = " ";
                                             string vchrCNameNS = " ";
+                                            string EFFDT_NameR = " ";
+
+                                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_NAMES WHERE NAME_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                            reader = cmd.ExecuteReader(); 
+                                            while (reader.Read())
+                                            {
+                                                EFFDT_NameR = reader["EFFDT"].ToString();
+                                            }
 
                                             cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + vchrApellidosCompletos + "') AS CADENA FROM DUAL";
                                             //cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + vchrApellidosCompletos + "') AS CADENA FROM DUAL";
@@ -1606,6 +1634,20 @@ namespace ReportesUnis
                                             while (reader.Read())
                                             {
                                                 vchrCNameNS = reader["CADENA"].ToString().TrimStart().TrimEnd();
+                                            }
+
+                                            //cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND  NAME_TYPE = 'REC' AND EMPLID = '" + UserEmplid.Text + "'";
+                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE PN.NAME = REPLACE('" + vchrApellidosCompletos + "," + TxtNombreR.Text + "','  ',' ') " +
+                                                "AND PN.LAST_NAME_SRCH ='" + vchrLNameNS + "' AND PN.FIRST_NAME_SRCH='" + vchrFNameNS + "' AND LAST_NAME ='" + TxtApellidoR.Text + "' " +
+                                                "AND FIRST_NAME='" + TxtNombreR.Text + "' AND SECOND_LAST_NAME='" + TxtCasadaR.Text + "' AND SECOND_LAST_SRCH=REPLACE(UPPER('" + TxtCasadaR.Text + "'),' ','')||' ' " +
+                                                "AND NAME_DISPLAY='" + TxtNombreR.Text + " " + vchrApellidosCompletos + "' " +
+                                                "AND NAME_FORMAL='" + TxtNombreR.Text + " " + vchrApellidosCompletos + "' " +
+                                                "AND NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "',' ','')) " +
+                                                "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "'";
+                                            reader = cmd.ExecuteReader();
+                                            while (reader.Read())
+                                            {
+                                                ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
                                             }
 
                                             if (ContadorNombreNit == 0)
@@ -1685,7 +1727,7 @@ namespace ReportesUnis
                                                                     "NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "',' ',''))," +
                                                                     "LASTUPDDTTM = SYSDATE, " +
                                                                     "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
-                                                                    "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'  AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
+                                                                    "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'  AND EFFDT ='" + EFFDT_NameR.Substring(0,10).TrimEnd() + "'";
                                                 cmd.ExecuteNonQuery();
 
                                             }
@@ -1708,7 +1750,7 @@ namespace ReportesUnis
                                             {
                                                 //ACTUALIZA NIT
                                                 cmd.CommandText = "UPDATE SYSADM.PS_EXTERNAL_SYSTEM SET EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' " +
-                                                                    " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + UserEmplid.Text + "' AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
+                                                                    " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + UserEmplid.Text + "' AND EFFDT ='" +EFFDT_SYSTEM + "'";
                                                 cmd.ExecuteNonQuery();
                                             }
 
@@ -1718,7 +1760,7 @@ namespace ReportesUnis
                                                 cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES (EMPLID, ADDRESS_TYPE,COUNTY,CITY,NUM1, NUM2, HOUSE_TYPE, ADDR_FIELD1, ADDR_FIELD2, ADDR_FIELD3,POSTAL,GEO_CODE,IN_CITY_LIMIT," +
                                                     "ADDRESS1_AC,ADDRESS2_AC,ADDRESS3_AC,CITY_AC,REG_REGION,EFFDT,EFF_STATUS,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,STATE,LASTUPDDTTM,LASTUPDOPRID) " +
                                                    "VALUES('" + UserEmplid.Text + "', 'REC',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', '" + DateTime.Now.ToString("dd/MM/yyyy")
-                                                   + "', 'A', '" + codPais + "', '" + TxtDiRe1.Text + "', '" + TxtDiRe2.Text + "', '" + TxtDiRe3.Text + "', ' ','" + StateNIT.Text + "', '" +
+                                                   + "', 'A', '" + codPaisNIT + "', '" + TxtDiRe1.Text + "', '" + TxtDiRe2.Text + "', '" + TxtDiRe3.Text + "', ' ','" + StateNIT.Text + "', '" +
                                                    DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "','" + TextUser.Text + "')";
                                                 cmd.ExecuteNonQuery();
                                                 cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES_SA (LOC_ADDR_DATA,LOC_ADDR, LOC_ADDR_LINE, LOC_ADDR_TYPE, EXT_ORG_ID, DESCR_EXT_ORG, DESCR_ORG_LOCATION, " +
@@ -1733,8 +1775,8 @@ namespace ReportesUnis
                                                     "A.ADDRESS1 = '" + TxtDiRe1.Text + "', " +
                                                     "A.ADDRESS2 = '" + TxtDiRe2.Text + "', " +
                                                     "A.ADDRESS3 = '" + TxtDiRe3.Text + "', " +
-                                                    "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
-                                                    "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='REC' AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
+                                                    "A.COUNTRY = '" + codPaisNIT + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
+                                                    "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='REC' AND EFFDT ='" + EFFDT_AddressNit.Substring(0, 10).TrimEnd() + "'";
                                                 cmd.ExecuteNonQuery();
                                             }
 

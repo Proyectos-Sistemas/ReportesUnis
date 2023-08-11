@@ -373,6 +373,7 @@ namespace ReportesUnis
         {
             if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
             {
+                llenado("CARNET = '" + Carnet + "'");
                 string respuesta = null;
                 string fecha = DateTime.Now.ToString("yyyy-MM-dd");
                 QueryInsertBi();
@@ -636,6 +637,16 @@ namespace ReportesUnis
             string TxtNombre = (TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text).TrimEnd();
             string TxtApellidos = (TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text).TrimEnd();
             string TxtCasada = TxtApellidoCasada.Text;
+            string EFFDT_Name = "";
+
+            if (Direccion2 == "")
+            {
+                Direccion2 = " ";
+            } 
+            if (Direccion3 == "")
+            {
+                Direccion3 = " ";
+            }
 
             if (TxtCasada.IsNullOrWhiteSpace())
             {
@@ -654,23 +665,9 @@ namespace ReportesUnis
                         int ContadorNombre = 0;
                         int ContadorDirecion = 0;
                         cmd.Connection = con;
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND  NAME_TYPE != 'REC' AND EMPLID = '" + emplid + "'";
-                        OracleDataReader reader1 = cmd.ExecuteReader();
-                        reader1 = cmd.ExecuteReader();
-                        while (reader1.Read())
-                        {
-                            ContadorNombre = Convert.ToInt16(reader1["CONTADOR"]);
-                        }
-
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND ADDRESS_TYPE = 'HOME' AND EMPLID = '" + emplid + "'";
-                        reader1 = cmd.ExecuteReader();
-                        while (reader1.Read())
-                        {
-                            ContadorDirecion = Convert.ToInt16(reader1["CONTADOR"]);
-                        }
-
 
                         cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + vchrApellidosCompletos + "') AS CADENA FROM DUAL";
+                        OracleDataReader reader1 = cmd.ExecuteReader();
                         reader1 = cmd.ExecuteReader();
                         while (reader1.Read())
                         {
@@ -690,6 +687,32 @@ namespace ReportesUnis
                         {
                             vchrCNameNS1 = reader1["CADENA"].ToString();
                         }
+
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES WHERE" +
+                            " NAME = '" + vchrApellidosCompletos + "," + TxtNombre + "' AND " +
+                            "NAME_TYPE != 'REC' AND EMPLID = '" + emplid + "'";
+                        reader1 = cmd.ExecuteReader();                        
+                        while (reader1.Read())
+                        {
+                            ContadorNombre = Convert.ToInt16(reader1["CONTADOR"]);
+                        }
+
+                        cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_NAMES WHERE NAME_TYPE !='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                        reader1 = cmd.ExecuteReader();
+                        while (reader1.Read())
+                        {
+                            EFFDT_Name = reader1["EFFDT"].ToString();
+                        }
+
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND ADDRESS_TYPE = 'HOME' AND EMPLID = '" + emplid + "'";
+                        reader1 = cmd.ExecuteReader();
+                        while (reader1.Read())
+                        {
+                            ContadorDirecion = Convert.ToInt16(reader1["CONTADOR"]);
+                        }
+
+
+                        
 
                         if (ContadorNombre == 0)
                         {
@@ -754,6 +777,68 @@ namespace ReportesUnis
                                                     "SYSDATE," + // LASTUPDDTTM
                                                     "'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";  // LASTUPDOPRID                                                                    
                             cmd.ExecuteNonQuery();
+
+                            cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES ( " +
+                                                "EMPLID, " +
+                                                "NAME_TYPE, " +
+                                                "EFFDT, " +
+                                                "EFF_STATUS, " +
+                                                "COUNTRY_NM_FORMAT, " +
+                                                "NAME, " +
+                                                "NAME_INITIALS, " +
+                                                "NAME_PREFIX, " +
+                                                "NAME_SUFFIX, " +
+                                                "NAME_ROYAL_PREFIX, " +
+                                                "NAME_ROYAL_SUFFIX, " +
+                                                "NAME_TITLE, " +
+                                                "LAST_NAME_SRCH, " +
+                                                "FIRST_NAME_SRCH, " +
+                                                "LAST_NAME, " +
+                                                "FIRST_NAME, " +
+                                                "MIDDLE_NAME, " +
+                                                "SECOND_LAST_NAME, " +
+                                                "SECOND_LAST_SRCH, " +
+                                                "NAME_AC, " +
+                                                "PREF_FIRST_NAME, " +
+                                                "PARTNER_LAST_NAME, " +
+                                                "PARTNER_ROY_PREFIX, " +
+                                                "LAST_NAME_PREF_NLD, " +
+                                                "NAME_DISPLAY, " +
+                                                "NAME_FORMAL, " +
+                                                "NAME_DISPLAY_SRCH, " +
+                                                "LASTUPDDTTM, " +
+                                                "LASTUPDOPRID " +
+                                                ") VALUES(" +
+                                                    "'" + emplid + "'," + // EMPLID
+                                                    "'PRI','" + // NAME_TYPE
+                                                    DateTime.Now.ToString("dd/MM/yyyy") + "'," + // EFFDT
+                                                    "'A'," + // EFF_STATUS
+                                                    "'MEX'," + // COUNTRY_NM_FORMAT
+                                                    "'" + vchrApellidosCompletos + "," + TxtNombre + "'," + // NAME
+                                                    "' '," + // NAME_INITIALS
+                                                    "' '," + // NAME_PREFIX
+                                                    "' '," + // NAME_SUFFIX
+                                                    "' '," + // NAME_ROYAL_PREFIX
+                                                    "' '," + // NAME_ROYAL_SUFFIX
+                                                    "' '," + // NAME_TITLE
+                                                    "'" + vchrLNameNS1 + "'," + // LAST_NAME_SRCH
+                                                    "'" + vchrFNameNS1 + "'," +// FIRST_NAME_SRCH
+                                                    "'" + TxtApellidos + "'," + // LAST_NAME
+                                                    "'" + TxtNombre + "'," + // FIRST_NAME
+                                                    "' '," + // MIDDLE_NAME
+                                                    "'" + TxtCasada + "'," + // SECOND_LAST_NAME
+                                                    "'" + vchrCNameNS1 + " '," + // SECOND_LAST_SRCH
+                                                    "' '," + // NAME_AC
+                                                    "' '," + // PREF_FIRST_NAME
+                                                    "' '," + // PARTNER_LAST_NAME
+                                                    "' '," + // PARTNER_ROY_PREFIX
+                                                    "'1'," + // LAST_NAME_PREF_NLD
+                                                    "'" + TxtNombre + " " + vchrApellidosCompletos + "'," + // NAME_DISPLAY
+                                                    "'" + TxtNombre + " " + vchrApellidosCompletos + "'," + // NAME_FORMAL
+                                                    "'" + (vchrFNameNS1 + vchrLNameNS1 + vchrCNameNS1).TrimEnd() + "'," + // NAME_DISPLAY_SRCH
+                                                    "SYSDATE," + // LASTUPDDTTM
+                                                    "'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";  // LASTUPDOPRID                                                                    
+                            cmd.ExecuteNonQuery();
                         }
                         else
                         {
@@ -769,7 +854,7 @@ namespace ReportesUnis
                                             "NAME_DISPLAY_SRCH ='" + (vchrFNameNS1 + vchrLNameNS1 + vchrCNameNS1).TrimEnd() + "'," +
                                             "LASTUPDDTTM = SYSDATE, " +
                                             "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
-                                            "WHERE PN.EMPLID = '" + emplid + "' AND  NAME_TYPE IN ('PRI','PRF')";
+                                            "WHERE PN.EMPLID = '" + emplid + "' AND  NAME_TYPE IN ('PRI','PRF') AND EFFDT ='"+ EFFDT_Name.Substring(0,10).TrimEnd()+"'";
                             cmd.ExecuteNonQuery();
 
                             cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_DATA " +
@@ -1046,21 +1131,27 @@ namespace ReportesUnis
                         int ContadorDirecionNit = 0;
                         int ContadorNit = 0;
                         int ContadorNit2 = 0;
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND  NAME_TYPE = 'REC' AND EMPLID = '" + emplid + "'";
-                        reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
-                        }
+                        string EFFDT_AddressNit = "";
+                        string EFFDT_SYSTEM = "";                        
 
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND ADDRESS_TYPE = 'REC' AND EMPLID = '" + emplid + "'";
+                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS1 = '" + TxtDiRe1 + "' AND ADDRESS2 = '" + TxtDiRe2 + "' AND ADDRESS3 = '" + TxtDiRe3 + "' " +
+                        "AND COUNTRY ='" + PaisNit + "' AND STATE = '" + StateNit + "' AND ADDRESS_TYPE ='REC' AND  EMPLID = '" + emplid + "'";
+                        //cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND ADDRESS_TYPE = 'REC' AND EMPLID = '" + emplid + "'";
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
                             ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
                         }
 
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND EMPLID = '" + emplid + "'";
+
+                        cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                        reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            EFFDT_AddressNit = reader["EFFDT"].ToString();
+                        }
+
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE'  AND EXTERNAL_SYSTEM_ID = '" + NIT+ "' AND EMPLID = '" + emplid + "'";
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
@@ -1073,10 +1164,26 @@ namespace ReportesUnis
                         {
                             ContadorNit2 = Convert.ToInt16(reader["CONTADOR"]);
                         }
+
+                        cmd.CommandText = "SELECT EFFDT AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EXTERNAL_SYSTEM_ID = '" + NIT + "' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                        reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            EFFDT_SYSTEM = reader["CONTADOR"].ToString();
+                        }
+
                         string vchrApellidosCompletos = (TxtApellidoR + " " + TxtCasadaR).TrimEnd();
                         string vchrFNameNS = " ";
                         string vchrLNameNS = " ";
                         string vchrCNameNS = " ";
+                        string EFFDT_NameR = " ";
+
+                        cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_NAMES WHERE NAME_TYPE ='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                        reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            EFFDT_NameR = reader["EFFDT"].ToString();
+                        }
 
                         cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + vchrApellidosCompletos + "') AS CADENA FROM DUAL";
                         reader = cmd.ExecuteReader();
@@ -1099,6 +1206,15 @@ namespace ReportesUnis
                             vchrCNameNS = reader["CADENA"].ToString().TrimStart().TrimEnd();
                         }
 
+                        //cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND  NAME_TYPE = 'REC' AND EMPLID = '" + emplid + "'";
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE PN.NAME ='" + vchrApellidosCompletos + "," + TxtNombreR + "'AND " +
+                                            "PN.EMPLID = '" + emplid + "' AND NAME_TYPE IN 'REC'";
+                        reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                        }
+
                         if (!String.IsNullOrEmpty(existeNit))
                         {
                             //ACTUALIZA NOMBRE DEL NIT
@@ -1114,7 +1230,7 @@ namespace ReportesUnis
                                                 "NAME_DISPLAY_SRCH ='" + (vchrFNameNS + vchrLNameNS + vchrCNameNS).TrimEnd() + "'," +
                                                 "LASTUPDDTTM = SYSDATE, " +
                                                 "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
-                                                "WHERE PN.EMPLID = '" + emplid + "' AND NAME_TYPE IN 'REC'  AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
+                                                "WHERE PN.EMPLID = '" + emplid + "' AND NAME_TYPE IN 'REC'  AND EFFDT ='" + EFFDT_NameR.Substring(0,10).TrimEnd() + "'";
                             cmd.ExecuteNonQuery();
                         }
                         else
@@ -1187,8 +1303,7 @@ namespace ReportesUnis
                         if (ContadorNit == 0)
                         {
                             //INSERTA EL NIT
-                            cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSTEM (EMPLID, EXTERNAL_SYSTEM, EFFDT, EXTERNAL_SYSTEM_ID) " +
-                            "VALUES ('" + emplid + "','NRE','" + DateTime.Now.ToString("dd/MM/yyyy") + "','" + NIT + "' AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "')";
+                            cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSTEM (EMPLID, EXTERNAL_SYSTEM, EFFDT, EXTERNAL_SYSTEM_ID) VALUES ('" + emplid + "','NRE','" + DateTime.Now.ToString("dd/MM/yyyy") + "','" + NIT +"')";
                             cmd.ExecuteNonQuery();
 
 
@@ -1203,7 +1318,7 @@ namespace ReportesUnis
                         {
                             //ACTUALIZA NIT
                             cmd.CommandText = "UPDATE SYSADM.PS_EXTERNAL_SYSTEM SET EXTERNAL_SYSTEM_ID = '" + NIT + "' " +
-                                                " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + emplid + "'";
+                                                " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + emplid + "' AND EFFDT ='" + EFFDT_SYSTEM.Substring(0,10).TrimEnd() + "'";
                             cmd.ExecuteNonQuery();
                         }
 
@@ -1229,7 +1344,7 @@ namespace ReportesUnis
                                 "A.ADDRESS2 = '" + TxtDiRe2 + "', " +
                                 "A.ADDRESS3 = '" + TxtDiRe3 + "', " +
                                 "A.COUNTRY = '" + PaisNit + "', LASTUPDOPRID ='" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
-                                "' WHERE A.EMPLID = '" + emplid + "' AND ADDRESS_TYPE ='REC' AND EFFDT ='" + DateTime.Now.ToString("dd/MM/yyyy") + "'";
+                                "' WHERE A.EMPLID = '" + emplid + "' AND ADDRESS_TYPE ='REC' AND EFFDT ='" + EFFDT_AddressNit.Substring(0,10).TrimEnd() + "'";
                             cmd.ExecuteNonQuery();
                         }
 
