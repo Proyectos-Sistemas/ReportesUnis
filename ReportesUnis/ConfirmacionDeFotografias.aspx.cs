@@ -186,34 +186,16 @@ namespace ReportesUnis
                 {
                     // Obtener el nombre de la imagen seleccionada sin extension
 
-
-                    string username = "SRVCarnets\\carnetuser";
-                    string password = "C@rn3tSrV#2023";
                     int cargaFt = 0;
-                    NetworkCredential credentials = new NetworkCredential(username, password);
 
                     try
                     {
-                        // Crear una instancia de WebClient y establecer las credenciales
-                        using (WebClient client = new WebClient())
-                        {
-                            client.Credentials = credentials;
-
-                            // Construir la ruta completa de la imagen en la ruta remota
-                            string remoteImagePath = Path.Combine(txtPath2.Text, row.Cells[1].Text);
-
-                            // Convertir la imagen Base64 nuevamente a bytes y cargarla en la ruta remota
-                            client.UploadString(remoteImagePath, "DELETE", "");
-
-                            //SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
-                            Console.WriteLine("Imagen eliminada exitosamente en la ruta remota.");
-                            cargaFt = 0;
-                        }
+                        File.Delete(CurrentDirectory + txtPath2.Text + row.Cells[1].Text);
+                        cargaFt = 0;
                     }
                     catch (Exception ex)
                     {
                         // Si hay un error, imprimir el mensaje
-                        Console.WriteLine("Error al eliminar la imagen en la ruta remota: " + ex.Message);
                         cargaFt = 1;
                     }
                     if (cargaFt == 0)
@@ -265,7 +247,6 @@ namespace ReportesUnis
                 {
                     cmd.Transaction = transaction;
                     cmd.Connection = con;
-                    //txtInsertBI.Text = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
                     cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
                                    "([Carnet] " +
                                    ",[Direccion] " +
@@ -539,8 +520,7 @@ namespace ReportesUnis
                 string EmplidExisteFoto = "";
                 string mensajeValidacion = "";
                 //Nombre de la fotografía cargada (Sin extensión)
-                string NombreFoto = "2990723550101";//Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
-                                                    //string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                 //Busca si la persona ya tiene fotografía registrada para proceder a actualizar
                 using (OracleConnection conEmplid = new OracleConnection(constr))
@@ -569,13 +549,6 @@ namespace ReportesUnis
                         }
                     }
                 }
-
-                //if (Request.Form["urlPath"].Contains("data:image/jpeg;base64,"))
-                //{
-                //    int largo = 0;
-                //    largo = ImagenData.Length;
-                //    ImagenData = ImagenData.Substring(23, largo - 23).ToString();
-                //}
                 byte[] bytes = Convert.FromBase64String(ImagenData);
 
                 using (OracleConnection con = new OracleConnection(constr))
@@ -644,7 +617,6 @@ namespace ReportesUnis
             }
             catch (Exception)
             {
-                Console.WriteLine("Error");
                 mensaje = ". Ocurrió un error al cargar la imagen";
                 mensaje = "1";
             }

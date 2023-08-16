@@ -132,8 +132,6 @@ namespace ReportesUnis
                         
                             if (!String.IsNullOrWhiteSpace(where))
                             {
-                                //if (LbxBusqueda.Text != "Género" && !TxtBuscador.Text.ToLower().Equals("mujer"))
-                                //{
                                     {
                                         using (OracleConnection con = new OracleConnection(constr))
                                         {
@@ -215,13 +213,10 @@ namespace ReportesUnis
                                                 else
                                                 {
                                                     lblBusqueda.Text = "No se encontró la información solicitada";
-                                                    //if (LbxBusqueda.Text == "Género")
-                                                    //    lblBusqueda.Text = lblBusqueda.Text + ". Para realizar búsqueda por género intente ingresando Male o Female";
                                                 }
                                                 con.Close();
                                             }
                                         }
-                                        //TxtBuscador.Enabled = false;
                                         CldrCiclosInicio.Enabled = false;
                                         CldrCiclosFin.Enabled = false;
                                         BtnImg.Enabled = true;
@@ -230,11 +225,6 @@ namespace ReportesUnis
                                         BtnBuscar2.Enabled = false;
                                         //LbxBusqueda.Enabled = false;
                                     }
-                                //}
-                                //else
-                                //{
-                                //    lblBusqueda.Text = "Para realizar búesqueda por género intente ingresando Male o Female";
-                                //}
                             }
                             else
                             {
@@ -288,8 +278,7 @@ namespace ReportesUnis
         //Llenado de informacion a las columnas correspondientes del excel
         protected void GenerarExcel(object sender, EventArgs e)
         {
-            //int largo = TxtBuscador.Text.Length;
-            //int contadorEspacio = contadorEspacios(largo, TxtBuscador.Text);
+            
             if (Convert.ToDateTime(CldrCiclosInicio.Text) < Convert.ToDateTime(CldrCiclosFin.Text))
             {
                 
@@ -694,7 +683,6 @@ namespace ReportesUnis
             {
                 string label = drive.IsReady ?
                     String.Format(" - {0}", drive.VolumeLabel) : null;
-                Console.WriteLine("{0} - {1}{2}", drive.Name, drive.DriveType, label);
                 name = name + " " + drive.Name;
             }
             return name;

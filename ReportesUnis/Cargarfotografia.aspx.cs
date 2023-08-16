@@ -356,7 +356,7 @@ namespace ReportesUnis
             }
             catch (Exception)
             {
-                Console.WriteLine("Error");
+                int x = 0;
             }
         }
 
@@ -381,7 +381,6 @@ namespace ReportesUnis
                         bytes = (byte[])sdr["EMPLOYEE_PHOTO"];
                         contentType = sdr["Extension"].ToString();
                         fileName = sdr["EMPLID"].ToString() + "." + contentType.ToLower();
-                        Console.WriteLine(fileName);
                     }
                     con.Close();
                 }

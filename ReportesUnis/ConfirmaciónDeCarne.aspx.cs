@@ -18,7 +18,6 @@ using static System.Windows.Forms.AxHost;
 using Windows.Devices.Sensors;
 using Windows.UI.Xaml.Automation.Text;
 using DocumentFormat.OpenXml.Spreadsheet;
-//using DocumentFormat.OpenXml.Vml;
 using System.Net;
 
 namespace ReportesUnis
@@ -53,45 +52,14 @@ namespace ReportesUnis
                 LeerInfoTxtSQL();
                 LeerInfoTxtPath();
                 LimpiarCampos();
-                //divConfirmar.Visible = true;
-                //divGenerar.Visible = false;
                 divCampos.Visible = true;
                 divDPI.Visible = true;
                 divFotografia.Visible = true;
                 divBtnConfirmar.Visible = true;
-                //divBtnGenerar.Visible = false;
                 Buscar("1");
                 lblActualizacion.Text = null;
             }
         }
-
-        //protected void RadioButtonConfirmar_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    LimpiarCampos();
-        //    divConfirmar.Visible = true;
-        //    divGenerar.Visible = false;
-        //    divCampos.Visible = true;
-        //    divDPI.Visible = true;
-        //    divFotografia.Visible = true;
-        //    divBtnConfirmar.Visible = true;
-        //    divBtnGenerar.Visible = false;
-        //    Buscar("1");
-        //    lblActualizacion.Text = null;
-        //}
-
-        //protected void RadioButtonGenerar_CheckedChanged(object sender, EventArgs e)
-        //{
-        //    LimpiarCampos();
-        //    divConfirmar.Visible = false;
-        //    divGenerar.Visible = true;
-        //    divCampos.Visible = true;
-        //    divDPI.Visible = false;
-        //    divFotografia.Visible = false;
-        //    divBtnConfirmar.Visible = false;
-        //    divBtnGenerar.Visible = true;
-        //    txtCarne.Text = null;
-        //    lblActualizacion.Text = null;
-        //}
 
         protected void CmbTipo_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -238,24 +206,6 @@ namespace ReportesUnis
             }
         }
 
-        //protected void BtnBuscar_Click(object sender, EventArgs e)
-        //{
-        //    lblActualizacion.Text = null;
-        //    if (!txtCarne.Text.IsNullOrWhiteSpace())
-        //    {
-        //        llenado("CARNET = '" + txtCarne.Text + "' AND CONFIRMACION = '0'");
-        //        if (TxtPrimerNombre.Text.IsNullOrWhiteSpace())
-        //        {
-        //            lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        txtCarne.Text = null;
-        //        lblActualizacion.Text = "Debe de ingresar un número de carnet para poder realizar la generación.";
-
-        //    }
-        //}
 
         private void LimpiarCampos()
         {
@@ -297,34 +247,16 @@ namespace ReportesUnis
                         try
                         {
                             int cargaFt = 0;
-                            /*
-                            string username = "SRVCarnets\\carnetuser";
-                            string password = "C@rn3tSrV#2023";
-                            NetworkCredential credentials = new NetworkCredential(username, password);*/
 
                             try
                             {
-                                // Crear una instancia de WebClient y establecer las credenciales
-                                /*using (WebClient client = new WebClient())
-                                {
-                                    client.Credentials = credentials;
 
-                                    // Construir la ruta completa de la imagen en la ruta remota
-                                    string remoteImagePath = Path.Combine(txtPath.Text, Carnet + ".jpg");
-
-                                    // Convertir la imagen Base64 nuevamente a bytes y cargarla en la ruta remota
-                                    client.UploadString(remoteImagePath, "DELETE", "");*/
-
-                                //SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
                                 File.Delete(txtPath.Text + Carnet + ".jpg");
-                                Console.WriteLine("Imagen eliminada exitosamente en la ruta remota.");
                                 cargaFt = 0;
-                                //}
                             }
                             catch (Exception ex)
                             {
                                 // Si hay un error, imprimir el mensaje
-                                Console.WriteLine("Error al eliminar la imagen en la ruta remota: " + ex.Message);
                                 cargaFt = 1;
                             }
                             if (cargaFt == 0)
@@ -472,7 +404,6 @@ namespace ReportesUnis
                 {
                     cmd.Transaction = transaction;
                     cmd.Connection = con;
-                    //txtInsertBI.Text = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
                     cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
                                    "([Carnet] " +
                                    ",[Direccion] " +
@@ -612,22 +543,6 @@ namespace ReportesUnis
             }
         }
 
-        //protected string QueryActualizaBi()
-        //{
-        //    string consulta = null;
-        //    string fecha = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-        //    consulta = "UPDATE [dbo].[Tarjeta_Identificacion_prueba] SET " +
-        //        "[Fecha_Solicitado] = '" + fecha + "' , " +
-        //        "[Fecha_Entrega] = '" + fecha + "', " +
-        //        "[Accion] = '2', " +
-        //        "[Fecha_Hora] = '" + fecha + "', " +
-        //        "[Fec_Emision] = '" + fecha + "', " +
-        //        "[Validar_Envio] = '1'  " +
-        //        "WHERE CARNET ='" + txtCarne.Text + "'";
-        //    return consulta;
-        //}
-
         protected string QueryActualizaNombre(string emplid)
         {
             string constr = TxtURL.Text;
@@ -712,10 +627,9 @@ namespace ReportesUnis
                             ContadorDirecion = Convert.ToInt16(reader1["CONTADOR"]);
                         }
 
+                        string Hoy = DateTime.Now.ToString("dd/MM/yy");
 
-
-
-                        if (ContadorNombre == 0)
+                        if (ContadorNombre == 0 && (EFFDT_Name != Hoy || !String.IsNullOrEmpty(EFFDT_Name)))
                         {
                             cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES ( " +
                                                 "EMPLID, " +
@@ -975,47 +889,6 @@ namespace ReportesUnis
             Confirmar(carne);
         }
 
-        //protected void BtnGenerar_Click(object sender, EventArgs e)
-        //{
-        //    if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
-        //    {
-        //        string respuesta = null;
-        //        string fecha = DateTime.Now.ToString("yyyy-MM-dd");
-        //        string consultaBi = QueryActualizaBi();
-        //        txtExiste.Text = consultaBi;
-        //        //SE INGRESA LA INFORMACIÓN EN EL BANCO
-        //        respuesta = ConsumoSQL(consultaBi);
-        //        if (respuesta == "0")
-        //        {
-        //            respuesta = "";
-        //            QueryUpdateApex("0", fecha, fecha, fecha, "2", txtCarne.Text);
-        //            if (!txtInsertApex.Text.IsNullOrWhiteSpace())
-        //            {
-        //                respuesta = ConsumoOracle(txtInsertApex.Text);
-        //                if (respuesta == "0")
-        //                {
-        //                    Upload(txtCarne.Text);
-        //                }
-        //            }
-        //        }
-
-        //        if (respuesta == "0")
-        //        {
-        //            lblActualizacion.Text = "Se almacenó correctamente la información para la renovación del carné";
-        //            LimpiarCampos();
-        //        }
-        //        else
-        //        {
-        //            lblActualizacion.Text = "Ocurrió un problema al almacenar la información";
-        //        }
-        //    }
-        //    else
-        //    {
-        //        lblActualizacion.Text = "No se encontró información confirmada para el número de Carne " + txtCarne.Text;
-        //    }
-
-        //}
-
         void LeerInfoTxtPath()
         {
             string rutaCompleta = CurrentDirectory + "PathAlmacenamiento.txt";
@@ -1092,8 +965,7 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                                        "WHERE PN.NATIONAL_ID ='" + TxtDpi.Text + "' " + //---1581737080101
-                                                                                         //"WHERE PN.NATIONAL_ID ='3682754340101' " + // de la cerda  
+                                        "WHERE PN.NATIONAL_ID ='" + TxtDpi.Text + "' " +
                                        ") WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -1137,7 +1009,6 @@ namespace ReportesUnis
 
                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS1 = '" + TxtDiRe1 + "' AND ADDRESS2 = '" + TxtDiRe2 + "' AND ADDRESS3 = '" + TxtDiRe3 + "' " +
                        "AND COUNTRY ='" + PaisNit + "' AND STATE = '" + StateNit + "' AND ADDRESS_TYPE ='REC' AND  EMPLID = '" + emplid + "'";
-                        //cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND ADDRESS_TYPE = 'REC' AND EMPLID = '" + emplid + "'";
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
@@ -1207,7 +1078,6 @@ namespace ReportesUnis
                             vchrCNameNS = reader["CADENA"].ToString().TrimStart().TrimEnd();
                         }
 
-                        //cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND  NAME_TYPE = 'REC' AND EMPLID = '" + emplid + "'";
                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE PN.NAME ='" + vchrApellidosCompletos + "," + TxtNombreR + "'AND " +
                                             "PN.EMPLID = '" + emplid + "' AND NAME_TYPE IN 'REC'";
                         reader = cmd.ExecuteReader();
@@ -1421,8 +1291,7 @@ namespace ReportesUnis
                 string EmplidExisteFoto = "";
                 string mensajeValidacion = "";
                 //Nombre de la fotografía cargada (Sin extensión)
-                string NombreFoto = "2990723550101";//Context.User.Identity.Name.Replace("@unis.edu.gt", ""); 
-                                                    //string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                 //Busca si la persona ya tiene fotografía registrada para proceder a actualizar
                 using (OracleConnection conEmplid = new OracleConnection(constr))
@@ -1452,12 +1321,6 @@ namespace ReportesUnis
                     }
                 }
 
-                //if (Request.Form["urlPath"].Contains("data:image/jpeg;base64,"))
-                //{
-                //    int largo = 0;
-                //    largo = ImagenData.Length;
-                //    ImagenData = ImagenData.Substring(23, largo - 23).ToString();
-                //}
                 byte[] bytes = Convert.FromBase64String(ImagenData);
 
                 using (OracleConnection con = new OracleConnection(constr))
@@ -1526,7 +1389,7 @@ namespace ReportesUnis
             }
             catch (Exception)
             {
-                Console.WriteLine("Error");
+
                 mensaje = ". Ocurrió un error al cargar la imagen";
                 mensaje = "1";
             }

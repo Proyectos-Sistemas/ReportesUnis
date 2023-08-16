@@ -706,12 +706,12 @@ namespace ReportesUnis
                 }
                 catch (Exception x)
                 {
-                    Console.WriteLine(x.ToString());
+                    x.ToString();
                 }
             }
             catch (Exception x)
             {
-                Console.WriteLine(x.ToString());
+                x.ToString();
             }
         }
         public void listaDepartamentos()

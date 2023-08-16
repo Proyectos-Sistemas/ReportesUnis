@@ -158,10 +158,8 @@
             <input type="hidden" id="txtCInicial" runat="server" />
             <%-- CONTROL DE VALIDACION DE NIT--%>
             <input type="hidden" id="ValidacionNit" runat="server" />
-            <%--<asp:Label ID="ValidacionNit" runat="server" Visible="true" ForeColor="White">0</asp:Label>--%>
             <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE NIT O NO--%>
             <input type="hidden" id="TrueNit" runat="server" />
-            <%--<asp:Label ID="TrueNit" runat="server" Visible="false"></asp:Label>--%>
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
 
             <div class="container" id="tabla" runat="server">
@@ -177,7 +175,7 @@
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <asp:Label runat="server" Font-Bold="true">Fecha de Nacimiento:</asp:Label>
+                                    <asp:Label runat="server" Font-Bold="true">Fecha de nacimiento:</asp:Label>
                                     <br />
                                     <asp:Label ID="txtCumple" runat="server" Enabled="false"></asp:Label>
                                 </div>
@@ -196,37 +194,37 @@
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <asp:Label runat="server" Font-Bold="true">Carrera:</asp:Label>
-                                    <br />
-                                    <asp:Label ID="txtCarrera" runat="server" Enabled="false"></asp:Label>
-                                </div>
-
-                                <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Facultad:</asp:Label>
                                     <br />
                                     <asp:Label ID="txtFacultad" runat="server" Enabled="false"></asp:Label>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <asp:Label runat="server" Font-Bold="true">Carrera:</asp:Label>
+                                    <br />
+                                    <asp:Label ID="txtCarrera" runat="server" Enabled="false"></asp:Label>
                                 </div>
 
 
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Nombres*:</asp:Label>
-                                    <asp:TextBox ID="txtNombre" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <br />
+                                    <asp:TextBox ID="txtNombre" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtNombre" ErrorMessage="Ingrese su nombre." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Apellidos*:</asp:Label>
-                                    <asp:TextBox ID="txtApellido" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <br />
+                                    <asp:TextBox ID="txtApellido" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="txtApellido" ErrorMessage="Ingrese su apellido." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <asp:Label runat="server" Font-Bold="true">Apellido de Casada:</asp:Label>
-                                    <asp:TextBox ID="txtCasada" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
+                                    <asp:Label runat="server" Font-Bold="true">Apellido de casada:</asp:Label>
                                     <br />
+                                    <asp:TextBox ID="txtCasada" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <br />
                                 </div>
 
@@ -234,8 +232,8 @@
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label>
-                                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <br />
+                                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtDireccion" ErrorMessage="Ingrese su dirección." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
 
@@ -255,20 +253,23 @@
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">País*:</asp:Label><br />
-                                    <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control">
+                                    <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                     </asp:DropDownList>
+                                    <br />
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label>
-                                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control">
+                                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                     </asp:DropDownList>
+                                    <br />
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label>
-                                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="275px" CssClass="form-control">
+                                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                     </asp:DropDownList>
+                                    <br />
                                 </div>
 
 
@@ -276,22 +277,20 @@
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Teléfono*:</asp:Label>
                                     <br />
-                                    <asp:CustomValidator ID="validarTelefono" runat="server" ControlToValidate="txtTelefono" ErrorMessage="El número de teléfono debe de tener al menos 8 caracteres" Font-Size="Small" ClientValidationFunction="VerificarCantidadTelefono" ForeColor="Red"></asp:CustomValidator>
-                                    <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" CssClass="form-control" Width="275px"></asp:TextBox>
-                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ControlToValidate="txtTelefono" ErrorMessage="Ingrese un número de teléfono." ForeColor="Red"> </asp:RequiredFieldValidator>
+                                    <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" CssClass="form-control" Width="275px" onblur="validarTelefono(this.value)"></asp:TextBox>
+                                    <span id="errorTelefono" style="color: red; font-size: small"></span>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <asp:Label runat="server" Font-Bold="true">Correo Personal*:</asp:Label>
+                                    <asp:Label runat="server" Font-Bold="true">Correo personal*:</asp:Label>
                                     <br />
+                                    <asp:TextBox ID="TxtCorreoPersonal" runat="server" MaxLength="75" CssClass="form-control" Width="275px" onblur="validarCorreo(this.value)"></asp:TextBox>
+                                    <span id="errorCorreo" style="color: red; font-size: small"></span>
                                     <br />
-                                    <asp:TextBox ID="TxtCorreoPersonal" runat="server" MaxLength="75" CssClass="form-control" Width="275px"></asp:TextBox>
-                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="TxtCorreoPersonal" ErrorMessage="Ingrese su correo personal." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <asp:Label runat="server" Font-Bold="true">Estado Civil:</asp:Label>
-                                    <br />
+                                    <asp:Label runat="server" Font-Bold="true">Estado civil:</asp:Label>
                                     <br />
                                     <asp:DropDownList ID="CmbEstado" runat="server" Width="275px" CssClass="form-control">
                                         <asp:ListItem Selected="False" Value=""></asp:ListItem>
@@ -310,7 +309,7 @@
                                 <div class="col-md-4 mx-auto text-center">
                                 </div>
                                 <div class="col-md-4 mx-auto text-center">
-                                    <h5 style="text-align: center;">Información para Recibos de Pago</h5>
+                                    <h5 style="text-align: center;">Información para recibos de pago</h5>
                                 </div>
                                 <div class="col-md-4 mx-auto text-center">
                                 </div>
@@ -349,7 +348,7 @@
                                     </div>
 
                                     <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
-                                        <asp:TextBox ID="txtNit" runat="server" Enabled="true" Width="275px" CssClass="form-control"></asp:TextBox>
+                                        <asp:TextBox ID="txtNit" runat="server" Width="275px" CssClass="form-control"></asp:TextBox>
                                     </div>
 
                                     <div class="col-md-4 mx-auto text-center">
@@ -373,7 +372,7 @@
                                     <div class="col-md-4 mx-auto text-center">
                                     </div>
                                     <div class="col-md-4 mx-auto text-center">
-                                        <asp:Button ID="ValidarNIT" runat="server" Text="Validar Nit" CssClass="btn-danger-unis" Enabled="true" OnClick="txtNit_TextChanged" />
+                                        <asp:Button ID="ValidarNIT" runat="server" Text="Validar Nit" CssClass="btn-danger-unis" Enabled="true" OnClick="txtNit_TextChanged" CausesValidation="false" />
                                     </div>
                                     <div class="col-md-4 mx-auto text-center">
                                     </div>
@@ -426,21 +425,45 @@
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">País*:</asp:Label>
                                                 <br />
-                                                <asp:DropDownList ID="CmbPaisNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPaisNIT_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control"></asp:DropDownList>
+                                                <asp:DropDownList ID="CmbPaisNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPaisNIT_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
                                                 <br />
                                             </div>
 
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label>
                                                 <br />
-                                                <asp:DropDownList ID="CmbDepartamentoNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamentoNIT_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control"></asp:DropDownList>
+                                                <asp:DropDownList ID="CmbDepartamentoNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamentoNIT_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
                                                 <br />
                                             </div>
 
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label>
                                                 <br />
-                                                <asp:DropDownList ID="CmbMunicipioNIT" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipioNIT_SelectedIndexChanged" Width="275px" CssClass="form-control"></asp:DropDownList>
+                                                <asp:DropDownList ID="CmbMunicipioNIT" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipioNIT_SelectedIndexChanged" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container" id="sustituirCombos" runat="server">
+                                        <div class="row">
+                                            <div class="form-group col-md-4">
+                                                <asp:Label runat="server" Font-Bold="true">País*:</asp:Label>
+                                                <br />
+                                                <asp:TextBox ID="PaisNit" runat="server" Enabled="false" Width="275px" CssClass="form-control"></asp:TextBox>
+                                                <br />
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label>
+                                                <br />
+                                                <asp:TextBox ID="DepartamentoNit" runat="server" Enabled="false" Width="275px" CssClass="form-control"></asp:TextBox>
+                                                <br />
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label>
+                                                <br />
+                                                <asp:TextBox ID="MunicipioNit" runat="server" Enabled="false" Width="275px" CssClass="form-control"></asp:TextBox>
                                                 <br />
                                             </div>
                                         </div>
@@ -459,12 +482,33 @@
             <asp:TableRow>
                 <asp:TableCell>
                     <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
-                    <%--<asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnActualizar_Click" OnClientClick="return mostrarAlerta();" />--%>
+
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>
-        <%--            </ContentTemplate>
-            </asp:UpdatePanel>--%>
+    </div>
+
+    <div id="myModalActualizacion" class="modala">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <div class="modal-message">Por favor, espera mientras la información se está actualizando...</div>
+
+            </div>
+        </div>
+    </div>
+    <div id="myModalEspera" class="modala">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <div class="modal-message">Por favor, espera un momento</div>
+
+            </div>
+        </div>
     </div>
     <div style="margin-left: auto; margin-right: auto; text-align: center;">
         <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
@@ -490,19 +534,19 @@
                                     <div class="profile-head">
                                         <div class="row">
                                             <div class="form-group col-md">
-                                                <asp:Label ID="Label1" runat="server" Font-Bold="true" ForeColor="Blue">Para realizar un cambio en su nombre es necesario adjuntar según sea el caso:</asp:Label>
+                                                <asp:Label ID="Label1" runat="server" Font-Bold="true" ForeColor="Black">Para realizar un cambio en su nombre es necesario adjuntar según sea el caso:</asp:Label>
                                                 <br />
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md">
-                                                <asp:Label ID="Label2" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">&nbsp;&nbsp;&nbsp;&nbsp;a.) Fotografia de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
+                                                <asp:Label ID="Label2" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Black">&nbsp;&nbsp;&nbsp;&nbsp;a.) Fotografia de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
                                                 <br />
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md">
-                                                <asp:Label ID="Label6" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">&nbsp;&nbsp;&nbsp;&nbsp;b.) Fotografia de su Pasaporte</asp:Label>
+                                                <asp:Label ID="Label6" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Black">&nbsp;&nbsp;&nbsp;&nbsp;b.) Fotografia de su Pasaporte</asp:Label>
                                                 <br />
                                             </div>
                                         </div>
@@ -533,7 +577,11 @@
         </div>
     </div>
 
-    <%--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--%>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 
     <script>
@@ -546,6 +594,29 @@
             .catch(function (error) {
                 console.error('Error al acceder a la cámara: ', error);
             });
+
+        function validarCorreo(correo) {
+            //var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            var errorCorreoElement = document.getElementById("errorCorreo");
+            var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (correo.trim() === "") {
+                errorCorreoElement.textContent = "Ingrese su correo personal.";
+            } else if (!regex.test(correo)) {
+                errorCorreoElement.textContent = "El formato del correo electrónico no es válido.";
+            }
+        }
+
+        function validarTelefono(Telefono) {
+            //var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            var errorTelefonoElement = document.getElementById("errorTelefono");
+
+            if (Telefono.trim() === "") {
+                errorTelefonoElement.textContent = "Ingrese su teléfono.";
+            } else if (Telefono.length > 0 && Telefono.length <= 7) {
+                errorTelefonoElement.textContent = "El número de télefono debe de tener 8 caracteres";
+            }
+        }
 
         $(document).ready(function () {
             var videoElement = $('#videoElement')[0];
@@ -585,22 +656,23 @@
             var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
             var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
             var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
-                var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
-                var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
-                var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
-                var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
-                var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
+            var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
+            var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
+            var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
+            var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
+            var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
+            var modal = document.getElementById("myModalActualizacion");
 
-                if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) {
-                    $('#myModal').css('display', 'block');
-                    return false;
-                } else if (TrueNit !== nit) {
+            if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) {
+                $('#myModal').css('display', 'block');
+                return false;
+            } else if (TrueNit !== nit) {
                 // Realiza las acciones necesarias si el valor es diferente de cero
-                if (nit !== "CF"){
+                if (nit !== "CF") {
                     alert("El NIT ha cambiado, es necesario validar.");
                     return false;
                 }
-                } else {
+            } else {
 
                 if (apellido.trim() === "") {
                     mensaje = "-Los Apellidos son requerido.";
@@ -676,7 +748,7 @@
                     }
                 }
 
-                if (direccionR1.trim() === "") {
+                if (direccionR1.trim() === "" && nombreR.trim() !== "") {
                     if (mensaje.trim() == "") {
                         mensaje = "-La Dirección 1 para el recibo es requerida.";
                     } else {
@@ -689,6 +761,7 @@
                     alert(mensaje);
                     return false;
                 } else if (confirm("¿Está seguro de que su información es correcta?")) {
+                    modal.style.display = "block";
                     __doPostBack('<%= BtnActualizar.ClientID %>', '');
                     return true; // Permite continuar con la acción del botón
                 } else {
@@ -699,13 +772,15 @@
 
         function Documentos() {
             alert("Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.");
+            $('#myModal').css('display', 'block');
+            return false;
         }
 
         function NoExisteNit() {
             alert("El NIT no existe. Intente de nuevo");
         }
 
-        
+
         function ConfirmacionActualizacionSensible() {
             mensaje = "Su información fue almacenada correctamente. \nLa información ingresada debe ser aprobada antes de ser confirmada.\nActualmente, solo se muestran los datos que han sido previamente confirmados.";
             mensaje = mensaje.replace("/\n/g", "<br>");
@@ -739,10 +814,15 @@
                         $('#<%= TxtDiRe1.ClientID %>').prop('disabled', true);
                         $('#<%= TxtDiRe2.ClientID %>').prop('disabled', true);
                         $('#<%= TxtDiRe3.ClientID %>').prop('disabled', true);
+                        $('#<%= PaisNit.ClientID %>').prop('disabled', true);
+                        $('#<%= MunicipioNit.ClientID %>').prop('disabled', true);
+                        $('#<%= DepartamentoNit.ClientID %>').prop('disabled', true);
                         $('#<%= lblActualizacion.ClientID %>').text('');
 
                         // Hacer visible la fila Combos
                         $('#<%= Combos.ClientID %>').hide();
+                        // Hacer visible la fila sustitucion de Combos
+                        $('#<%= sustituirCombos.ClientID %>').hide();
                     }
                 });
             }
@@ -757,9 +837,11 @@
                 if ($(this).is(':checked')) {
                     // El RadioButton ha sido marcado, ocultar la fila
                     $('#<%= Combos.ClientID %>').hide();
+                    $('#<%= sustituirCombos.ClientID %>').show();
                 } else {
                     // El RadioButton ha sido desmarcado, mostrar la fila
                     $('#<%= Combos.ClientID %>').show();
+                    $('#<%= sustituirCombos.ClientID %>').hide();
                 }
             });
 
@@ -767,9 +849,11 @@
             if ($('#<%= RadioButtonNombreSi.ClientID %>').is(':checked')) {
                 // El RadioButton está marcado, ocultar la fila
                 $('#<%= Combos.ClientID %>').hide();
+                $('#<%= sustituirCombos.ClientID %>').show();
             } else {
                 // El RadioButton no está marcado, mostrar la fila
                 $('#<%= Combos.ClientID %>').show();
+                $('#<%= sustituirCombos.ClientID %>').hide();
             }
         });
 
@@ -797,8 +881,10 @@
                         $('#<%= CmbPaisNIT.ClientID %>').prop('disabled', false);
                         $('#<%= CmbDepartamentoNIT.ClientID %>').prop('disabled', false);
                         $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
                         // Hacer visible la fila Combos
                         $('#<%= Combos.ClientID %>').show();
+                        $('#<%= sustituirCombos.ClientID %>').hide();
                         llenadoPaisnit();
                         llenadoDepartamentoNit();
                         llenadoMunicipioNIT();
@@ -811,29 +897,9 @@
 
         });
 
-<%--        $(document).ready(function () {
-            $('#<%= txtNombre.ClientID %> , #<%= txtApellido.ClientID %>, #<%= txtCasada.ClientID %>').on('input', function () {
-                var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
-                var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
-                var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
-                var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
-                var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
-                var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
-
-                if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) {
-                    $('#myModal').css('display', 'block');
-                } else {
-                    $('#myModal').css('display', 'none');
-                }
-            });
-        });--%>
-
-        $('.close').click(function() {
-                $('#<%= txtNombre.ClientID %>').val($('#<%= txtNInicial.ClientID %>').val());
-                $('#<%= txtApellido.ClientID %>').val($('#<%= txtAInicial.ClientID %>').val());
-                $('#<%= txtCasada.ClientID %>').val($('#<%= txtCInicial.ClientID %>').val());
-                $('#myModal').css('display', 'none');
-            });
+        $('.close').click(function () {
+            $('#myModal').css('display', 'none');
+        });
 
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
         $(document).ready(function () {
@@ -888,6 +954,14 @@
                 }
             });
         });
+        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO PAIS EN EL RECIBO 
+        $(document).ready(function () {
+            $('#<%= CmbPaisNIT.ClientID %> ').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                    $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
+                }
+            });
+        });
 
         function VerificarCantidadTelefono(sender, args) {
             args.IsValid = (args.Value.length >= 7);
@@ -916,7 +990,7 @@
                 // Eliminar los archivos adicionales
                 while (files.length > 2) {
                     fileUpload.remove(files.length - 1);
-                    fileUpload.value = ""; 
+                    fileUpload.value = "";
                 }
             }
         }
@@ -951,12 +1025,12 @@
                 }
             });
         });
-       
+
 
         //Detectar cambio de nit
         $(document).ready(function () {
             $('#<%= txtNit.ClientID %>').on('input', function () {
-               var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
+                var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
                 var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
                 var labelValidacion = $('#<%= ValidacionNit.ClientID %>').val().trim();
                 if (txtNit !== TrueNit || txtNit !== 'CF') {
@@ -967,7 +1041,7 @@
                 }
             });
         });
-        
+
         $(document).ready(function () {
             // Verificar si el navegador es compatible con enumerateDevices
             if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
@@ -981,12 +1055,12 @@
                         });
 
                         if (hasCamera) {
-                            console.log("La cámara está conectada.");    
+                            console.log("La cámara está conectada.");
                         } else {
                             console.log("La cámara no está conectada.");
-                            ////////$('#<%= CargaFotografia.ClientID %>').hide();
+                            $('#<%= CargaFotografia.ClientID %>').hide();
                             var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                            //lblActualizacion.text("Es necesario que su dispositivo cuente con una cámara para poder actualizar su información.");
+                            lblActualizacion.text("Es necesario que su dispositivo cuente con una cámara para poder actualizar su información.");
                         }
                     })
                     .catch(function (error) {
@@ -1011,6 +1085,7 @@
                 navigator.webkitGetUserMedia ||
                 navigator.mozGetUserMedia ||
                 navigator.msGetUserMedia);
+
             navigator.getMedia({ video: true }, function () {
                 $('#<%= CargaFotografia.ClientID %>').show();
                 $('#<%= BtnDownload.ClientID %>').hide();
@@ -1027,7 +1102,7 @@
                 $('#<%= BtnReload.ClientID %>').show();
                 $('#<%= BtnDownload.ClientID %>').show();
             });
-            setTimeout(function () { startTime() }, 1000);
+            setTimeout(function () { ValidarEstadoCamara() }, 1000);
         };
 
 
@@ -1067,7 +1142,29 @@
             canvas.width = newWidth;
             canvas.height = newHeight;
         };
+
+        /*function mostrarModalActualizacion() {
+            
+        }*/
+
+
+        function mostrarModalEspera() {
+            var modal = document.getElementById("myModalEspera");
+            modal.style.display = "block";
+        }
+        function ocultarModalEspera() {
+            var modal = document.getElementById("myModalEspera");
+            modal.style.display = "none";
+        }
+
+        function ocultarModalActualizacion() {
+            var modal = document.getElementById("myModalActualizacion");
+            modal.style.display = "none";
+        }
+
     </script>
+
+
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>

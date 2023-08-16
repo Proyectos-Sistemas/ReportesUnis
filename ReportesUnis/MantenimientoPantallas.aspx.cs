@@ -300,7 +300,6 @@ namespace ReportesUnis
         protected void BtnInsertar_Click(object sender, EventArgs e)
         {
             Insertar();
-            //TXTINICIO.Text = "INSERT INTO UNIS_INTERFACES.TBL_PANTALLA_CARNE (FECHA_INICIO, FECHA_FIN, PANTALLA) VALUES('" + DTInicio.Text + "','" + DTFin.Text + "','" + CmbTipo.Text + "')";
         }
 
         protected void BtnActualizar_Click(object sender, EventArgs e)
@@ -315,7 +314,6 @@ namespace ReportesUnis
                 else
                 {
                     Actualizar();
-                    //TXTINICIO.Text = "UPDATE UNIS_INTERFACES.TBL_PANTALLA_CARNE SET FECHA_INICIO = '" + DTNInicio.Text + "', FECHA_FIN = '" + DTNFin.Text + "', PANTALLA = '" + CmbTipo.Text + "' WHERE ID_REGISTRO = " + ID;
                 }
             }
             else
@@ -327,7 +325,6 @@ namespace ReportesUnis
         protected void BtnEliminar_Click(object sender, EventArgs e)
         {
             Eliminar();
-            //TXTINICIO.Text = "DELETE FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE WHERE ID_REGISTRO = " + ID;
         }
 
         protected void DTInicio_TextChanged(object sender, EventArgs e)

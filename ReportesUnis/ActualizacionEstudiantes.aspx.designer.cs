@@ -438,15 +438,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label EmailUnis;
 
         /// <summary>
-        /// Control txtCarrera.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtCarrera;
-
-        /// <summary>
         /// Control txtFacultad.
         /// </summary>
         /// <remarks>
@@ -454,6 +445,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label txtFacultad;
+
+        /// <summary>
+        /// Control txtCarrera.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtCarrera;
 
         /// <summary>
         /// Control txtNombre.
@@ -564,15 +564,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.DropDownList CmbMunicipio;
 
         /// <summary>
-        /// Control validarTelefono.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator validarTelefono;
-
-        /// <summary>
         /// Control txtTelefono.
         /// </summary>
         /// <remarks>
@@ -582,15 +573,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox txtTelefono;
 
         /// <summary>
-        /// Control RequiredFieldValidator4.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator4;
-
-        /// <summary>
         /// Control TxtCorreoPersonal.
         /// </summary>
         /// <remarks>
@@ -598,15 +580,6 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxtCorreoPersonal;
-
-        /// <summary>
-        /// Control RequiredFieldValidator5.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator5;
 
         /// <summary>
         /// Control CmbEstado.
@@ -742,6 +715,42 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList CmbMunicipioNIT;
+
+        /// <summary>
+        /// Control sustituirCombos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl sustituirCombos;
+
+        /// <summary>
+        /// Control PaisNit.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox PaisNit;
+
+        /// <summary>
+        /// Control DepartamentoNit.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox DepartamentoNit;
+
+        /// <summary>
+        /// Control MunicipioNit.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox MunicipioNit;
 
         /// <summary>
         /// Control tbactualizar.

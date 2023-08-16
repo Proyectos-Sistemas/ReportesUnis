@@ -687,7 +687,6 @@ namespace ReportesUnis
             {
                 string label = drive.IsReady ?
                     String.Format(" - {0}", drive.VolumeLabel) : null;
-                Console.WriteLine("{0} - {1}{2}", drive.Name, drive.DriveType, label);
                 name = name + " " + drive.Name;
             }
             return name;
