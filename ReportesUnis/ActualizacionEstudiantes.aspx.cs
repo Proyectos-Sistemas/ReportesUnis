@@ -51,7 +51,7 @@ namespace ReportesUnis
             if (controlPantalla >= 1)
             {
                 TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
-                
+
                 if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
                 {
                     Response.Redirect(@"~/Default.aspx");
@@ -284,7 +284,7 @@ namespace ReportesUnis
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                                         //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +                                        
-                                        "WHERE PN.NATIONAL_ID ='2734677940101' " +                                        
+                                        "WHERE PN.NATIONAL_ID ='2734677940101' " +
                                        ") WHERE CNT = 1";
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -932,7 +932,7 @@ namespace ReportesUnis
                     else
                     {
                         if (txtAInicial.Value != txtApellido.Text || txtNInicial.Value != txtNombre.Text || txtCInicial.Value != txtCasada.Text)
-                        {                            
+                        {
                             string script = "<script>Documentos();</script>";
                             ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                             mensaje = "Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.";
@@ -1156,13 +1156,13 @@ namespace ReportesUnis
                                 RegistroCarne = reader["CONTADOR"].ToString();
                             }
                             txtExiste.Text = RegistroCarne.ToString() + " registros";
-                                                        
+
                             string nombreArchivo = txtCarne.Text + ".jpg";
                             string ruta = txtPath.Text + nombreArchivo;
-                            int cargaFt = 0;                            
+                            int cargaFt = 0;
 
                             mensaje = SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
-                            
+
                             if (mensaje.Equals("Imagen guardada correctamente."))
                             {
                                 cargaFt = 0;
@@ -1582,7 +1582,7 @@ namespace ReportesUnis
 
                                             string Hoy = DateTime.Now.ToString();
 
-                                            if (ContadorNombreNit == 0 && (EFFDT_NameR.Substring(0,10).TrimEnd() != Hoy.Substring(0, 10).TrimEnd()))
+                                            if (ContadorNombreNit == 0 && (EFFDT_NameR.Substring(0, 10).TrimEnd() != Hoy.Substring(0, 10).TrimEnd()))
                                             {
                                                 cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES ( " +
                                                                     "EMPLID, " +
@@ -1682,7 +1682,7 @@ namespace ReportesUnis
                                             {
                                                 //ACTUALIZA NIT
                                                 cmd.CommandText = "UPDATE SYSADM.PS_EXTERNAL_SYSTEM SET EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' " +
-                                                                    " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + UserEmplid.Text + "' AND EFFDT ='" + EFFDT_SYSTEM.Substring(0,10).TrimEnd() + "'";
+                                                                    " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + UserEmplid.Text + "' AND EFFDT ='" + EFFDT_SYSTEM.Substring(0, 10).TrimEnd() + "'";
                                                 cmd.ExecuteNonQuery();
                                             }
 
@@ -1787,7 +1787,7 @@ namespace ReportesUnis
                             }
                             else
                             {
-                                mensaje ="Ocurrió un problema al actualizar su información y su fotografía.";
+                                mensaje = "Ocurrió un problema al actualizar su información y su fotografía.";
                             }
                         }
                     }
@@ -1851,7 +1851,7 @@ namespace ReportesUnis
 
             // Al finalizar la actualización, ocultar el modal
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalActualizacion();", true);
-        }        
+        }
 
         protected void CmbPais_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -2214,7 +2214,6 @@ namespace ReportesUnis
             }
             fotoAlmacenada();
         }
-
 
         protected void RadioButtonNombreSi_CheckedChanged(object sender, EventArgs e)
         {

@@ -367,7 +367,7 @@
                                 </div>
                             </div>
 
-                            <div class="container">
+                             <div class="container">
                                 <div class="row">
                                     <div class="col-md-4 mx-auto text-center">
                                     </div>
@@ -636,7 +636,6 @@
                 canvas.hide();
             });
         });
-
 
         function mostrarAlerta() {
             var mensaje = "";
