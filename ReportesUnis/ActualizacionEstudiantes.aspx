@@ -160,8 +160,46 @@
             <input type="hidden" id="ValidacionNit" runat="server" />
             <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE NIT O NO--%>
             <input type="hidden" id="TrueNit" runat="server" />
-            <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
+            <%-- TEXTBOX ALMACENA SI EL EFFDT DE ESTADO CIVIL--%>
+            <input type="hidden" id="EFFDT_EC" runat="server" />
+            <%-- TEXTBOX ALMACENA SI EL EFFDT DE LA DIRECCION --%>
+            <input type="hidden" id="EFFDT_A" runat="server" />
+            <%-- TEXTBOX ALMACENA SI EL EFFDT DE LA DIRECCION NIT--%>
+            <input type="hidden" id="EFFDT_A_NIT" runat="server" />
+            <%-- TEXTBOX ALMACENA SI EL EFFDT DEL TELEFONO--%>
+            <input type="hidden" id="EFFDT_P" runat="server" />
+            <%-- TEXTBOX ALMACENA SI EL EFFDT DEL NOMBRE EL NIT--%>
+            <input type="hidden" id="EFFDT_NameR" runat="server" />
 
+            <%-- TEXTBOX ALMACENA UP ESTADO CIVIL--%>
+            <input type="hidden" id="UP_PERS_DATA_EFFDT" runat="server" />
+            <%-- TEXTBOX ALMACENA UP NOMBRE NIT--%>
+            <input type="hidden" id="UP_NAMES_NIT" runat="server" />
+            <%-- TEXTBOX ALMACENA UP DIRECCION NIT--%>
+            <input type="hidden" id="UP_ADDRESSES_NIT" runat="server" />
+            <%-- TEXTBOX ALMACENA UP DIRECCION--%>
+            <input type="hidden" id="UP_ADDRESSES" runat="server" />
+            <%-- TEXTBOX ALMACENA UP TELEFONO--%>
+            <input type="hidden" id="UP_PERSONAL_PHONE" runat="server" />
+            <%-- TEXTBOX ALMACENA UP CORREO PERSONAL--%>
+            <input type="hidden" id="UP_EMAIL_ADDRESSES" runat="server" />
+
+            <%-- TEXTBOX ALMACENA UD ESTADO CIVIL--%>
+            <input type="hidden" id="UD_PERS_DATA_EFFDT" runat="server" />
+            <%-- TEXTBOX ALMACENA UD NOMBRE NIT--%>
+            <input type="hidden" id="UD_NAMES_NIT" runat="server" />
+            <%-- TEXTBOX ALMACENA UD DIRECCION NIT--%>
+            <input type="hidden" id="UD_ADDRESSES_NIT" runat="server" />
+            <%-- TEXTBOX ALMACENA UD DIRECCION--%>
+            <input type="hidden" id="UD_ADDRESSES" runat="server" />
+            <%-- TEXTBOX ALMACENA UD TELEFONO--%>
+            <input type="hidden" id="UD_PERSONAL_PHONE" runat="server" />
+            <%-- TEXTBOX ALMACENA UD CORREO PERSONAL--%>
+            <input type="hidden" id="UD_EMAIL_ADDRESSES" runat="server" />
+
+
+
+            <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
             <div class="container" id="tabla" runat="server">
                 <div class="row">
                     <div class="col-md">
@@ -806,6 +844,9 @@
                         $('#<%= CmbPaisNIT.ClientID %>').val($('#<%= CmbPais.ClientID %>').val());
                         $('#<%= CmbMunicipioNIT.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
                         $('#<%= CmbDepartamentoNIT.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
+                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPais.ClientID %>').val());
+                        $('#<%= MunicipioNit.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
+                        $('#<%= DepartamentoNit.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
                         $('#<%= StateNIT.ClientID %>').val($('#<%= State.ClientID %>').val());
                         $('#<%= txtNit.ClientID %>').val('CF');
                         $('#<%= txtNit.ClientID %>').prop('disabled', true);

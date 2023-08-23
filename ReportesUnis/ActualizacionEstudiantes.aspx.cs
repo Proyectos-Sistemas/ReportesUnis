@@ -17,6 +17,11 @@ using System.Threading;
 using System.Windows.Controls;
 using System.Net;
 using System.Text;
+using System.Xml;
+using static NPOI.SS.Formula.PTG.ArrayPtg;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+using static ICSharpCode.SharpZipLib.Zip.ExtendedUnixData;
+using static System.Windows.Forms.AxHost;
 
 namespace ReportesUnis
 {
@@ -29,7 +34,13 @@ namespace ReportesUnis
         int controlRenovacionFecha = 0;
         string emplid;
         string tiempoSleep = "";
+        int auxConsulta = 0;
+        int contadorUP = 0;
+        int contadorUD = 0;
         ConsumoAPI api = new ConsumoAPI();
+        public static string archivoConfiguraciones = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConfigCampus.dat");
+        string Hoy = DateTime.Now.ToString("yyyy-MM-dd").Substring(0, 10).TrimEnd();
+        string HoyEffdt = DateTime.Now.ToString("dd-MM-yyyy").Substring(0, 10).TrimEnd();
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Request.HttpMethod == "OPTIONS")
@@ -59,71 +70,72 @@ namespace ReportesUnis
                 if (!IsPostBack)
                 {
                     BtnReload.Visible = false;
-                    controlPantalla = PantallaHabilitada("Semana");
+                    /*controlPantalla = PantallaHabilitada("Semana");
                     if (controlPantalla >= 1)
+                    {*/
+                    Page.ClientScript.RegisterStartupScript(GetType(), "CheckCameraAccess", "checkCameraAccess();", true);
+                    LeerInfoTxtSQL();
+                    LeerInfoTxtPath();
+                    llenadoPais();
+                    llenadoDepartamento();
+                    llenadoState();
+                    emplid = mostrarInformación();
+                    controlRenovacionFecha = 0;//ControlRenovacion("WHERE EMPLID  ='" + emplid + "' AND FECHA_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
+                    controlRenovacion = 0;//ControlRenovacion("WHERE EMPLID  ='" + emplid + "'");
+                    if (controlRenovacion < 2 || (controlRenovacionFecha < 3 && controlRenovacionFecha > 0))
                     {
-                        Page.ClientScript.RegisterStartupScript(GetType(), "CheckCameraAccess", "checkCameraAccess();", true);
-                        LeerInfoTxtSQL();
-                        LeerInfoTxtPath();
-                        llenadoPais();
-                        llenadoDepartamento();
-                        llenadoState();
-                        emplid = mostrarInformación();
-                        controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + emplid + "' AND FECHA_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
-                        controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + emplid + "'");
-                        if (controlRenovacion < 2 || (controlRenovacionFecha < 3 && controlRenovacionFecha > 0))
+                        if (txtNit.Text == "CF")
                         {
-                            if (txtNit.Text == "CF")
-                            {
-                                txtNit.Enabled = false;
-                                RadioButtonNombreSi.Checked = true;
-                                ValidarNIT.Enabled = false;
-                                PaisNit.Text = CmbPais.SelectedValue;
-                                DepartamentoNit.Text = CmbDepartamento.SelectedValue;
-                                MunicipioNit.Text = CmbMunicipio.SelectedValue;
-                            }
-                            else
-                            {
-                                RadioButtonNombreNo.Checked = true;
-                                TxtDiRe1.Enabled = true;
-                                TxtDiRe2.Enabled = true;
-                                TxtDiRe3.Enabled = true;
-                                ValidarNIT.Enabled = true;
-                                txtNit.Enabled = true;
-                            }
-
-                            if (Request.Form["urlPathControl"] == "1")
-                            {
-                                AlmacenarFotografia();
-                            }
-                            Thread.Sleep(Convert.ToInt16(tiempoSleep));
-                            fotoAlmacenada();
-
-                            if (String.IsNullOrEmpty(txtCarne.Text))
-                            {
-                                BtnActualizar.Visible = false;
-                                lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
-                                CmbPais.SelectedValue = "Guatemala";
-                                tabla.Visible = false;
-                                CargaFotografia.Visible = false;
-                                InfePersonal.Visible = false;
-                            }
+                            txtNit.Enabled = false;
+                            RadioButtonNombreSi.Checked = true;
+                            ValidarNIT.Enabled = false;
+                            PaisNit.Text = CmbPais.SelectedValue;
+                            DepartamentoNit.Text = CmbDepartamento.SelectedValue;
+                            MunicipioNit.Text = CmbMunicipio.SelectedValue;
                         }
                         else
                         {
-                            controlCamposVisibles();
-                            lblActualizacion.ForeColor = System.Drawing.Color.Black;
-                            lblActualizacion.Text = "Ha llegado al límite de las renovaciones. <br /> " +
-                                "Si desea generar una nueva renovación pongase en contacto con soporte@unis.edu.gt.";
-                            BtnDownload.Visible = false;
+                            RadioButtonNombreNo.Checked = true;
+                            TxtDiRe1.Enabled = true;
+                            TxtDiRe2.Enabled = true;
+                            TxtDiRe3.Enabled = true;
+                            ValidarNIT.Enabled = true;
+                            txtNit.Enabled = true;
                         }
 
+                        if (Request.Form["urlPathControl"] == "1")
+                        {
+                            AlmacenarFotografia();
+                        }
+                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                        fotoAlmacenada();
+
+                        if (String.IsNullOrEmpty(txtCarne.Text))
+                        {
+                            BtnActualizar.Visible = false;
+                            lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
+                            CmbPais.SelectedValue = "Guatemala";
+                            tabla.Visible = false;
+                            CargaFotografia.Visible = false;
+                            InfePersonal.Visible = false;
+                        }
                     }
+                    else
+                    {
+                        controlCamposVisibles();
+                        lblActualizacion.ForeColor = System.Drawing.Color.Black;
+                        lblActualizacion.Text = "Ha llegado al límite de las renovaciones. <br /> " +
+                            "Si desea generar una nueva renovación pongase en contacto con soporte@unis.edu.gt.";
+                        BtnDownload.Visible = false;
+                    }
+
+                    /*}
                     else
                     {
                         lblActualizacion.Text = "La pantalla de actualización está disponible únicamente de Lunes a Viernes.";
                         controlCamposVisibles();
-                    }
+                        BtnDownload.Visible = false;
+                    }*/
                 }
             }
 
@@ -401,6 +413,71 @@ namespace ReportesUnis
                     while (reader2.Read())
                     {
                         txtFacultad.Text = reader2["NOMBRE_COMPLETO"].ToString();
+                    }
+
+                    cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();// + reader["EFFDT"].ToString().Substring(9, 2).TrimEnd();
+
+                        if (EFFDT_A_NIT.Value.Length == 9)
+                        {
+                            EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
+                        }
+                        else
+                        {
+                            EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                        }
+                    }
+
+
+                    cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        EFFDT_A.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();
+
+                        if (EFFDT_A.Value.Length == 9)
+                        {
+                            EFFDT_A.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
+                        }
+                        else
+                        {
+                            EFFDT_A.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                        }
+                    }
+
+                    cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_PERS_DATA_EFFDT WHERE EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        EFFDT_EC.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();
+
+                        if (EFFDT_EC.Value.Length == 9)
+                        {
+                            EFFDT_EC.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
+                        }
+                        else
+                        {
+                            EFFDT_EC.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                        }
+                    }
+
+                    cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_NAMES WHERE NAME_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        EFFDT_NameR.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();
+
+                        if (EFFDT_NameR.Value.Length == 9)
+                        {
+                            EFFDT_NameR.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
+                        }
+                        else
+                        {
+                            EFFDT_NameR.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                        }
                     }
                     con.Close();
 
@@ -1352,89 +1429,80 @@ namespace ReportesUnis
 
                                 try
                                 {
-                                    if (String.IsNullOrEmpty(State.Text))
+                                    if (String.IsNullOrEmpty(State.Text.TrimEnd()))
                                         State.Text = " ";
-                                    if (String.IsNullOrEmpty(txtDireccion2.Text))
+                                    if (String.IsNullOrEmpty(txtDireccion2.Text.TrimEnd()))
                                         txtDireccion2.Text = " ";
-                                    if (String.IsNullOrEmpty(txtDireccion3.Text))
+                                    if (String.IsNullOrEmpty(txtDireccion3.Text.TrimEnd()))
                                         txtDireccion3.Text = " ";
-                                    if (String.IsNullOrEmpty(StateNIT.Text))
+                                    if (String.IsNullOrEmpty(StateNIT.Text.TrimEnd()))
                                         StateNIT.Text = " ";
-                                    if (String.IsNullOrEmpty(TxtDiRe2.Text))
+                                    if (String.IsNullOrEmpty(TxtDiRe2.Text.TrimEnd()))
                                         TxtDiRe2.Text = " ";
-                                    if (String.IsNullOrEmpty(TxtDiRe3.Text))
+                                    if (String.IsNullOrEmpty(TxtDiRe3.Text.TrimEnd()))
                                         TxtDiRe3.Text = " ";
-                                    if (String.IsNullOrEmpty(txtCasada.Text))
+                                    if (String.IsNullOrEmpty(txtCasada.Text.TrimEnd()))
                                         txtCasada.Text = " ";
-                                    if (String.IsNullOrEmpty(TxtCasadaR.Text))
+                                    if (String.IsNullOrEmpty(TxtCasadaR.Text.TrimEnd()))
                                         TxtCasadaR.Text = " ";
-                                    if (String.IsNullOrEmpty(TxtApellidoR.Text))
+                                    if (String.IsNullOrEmpty(TxtApellidoR.Text.TrimEnd()))
                                         TxtApellidoR.Text = " ";
-                                    if (String.IsNullOrEmpty(TxtNombreR.Text))
+                                    if (String.IsNullOrEmpty(TxtNombreR.Text.TrimEnd()))
                                         TxtNombreR.Text = " ";
-                                    //Telefono y direccion
-                                    cmd.Connection = con;
-                                    cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_DATA PPD SET PPD.PHONE = '" + txtTelefono.Text + "', PPD.STATE =  '" + State.Text + "', " +
-                                        "PPD.ADDRESS1 = '" + txtDireccion.Text + "', PPD.ADDRESS2 = '" + txtDireccion2.Text + "', PPD.ADDRESS3 = '" + txtDireccion3.Text + "', PPD.COUNTRY = '" + codPais + "',LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "' WHERE PPD.EMPLID = '" + UserEmplid.Text + "'";
-                                    cmd.ExecuteNonQuery();
 
                                     //Numero de Telefono
-                                    int contadorPrincipales = 0;
-                                    string principal = "Y";
-
                                     if (!String.IsNullOrEmpty(TruePhone.Text))
-                                    {
-                                        cmd.CommandText = "UPDATE SYSADM.PS_PERSONAL_PHONE PP SET PP.PHONE = '" + txtTelefono.Text + "'" +
-                                                            "WHERE PP.EMPLID = '" + UserEmplid.Text + "' AND PP.PHONE_TYPE='HOME'";
-                                        cmd.ExecuteNonQuery();
+                                    { //UPDATE
+                                        UD_PERSONAL_PHONE.Value = "<COLL_PERSONAL_PHONE> \n" +
+                                                                    "                                            <EMPLID>" + txtCarne.Text + @"</EMPLID>" +
+                                                                    "\n" +
+                                                                    "                                            <KEYPROP_PHONE_TYPE>HOME</KEYPROP_PHONE_TYPE> \n" +
+                                                                    "                                            <PROP_PHONE>" + txtTelefono.Text + @"</PROP_PHONE>" +
+                                                                    "\n" +
+                                                                    "                                            <PROP_PREF_PHONE_FLAG>Y</PROP_PREF_PHONE_FLAG> \n" +
+                                                                 "                                         </COLL_PERSONAL_PHONE> \n";
+                                        contadorUD = contadorUD + 1;
                                     }
                                     else
-                                    {
-                                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_PERSONAL_PHONE WHERE PREF_PHONE_FLAG = 'Y' AND EMPLID = '" + UserEmplid.Text + "'";
-                                        reader = cmd.ExecuteReader();
-                                        while (reader.Read())
-                                        {
-                                            contadorPrincipales = Convert.ToInt16(reader["CONTADOR"]);
-                                        }
-                                        if (contadorPrincipales > 0)
-                                        {
-                                            principal = "N";
-                                        }
-                                        cmd.CommandText = "INSERT INTO SYSADM.PS_PERSONAL_PHONE (EMPLID, PHONE_TYPE,COUNTRY_CODE,EXTENSION,PHONE,PREF_PHONE_FLAG) VALUES ('" + UserEmplid.Text + "', 'HOME',' ',' ',  '" + txtTelefono.Text + "', '" + principal + "')";
-                                        cmd.ExecuteNonQuery();
+                                    {//INSERT
+                                        UP_PERSONAL_PHONE.Value = "<COLL_PERSONAL_PHONE> \n" +
+                                                                    "                                            <EMPLID>" + txtCarne.Text + @"</EMPLID>" +
+                                                                    "\n" +
+                                                                    "                                            <KEYPROP_PHONE_TYPE>HOME</KEYPROP_PHONE_TYPE> \n" +
+                                                                    "                                            <PROP_PHONE>" + txtTelefono.Text + @"</PROP_PHONE>" +
+                                                                    "\n" +
+                                                                    "                                            <PROP_PREF_PHONE_FLAG>Y</PROP_PREF_PHONE_FLAG> \n" +
+                                                                 "                                         </COLL_PERSONAL_PHONE> \n";
+                                        contadorUP = contadorUP + 1;
                                     }
 
                                     //EMAIL PERSONAL
-                                    int contadorEPrincipal = 0;
-                                    principal = "Y";
                                     if (!String.IsNullOrEmpty(TrueEmail.Text))
-                                    {
+                                    {//UPDATE
 
-                                        cmd.CommandText = "UPDATE SYSADM.PS_EMAIL_ADDRESSES EA SET EA.EMAIL_ADDR = '" + TxtCorreoPersonal.Text + "'" +
-                                                            "WHERE EA.EMPLID = '" + UserEmplid.Text + "' AND EA.E_ADDR_TYPE='HOM1'";
-                                        cmd.ExecuteNonQuery();
+                                        UD_EMAIL_ADDRESSES.Value = "<COLL_EMAIL_ADDRESSES>\n" +
+                                                                        "                                            <KEYPROP_E_ADDR_TYPE>HOM1</KEYPROP_E_ADDR_TYPE> \n" +
+                                                                        "                                            <PROP_EMAIL_ADDR>" + TxtCorreoPersonal.Text + @"</PROP_EMAIL_ADDR> " +
+                                                                        "\n" +
+                                                                        "                                            <PROP_PREF_EMAIL_FLAG>N</PROP_PREF_EMAIL_FLAG> \n" +
+                                                                     "                                         </COLL_EMAIL_ADDRESSES> \n";
+                                        contadorUD = contadorUD + 1;
                                     }
                                     else
-                                    {
-                                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EMAIL_ADDRESSES WHERE PREF_EMAIL_FLAG = 'Y' AND EMPLID = '" + UserEmplid.Text + "'";
-                                        reader = cmd.ExecuteReader();
-                                        while (reader.Read())
-                                        {
-                                            contadorEPrincipal = Convert.ToInt16(reader["CONTADOR"]);
-                                        }
-                                        if (contadorEPrincipal > 0)
-                                        {
-                                            principal = "N";
-                                        }
-                                        cmd.CommandText = "INSERT INTO SYSADM.PS_EMAIL_ADDRESSES (EMPLID, EMAIL_ADDR_TYPE,EMAIL_ADDR,PREF_EMAIL_FLAG) VALUES ('" + UserEmplid.Text + "', 'HOM1',' ',' ',  '" + TxtCorreoPersonal.Text + "', '" + principal + "')";
-                                        cmd.ExecuteNonQuery();
+                                    {//INSERT
+                                        UP_EMAIL_ADDRESSES.Value = "<COLL_EMAIL_ADDRESSES>\n" +
+                                                                        "                                            <KEYPROP_E_ADDR_TYPE>HOM1</KEYPROP_E_ADDR_TYPE> \n" +
+                                                                        "                                            <PROP_EMAIL_ADDR>" + TxtCorreoPersonal.Text + @"</PROP_EMAIL_ADDR> " +
+                                                                        "\n" +
+                                                                        "                                            <PROP_PREF_EMAIL_FLAG>N</PROP_PREF_EMAIL_FLAG> \n" +
+                                                                     "                                         </COLL_EMAIL_ADDRESSES> \n";
+                                        contadorUP = contadorUP + 1;
                                     }
+
                                     //Direccion
                                     int ContadorDirecciones = 0;
                                     int ContadorTipoDirecciones = 0;
-                                    string EFFDT_Addres = "";
-                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS1 = '" + txtDireccion.Text + "' AND ADDRESS2 = '" + txtDireccion2.Text + "' AND ADDRESS3 = '" + txtDireccion3.Text + "' " +
-                                        "AND COUNTRY ='" + codPais + "' AND STATE = '" + State.Text + "' AND ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "'";
+                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "' AND EFFDT ='"+HoyEffdt+"'";
                                     reader = cmd.ExecuteReader();
                                     while (reader.Read())
                                     {
@@ -1446,45 +1514,66 @@ namespace ReportesUnis
                                     {
                                         ContadorTipoDirecciones = Convert.ToInt16(reader["CONTADOR"]);
                                     }
-                                    cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                    reader = cmd.ExecuteReader();
-                                    while (reader.Read())
-                                    {
-                                        EFFDT_Addres = reader["EFFDT"].ToString();
-                                    }
 
                                     if (ContadorDirecciones > 0)
-                                    {
-                                        cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + State.Text + "', " +
-                                            "A.ADDRESS1 = '" + txtDireccion.Text + "', " +
-                                            "A.ADDRESS2 = '" + txtDireccion2.Text + "', " +
-                                            "A.ADDRESS3 = '" + txtDireccion3.Text + "', " +
-                                            "A.COUNTRY = '" + codPais + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
-                                            "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='HOME' AND EFFDT ='" + EFFDT_Addres.Substring(0, 10).TrimEnd() + "'";
-                                        cmd.ExecuteNonQuery();
+                                    {//UPDATE
+                                        UD_ADDRESSES.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
+                                                                "                                            <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                "                                            <COLL_ADDRESSES> \n" +
+                                                                  "                                                <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                  "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_COUNTRY>" + codPais + @"</PROP_COUNTRY> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS1>" + txtDireccion.Text + @"</PROP_ADDRESS1> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS2>" + txtDireccion2.Text + @"</PROP_ADDRESS2> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS3>" + txtDireccion3.Text + @"</PROP_ADDRESS3> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_STATE>" + State.Text + @"</PROP_STATE>  " +
+                                                                  "\n" +
+                                                                "                                            </COLL_ADDRESSES> \n" +
+                                                             "                                        </COLL_ADDRESS_TYPE_VW> \n";
+                                        contadorUD = contadorUD + 1;
                                     }
                                     else
-                                    {
-                                        cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES (EMPLID, ADDRESS_TYPE,COUNTY,CITY,NUM1, NUM2, HOUSE_TYPE, ADDR_FIELD1, ADDR_FIELD2, ADDR_FIELD3,POSTAL,GEO_CODE,IN_CITY_LIMIT,ADDRESS1_AC,ADDRESS2_AC,ADDRESS3_AC,CITY_AC,REG_REGION,EFFDT,EFF_STATUS,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,STATE,LASTUPDDTTM,LASTUPDOPRID) " +
-                                        "VALUES('" + UserEmplid.Text + "', 'HOME',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', '" + DateTime.Now.ToString("dd/MM/yy") + "', 'A', '" + codPais + "', '" + txtDireccion.Text + "', '" + txtDireccion2.Text + "', '" + txtDireccion3.Text + "', ' ','" + State.Text + "', '" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "','" + TextUser.Text + "')";
-                                        cmd.ExecuteNonQuery();
-                                        cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES_SA (LOC_ADDR_DATA,LOC_ADDR, LOC_ADDR_LINE, LOC_ADDR_TYPE, EXT_ORG_ID, DESCR_EXT_ORG, DESCR_ORG_LOCATION, CONTACT_NAME, DATA_SOURCE, EMPLID, ADDRESS_TYPE,EFFDT,ORG_LOCATION,MAINT_ADDR_MANUAL,MAINT_OTHER_MANUAL,ORG_CONTACT,SEASONAL_ADDR) " +
-                                            "VALUES(' ',' ',' ',' ',' ',' ',' ',' ',' ','" + UserEmplid.Text + "', 'HOME', '" + DateTime.Now.ToString("dd/MM/yy") + "', 0, 'N','N',0,'N')";
-                                        cmd.ExecuteNonQuery();
-                                        if (ContadorTipoDirecciones == 0)
-                                        {
-                                            cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESS_TYPE (EMPLID, ADDRESS_TYPE, DESCR) " +
-                                                "VALUES('" + UserEmplid.Text + "', 'HOME', ' ')";
-                                            cmd.ExecuteNonQuery();
-                                        }
+                                    {//INSERT
+                                        UP_ADDRESSES.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
+                                                                "                                            <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                "                                            <COLL_ADDRESSES> \n" +
+                                                                  "                                                <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                  "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_COUNTRY>" + codPais + @"</PROP_COUNTRY> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS1>" + txtDireccion.Text + @"</PROP_ADDRESS1> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS2>" + txtDireccion2.Text + @"</PROP_ADDRESS2> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS3>" + txtDireccion3.Text + @"</PROP_ADDRESS3> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_STATE>" + State.Text + @"</PROP_STATE>  " +
+                                                                  "\n" +
+                                                                "                                            </COLL_ADDRESSES> \n" +
+                                                             "                                        </COLL_ADDRESS_TYPE_VW> \n";
+                                        contadorUP = contadorUP + 1;
                                     }
-
+                                    
                                     //Estado Civil
+                                    
                                     cmd.CommandText = "UPDATE SYSADM.PS_PERS_DATA_EFFDT PD SET PD.MAR_STATUS = '" + ec + "', " +
                                                         "LASTUPDDTTM = SYSDATE , " +
                                                         "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "'" +
                                                         " WHERE PD.EMPLID = '" + UserEmplid.Text + "'";
-                                    cmd.ExecuteNonQuery();
+                                    cmd.ExecuteNonQuery();/*
+                                    if (!String.IsNullOrEmpty(EFFDT_EC.ToString()))
+                                    {
+                                        UD_PERS_DATA_EFFDT.Value = "<COLL_PERS_DATA_EFFDT>" +
+                                                            " <KEYPROP_EFFDT>" + EFFDT_EC.Value + @"</KEYPROP_EFFDT>" +
+                                                            " <PROP_MAR_STATUS>" + ec + @"</PROP_MAR_STATUS> " +
+                                                             "</COLL_PERS_DATA_EFFDT>";
+                                    }*/
 
                                     if (!String.IsNullOrEmpty(TxtNombreR.Text))
                                     {
@@ -1494,24 +1583,16 @@ namespace ReportesUnis
                                             int ContadorDirecionNit = 0;
                                             int ContadorNit = 0;
                                             int ContadorNit2 = 0;
-                                            string EFFDT_AddressNit = "";
                                             string EFFDT_SYSTEM = "";
 
 
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS1 = '" + TxtDiRe1.Text + "' AND ADDRESS2 = '" + TxtDiRe2.Text + "' AND ADDRESS3 = '" + TxtDiRe3.Text + "' " +
-                                                "AND COUNTRY ='" + codPaisNIT + "' AND STATE = '" + StateNIT.Text + "' AND ADDRESS_TYPE ='REC' AND  EMPLID = '" + UserEmplid.Text + "'";
+                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND  EMPLID = '" + UserEmplid.Text + "' AND EFFDT ='" + HoyEffdt + "'";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
                                                 ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
                                             }
 
-                                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                EFFDT_AddressNit = reader["EFFDT"].ToString();
-                                            }
 
                                             cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND  EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + UserEmplid.Text + "'";
                                             reader = cmd.ExecuteReader();
@@ -1536,43 +1617,31 @@ namespace ReportesUnis
                                             string vchrApellidosCompletos = (TxtApellidoR.Text + " " + TxtCasadaR.Text).TrimEnd();
                                             string vchrFNameNS = " ";
                                             string vchrLNameNS = " ";
-                                            string vchrCNameNS = " ";
-                                            string EFFDT_NameR = " ";
+                                            string vchrCNameNS = " ";                                            
 
-                                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_NAMES WHERE NAME_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                EFFDT_NameR = reader["EFFDT"].ToString();
-                                            }
-
-                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + vchrApellidosCompletos + "') AS CADENA FROM DUAL";
+                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + vchrApellidosCompletos + "') AS CADENA FROM DUAL";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
                                                 vchrLNameNS = reader["CADENA"].ToString().TrimStart().TrimEnd();
                                             }
 
-                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + TxtNombreR.Text + "') AS CADENA FROM DUAL";
+                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + TxtNombreR.Text + "') AS CADENA FROM DUAL";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
                                                 vchrFNameNS = reader["CADENA"].ToString().TrimStart().TrimEnd(); ;
                                             }
 
-                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNT_GET_SEARCH_NAME('" + TxtCasadaR.Text + "') AS CADENA FROM DUAL";
+                                            cmd.CommandText = "SELECT UNIS_INTERFACES.FNCT_GET_SEARCH_NAME('" + TxtCasadaR.Text + "') AS CADENA FROM DUAL";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
                                                 vchrCNameNS = reader["CADENA"].ToString().TrimStart().TrimEnd();
                                             }
 
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE PN.NAME = REPLACE('" + vchrApellidosCompletos + "," + TxtNombreR.Text + "','  ',' ') " +
-                                                "AND PN.LAST_NAME_SRCH ='" + vchrLNameNS + "' AND PN.FIRST_NAME_SRCH='" + vchrFNameNS + "' AND LAST_NAME ='" + TxtApellidoR.Text + "' " +
-                                                "AND FIRST_NAME='" + TxtNombreR.Text + "' AND SECOND_LAST_NAME='" + TxtCasadaR.Text + "' AND SECOND_LAST_SRCH=REPLACE(UPPER('" + TxtCasadaR.Text + "'),' ','')||' ' " +
-                                                "AND NAME_DISPLAY='" + TxtNombreR.Text + " " + vchrApellidosCompletos + "' " +
-                                                "AND NAME_FORMAL='" + TxtNombreR.Text + " " + vchrApellidosCompletos + "' " +
-                                                "AND NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "',' ','')) " +
+                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoR.Text + "' " +
+                                                "AND FIRST_NAME='" + TxtNombreR.Text + "' AND SECOND_LAST_NAME='" + TxtCasadaR.Text + "' " +
                                                 "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "'";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
@@ -1580,89 +1649,44 @@ namespace ReportesUnis
                                                 ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
                                             }
 
-                                            string Hoy = DateTime.Now.ToString();
+                                            
+                                            string FechaEfectiva = "";
+                                            if (EFFDT_NameR.Value.IsNullOrWhiteSpace())
+                                                FechaEfectiva = "1900-01-01";
+                                            else
+                                                FechaEfectiva = EFFDT_NameR.Value;
 
-                                            if (ContadorNombreNit == 0 && (EFFDT_NameR.Substring(0, 10).TrimEnd() != Hoy.Substring(0, 10).TrimEnd()))
-                                            {
-                                                cmd.CommandText = "INSERT INTO SYSADM.PS_NAMES ( " +
-                                                                    "EMPLID, " +
-                                                                    "NAME_TYPE, " +
-                                                                    "EFFDT, " +
-                                                                    "EFF_STATUS, " +
-                                                                    "COUNTRY_NM_FORMAT, " +
-                                                                    "NAME, " +
-                                                                    "NAME_INITIALS, " +
-                                                                    "NAME_PREFIX, " +
-                                                                    "NAME_SUFFIX, " +
-                                                                    "NAME_ROYAL_PREFIX, " +
-                                                                    "NAME_ROYAL_SUFFIX, " +
-                                                                    "NAME_TITLE, " +
-                                                                    "LAST_NAME_SRCH, " +
-                                                                    "FIRST_NAME_SRCH, " +
-                                                                    "LAST_NAME, " +
-                                                                    "FIRST_NAME, " +
-                                                                    "MIDDLE_NAME, " +
-                                                                    "SECOND_LAST_NAME, " +
-                                                                    "SECOND_LAST_SRCH, " +
-                                                                    "NAME_AC, " +
-                                                                    "PREF_FIRST_NAME, " +
-                                                                    "PARTNER_LAST_NAME, " +
-                                                                    "PARTNER_ROY_PREFIX, " +
-                                                                    "LAST_NAME_PREF_NLD, " +
-                                                                    "NAME_DISPLAY, " +
-                                                                    "NAME_FORMAL, " +
-                                                                    "NAME_DISPLAY_SRCH, " +
-                                                                    "LASTUPDDTTM, " +
-                                                                    "LASTUPDOPRID " +
-                                                                    ") VALUES(" +
-                                                                        "'" + UserEmplid.Text + "'," + // EMPLID
-                                                                        "'REC','" + // NAME_TYPE
-                                                                        DateTime.Now.ToString("dd/MM/yyyy") + "'," + // EFFDT
-                                                                        "'A'," + // EFF_STATUS
-                                                                        "'MEX'," + // COUNTRY_NM_FORMAT
-                                                                        "'" + vchrApellidosCompletos + "," + TxtNombreR.Text + "'," + // NAME
-                                                                        "' '," + // NAME_INITIALS
-                                                                        "' '," + // NAME_PREFIX
-                                                                        "' '," + // NAME_SUFFIX
-                                                                        "' '," + // NAME_ROYAL_PREFIX
-                                                                        "' '," + // NAME_ROYAL_SUFFIX
-                                                                        "' '," + // NAME_TITLE
-                                                                        "'" + vchrLNameNS + "'," + // LAST_NAME_SRCH
-                                                                        "'" + vchrFNameNS + "'," +// FIRST_NAME_SRCH
-                                                                        "'" + TxtApellidoR.Text + "'," + // LAST_NAME
-                                                                        "'" + TxtNombreR.Text + "'," + // FIRST_NAME
-                                                                        "' '," + // MIDDLE_NAME
-                                                                        "'" + TxtCasadaR.Text + "'," + // SECOND_LAST_NAME
-                                                                        "'" + vchrCNameNS + " '," + // SECOND_LAST_SRCH
-                                                                        "' '," + // NAME_AC
-                                                                        "' '," + // PREF_FIRST_NAME
-                                                                        "' '," + // PARTNER_LAST_NAME
-                                                                        "' '," + // PARTNER_ROY_PREFIX
-                                                                        "'1'," + // LAST_NAME_PREF_NLD
-                                                                        "'" + TxtNombreR.Text + " " + vchrApellidosCompletos + "'," + // NAME_DISPLAY
-                                                                        "'" + TxtNombreR.Text + " " + vchrApellidosCompletos + "'," + // NAME_FORMAL
-                                                                        "'" + (vchrFNameNS + vchrLNameNS + vchrCNameNS).TrimEnd() + "'," + // NAME_DISPLAY_SRCH
-                                                                        "SYSDATE," + // LASTUPDDTTM
-                                                                        "'" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "')";  // LASTUPDOPRID                                                                    
-                                                cmd.ExecuteNonQuery();
+                                            /*if (ContadorNombreNit == 0 && (FechaEfectiva != Hoy))
+                                            {//INSERT
+                                                UP_NAMES_NIT.Value= "<COLL_NAME_TYPE_VW> " +
+                                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                    "        <COLL_NAMES>" +
+                                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                    "          <KEYPROP_EFFDT>" + Hoy+ @"</KEYPROP_EFFDT>" +
+                                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                    "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
+                                                                    "          <PROP_FIRST_NAME>" + TxtNombreR.Text+ @"</PROP_FIRST_NAME>" +
+                                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                                    "        </COLL_NAMES>" +
+                                                                    "      </COLL_NAME_TYPE_VW>" ;
+                                                contadorUP = contadorUP + 1;
                                             }
                                             else
-                                            {
-                                                //ACTUALIZA NOMBRE DEL NIT
-                                                cmd.CommandText = "UPDATE SYSADM.PS_NAMES PN SET PN.NAME = REPLACE('" + vchrApellidosCompletos + "," + TxtNombreR.Text + "','  ',' ') , " +
-                                                                    "PN.LAST_NAME_SRCH ='" + vchrLNameNS + "', " +
-                                                                    "PN.FIRST_NAME_SRCH='" + vchrFNameNS + "', " +
-                                                                    "LAST_NAME ='" + TxtApellidoR.Text + "', FIRST_NAME='" + TxtNombreR.Text + "', " +
-                                                                    "SECOND_LAST_NAME='" + TxtCasadaR.Text + "', SECOND_LAST_SRCH=REPLACE(UPPER('" + TxtCasadaR.Text + "'),' ','')||' ', " +
-                                                                    "NAME_DISPLAY='" + TxtNombreR.Text + " " + vchrApellidosCompletos + "', " +
-                                                                    "NAME_FORMAL='" + TxtNombreR.Text + " " + vchrApellidosCompletos + "', " +
-                                                                    "NAME_DISPLAY_SRCH =UPPER(REPLACE('" + TxtNombreR.Text + TxtApellidoR.Text + TxtCasadaR.Text + "',' ',''))," +
-                                                                    "LASTUPDDTTM = SYSDATE, " +
-                                                                    "LASTUPDOPRID = '" + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "' " +
-                                                                    "WHERE PN.EMPLID = '" + UserEmplid.Text + "' AND NAME_TYPE IN 'REC'  AND EFFDT ='" + EFFDT_NameR.Substring(0, 10).TrimEnd() + "'";
-                                                cmd.ExecuteNonQuery();
-
-                                            }
+                                            {//UPDATE
+                                                
+                                                UD_NAMES_NIT.Value  = "<COLL_NAME_TYPE_VW> " +
+                                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                    "        <COLL_NAMES>" +
+                                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                    "          <KEYPROP_EFFDT>" + EFFDT_NameR.Value + @"</KEYPROP_EFFDT>" +
+                                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                    "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
+                                                                    "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                                    "        </COLL_NAMES>" +
+                                                                    "      </COLL_NAME_TYPE_VW>";
+                                                contadorUD = contadorUD + 1;
+                                            }*/
                                             if (ContadorNit == 0)
                                             {
                                                 //INSERTA EL NIT
@@ -1687,32 +1711,51 @@ namespace ReportesUnis
                                             }
 
                                             if (ContadorDirecionNit == 0)
-                                            {
-                                                //INSERTA LA DIRECCION DEL NIT
-                                                cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES (EMPLID, ADDRESS_TYPE,COUNTY,CITY,NUM1, NUM2, HOUSE_TYPE, ADDR_FIELD1, ADDR_FIELD2, ADDR_FIELD3,POSTAL,GEO_CODE,IN_CITY_LIMIT," +
-                                                    "ADDRESS1_AC,ADDRESS2_AC,ADDRESS3_AC,CITY_AC,REG_REGION,EFFDT,EFF_STATUS,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,STATE,LASTUPDDTTM,LASTUPDOPRID) " +
-                                                   "VALUES('" + UserEmplid.Text + "', 'REC',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', '" + DateTime.Now.ToString("dd/MM/yyyy")
-                                                   + "', 'A', '" + codPaisNIT + "', '" + TxtDiRe1.Text + "', '" + TxtDiRe2.Text + "', '" + TxtDiRe3.Text + "', ' ','" + StateNIT.Text + "', '" +
-                                                   DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") + "','" + TextUser.Text + "')";
-                                                cmd.ExecuteNonQuery();
-                                                cmd.CommandText = cmd.CommandText = "INSERT INTO SYSADM.PS_ADDRESSES_SA (LOC_ADDR_DATA,LOC_ADDR, LOC_ADDR_LINE, LOC_ADDR_TYPE, EXT_ORG_ID, DESCR_EXT_ORG, DESCR_ORG_LOCATION, " +
-                                                    "CONTACT_NAME, DATA_SOURCE, EMPLID, ADDRESS_TYPE,EFFDT,ORG_LOCATION,MAINT_ADDR_MANUAL,MAINT_OTHER_MANUAL,ORG_CONTACT,SEASONAL_ADDR) " +
-                                                    "VALUES(' ',' ',' ',' ',' ',' ',' ',' ',' ','" + UserEmplid.Text + "', 'REC', '" + DateTime.Now.ToString("dd/MM/yyyy") + "', 0, 'N','N',0,'N')";
-                                                cmd.ExecuteNonQuery();
+                                            {//INSERTA
+                                                UP_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
+                                                                "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                "                                            <COLL_ADDRESSES> \n" +
+                                                                  "                                                <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                  "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_COUNTRY>" + codPaisNIT + @"</PROP_COUNTRY> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS1>" + TxtDiRe1.Text + @"</PROP_ADDRESS1> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS2>" + TxtDiRe2.Text + @"</PROP_ADDRESS2> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS3>" + TxtDiRe3.Text + @"</PROP_ADDRESS3> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_STATE>" + StateNIT.Text + @"</PROP_STATE>  " +
+                                                                  "\n" +
+                                                                "                                            </COLL_ADDRESSES> \n" +
+                                                             "                                        </COLL_ADDRESS_TYPE_VW> \n";
+                                                contadorUP = contadorUP + 1;
                                             }
                                             else
-                                            {
-                                                //ACTUALIZA DIRECCION DEL NIT
-                                                cmd.CommandText = "UPDATE SYSADM.PS_ADDRESSES A SET A.STATE =  '" + StateNIT.Text + "', " +
-                                                    "A.ADDRESS1 = '" + TxtDiRe1.Text + "', " +
-                                                    "A.ADDRESS2 = '" + TxtDiRe2.Text + "', " +
-                                                    "A.ADDRESS3 = '" + TxtDiRe3.Text + "', " +
-                                                    "A.COUNTRY = '" + codPaisNIT + "', LASTUPDOPRID ='" + TextUser.Text + "',  LASTUPDDTTM ='" + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss") +
-                                                    "' WHERE A.EMPLID = '" + UserEmplid.Text + "' AND ADDRESS_TYPE ='REC' AND EFFDT ='" + EFFDT_AddressNit.Substring(0, 10).TrimEnd() + "'";
-                                                cmd.ExecuteNonQuery();
+                                            {//ACTUALIZA
+                                                UD_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
+                                                                "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                "                                            <COLL_ADDRESSES> \n" +
+                                                                  "                                                <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                  "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_COUNTRY>" + codPaisNIT + @"</PROP_COUNTRY> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS1>" + TxtDiRe1.Text + @"</PROP_ADDRESS1> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS2>" + TxtDiRe2.Text + @"</PROP_ADDRESS2> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS3>" + TxtDiRe3.Text + @"</PROP_ADDRESS3> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_STATE>" + StateNIT.Text + @"</PROP_STATE>  " +
+                                                                  "\n" +
+                                                                "                                            </COLL_ADDRESSES> \n" +
+                                                             "                                        </COLL_ADDRESS_TYPE_VW> \n";
+                                                contadorUD = contadorUD + 1;
                                             }
 
-                                            controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "' AND FECHA_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
+                                            /*controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "' AND FECHA_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
                                             controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "'");
 
                                             if (controlRenovacion == 0)
@@ -1730,7 +1773,7 @@ namespace ReportesUnis
                                                                         " WHERE EMPLID='" + UserEmplid.Text + "'";
                                                     cmd.ExecuteNonQuery();
                                                 }
-                                            }
+                                            }*/
                                         }
                                         else
                                         {
@@ -1762,15 +1805,43 @@ namespace ReportesUnis
                                         cmd.CommandText = txtInsert.Text;
                                         cmd.ExecuteNonQuery();
                                     }
-                                    transaction.Commit();
-                                    con.Close();
-                                    if (Request.Form["urlPathControl"] == "1")
+                                    auxConsulta = 0;
+                                    string consultaUP = "1";
+                                    string consultaUD = "1";
+                                    if (contadorUP > 0)
                                     {
-                                        AlmacenarFotografia();
+                                        consultaUP = Consultar();
                                     }
-                                    Thread.Sleep(Convert.ToInt16(tiempoSleep));
-                                    fotoAlmacenada();
-                                    mensaje = "Su información fue actualizada correctamente";
+                                    auxConsulta = 1;
+                                    if (contadorUD > 0)
+                                    {
+                                        consultaUD = Consultar();
+                                    }
+
+                                    if (consultaUD == "1" && consultaUP == "1")
+                                    {
+                                        transaction.Commit();
+                                        con.Close();
+                                        if (Request.Form["urlPathControl"] == "1")
+                                        {
+                                            AlmacenarFotografia();
+                                        }
+                                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                                        fotoAlmacenada();
+                                        mensaje = "Su información fue actualizada correctamente";
+                                    }
+                                    else
+                                    {
+                                        transaction.Rollback();
+                                        mensaje = "Ocurrió un problema al actualizar su información.";
+                                        if (Request.Form["urlPathControl"] == "1")
+                                        {
+                                            AlmacenarFotografia();
+                                        }
+                                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                                        fotoAlmacenada();
+                                    }
+
 
                                 }
                                 catch (Exception x)
@@ -2361,5 +2432,270 @@ namespace ReportesUnis
             return Convert.ToInt32(control);
         }
 
+        /*-------------------------------------------INICIAN FUNCIONES PARA METODO SOAP-------------------------------------------*/
+
+        //Función para limpiar variables
+        private static void limpiarVariables()
+        {
+            //Cuerpo del servicio web (enviar información) 
+            Variables.soapBody = "";
+            Variables.strDocumentoRespuesta = "";
+            //Direción del serivicio web
+            Variables.wsUrl = "";
+            //Usuario del servicio web
+            Variables.wsUsuario = "";
+            //Contraseña del servicio web
+            Variables.wsPassword = "";
+        }
+
+        public class Variables
+        {
+            //Cuerpo del servicio web (enviar información) 
+            public static string soapBody;
+            public static string strDocumentoRespuesta;
+
+            //Direción del serivicio web
+            public static string wsUrl = "";
+            //Usuario del servicio web
+            public static string wsUsuario = "";
+            //Contraseña del servicio web
+            public static string wsPassword = "";
+            //Acción del servicio web
+            public static string wsAction = "";
+        }
+
+        //Función para obtener información de acceso al servicio de Campus
+        private static void credencialesEndPoint(string RutaConfiguracion, string strMetodo)
+        {
+            int cont = 0;
+
+            foreach (var line in File.ReadLines(RutaConfiguracion))
+            {
+                if (cont == 1)
+                    Variables.wsUrl = line.ToString();
+                if (cont == 3)
+                    Variables.wsUsuario = line.ToString();
+                if (cont == 5)
+                    Variables.wsPassword = line.ToString();
+                cont++;
+            }
+        }
+        //Función para crear el elemento raíz para solicitud web 
+        private static XmlDocument CreateSoapEnvelope(string xmlString)
+        {
+            XmlDocument soapEnvelopeDocument = new XmlDocument();
+            soapEnvelopeDocument.LoadXml(xmlString);
+            return soapEnvelopeDocument;
+        }
+
+        //Función para crear el encabezado para la Solicitud web
+        private static HttpWebRequest CreateWebRequest(string url, string action)
+        {
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
+            webRequest.Headers.Add("SOAPAction", action);
+            webRequest.ContentType = "text/xml;charset=\"utf-8\"";
+            webRequest.Accept = "text/xml";
+            webRequest.Method = "POST";
+            return webRequest;
+        }
+
+        //Función para crear unificar toda la estructura de la solicitud web
+        private static void InsertSoapEnvelopeIntoWebRequest(XmlDocument soapEnvelopeXml, HttpWebRequest webRequest)
+        {
+            using (Stream stream = webRequest.GetRequestStream())
+            {
+                soapEnvelopeXml.Save(stream);
+            }
+        }
+
+        //Función para llamar un servicio web de Campus
+        public string LlamarWebServiceCampus(string _url, string _action, string _xmlString)
+        {
+            XmlDocument soapEnvelopeXml = CreateSoapEnvelope(_xmlString);
+            HttpWebRequest webRequest = CreateWebRequest(_url, _action);
+            InsertSoapEnvelopeIntoWebRequest(soapEnvelopeXml, webRequest);
+
+            //Comienza la llamada asíncrona a la solicitud web.
+            IAsyncResult asyncResult = webRequest.BeginGetResponse(null, null);
+
+            //Suspender este hilo hasta que se complete la llamada. Es posible que desee hacer algo útil aquí, como actualizar su interfaz de usuario.
+            asyncResult.AsyncWaitHandle.WaitOne();
+
+            //Obtener la respuesta de la solicitud web completada.
+            string soapResult;
+            try
+            {
+                using (WebResponse webResponse = webRequest.EndGetResponse(asyncResult))
+                {
+                    using (StreamReader rd = new StreamReader(webResponse.GetResponseStream()))
+                    {
+                        soapResult = rd.ReadToEnd();
+                    }
+                    return soapResult;
+                }
+            }
+            catch (WebException ex)
+            {
+                using (var stream = new StreamReader(ex.Response.GetResponseStream()))
+                {
+                    soapResult = stream.ReadToEnd();
+                }
+                return soapResult;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        private static string Respuesta(string StrCodigoRetorno, string StrMensajeRetorno)
+        {
+            //Inicia a crear la respuesta en formato XML.
+            //Crea un nuevo docuemento para responder 
+            XmlDocument xmlDocumentoRespuesta = new XmlDocument();
+
+            //Declaración del XML
+            XmlDeclaration xmlDeclaration = xmlDocumentoRespuesta.CreateXmlDeclaration("1.0", "ISO-8859-1", null);
+            XmlElement root = xmlDocumentoRespuesta.DocumentElement;
+            xmlDocumentoRespuesta.InsertBefore(xmlDeclaration, root);
+
+            //Mensaje
+            XmlElement NodoMensaje = xmlDocumentoRespuesta.CreateElement(string.Empty, "mensaje", string.Empty);
+            xmlDocumentoRespuesta.AppendChild(NodoMensaje);
+
+            //Encabezado
+            XmlElement NodoEncabezado = xmlDocumentoRespuesta.CreateElement(string.Empty, "encabezado", string.Empty);
+            NodoMensaje.AppendChild(NodoEncabezado);
+
+            /*Estado resultante de la transacción*/
+            //Código retorno
+            XmlElement NodoCodigoRetorno = xmlDocumentoRespuesta.CreateElement(string.Empty, "codigoRetorno", string.Empty);
+            XmlText CodigoRetorno = xmlDocumentoRespuesta.CreateTextNode(StrCodigoRetorno);
+            NodoCodigoRetorno.AppendChild(CodigoRetorno);
+            NodoEncabezado.AppendChild(NodoCodigoRetorno);
+
+            //Mensaje retorno
+            XmlElement NodoMensajeRetorno = xmlDocumentoRespuesta.CreateElement(string.Empty, "mensajeRetorno", string.Empty);
+            XmlText MensajeRetorno = xmlDocumentoRespuesta.CreateTextNode(StrMensajeRetorno);
+            NodoMensajeRetorno.AppendChild(MensajeRetorno);
+            NodoEncabezado.AppendChild(NodoMensajeRetorno);
+
+            //Encabezado
+            XmlElement NodoValor = xmlDocumentoRespuesta.CreateElement(string.Empty, "valor", string.Empty);
+            NodoMensaje.AppendChild(NodoValor);
+
+            //Se convierte el XML de respuesta en string
+            using (var StringRespuestaConsultar = new StringWriter())
+            using (var xmlAStringResputaConsultar = XmlWriter.Create(StringRespuestaConsultar))
+            {
+                xmlDocumentoRespuesta.WriteTo(xmlAStringResputaConsultar);
+                xmlAStringResputaConsultar.Flush();
+                return StringRespuestaConsultar.GetStringBuilder().ToString();
+            }
+        }
+
+
+        [WebMethod]
+        public string Consultar()
+        {
+            //Se limpian variables para guardar la nueva información
+            limpiarVariables();
+
+            //Obtiene información del servicio (URL y credenciales)
+            credencialesEndPoint(archivoConfiguraciones, "Consultar");
+
+            if (auxConsulta == 0)
+            {
+                Variables.wsAction = "CI_CI_PERSONAL_DATA_UP.V1";
+                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UP_NAMES_NIT.Value, UP_PERS_DATA_EFFDT.Value, UP_ADDRESSES_NIT.Value, UP_ADDRESSES.Value, UP_PERSONAL_PHONE.Value, UP_EMAIL_ADDRESSES.Value);
+            }
+            else if (auxConsulta == 1)
+            {
+                Variables.wsAction = "CI_CI_PERSONAL_DATA_UD.V1";
+                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UD_NAMES_NIT.Value, UD_PERS_DATA_EFFDT.Value, UD_ADDRESSES_NIT.Value, UD_ADDRESSES.Value, UD_PERSONAL_PHONE.Value, UD_EMAIL_ADDRESSES.Value);
+            }
+
+            //Crea un documento de respuesta Campus
+            System.Xml.XmlDocument xmlDocumentoRespuestaCampus = new System.Xml.XmlDocument();
+
+            // Indica que no se mantengan los espacios y saltos de línea
+            xmlDocumentoRespuestaCampus.PreserveWhitespace = false;
+
+            try
+            {
+                // Carga el XML de respuesta de Campus
+                xmlDocumentoRespuestaCampus.LoadXml(LlamarWebServiceCampus(Variables.wsUrl, Variables.wsAction, Variables.soapBody));
+            }
+            catch (WebException)
+            {
+                //Crea la respuesta cuando se genera una excepción web.
+                Variables.strDocumentoRespuesta = Respuesta("05", "ERROR AL CONSULTAR EL REPORTE");
+                return Variables.strDocumentoRespuesta;
+
+            }
+            XmlNodeList elemList = xmlDocumentoRespuestaCampus.GetElementsByTagName("notification");
+            //return elemList[0].InnerText.ToString();
+            return elemList[0].InnerText.ToString();
+        }
+
+        //Crea el cuerpo que se utiliza para hacer PATCH
+        private static void CuerpoConsultaUD(string Usuario, string Pass, string EMPLID, string COLL_NAMES, string COLL_PERS_DATA_EFFDT, string COLL_ADDRESSES_NIT, string COLL_ADDRESSES, string COLL_PERSONAL_PHONE,
+            string COLL_EMAIL_ADDRESSES)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/M644328134.V1"">
+                                    <soapenv:Header xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
+                                    <wsse:Security soap:mustUnderstand=""1"" xmlns:soap=""http://schemas.xmlsoap.org/wsdl/soap/"" xmlns:wsse=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"">
+                                      <wsse:UsernameToken wsu:Id=""UsernameToken-1"" xmlns:wsu=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"">
+                                        <wsse:Username>" + Usuario + @"</wsse:Username>
+                                        <wsse:Password Type=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"">" + Pass + @"</wsse:Password>
+                                      </wsse:UsernameToken>
+                                    </wsse:Security>
+                                  </soapenv:Header>
+                                   <soapenv:Body>
+                                      <Updatedata__CompIntfc__CI_PERSONAL_DATA>
+                                         <KEYPROP_EMPLID>" + EMPLID + @"</KEYPROP_EMPLID>
+                                         " + COLL_PERS_DATA_EFFDT + @"
+                                         " + COLL_NAMES + @"
+                                         " + COLL_ADDRESSES_NIT + @"
+                                         " + COLL_ADDRESSES + @"
+                                         " + COLL_PERSONAL_PHONE + @"
+                                         " + COLL_EMAIL_ADDRESSES + @"
+                                      </Updatedata__CompIntfc__CI_PERSONAL_DATA>
+                                   </soapenv:Body>
+                                </soapenv:Envelope>";
+        }
+        //Crea el cuerpo que se utiliza para hacer POST
+        private static void CuerpoConsultaUP(string Usuario, string Pass, string EMPLID, string COLL_NAMES, string COLL_PERS_DATA_EFFDT, string COLL_ADDRESSES_NIT, string COLL_ADDRESSES, string COLL_PERSONAL_PHONE,
+            string COLL_EMAIL_ADDRESSES)
+        {
+            Variables.soapBody = @"<?xml version=""1.0""?>
+                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/M780623797.V1"">
+                                    <soapenv:Header xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
+                                    <wsse:Security soap:mustUnderstand=""1"" xmlns:soap=""http://schemas.xmlsoap.org/wsdl/soap/"" xmlns:wsse=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"">
+                                      <wsse:UsernameToken wsu:Id=""UsernameToken-1"" xmlns:wsu=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"">
+                                        <wsse:Username>" + Usuario + @"</wsse:Username>
+                                        <wsse:Password Type=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"">" + Pass + @"</wsse:Password>
+                                      </wsse:UsernameToken>
+                                    </wsse:Security>
+                                  </soapenv:Header>
+                                   <soapenv:Body>
+                                      <Update__CompIntfc__CI_PERSONAL_DATA>
+                                         <KEYPROP_EMPLID>" + EMPLID + @"</KEYPROP_EMPLID>
+                                         " + COLL_PERS_DATA_EFFDT + @"
+                                         " + COLL_NAMES + @"
+                                         " + COLL_ADDRESSES_NIT + @"
+                                         " + COLL_ADDRESSES + @"
+                                         " + COLL_PERSONAL_PHONE + @"
+                                         " + COLL_EMAIL_ADDRESSES + @"
+                                      </Update__CompIntfc__CI_PERSONAL_DATA>
+                                   </soapenv:Body>
+                                </soapenv:Envelope>";
+        }
+
+        public string DecodeStringFromBase64(string stringToDecode)
+        {
+            return Encoding.UTF8.GetString(Convert.FromBase64String(stringToDecode));
+        }
     }
 }

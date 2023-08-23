@@ -249,6 +249,7 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
                                    "([Carnet] " +
+                                   ",[Carr] " +
                                    ",[Direccion] " +
                                    ",[Zona] " +
                                    ",[Colonia] " +
@@ -312,6 +313,7 @@ namespace ReportesUnis
                                    ",[O_Condmig] " +
                                    ",[Validar_Envio]) " +
                                 "VALUES ('''||CARNET||''','''" + // APELLIDO DE CASADA
+                                    "||CARGO||''','''" + //Carrera
                                     "||DIRECCION||''','''" + //DIRECCION
                                     "||ZONA||''','''" + //ZONA
                                     "||COLONIA||''','''" + //COLONIA
