@@ -393,6 +393,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden TrueNit;
 
         /// <summary>
+        /// Control TrueEstadoCivil.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden TrueEstadoCivil;
+
+        /// <summary>
         /// Control EFFDT_EC.
         /// </summary>
         /// <remarks>
@@ -420,6 +429,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden EFFDT_A_NIT;
 
         /// <summary>
+        /// Control EFFDT_NameR.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden EFFDT_NameR;
+
+        /// <summary>
         /// Control EFFDT_P.
         /// </summary>
         /// <remarks>
@@ -429,13 +447,31 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden EFFDT_P;
 
         /// <summary>
-        /// Control EFFDT_NameR.
+        /// Control FT_STUDENT.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden EFFDT_NameR;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden FT_STUDENT;
+
+        /// <summary>
+        /// Control HIGH_LVL.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden HIGH_LVL;
+
+        /// <summary>
+        /// Control SEX_EC.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden SEX_EC;
 
         /// <summary>
         /// Control UP_PERS_DATA_EFFDT.

@@ -160,16 +160,24 @@
             <input type="hidden" id="ValidacionNit" runat="server" />
             <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE NIT O NO--%>
             <input type="hidden" id="TrueNit" runat="server" />
-            <%-- TEXTBOX ALMACENA SI EL EFFDT DE ESTADO CIVIL--%>
+            <%-- TEXTBOX ALMACENA EL ESTADO CIVIL INICIAL--%>
+            <input type="hidden" id="TrueEstadoCivil" runat="server" />
+            <%-- TEXTBOX ALMACENA EL EFFDT DE ESTADO CIVIL--%>
             <input type="hidden" id="EFFDT_EC" runat="server" />
-            <%-- TEXTBOX ALMACENA SI EL EFFDT DE LA DIRECCION --%>
+            <%-- TEXTBOX ALMACENA EL EFFDT DE LA DIRECCION --%>
             <input type="hidden" id="EFFDT_A" runat="server" />
-            <%-- TEXTBOX ALMACENA SI EL EFFDT DE LA DIRECCION NIT--%>
+            <%-- TEXTBOX ALMACENA EL EFFDT DE LA DIRECCION NIT--%>
             <input type="hidden" id="EFFDT_A_NIT" runat="server" />
-            <%-- TEXTBOX ALMACENA SI EL EFFDT DEL TELEFONO--%>
-            <input type="hidden" id="EFFDT_P" runat="server" />
-            <%-- TEXTBOX ALMACENA SI EL EFFDT DEL NOMBRE EL NIT--%>
+            <%-- TEXTBOX ALMACENA EL EFFDT DEL NOMBRE EL NIT--%>
             <input type="hidden" id="EFFDT_NameR" runat="server" />
+            <%-- TEXTBOX ALMACENA EL EFFDT DEL TELEFONO--%>
+            <input type="hidden" id="EFFDT_P" runat="server" />
+            <%-- TEXTBOX ALMACENA EL FT STUDENT DEL ESTADO CIVIL--%>
+            <input type="hidden" id="FT_STUDENT" runat="server" />
+            <%-- TEXTBOX ALMACENA EL NIVEL EDUCATIVO DEL ESTADO CIVIL--%>
+            <input type="hidden" id="HIGH_LVL" runat="server" />
+            <%-- TEXTBOX ALMACENA EL SEXO DEL ESTADO CIVIL--%>
+            <input type="hidden" id="SEX_EC" runat="server" />
 
             <%-- TEXTBOX ALMACENA UP ESTADO CIVIL--%>
             <input type="hidden" id="UP_PERS_DATA_EFFDT" runat="server" />
@@ -271,20 +279,20 @@
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtDireccion" ErrorMessage="Ingrese su dirección." ForeColor="Red"> </asp:RequiredFieldValidator>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Dirección 2:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtDireccion2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtDireccion2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Dirección 3:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                 </div>
 
 
@@ -442,19 +450,19 @@
 
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label>
-                                        <asp:TextBox ID="TxtDiRe1" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                        <asp:TextBox ID="TxtDiRe1" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                         <br />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Dirección 2:</asp:Label>
-                                        <asp:TextBox ID="TxtDiRe2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                        <asp:TextBox ID="TxtDiRe2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                         <br />
                                     </div>
 
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Dirección 3:</asp:Label>
-                                        <asp:TextBox ID="TxtDiRe3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false"></asp:TextBox>
+                                        <asp:TextBox ID="TxtDiRe3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                         <br />
                                     </div>
 
@@ -1200,6 +1208,15 @@
         function ocultarModalActualizacion() {
             var modal = document.getElementById("myModalActualizacion");
             modal.style.display = "none";
+        }
+
+        //evitar enter
+        function evitarEnter(e) {
+            if (e.keyCode == 13) {
+                e.preventDefault(); // Evitar que se realice una nueva línea
+                return false;
+            }
+            return true;
         }
 
     </script>

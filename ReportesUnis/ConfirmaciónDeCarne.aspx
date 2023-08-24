@@ -25,6 +25,10 @@
         <asp:TextBox ID="txtInsertName" runat="server" Visible="false"></asp:TextBox>
         <%-- txtInsertApexI ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
         <asp:TextBox ID="txtInsertApex" runat="server" Visible="false"></asp:TextBox>  
+        <%-- TEXTBOX ALMACENA EL EFFDT DE LA DIRECCION NIT--%>
+        <input type="hidden" id="EFFDT_A_NIT" runat="server" />
+        <%-- TEXTBOX ALMACENA EL EFFDT DEL NOMBRE EL NIT--%>
+        <input type="hidden" id="EFFDT_NameR" runat="server" />
     </div>
    
     
