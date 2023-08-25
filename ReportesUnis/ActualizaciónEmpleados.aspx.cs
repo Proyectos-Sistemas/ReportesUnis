@@ -594,8 +594,7 @@ namespace ReportesUnis
             }
             catch (Exception)
             {
-
-                sustituto = sustituto;
+                throw;
             }
             Txtsustituto.Text = sustituto;
             return sustituto;
@@ -1246,10 +1245,13 @@ namespace ReportesUnis
         }
 
         //Crea un archivo .txt para guardar bitácora
-        public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
+        /*public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
         {
-            using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
-        }
+            using (StreamWriter sw = File.CreateText(archivoBitacora))
+            {
+                ;
+            }
+        }*/
 
         public int contadorID(int largo, string[] cadena)
         {
@@ -1390,7 +1392,7 @@ namespace ReportesUnis
                                 SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "/Usuarios/UltimasCargas/", UserEmplid.Text + ".jpg");
                                 transaction.Commit();
                             }
-                            catch (Exception x)
+                            catch (Exception)
                             {
                                 transaction.Rollback();
                                 fotoAlmacenada();

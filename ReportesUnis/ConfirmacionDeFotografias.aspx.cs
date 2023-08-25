@@ -135,7 +135,7 @@ namespace ReportesUnis
                         con.Close();
                         retorno = "0";
                     }
-                    catch (Exception x)
+                    catch (Exception)
                     {
                         transaction.Rollback();
                         retorno = "1";
@@ -165,7 +165,7 @@ namespace ReportesUnis
                         conexion.Close();
                         retorno = "0";
                     }
-                    catch (Exception x)
+                    catch (Exception)
                     {
                         trans.Rollback();
                         conexion.Close();
@@ -193,7 +193,7 @@ namespace ReportesUnis
                         File.Delete(CurrentDirectory + txtPath2.Text + row.Cells[1].Text);
                         cargaFt = 0;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // Si hay un error, imprimir el mensaje
                         cargaFt = 1;

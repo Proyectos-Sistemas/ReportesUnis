@@ -465,7 +465,7 @@ namespace ReportesUnis
                                     }
                                 }
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 mensajeValidacion = "Error con la base de datos de HCM, no se registró la fotografía en HCM. " + "Es necesario tener registrado un identificador nacional con el nombre de la fotografía";
                                 GuardarBitacora(ArchivoBitacora, NombreImagen.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));

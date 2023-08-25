@@ -356,7 +356,8 @@ namespace ReportesUnis
             }
             catch (Exception)
             {
-                int x = 0;
+                //int x = 0;
+                throw;
             }
         }
 

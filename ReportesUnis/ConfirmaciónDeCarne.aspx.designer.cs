@@ -123,6 +123,78 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden EFFDT_NameR;
 
         /// <summary>
+        /// Control UP_NAMES_NIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UP_NAMES_NIT;
+
+        /// <summary>
+        /// Control UP_ADDRESSES_NIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UP_ADDRESSES_NIT;
+
+        /// <summary>
+        /// Control UP_NAMES_PRF.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UP_NAMES_PRF;
+
+        /// <summary>
+        /// Control UP_NAMES_PRI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UP_NAMES_PRI;
+
+        /// <summary>
+        /// Control UD_NAMES_NIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UD_NAMES_NIT;
+
+        /// <summary>
+        /// Control UD_ADDRESSES_NIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UD_ADDRESSES_NIT;
+
+        /// <summary>
+        /// Control UD_NAMES_PRF.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UD_NAMES_PRF;
+
+        /// <summary>
+        /// Control UD_NAMES_PRI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UD_NAMES_PRI;
+
+        /// <summary>
         /// Control divConfirmar.
         /// </summary>
         /// <remarks>

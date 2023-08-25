@@ -28,7 +28,23 @@
         <%-- TEXTBOX ALMACENA EL EFFDT DE LA DIRECCION NIT--%>
         <input type="hidden" id="EFFDT_A_NIT" runat="server" />
         <%-- TEXTBOX ALMACENA EL EFFDT DEL NOMBRE EL NIT--%>
-        <input type="hidden" id="EFFDT_NameR" runat="server" />
+        <input type="hidden" id="EFFDT_NameR" runat="server" />        
+        <%-- TEXTBOX ALMACENA UP NOMBRE NIT--%>
+        <input type="hidden" id="UP_NAMES_NIT" runat="server" />
+        <%-- TEXTBOX ALMACENA UP DIRECCION NIT--%>
+        <input type="hidden" id="UP_ADDRESSES_NIT" runat="server" />
+        <%-- TEXTBOX ALMACENA UP NOMBRE PRF--%>
+        <input type="hidden" id="UP_NAMES_PRF" runat="server" />  
+        <%-- TEXTBOX ALMACENA UP NOMBRE PRI--%>
+        <input type="hidden" id="UP_NAMES_PRI" runat="server" />       
+        <%-- TEXTBOX ALMACENA UD NOMBRE NIT--%>
+        <input type="hidden" id="UD_NAMES_NIT" runat="server" />
+        <%-- TEXTBOX ALMACENA UD DIRECCION NIT--%>
+        <input type="hidden" id="UD_ADDRESSES_NIT" runat="server" />
+        <%-- TEXTBOX ALMACENA UD NOMBRE--%>
+        <input type="hidden" id="UD_NAMES_PRF" runat="server" />
+        <%-- TEXTBOX ALMACENA UD NOMBRE--%>
+        <input type="hidden" id="UD_NAMES_PRI" runat="server" />
     </div>
    
     
