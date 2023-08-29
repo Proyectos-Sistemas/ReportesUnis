@@ -330,7 +330,7 @@
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Correo personal*:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="TxtCorreoPersonal" runat="server" MaxLength="75" CssClass="form-control" Width="275px" onblur="validarCorreo(this.value)"></asp:TextBox>
+                                    <asp:TextBox ID="TxtCorreoPersonal" runat="server" MaxLength="70" CssClass="form-control" Width="275px" onblur="validarCorreo(this.value)"></asp:TextBox>
                                     <span id="errorCorreo" style="color: red; font-size: small"></span>
                                     <br />
                                 </div>
@@ -545,6 +545,14 @@
             </div>
         </div>
     </div>
+    <div id="myModalCorrecto" class="modala">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-message">Su información fue actualizada correctamente.</div>
+
+            </div>
+        </div>
+    </div>
     <div id="myModalEspera" class="modala">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -650,6 +658,8 @@
                 errorCorreoElement.textContent = "Ingrese su correo personal.";
             } else if (!regex.test(correo)) {
                 errorCorreoElement.textContent = "El formato del correo electrónico no es válido.";
+            } else {
+                errorCorreoElement.textContent = " ";
             }
         }
 
@@ -1116,7 +1126,6 @@
                     });
             } else {
                 console.error("enumerateDevices no es compatible con este navegador.");
-                // Aquí podrías mostrar un mensaje o realizar alguna acción específica.
             }
         });
 
@@ -1208,6 +1217,16 @@
         function ocultarModalActualizacion() {
             var modal = document.getElementById("myModalActualizacion");
             modal.style.display = "none";
+        }
+
+        function mostrarModalCorrecto() {
+            var modal = document.getElementById("myModalCorrecto");
+            modal.style.display = "block";
+
+            setTimeout(function () {
+                modal.style.display = "none"; // Oculta el modal después de 10 segundos
+                window.location.href = "ActualizacionEstudiantes.aspx";
+            }, 4000); // 4000 milisegundos =  segundos
         }
 
         //evitar enter

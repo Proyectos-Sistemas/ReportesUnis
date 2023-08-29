@@ -69,7 +69,6 @@
                 <%-- TIPO  12--%>
                 <asp:TableCell>
                     <asp:DropDownList ID="CmbTipo" runat="server" Width="220px">
-                        <asp:ListItem>Semana</asp:ListItem>
                         <asp:ListItem>Carnetización Masiva</asp:ListItem>
                     </asp:DropDownList>
                 </asp:TableCell>

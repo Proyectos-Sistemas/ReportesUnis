@@ -226,8 +226,7 @@ namespace ReportesUnis
                 {
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT EMPLID FROM SYSADM.PS_PERS_NID PN " +
-                    //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' ";
-                    "WHERE PN.NATIONAL_ID ='2734677940101' ";
+                    "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' ";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -289,8 +288,7 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                                        //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +                                        
-                                        "WHERE PN.NATIONAL_ID ='2734677940101' " +
+                                        "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
                                        ") WHERE CNT = 1";
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -1044,7 +1042,7 @@ namespace ReportesUnis
             else
             {
                 lblActualizacion.ForeColor = System.Drawing.Color.Black;
-                lblActualizacion.Text = "La cámara no tiene permisos disponibles. <br /> " +
+                lblActualizacion.Text = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br /> " +
                     "Para asignar los permisos correspondientes, descargué el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página.<br />";
                 mensaje = "0";
                 controlCamposVisibles();
@@ -1433,8 +1431,7 @@ namespace ReportesUnis
                                                 "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
                                                 "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
                                                 "LEFT JOIN SYSADM.PS_EMPL_PHOTO P ON P.EMPLID = PD.EMPLID " +
-                                                //"WHERE PN.NATIONAL_ID ='" + TextUser.Text + "') " +
-                                                "WHERE PN.NATIONAL_ID ='2734677940101') " +
+                                                "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "') " +
                                                 "WHERE CODIGO_BARRAS=DPI||DEPARTAMENTO_CUI||MUNICIPIO_CUI OR CODIGO_BARRAS=PASAPORTE OR CODIGO_BARRAS=CEDULA " +
                                                 "ORDER BY 1 ASC";
                                 reader = cmd.ExecuteReader();
@@ -1448,26 +1445,6 @@ namespace ReportesUnis
 
                                 try
                                 {
-                                    if (String.IsNullOrEmpty(State.Text.TrimEnd()))
-                                        State.Text = " ";
-                                    if (String.IsNullOrEmpty(txtDireccion2.Text.TrimEnd()))
-                                        txtDireccion2.Text = " ";
-                                    if (String.IsNullOrEmpty(txtDireccion3.Text.TrimEnd()))
-                                        txtDireccion3.Text = " ";
-                                    if (String.IsNullOrEmpty(StateNIT.Text.TrimEnd()))
-                                        StateNIT.Text = " ";
-                                    if (String.IsNullOrEmpty(TxtDiRe2.Text.TrimEnd()))
-                                        TxtDiRe2.Text = " ";
-                                    if (String.IsNullOrEmpty(TxtDiRe3.Text.TrimEnd()))
-                                        TxtDiRe3.Text = " ";
-                                    if (String.IsNullOrEmpty(txtCasada.Text.TrimEnd()))
-                                        txtCasada.Text = " ";
-                                    if (String.IsNullOrEmpty(TxtCasadaR.Text.TrimEnd()))
-                                        TxtCasadaR.Text = " ";
-                                    if (String.IsNullOrEmpty(TxtApellidoR.Text.TrimEnd()))
-                                        TxtApellidoR.Text = " ";
-                                    if (String.IsNullOrEmpty(TxtNombreR.Text.TrimEnd()))
-                                        TxtNombreR.Text = " ";
 
                                     //Numero de Telefono
                                     if (!String.IsNullOrEmpty(TruePhone.Text))
@@ -1528,14 +1505,7 @@ namespace ReportesUnis
                                     {
                                         ContadorEffdtDirecciones = Convert.ToInt16(reader["CONTADOR"]);
                                     }
-                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "' " +
-                                        "AND ADDRESS1 ='" + txtDireccion.Text + "' AND ADDRESS2 = '" + txtDireccion2.Text + "' AND ADDRESS3 = '" + txtDireccion3.Text + "'" +
-                                        "AND COUNTRY='" + codPais + "' AND STATE ='" + State.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                    reader = cmd.ExecuteReader();
-                                    while (reader.Read())
-                                    {
-                                        ContadorDirecciones = Convert.ToInt16(reader["CONTADOR"]);
-                                    }
+
                                     cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "' " +
                                          " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
                                     reader = cmd.ExecuteReader();
@@ -1544,58 +1514,65 @@ namespace ReportesUnis
                                         EffdtDireccionUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
                                     }
 
+                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "' " +
+                                        "AND ADDRESS1 ='" + txtDireccion.Text + "' AND ADDRESS2 = '" + txtDireccion2.Text + "' AND ADDRESS3 = '" + txtDireccion3.Text + "'" +
+                                        "AND COUNTRY='" + codPais + "' AND STATE ='" + State.Text + "' AND EFFDT ='"+ Convert.ToDateTime(EffdtDireccionUltimo).ToString("dd/MM/yyyy")+"' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                    reader = cmd.ExecuteReader();
+                                    while (reader.Read())
+                                    {
+                                        ContadorDirecciones = Convert.ToInt16(reader["CONTADOR"]);
+                                    }
+
+
                                     if (txtNit.Text == "CF")
                                     {
                                         StateNIT.Text = State.Text;
                                     }
 
-                                    if (ContadorEffdtDirecciones == 0 && (EffdtDireccionUltimo == Hoy))
+                                    if (EffdtDireccionUltimo != Hoy && ContadorDirecciones == 0 && ContadorEffdtDirecciones == 0)
+                                    {//INSERT
+                                        UP_ADDRESSES.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
+                                                                "                                            <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                "                                            <COLL_ADDRESSES> \n" +
+                                                                  "                                                <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                  "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_COUNTRY>" + codPais + @"</PROP_COUNTRY> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS1>" + txtDireccion.Text + @"</PROP_ADDRESS1> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS2>" + txtDireccion2.Text + @"</PROP_ADDRESS2> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS3>" + txtDireccion3.Text + @"</PROP_ADDRESS3> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_STATE>" + State.Text + @"</PROP_STATE>  " +
+                                                                  "\n" +
+                                                                "                                            </COLL_ADDRESSES> \n" +
+                                                             "                                        </COLL_ADDRESS_TYPE_VW> \n";
+                                        contadorUP = contadorUP + 1;
+                                    }
+                                    else if (EffdtDireccionUltimo == Hoy && ContadorDirecciones > 0 && ContadorEffdtDirecciones > 0)
                                     {
-                                        if (ContadorDirecciones == 0)
-                                        {//INSERT
-                                            UP_ADDRESSES.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
-                                                                    "                                            <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                    "                                            <COLL_ADDRESSES> \n" +
-                                                                      "                                                <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                      "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_COUNTRY>" + codPais + @"</PROP_COUNTRY> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS1>" + txtDireccion.Text + @"</PROP_ADDRESS1> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS2>" + txtDireccion2.Text + @"</PROP_ADDRESS2> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS3>" + txtDireccion3.Text + @"</PROP_ADDRESS3> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_STATE>" + State.Text + @"</PROP_STATE>  " +
-                                                                      "\n" +
-                                                                    "                                            </COLL_ADDRESSES> \n" +
-                                                                 "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                                            contadorUP = contadorUP + 1;
-                                        }
-                                        else
-                                        {
-                                            //UPDATE
-                                            UD_ADDRESSES.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
-                                                                    "                                            <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                    "                                            <COLL_ADDRESSES> \n" +
-                                                                      "                                                <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                      "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_COUNTRY>" + codPais + @"</PROP_COUNTRY> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS1>" + txtDireccion.Text + @"</PROP_ADDRESS1> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS2>" + txtDireccion2.Text + @"</PROP_ADDRESS2> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS3>" + txtDireccion3.Text + @"</PROP_ADDRESS3> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_STATE>" + State.Text + @"</PROP_STATE>  " +
-                                                                      "\n" +
-                                                                    "                                            </COLL_ADDRESSES> \n" +
-                                                                 "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                                            contadorUD = contadorUD + 1;
-                                        }
+                                        //UPDATE
+                                        UD_ADDRESSES.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
+                                                                "                                            <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                "                                            <COLL_ADDRESSES> \n" +
+                                                                  "                                                <KEYPROP_ADDRESS_TYPE>HOME</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                  "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_COUNTRY>" + codPais + @"</PROP_COUNTRY> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS1>" + txtDireccion.Text + @"</PROP_ADDRESS1> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS2>" + txtDireccion2.Text + @"</PROP_ADDRESS2> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS3>" + txtDireccion3.Text + @"</PROP_ADDRESS3> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_STATE>" + State.Text + @"</PROP_STATE>  " +
+                                                                  "\n" +
+                                                                "                                            </COLL_ADDRESSES> \n" +
+                                                             "                                        </COLL_ADDRESS_TYPE_VW> \n";
+                                        contadorUD = contadorUD + 1;
                                     }
                                     else
                                     {
@@ -1676,9 +1653,18 @@ namespace ReportesUnis
                                                 ContadorEffdtDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
                                             }
 
+                                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' " +
+                                                " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                            reader = cmd.ExecuteReader();
+                                            while (reader.Read())
+                                            {
+                                                EffdtDireccionNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
+                                            }
+
                                             cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' " +
                                                 "AND ADDRESS1 ='" + TxtDiRe1.Text + "' AND ADDRESS2 = '" + TxtDiRe2.Text + "' AND ADDRESS3 = '" + TxtDiRe3.Text + "' " +
-                                                "AND COUNTRY='" + codPaisNIT + "' AND STATE ='" + StateNIT + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                                "AND COUNTRY='" + codPaisNIT + "' AND STATE ='" + StateNIT.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtDireccionNitUltimo).ToString("dd/MM/yyyy") + "'" +
+                                                " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
@@ -1693,26 +1679,27 @@ namespace ReportesUnis
                                                 EffdtNombreNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
                                             }
 
-                                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' " +
-                                                " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                EffdtDireccionNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
-                                            }
-
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND  EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + UserEmplid.Text + "'";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
-                                            }
 
                                             cmd.CommandText = "SELECT EFFDT AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + UserEmplid.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
                                                 EFFDT_SYSTEM = reader["CONTADOR"].ToString();
+                                            }
+
+                                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + UserEmplid.Text + "'" +
+                                                " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                            reader = cmd.ExecuteReader();
+                                            while (reader.Read())
+                                            {
+                                                EffdtNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("dd-MM-yyyy")).ToString();
+                                            }
+
+                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND  EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + UserEmplid.Text + "' AND EFFDT='"+EffdtNitUltimo+"'";
+                                            reader = cmd.ExecuteReader();
+                                            while (reader.Read())
+                                            {
+                                                ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
                                             }
 
                                             cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSKEY WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + UserEmplid.Text + "'";
@@ -1722,15 +1709,6 @@ namespace ReportesUnis
                                                 ContadorNit2 = Convert.ToInt16(reader["CONTADOR"]);
                                             }
 
-
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoR.Text + "' " +
-                                                "AND FIRST_NAME='" + TxtNombreR.Text + "' AND SECOND_LAST_NAME='" + TxtCasadaR.Text + "' " +
-                                                "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "'";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
-                                            }
                                             cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
                                                 "AND EFFDT ='" + HoyEffdt + "'";
                                             reader = cmd.ExecuteReader();
@@ -1746,14 +1724,14 @@ namespace ReportesUnis
                                                 ContadorEffdtNit = Convert.ToInt16(reader["CONTADOR"]);
                                             }
 
-                                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + UserEmplid.Text + "'" +
-                                                " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoR.Text + "' " +
+                                                "AND FIRST_NAME='" + TxtNombreR.Text + "' AND SECOND_LAST_NAME='" + TxtCasadaR.Text + "' " +
+                                                "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
-                                                EffdtNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
+                                                ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
                                             }
-
 
                                             string FechaEfectiva = "";
                                             if (EFFDT_NameR.Value.IsNullOrWhiteSpace())
@@ -1761,39 +1739,36 @@ namespace ReportesUnis
                                             else
                                                 FechaEfectiva = EFFDT_NameR.Value;
 
-                                            if (ContadorEffdtNombreNit == 0 && EffdtNombreNitUltimo != Hoy)
-                                            {
-                                                if (ContadorNombreNit == 0 && (FechaEfectiva != Hoy))
-                                                {//INSERT
-                                                    UP_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
-                                                                        "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "        <COLL_NAMES>" +
-                                                                        "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                                        "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
-                                                                        "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
-                                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
-                                                                        "        </COLL_NAMES>" +
-                                                                        "      </COLL_NAME_TYPE_VW>";
-                                                    contadorUP = contadorUP + 1;
-                                                }
-                                                else
-                                                {//UPDATE
+                                            if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNit == 0)
+                                            {//INSERT
+                                                UP_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
+                                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                    "        <COLL_NAMES>" +
+                                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                    "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
+                                                                    "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                                    "        </COLL_NAMES>" +
+                                                                    "      </COLL_NAME_TYPE_VW>";
+                                                contadorUP = contadorUP + 1;
+                                            }
+                                            else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit > 0 && ContadorEffdtNit > 0)
+                                            {//UPDATE
 
-                                                    UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
-                                                                        "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "        <COLL_NAMES>" +
-                                                                        "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                                        "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
-                                                                        "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
-                                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
-                                                                        "        </COLL_NAMES>" +
-                                                                        "      </COLL_NAME_TYPE_VW>";
-                                                    contadorUD = contadorUD + 1;
-                                                }
+                                                UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
+                                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                    "        <COLL_NAMES>" +
+                                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                    "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
+                                                                    "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                                    "        </COLL_NAMES>" +
+                                                                    "      </COLL_NAME_TYPE_VW>";
+                                                contadorUD = contadorUD + 1;
                                             }
                                             else
                                             {
@@ -1811,30 +1786,28 @@ namespace ReportesUnis
                                                 contadorUD = contadorUD + 1;
                                             }
 
-                                            if (ContadorEffdtNit == 0 && EffdtNitUltimo != Hoy)
+                                            if (EffdtNitUltimo == Hoy && ContadorNit == 0)
                                             {
-                                                if (ContadorNit == 0)
-                                                {
-                                                    //INSERTA EL NIT
-                                                    cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSTEM (EMPLID, EXTERNAL_SYSTEM, EFFDT, EXTERNAL_SYSTEM_ID) " +
-                                                    "VALUES ('" + UserEmplid.Text + "','NRE','" + DateTime.Now.ToString("dd/MM/yyyy") + "','" + txtNit.Text + "')";
-                                                    cmd.ExecuteNonQuery();
+                                                //INSERTA EL NIT
+                                                cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSTEM (EMPLID, EXTERNAL_SYSTEM, EFFDT, EXTERNAL_SYSTEM_ID) " +
+                                                "VALUES ('" + UserEmplid.Text + "','NRE','" + DateTime.Now.ToString("dd/MM/yyyy") + "','" + txtNit.Text + "')";
+                                                cmd.ExecuteNonQuery();
 
 
-                                                    if (ContadorNit2 == 0)
-                                                    {
-                                                        cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSKEY (EMPLID, EXTERNAL_SYSTEM) " +
-                                                        "VALUES ('" + UserEmplid.Text + "','NRE')";
-                                                        cmd.ExecuteNonQuery();
-                                                    }
-                                                }
-                                                else
+                                                if (ContadorNit2 == 0)
                                                 {
-                                                    //ACTUALIZA NIT
-                                                    cmd.CommandText = "UPDATE SYSADM.PS_EXTERNAL_SYSTEM SET EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' " +
-                                                                        " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + UserEmplid.Text + "' AND EFFDT ='" + HoyEffdt + "'";
+                                                    cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSKEY (EMPLID, EXTERNAL_SYSTEM) " +
+                                                    "VALUES ('" + UserEmplid.Text + "','NRE')";
                                                     cmd.ExecuteNonQuery();
                                                 }
+                                            }
+                                            else if (EffdtNitUltimo != Hoy && ContadorNit > 0)
+                                            {
+                                                //ACTUALIZA NIT
+                                                cmd.CommandText = "UPDATE SYSADM.PS_EXTERNAL_SYSTEM SET EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' " +
+                                                                    " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + UserEmplid.Text + "' AND EFFDT ='" + HoyEffdt + "'";
+                                                cmd.ExecuteNonQuery();
+
                                             }
                                             else
                                             {
@@ -1844,53 +1817,51 @@ namespace ReportesUnis
                                                 cmd.ExecuteNonQuery();
                                             }
 
-                                            if (ContadorEffdtDirecionNit == 0 && EffdtDireccionNitUltimo != Hoy)
-                                            {
-                                                if (ContadorDirecionNit == 0)
-                                                {//INSERTA
-                                                    UP_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
-                                                                    "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                    "                                            <COLL_ADDRESSES> \n" +
-                                                                      "                                                <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                      "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_COUNTRY>" + codPaisNIT + @"</PROP_COUNTRY> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS1>" + TxtDiRe1.Text + @"</PROP_ADDRESS1> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS2>" + TxtDiRe2.Text + @"</PROP_ADDRESS2> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS3>" + TxtDiRe3.Text + @"</PROP_ADDRESS3> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_STATE>" + StateNIT.Text + @"</PROP_STATE>  " +
-                                                                      "\n" +
-                                                                    "                                            </COLL_ADDRESSES> \n" +
-                                                                 "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                                                    contadorUP = contadorUP + 1;
-                                                }
-                                                else
-                                                {//ACTUALIZA
-                                                    UD_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
-                                                                    "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                    "                                            <COLL_ADDRESSES> \n" +
-                                                                      "                                                <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                      "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_COUNTRY>" + codPaisNIT + @"</PROP_COUNTRY> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS1>" + TxtDiRe1.Text + @"</PROP_ADDRESS1> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS2>" + TxtDiRe2.Text + @"</PROP_ADDRESS2> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_ADDRESS3>" + TxtDiRe3.Text + @"</PROP_ADDRESS3> " +
-                                                                      "\n" +
-                                                                      "                                                <PROP_STATE>" + StateNIT.Text + @"</PROP_STATE>  " +
-                                                                      "\n" +
-                                                                    "                                            </COLL_ADDRESSES> \n" +
-                                                                 "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                                                    contadorUD = contadorUD + 1;
-                                                }
+                                            if (EffdtDireccionNitUltimo != Hoy && ContadorDirecionNit == 0 && ContadorEffdtDirecionNit == 0)
+                                            {//INSERTA
+                                                UP_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
+                                                                "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                "                                            <COLL_ADDRESSES> \n" +
+                                                                  "                                                <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                  "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_COUNTRY>" + codPaisNIT + @"</PROP_COUNTRY> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS1>" + TxtDiRe1.Text + @"</PROP_ADDRESS1> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS2>" + TxtDiRe2.Text + @"</PROP_ADDRESS2> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS3>" + TxtDiRe3.Text + @"</PROP_ADDRESS3> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_STATE>" + StateNIT.Text + @"</PROP_STATE>  " +
+                                                                  "\n" +
+                                                                "                                            </COLL_ADDRESSES> \n" +
+                                                             "                                        </COLL_ADDRESS_TYPE_VW> \n";
+                                                contadorUP = contadorUP + 1;
                                             }
+                                            else if (EffdtDireccionNitUltimo == Hoy && ContadorDirecionNit > 0 && ContadorEffdtDirecionNit > 0)
+                                            {//ACTUALIZA
+                                                UD_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
+                                                                "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                "                                            <COLL_ADDRESSES> \n" +
+                                                                  "                                                <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                  "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_COUNTRY>" + codPaisNIT + @"</PROP_COUNTRY> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS1>" + TxtDiRe1.Text + @"</PROP_ADDRESS1> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS2>" + TxtDiRe2.Text + @"</PROP_ADDRESS2> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_ADDRESS3>" + TxtDiRe3.Text + @"</PROP_ADDRESS3> " +
+                                                                  "\n" +
+                                                                  "                                                <PROP_STATE>" + StateNIT.Text + @"</PROP_STATE>  " +
+                                                                  "\n" +
+                                                                "                                            </COLL_ADDRESSES> \n" +
+                                                             "                                        </COLL_ADDRESS_TYPE_VW> \n";
+                                                contadorUD = contadorUD + 1;
+                                            }
+
                                             else
                                             {//UPDATE
                                                 UD_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
@@ -1913,7 +1884,6 @@ namespace ReportesUnis
                                                                  "                                        </COLL_ADDRESS_TYPE_VW> \n";
                                                 contadorUD = contadorUD + 1;
                                             }
-
 
                                             controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "' AND FECH_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
                                             controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "'");
@@ -1988,6 +1958,9 @@ namespace ReportesUnis
                                         }
                                         Thread.Sleep(Convert.ToInt16(tiempoSleep));
                                         fotoAlmacenada();
+                                        PaisNit.Text = CmbPais.SelectedValue;
+                                        DepartamentoNit.Text = CmbDepartamento.SelectedValue;
+                                        MunicipioNit.Text = CmbMunicipio.SelectedValue;
                                         mensaje = "Su información fue actualizada correctamente";
                                     }
                                     else
@@ -2082,6 +2055,8 @@ namespace ReportesUnis
 
             // Al finalizar la actualización, ocultar el modal
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalActualizacion();", true);
+            // Llama a la función JavaScript para mostrar el modal
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
         }
 
         protected void CmbPais_SelectedIndexChanged(object sender, EventArgs e)
