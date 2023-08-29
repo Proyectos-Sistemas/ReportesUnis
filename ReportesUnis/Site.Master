@@ -169,14 +169,9 @@
                     <li class="nav-item dropdown" id="liNavbarInformacion">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarInformacion" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Información
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <%--<a id="RepEstudiantes" runat="server" class="dropdown-item" href="~/ReporteEstudiantes">Reportes de Carné de Estudiantes</a>
-                            <a id="RepEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteEmpleados">Reportes de Carné  de Empleados</a>--%>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">                            
                             <a id="RepCamarasEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicas">Reportes Cámaras Térmicas de Estudiantes</a>
-                           <%-- <a id="RepCamarasEmp" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicasEmpleados">Reportes Cámaras Térmicas de Empleados</a>--%>
-                            <%--<a id="CargaCTEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/Cargarfotografia">Carga Masiva de Fotografías Estudiantes</a>
-                            <a id="CargaCTEmp" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/CargarFotografiaEmpleados">Carga Masiva de Fotografías Empleados</a>--%>
-                            <a id="Actualizacion" runat="server"  class="dropdown-item" href="~/UnificacionActualización">Actualización de información</a>                      
+                           <a id="Actualizacion" runat="server"  class="dropdown-item" href="~/UnificacionActualización">Actualización de información</a>                      
                         </div>
                     </li>
                     <li class="nav-item dropdown" id="liNavbarCarnet">
@@ -185,8 +180,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a id="MantPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Tiempo Pantallas</a>
                             <a id="GestionesEstudiantes" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónDeCarne">Gestión Estudiantes</a>
-                            <a id="Confirmacion" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografias">Confirmar Fotografías</a>
-                            <%--<a id="MantenimientoPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Mantenimiento Pantallas</a>--%>
+                            <a id="Confirmacion" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografias">Confirmar Fotografías</a>                            
                         </div>
                     </li>
                 </ul>

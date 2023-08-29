@@ -534,7 +534,7 @@
         </asp:Table>
     </div>
 
-    <div id="myModalActualizacion" class="modala">
+    <div id="myModalActualizacion" class="modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-spinner">
@@ -545,7 +545,7 @@
             </div>
         </div>
     </div>
-    <div id="myModalCorrecto" class="modala">
+    <div id="myModalCorrecto" class="modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-message">Su información fue actualizada correctamente.</div>
@@ -553,7 +553,7 @@
             </div>
         </div>
     </div>
-    <div id="myModalEspera" class="modala">
+    <div id="myModalEspera" class="modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-spinner">
@@ -632,9 +632,6 @@
     </div>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 

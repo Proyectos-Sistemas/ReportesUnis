@@ -37,7 +37,7 @@ namespace ReportesUnis
         string HoyEffdt = DateTime.Now.ToString("dd-MM-yyyy").Substring(0, 10).TrimEnd();
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request.HttpMethod == "OPTIONS")
+            /*if (Request.HttpMethod == "OPTIONS")
             {
                 // Handle preflight request
                 Response.StatusCode = 204; // No Content
@@ -47,7 +47,7 @@ namespace ReportesUnis
             // Add CORS headers to the response
             Response.AppendHeader("Access-Control-Allow-Origin", "*"); // Replace "*" with the specific origin if needed
             Response.AppendHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-            Response.AppendHeader("Access-Control-Allow-Headers", "Content-Type");
+            Response.AppendHeader("Access-Control-Allow-Headers", "Content-Type");*/
             LeerTiempo();
             LeerInfoTxt();
             LeerPathApex();
@@ -64,9 +64,6 @@ namespace ReportesUnis
                 if (!IsPostBack)
                 {
                     BtnReload.Visible = false;
-                    /*controlPantalla = PantallaHabilitada("Semana");
-                    if (controlPantalla >= 1)
-                    {*/
                     Page.ClientScript.RegisterStartupScript(GetType(), "CheckCameraAccess", "checkCameraAccess();", true);
                     LeerInfoTxtSQL();
                     LeerInfoTxtPath();
@@ -122,14 +119,6 @@ namespace ReportesUnis
                             "Si desea generar una nueva renovación pongase en contacto con soporte@unis.edu.gt.";
                         BtnDownload.Visible = false;
                     }
-
-                    /*}
-                    else
-                    {
-                        lblActualizacion.Text = "La pantalla de actualización está disponible únicamente de Lunes a Viernes.";
-                        controlCamposVisibles();
-                        BtnDownload.Visible = false;
-                    }*/
                 }
             }
 
@@ -938,6 +927,19 @@ namespace ReportesUnis
 
         private string actualizarInformacion()
         {
+            if (txtAInicial.Value == "\r\n")
+            {
+                txtAInicial.Value = null;
+            }
+            if (txtNInicial.Value == "\r\n")
+            {
+                txtNInicial.Value = null;
+            }
+            if (txtCInicial.Value == "\r\n")
+            {
+                txtCInicial.Value = null;
+            }
+
             if (String.IsNullOrEmpty(txtNit.Text))
             {
                 txtNit.Text = "CF";

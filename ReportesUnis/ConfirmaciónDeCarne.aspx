@@ -288,7 +288,7 @@
         </asp:Table>
     </div>
 
-    <div id="myModalActualizacion" class="modala">
+    <div id="myModalActualizacion" class="modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-spinner">
@@ -304,6 +304,11 @@
             <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
             </asp:Label>
     </div>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
 
     <script>
         function mostrarAlertaRechazo() {
