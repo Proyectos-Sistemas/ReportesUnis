@@ -288,6 +288,18 @@
         </asp:Table>
     </div>
 
+    <div id="myModalActualizacion" class="modala">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <div class="modal-message">Por favor, espera mientras la información se está actualizando...</div>
+
+            </div>
+        </div>
+    </div>
+
     <div visible="false" style="margin-left: auto; margin-right: auto; text-align: center;",>
             <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
             </asp:Label>
@@ -295,7 +307,9 @@
 
     <script>
         function mostrarAlertaRechazo() {
+            var modal = document.getElementById("myModalActualizacion");
             if (confirm("¿Está seguro de que desea rechazar la información?")) {
+                modal.style.display = "block";
                 __doPostBack('<%= BtnRechazar.ClientID %>', '');
                 return true; // Permite continuar con la acción del botón
             } else {
@@ -310,6 +324,11 @@
             } else {
                 return false; // Cancela la acción del botón
             }
+        }
+
+        function ocultarModalActualizacion() {
+            var modal = document.getElementById("myModalActualizacion");
+            modal.style.display = "none";
         }
 
     </script>

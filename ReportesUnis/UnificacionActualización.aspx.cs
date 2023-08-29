@@ -21,6 +21,7 @@ namespace ReportesUnis
                 //{
                 //    Response.Redirect(@"~/ActualizaciónEmpleados.aspx");
                 //}  DESCOMENTAR EN LA FASE 2
+
                 if (((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos"))
                 {
                     Response.Redirect(@"~/ActualizacionEstudiantes.aspx");

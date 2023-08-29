@@ -1200,11 +1200,6 @@
             canvas.height = newHeight;
         };
 
-        /*function mostrarModalActualizacion() {
-            
-        }*/
-
-
         function mostrarModalEspera() {
             var modal = document.getElementById("myModalEspera");
             modal.style.display = "block";

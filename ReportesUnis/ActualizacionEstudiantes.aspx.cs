@@ -1739,7 +1739,7 @@ namespace ReportesUnis
                                             else
                                                 FechaEfectiva = EFFDT_NameR.Value;
 
-                                            if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNit == 0)
+                                            if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNombreNit == 0)
                                             {//INSERT
                                                 UP_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
                                                                     "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
@@ -1754,7 +1754,7 @@ namespace ReportesUnis
                                                                     "      </COLL_NAME_TYPE_VW>";
                                                 contadorUP = contadorUP + 1;
                                             }
-                                            else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit > 0 && ContadorEffdtNit > 0)
+                                            else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit > 0 && ContadorEffdtNombreNit > 0)
                                             {//UPDATE
 
                                                 UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
@@ -1977,10 +1977,10 @@ namespace ReportesUnis
 
 
                                 }
-                                catch (Exception x)
+                                catch (Exception)
                                 {
                                     transaction.Rollback();
-                                    mensaje = x + "Ocurrió un problema al actualizar su información.";
+                                    mensaje = "Ocurrió un problema al actualizar su información.";
                                     if (Request.Form["urlPathControl"] == "1")
                                     {
                                         AlmacenarFotografia();
