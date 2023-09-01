@@ -324,6 +324,7 @@
 
         function mostrarAlertaAceptar() {
             if (confirm("¿Está seguro de que desea confirmar la información?")) {
+                modal.style.display = "block";
                 __doPostBack('<%= BtnConfirmar.ClientID %>', '');
                 return true; // Permite continuar con la acción del botón
             } else {

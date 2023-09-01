@@ -1150,7 +1150,7 @@
                 $('#<%= tbactualizar.ClientID %>').hide();
                 $('#<%= InfePersonal.ClientID %>').hide();
                 var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                mensaje = "La cámara no tiene permisos disponibles. <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones. <br>";
+                mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones. <br>";
                 lblActualizacion.css("color", "black");
                 lblActualizacion.html(mensaje);
                 $('#<%= BtnReload.ClientID %>').show();

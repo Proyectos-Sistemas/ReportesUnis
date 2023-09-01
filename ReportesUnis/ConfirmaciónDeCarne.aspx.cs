@@ -280,6 +280,7 @@ namespace ReportesUnis
                                 {
                                     File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
                                 }
+                                ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalActualizacion();", true);
                                 lblActualizacion.Text = "Se ha rechazado la solicitud de carnet.";
                             }
                             else

@@ -37,17 +37,6 @@ namespace ReportesUnis
         string HoyEffdt = DateTime.Now.ToString("dd-MM-yyyy").Substring(0, 10).TrimEnd();
         protected void Page_Load(object sender, EventArgs e)
         {
-            /*if (Request.HttpMethod == "OPTIONS")
-            {
-                // Handle preflight request
-                Response.StatusCode = 204; // No Content
-                Response.End();
-            }
-
-            // Add CORS headers to the response
-            Response.AppendHeader("Access-Control-Allow-Origin", "*"); // Replace "*" with the specific origin if needed
-            Response.AppendHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-            Response.AppendHeader("Access-Control-Allow-Headers", "Content-Type");*/
             LeerTiempo();
             LeerInfoTxt();
             LeerPathApex();
@@ -510,7 +499,8 @@ namespace ReportesUnis
                         if (contador > 0)
                         {
                             ImgBase.Visible = true;
-                            ImgBase.ImageUrl = "~/Usuarios/UltimasCargas/" + txtCarne.Text + ".jpg";
+                            //ImgBase.ImageUrl = "~/Usuarios/UltimasCargas/" + txtCarne.Text + ".jpg";
+                            ImgBase.ImageUrl = (File.Exists(Server.MapPath($"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg"))) ? $"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg?c={DateTime.Now.Ticks}" : string.Empty;
                             byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + txtCarne.Text + ".jpg");
                             string base64String = Convert.ToBase64String(imageBytes);
                             string script = $@"<script type='text/javascript'>
