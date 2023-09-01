@@ -27,7 +27,6 @@ namespace ReportesUnis
         int controlRenovacion = 0;
         int controlRenovacionFecha = 0;
         string emplid;
-        string tiempoSleep = "";
         int auxConsulta = 0;
         int contadorUP = 0;
         int contadorUD = 0;
@@ -37,7 +36,6 @@ namespace ReportesUnis
         string HoyEffdt = DateTime.Now.ToString("dd-MM-yyyy").Substring(0, 10).TrimEnd();
         protected void Page_Load(object sender, EventArgs e)
         {
-            LeerTiempo();
             LeerInfoTxt();
             LeerPathApex();
             controlPantalla = PantallaHabilitada("Carnetización Masiva");
@@ -87,7 +85,7 @@ namespace ReportesUnis
                         {
                             AlmacenarFotografia();
                         }
-                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                        
                         fotoAlmacenada();
 
                         if (String.IsNullOrEmpty(txtCarne.Text))
@@ -127,18 +125,6 @@ namespace ReportesUnis
             {
                 line = file.ReadToEnd();
                 TxtURL.Text = line;
-                file.Close();
-            }
-        }
-
-        void LeerTiempo()
-        {
-            string rutaCompleta = CurrentDirectory + "sleep.txt";
-            string line = "";
-            using (StreamReader file = new StreamReader(rutaCompleta))
-            {
-                line = file.ReadToEnd();
-                tiempoSleep = line;
                 file.Close();
             }
         }
@@ -474,7 +460,7 @@ namespace ReportesUnis
                     }
                     con.Close();
 
-                    Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                    
                     fotoAlmacenada();
                 }
             }
@@ -1025,7 +1011,6 @@ namespace ReportesUnis
                             TxtApellidoR.Text = txtApellido.Text;
                             TxtCasadaR.Text = TxtCasadaR.Text;
                         }
-                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
                         fotoAlmacenada();
                     }
                 }
@@ -1066,7 +1051,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            Thread.Sleep(Convert.ToInt16(tiempoSleep));
+            
             llenadoState();
             fotoAlmacenada();
             MunicipioNit.Text = CmbMunicipio.SelectedValue;
@@ -1078,7 +1063,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            Thread.Sleep(Convert.ToInt16(tiempoSleep));
+            
             llenadoStateNIT();
             fotoAlmacenada();
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
@@ -1089,7 +1074,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            Thread.Sleep(Convert.ToInt16(tiempoSleep));
+            
             llenadoMunicipio();
             llenadoState();
             fotoAlmacenada();
@@ -1103,7 +1088,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            Thread.Sleep(Convert.ToInt16(tiempoSleep));
+            
             llenadoMunicipioNIT();
             llenadoStateNIT();
             fotoAlmacenada();
@@ -1948,7 +1933,7 @@ namespace ReportesUnis
                                         {
                                             AlmacenarFotografia();
                                         }
-                                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                                        
                                         fotoAlmacenada();
                                         PaisNit.Text = CmbPais.SelectedValue;
                                         DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -1963,7 +1948,7 @@ namespace ReportesUnis
                                         {
                                             AlmacenarFotografia();
                                         }
-                                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                                        
                                         fotoAlmacenada();
                                     }
 
@@ -1977,7 +1962,7 @@ namespace ReportesUnis
                                     {
                                         AlmacenarFotografia();
                                     }
-                                    Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                                    
                                     fotoAlmacenada();
                                 }
                             }
@@ -1996,7 +1981,7 @@ namespace ReportesUnis
                 {
                     AlmacenarFotografia();
                 }
-                Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                
                 fotoAlmacenada();
             }
             else
@@ -2024,7 +2009,7 @@ namespace ReportesUnis
                             {
                                 AlmacenarFotografia();
                             }
-                            Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                            
                             fotoAlmacenada();
                             mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
                             lblActualizacion.Text = mensaje;
@@ -2038,7 +2023,7 @@ namespace ReportesUnis
                             AlmacenarFotografia();
                         }
 
-                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                        
                         fotoAlmacenada();
                     }
                 }
@@ -2060,7 +2045,7 @@ namespace ReportesUnis
             llenadoDepartamento();
             llenadoMunicipio();
             llenadoState();
-            Thread.Sleep(Convert.ToInt16(tiempoSleep));
+            
             fotoAlmacenada();
             PaisNit.Text = CmbPais.SelectedValue;
             DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -2073,7 +2058,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            Thread.Sleep(Convert.ToInt16(tiempoSleep));
+            
             llenadoDepartamentoNit();
             llenadoMunicipioNIT();
             llenadoStateNIT();
@@ -2188,7 +2173,7 @@ namespace ReportesUnis
                             catch (Exception)
                             {
                                 transaction.Rollback();
-                                Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                                
                                 fotoAlmacenada();
                             }
                         }
@@ -2376,7 +2361,7 @@ namespace ReportesUnis
                         AlmacenarFotografia();
                     }
 
-                    Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                    
                     fotoAlmacenada();
                     ValidacionNit.Value = "0";
                 }
@@ -2501,7 +2486,7 @@ namespace ReportesUnis
                             {
                                 AlmacenarFotografia();
                             }
-                            Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                            
                             fotoAlmacenada();
                             mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
                             lblActualizacion.Text = mensaje;
@@ -2514,7 +2499,7 @@ namespace ReportesUnis
                         {
                             AlmacenarFotografia();
                         }
-                        Thread.Sleep(Convert.ToInt16(tiempoSleep));
+                        
                         fotoAlmacenada();
                     }
                 }
