@@ -10,7 +10,9 @@
             </div>
         </div>
     </div>
-    <div id="CargaFotografia" runat="server" visible="true">
+    <asp:HiddenField ID="hdnCameraAvailable" runat="server" ClientIDMode="Static" />
+    <asp:HiddenField ID="cameraPermissionsGranted" runat="server" ClientIDMode="Static" />
+    <div id="CargaFotografia" runat="server" style="display: none">
         <hr />
         <div class="container">
             <div class="row">
@@ -20,7 +22,7 @@
             </div>
         </div>
         <br />
-        <asp:HiddenField runat="server" ID="hdnCameraAvailable" />
+
 
         <div class="container">
             <div class="row">
@@ -136,7 +138,7 @@
             <%-- ¡tiene pasaporte? --%>
             <asp:Label ID="txtCantidadImagenesDpi" runat="server" Visible="false">0</asp:Label>
         </div>
-        <div id="InfePersonal" runat="server">
+        <div id="InfePersonal" runat="server" style="display: none">
 
             <div class="container">
                 <div class="row">
@@ -208,7 +210,7 @@
 
 
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
-            <div class="container" id="tabla" runat="server">
+            <div class="container" id="tabla" runat="server" style="display: none">
                 <div class="row">
                     <div class="col-md">
                         <div class="container">
@@ -413,7 +415,7 @@
                                 </div>
                             </div>
 
-                             <div class="container">
+                            <div class="container">
                                 <div class="row">
                                     <div class="col-md-4 mx-auto text-center">
                                     </div>
@@ -524,14 +526,19 @@
         </div>
 
         <br />
-        <asp:Table ID="tbactualizar" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
-            <asp:TableRow>
-                <asp:TableCell>
-                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
 
-                </asp:TableCell>
-            </asp:TableRow>
-        </asp:Table>
+
+        <div class="container" id="tbactualizar" runat="server" style="display: none">
+            <div class="row">
+                <div class="col-md-4 mx-auto text-center">
+                </div>
+                <div class="col-md-4 mx-auto text-center">
+                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
+                </div>
+                <div class="col-md-4 mx-auto text-center">
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="myModalActualizacion" class="modal">
@@ -564,13 +571,40 @@
             </div>
         </div>
     </div>
-    <div style="margin-left: auto; margin-right: auto; text-align: center;">
-        <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
-        </asp:Label>
+
+
+
+
+    <div class="container" runat="server">
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8 d-flex justify-content-center align-items-center">
+                <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"></asp:Label>
+            </div>
+            <div class="col-md-2">
+            </div>
+        </div>
         <br />
-        <asp:Button ID="BtnDownload" runat="server" Text="Descargar Manual" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnDownload_Click" />
-        <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnReload_Click" />
+        <div class="row">
+            <div class="col-md-4 mx-auto text-center">
+            </div>
+            <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center" >
+                <asp:Button ID="BtnDownload" runat="server" Text="Descargar Manual" CssClass="btn-danger-unis" OnClick="BtnDownload_Click" Style="display: none" />
+            </div>
+            <div class="col-md-4 mx-auto text-center">
+            </div>
+        </div>
         <br />
+        <div class="row">
+            <div class="col-md-4 mx-auto text-center">
+            </div>
+            <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center" >
+                <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" OnClick="BtnReload_Click" Style="display: none" />
+            </div>
+            <div class="col-md-4 mx-auto text-center">
+            </div>
+        </div>
     </div>
 
     <div id="myModal" class="modal">
@@ -633,7 +667,8 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
 
     <script>
         // Acceder a la cámara y mostrar el video en el elemento de video
@@ -643,7 +678,7 @@
                 videoElement.srcObject = stream;
             })
             .catch(function (error) {
-                console.error('Error al acceder a la cámara: ', error);
+                error;
             });
 
         function validarCorreo(correo) {
@@ -671,22 +706,24 @@
             }
         }
 
-        $(document).ready(function () {
-            var videoElement = $('#videoElement')[0];
-            var canvas = $('#canvas')[0];
-            var context = canvas.getContext('2d');
-            var captureBtn = $('#captureBtn');
-            var textarea = $("#urlPath");
-            var imgBase = $("#<%= ImgBase.ClientID %>");
-            var urlPathControl = $("#urlPathControl");
-            captureBtn.on('click', function (event) {
-                event.preventDefault();
-                context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-                var imageData = canvas.toDataURL('image/jpeg');
-                textarea.val(imageData);
-                urlPathControl.val('1');
-                imgBase.attr('src', imageData);
-                canvas.hide();
+        document.addEventListener("DOMContentLoaded", function () {
+            $(document).ready(function () {
+                var videoElement = $('#videoElement')[0];
+                var canvas = $('#canvas')[0];
+                var context = canvas.getContext('2d');
+                var captureBtn = $('#captureBtn');
+                var textarea = $("#urlPath");
+                var imgBase = $("#<%= ImgBase.ClientID %>");
+                var urlPathControl = $("#urlPathControl");
+                captureBtn.on('click', function (event) {
+                    event.preventDefault();
+                    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                    var imageData = canvas.toDataURL('image/jpeg');
+                    textarea.val(imageData);
+                    urlPathControl.val('1');
+                    imgBase.attr('src', imageData);
+                    canvas.hide();
+                });
             });
         });
 
@@ -1027,12 +1064,13 @@
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'true';
+                    console.log('Ingresa Funcion')
                     stream.getTracks().forEach(function (track) {
                         track.stop();
                     });
                 })
                 .catch(function (error) {
-                    document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'false';
+                    console.log('Error')
                 });
         }
 
@@ -1049,6 +1087,36 @@
                 }
             }
         }
+
+
+
+        async function checkCameraPermissions() {
+            let cameraPermissionsGranted = true;
+
+            try {
+                // Intenta obtener acceso a la cámara
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+                // Si se obtiene acceso, establece la variable en TRUE
+                cameraPermissionsGranted = true;
+
+                // Cierra el flujo de la cámara
+                stream.getTracks().forEach(track => track.stop());
+            } catch (error) {
+                // Si se produce un error, los permisos no se han otorgado
+                cameraPermissionsGranted = false;
+            }
+
+            // Almacena el estado de los permisos en una cookie
+            document.cookie = `cameraPermissionsGranted=${cameraPermissionsGranted}`;
+        }
+
+        // Llama a la función para verificar los permisos al cargar la página
+        window.addEventListener('load', checkCameraPermissions);
+
+        // Llama a la función para verificar los permisos al cargar la página
+        window.addEventListener('load', checkCameraPermissions);
+
 
         //FUNCION PARA EVITAR QUE SEA INGRESADO EL -
         $(document).ready(function () {
@@ -1097,36 +1165,6 @@
             });
         });
 
-        $(document).ready(function () {
-            // Verificar si el navegador es compatible con enumerateDevices
-            if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-                // Obtener la lista de dispositivos multimedia
-                navigator.mediaDevices
-                    .enumerateDevices()
-                    .then(function (devices) {
-                        // Verificar si hay al menos una cámara en la lista
-                        const hasCamera = devices.some(function (device) {
-                            return device.kind === "videoinput";
-                        });
-
-                        if (hasCamera) {
-                            console.log("La cámara está conectada.");
-                        } else {
-                            console.log("La cámara no está conectada.");
-                            $('#<%= CargaFotografia.ClientID %>').hide();
-                            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                            lblActualizacion.text("Es necesario que su dispositivo cuente con una cámara para poder actualizar su información.");
-                        }
-                    })
-                    .catch(function (error) {
-                        console.error("Error al enumerar los dispositivos:", error);
-                    });
-            } else {
-                console.error("enumerateDevices no es compatible con este navegador.");
-            }
-        });
-
-
         window.addEventListener('load', function () {
             ValidarEstadoCamara();
         });
@@ -1141,61 +1179,75 @@
                 navigator.msGetUserMedia);
 
             navigator.getMedia({ video: true }, function () {
-                $('#<%= CargaFotografia.ClientID %>').show();
-                $('#<%= BtnDownload.ClientID %>').hide();
-                $('#<%= BtnReload.ClientID %>').hide();
+
+                $("#<%= CargaFotografia.ClientID %>").css("display", "block");
+                $('#<%= tabla.ClientID %>').css("display", "block");
+                $('#<%= tbactualizar.ClientID %>').css("display", "block");
+                $('#<%= InfePersonal.ClientID %>').css("display", "block");
+                $('#<%= BtnReload.ClientID %>').css("display", "none");
+                $('#<%= BtnDownload.ClientID %>').css("display", "none");
+                document.getElementById('<%= cameraPermissionsGranted.ClientID %>').value = 'true';
+                $('#<%= BtnReload.ClientID %>').click;
             }, function () {
-                $('#<%= CargaFotografia.ClientID %>').hide();
-                $('#<%= tabla.ClientID %>').hide();
-                $('#<%= tbactualizar.ClientID %>').hide();
-                $('#<%= InfePersonal.ClientID %>').hide();
+
+                $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                $('#<%= tabla.ClientID %>').css("display", "none");
+                $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                $('#<%= InfePersonal.ClientID %>').css("display", "none");
                 var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones. <br>";
+                mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página... <br>";
                 lblActualizacion.css("color", "black");
                 lblActualizacion.html(mensaje);
-                $('#<%= BtnReload.ClientID %>').show();
-                $('#<%= BtnDownload.ClientID %>').show();
+                $('#<%= BtnReload.ClientID %>').css("display", "block");
+                $('#<%= BtnDownload.ClientID %>').css("display", "block");
+                document.getElementById('<%= cameraPermissionsGranted.ClientID %>').value = 'false';
             });
             setTimeout(function () { ValidarEstadoCamara() }, 1000);
         };
 
+        $(document).ready(function () {
+            ValidarEstadoCamara();
+
+        });
 
     </script>
     <script>
-        // Obtenemos el elemento de video y la imagen en JavaScript
-        const videoElement = document.getElementById("videoElement");
-        const imgBase = document.getElementById("<%= ImgBase.ClientID %>");
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d");
+        document.addEventListener("DOMContentLoaded", function () {
+            // Obtenemos el elemento de video y la imagen en JavaScript
+            const videoElement = document.getElementById("videoElement");
+            const imgBase = document.getElementById("<%= ImgBase.ClientID %>");
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
 
-        // Cuando el video esté listo, obtenemos las dimensiones y las aplicamos a la imagen y el canvas
-        videoElement.onloadedmetadata = function () {
-            const videoWidth = videoElement.videoWidth;
-            const videoHeight = videoElement.videoHeight;
+            // Cuando el video esté listo, obtenemos las dimensiones y las aplicamos a la imagen y el canvas
+            videoElement.onloadedmetadata = function () {
+                const videoWidth = videoElement.videoWidth;
+                const videoHeight = videoElement.videoHeight;
 
-            const maxWidth = 375;
-            const maxHeight = 275;
+                const maxWidth = 375;
+                const maxHeight = 275;
 
-            // Calculamos las dimensiones para la imagen considerando la relación de aspecto
-            let newWidth, newHeight;
-            if (videoWidth / videoHeight > maxWidth / maxHeight) {
-                newWidth = maxWidth;
-                newHeight = videoHeight * (maxWidth / videoWidth);
-            } else {
-                newHeight = maxHeight;
-                newWidth = videoWidth * (maxHeight / videoHeight);
-            }
+                // Calculamos las dimensiones para la imagen considerando la relación de aspecto
+                let newWidth, newHeight;
+                if (videoWidth / videoHeight > maxWidth / maxHeight) {
+                    newWidth = maxWidth;
+                    newHeight = videoHeight * (maxWidth / videoWidth);
+                } else {
+                    newHeight = maxHeight;
+                    newWidth = videoWidth * (maxHeight / videoHeight);
+                }
 
-            // Aplicamos las dimensiones a la imagen
-            imgBase.style.width = newWidth + "px";
-            imgBase.style.height = newHeight + "px";
+                // Aplicamos las dimensiones a la imagen
+                imgBase.style.width = newWidth + "px";
+                imgBase.style.height = newHeight + "px";
 
-            // Aplicamos las dimensiones al canvas
-            canvas.style.width = newWidth + "px";
-            canvas.style.height = newHeight + "px";
-            canvas.width = newWidth;
-            canvas.height = newHeight;
-        };
+                // Aplicamos las dimensiones al canvas
+                canvas.style.width = newWidth + "px";
+                canvas.style.height = newHeight + "px";
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+            };
+        });
 
         function mostrarModalEspera() {
             var modal = document.getElementById("myModalEspera");
