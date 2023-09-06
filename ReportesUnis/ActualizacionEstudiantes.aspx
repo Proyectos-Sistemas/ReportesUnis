@@ -589,7 +589,7 @@
         <div class="row">
             <div class="col-md-4 mx-auto text-center">
             </div>
-            <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center" >
+            <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center">
                 <asp:Button ID="BtnDownload" runat="server" Text="Descargar Manual" CssClass="btn-danger-unis" OnClick="BtnDownload_Click" Style="display: none" />
             </div>
             <div class="col-md-4 mx-auto text-center">
@@ -599,7 +599,7 @@
         <div class="row">
             <div class="col-md-4 mx-auto text-center">
             </div>
-            <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center" >
+            <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center">
                 <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" OnClick="BtnReload_Click" Style="display: none" />
             </div>
             <div class="col-md-4 mx-auto text-center">
@@ -706,24 +706,23 @@
             }
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            $(document).ready(function () {
-                var videoElement = $('#videoElement')[0];
-                var canvas = $('#canvas')[0];
-                var context = canvas.getContext('2d');
-                var captureBtn = $('#captureBtn');
-                var textarea = $("#urlPath");
-                var imgBase = $("#<%= ImgBase.ClientID %>");
-                var urlPathControl = $("#urlPathControl");
-                captureBtn.on('click', function (event) {
-                    event.preventDefault();
-                    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-                    var imageData = canvas.toDataURL('image/jpeg');
-                    textarea.val(imageData);
-                    urlPathControl.val('1');
-                    imgBase.attr('src', imageData);
-                    
-                });
+
+        $(document).ready(function () {
+            var videoElement = $('#videoElement')[0];
+            var canvas = $('#canvas')[0];
+            var context = canvas.getContext('2d');
+            var captureBtn = $('#captureBtn');
+            var textarea = $("#urlPath");
+            var imgBase = $("#<%= ImgBase.ClientID %>");
+            var urlPathControl = $("#urlPathControl");
+            captureBtn.on('click', function (event) {
+                event.preventDefault();
+                context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                var imageData = canvas.toDataURL('image/jpeg');
+                textarea.val(imageData);
+                urlPathControl.val('1');
+                imgBase.attr('src', imageData);
+                canvas.hide();
             });
         });
 
@@ -1169,41 +1168,67 @@
             ValidarEstadoCamara();
         });
 
+        $(document).ready(function () {
+            // Verificar si el navegador es compatible con enumerateDevices
+            if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+                // Obtener la lista de dispositivos multimedia
+                navigator.mediaDevices
+                    .enumerateDevices()
+                    .then(function (devices) {
+                        // Verificar si hay al menos una cámara en la lista
+                        const hasCamera = devices.some(function (device) {
+                            return device.kind === "videoinput";
+                        });
+
+                        if (hasCamera) {
+                            console.log("La cámara está conectada.");
+                        } else {
+                            $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                            $('#<%= tabla.ClientID %>').css("display", "none");
+                            $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                            $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                            lblActualizacion.text("Es necesario que su dispositivo cuente con una cámara para poder actualizar su información.");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error("Error al enumerar los dispositivos:", error);
+                    });
+            } else {
+                console.error("enumerateDevices no es compatible con este navegador.");
+            }
+        });
 
         function ValidarEstadoCamara() {
             const date = new Date();
             var mensaje = "";
-            navigator.getMedia = (navigator.getUserMedia ||
-                navigator.webkitGetUserMedia ||
-                navigator.mozGetUserMedia ||
-                navigator.msGetUserMedia);
 
-            navigator.getMedia({ video: true }, function () {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function () {
+                    $("#<%= CargaFotografia.ClientID %>").css("display", "block");
+                    $('#<%= tabla.ClientID %>').css("display", "block");
+                    $('#<%= tbactualizar.ClientID %>').css("display", "block");
+                    $('#<%= InfePersonal.ClientID %>').css("display", "block");
+                    $('#<%= BtnReload.ClientID %>').css("display", "none");
+                    $('#<%= BtnDownload.ClientID %>').css("display", "none");
+                    $('#<%= BtnReload.ClientID %>').click;
+                })
+                .catch(function () {
+                    $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                    $('#<%= tabla.ClientID %>').css("display", "none");
+                    $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                    $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                    var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                    mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página... <br>";
+                    lblActualizacion.css("color", "black");
+                    lblActualizacion.html(mensaje);
+                    $('#<%= BtnReload.ClientID %>').css("display", "block");
+                    $('#<%= BtnDownload.ClientID %>').css("display", "block");
+                });
 
-                $("#<%= CargaFotografia.ClientID %>").css("display", "block");
-                $('#<%= tabla.ClientID %>').css("display", "block");
-                $('#<%= tbactualizar.ClientID %>').css("display", "block");
-                $('#<%= InfePersonal.ClientID %>').css("display", "block");
-                $('#<%= BtnReload.ClientID %>').css("display", "none");
-                $('#<%= BtnDownload.ClientID %>').css("display", "none");
-                document.getElementById('<%= cameraPermissionsGranted.ClientID %>').value = 'true';
-                $('#<%= BtnReload.ClientID %>').click;
-            }, function () {
-
-                $('#<%= CargaFotografia.ClientID %>').css("display", "none");
-                $('#<%= tabla.ClientID %>').css("display", "none");
-                $('#<%= tbactualizar.ClientID %>').css("display", "none");
-                $('#<%= InfePersonal.ClientID %>').css("display", "none");
-                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página... <br>";
-                lblActualizacion.css("color", "black");
-                lblActualizacion.html(mensaje);
-                $('#<%= BtnReload.ClientID %>').css("display", "block");
-                $('#<%= BtnDownload.ClientID %>').css("display", "block");
-                document.getElementById('<%= cameraPermissionsGranted.ClientID %>').value = 'false';
-            });
-            setTimeout(function () { ValidarEstadoCamara() }, 1000);
+            setTimeout(function () { ValidarEstadoCamara() }, 1);
         };
+
 
         $(document).ready(function () {
             ValidarEstadoCamara();
@@ -1266,6 +1291,8 @@
         function mostrarModalCorrecto() {
             var modal = document.getElementById("myModalCorrecto");
             modal.style.display = "block";
+            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+            lblActualizacion.html("");
 
             setTimeout(function () {
                 modal.style.display = "none"; // Oculta el modal después de 10 segundos
