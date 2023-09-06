@@ -1948,6 +1948,7 @@ namespace ReportesUnis
                                         DepartamentoNit.Text = CmbDepartamento.SelectedValue;
                                         MunicipioNit.Text = CmbMunicipio.SelectedValue;
                                         mensaje = "Su información fue actualizada correctamente";
+                                        ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                                     }
                                     else
                                     {
@@ -2003,63 +2004,46 @@ namespace ReportesUnis
 
         protected void BtnActualizar_Click(object sender, EventArgs e)
         {
-            string cameraAvailable = hdnCameraAvailable.Value;
 
-            if (cameraAvailable == "true")
+            string informacion = actualizarInformacion();
+
+            if (informacion != "0")
             {
-                string informacion = actualizarInformacion();
 
-                if (informacion != "0")
+                if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text))
                 {
-
-                    if (!String.IsNullOrEmpty(txtDireccion.Text) && !String.IsNullOrEmpty(txtTelefono.Text) && !String.IsNullOrEmpty(CmbPais.Text) && !String.IsNullOrEmpty(CmbMunicipio.Text) && !String.IsNullOrEmpty(CmbDepartamento.Text) && !String.IsNullOrEmpty(CmbEstado.Text))
+                    if (RadioButtonNombreNo.Checked)
                     {
-                        if (RadioButtonNombreNo.Checked)
-                        {
-                            if (CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() || CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() || CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
-                            {
-                                if (Request.Form["urlPathControl"] == "1")
-                                {
-                                    AlmacenarFotografia();
-                                }
-
-                                fotoAlmacenada();
-                                mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
-                                lblActualizacion.Text = mensaje;
-                                // Al finalizar la actualización, ocultar el modal
-                                ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalActualizacion();", true);
-                            }
-                            else
-                            {
-                                // Llama a la función JavaScript para mostrar el modal
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
-                            }
-                        }
-
-                        if (RadioButtonNombreSi.Checked)
+                        if (CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() || CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() || CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
                         {
                             if (Request.Form["urlPathControl"] == "1")
                             {
                                 AlmacenarFotografia();
                             }
+
                             fotoAlmacenada();
+                            mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
+                            lblActualizacion.Text = mensaje;
+                            // Al finalizar la actualización, ocultar el modal
+                            ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalActualizacion();", true);
+                        }
+                        else
+                        {
+                            // Llama a la función JavaScript para mostrar el modal
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                         }
                     }
 
+                    if (RadioButtonNombreSi.Checked)
+                    {
+                        if (Request.Form["urlPathControl"] == "1")
+                        {
+                            AlmacenarFotografia();
+                        }
+                        fotoAlmacenada();
+                    }
                 }
 
-
-
-            }
-            else
-            {
-                lblActualizacion.ForeColor = System.Drawing.Color.Black;
-                lblActualizacion.Text = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br /> " +
-                    "Para asignar los permisos correspondientes, descargué el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página.<br />";
-                mensaje = "0";
-                //controlCamposVisibles(false);
-                BtnDownload.Visible = true;
-                BtnReload.Visible = true;
             }
         }
 

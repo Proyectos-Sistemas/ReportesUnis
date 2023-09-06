@@ -722,7 +722,7 @@
                     textarea.val(imageData);
                     urlPathControl.val('1');
                     imgBase.attr('src', imageData);
-                    canvas.hide();
+                    
                 });
             });
         });
@@ -850,7 +850,7 @@
                     alert(mensaje);
                     return false;
                 } else if (confirm("¿Está seguro de que su información es correcta?")) {
-                    modal.style.display = "block";
+                    $('#myModalActualizacion').css('display', 'block');
                     __doPostBack('<%= BtnActualizar.ClientID %>', '');
                     return true; // Permite continuar con la acción del botón
                 } else {
