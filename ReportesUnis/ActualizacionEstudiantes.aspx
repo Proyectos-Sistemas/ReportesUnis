@@ -1207,16 +1207,9 @@
             var mensaje = "";
             var sesion = $('#<%= ISESSION.ClientID %>').val().trim(); 
             var bandera = $('#<%= banderaSESSION.ClientID %>').val().trim();
-            console.log("sesion");
-            console.log(sesion);
-            console.log("bandera");
-            console.log(bandera);
                 navigator.mediaDevices.getUserMedia({ video: true })
                     .then(function () {
                         if ((sesion == "0" || sesion == "1") && bandera == 0) {
-                            console.log(bandera);
-                            console.log(sesion);
-                            console.log('Se ve');
                             $("#<%= CargaFotografia.ClientID %>").css("display", "block");
                             $('#<%= tabla.ClientID %>').css("display", "block");
                             $('#<%= tbactualizar.ClientID %>').css("display", "block");
@@ -1230,9 +1223,6 @@
                         })
                     .catch(function () {
                         if ((sesion == "0" || sesion == "2") && bandera == 0) {
-                            console.log(sesion);
-                            console.log(bandera);
-                            console.log('Se oculta');
                             $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                             $('#<%= tabla.ClientID %>').css("display", "none");
                             $('#<%= tbactualizar.ClientID %>').css("display", "none");
