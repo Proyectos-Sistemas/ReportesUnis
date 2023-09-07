@@ -206,6 +206,9 @@
             <input type="hidden" id="UD_PERSONAL_PHONE" runat="server" />
             <%-- TEXTBOX ALMACENA UD CORREO PERSONAL--%>
             <input type="hidden" id="UD_EMAIL_ADDRESSES" runat="server" />
+            <%-- TEXTBOX ALMACENA LA VARIABLE DE SESION--%>
+            <input type="text" id="ISESSION" style="display: none" value="0" runat="server" />
+            <input type="hidden" id="banderaSESSION" runat="server"/>
 
 
 
@@ -1165,8 +1168,8 @@
         });
 
         window.addEventListener('load', function () {
-            ValidarEstadoCamara();
-        });
+            ValidarEstadoCamara1();
+        });;
 
         $(document).ready(function () {
             // Verificar si el navegador es compatible con enumerateDevices
@@ -1199,44 +1202,62 @@
             }
         });
 
-        function ValidarEstadoCamara() {
+        function ValidarEstadoCamara1() {
             const date = new Date();
             var mensaje = "";
+            var sesion = $('#<%= ISESSION.ClientID %>').val().trim(); 
+            var bandera = $('#<%= banderaSESSION.ClientID %>').val().trim();
+            console.log("sesion");
+            console.log(sesion);
+            console.log("bandera");
+            console.log(bandera);
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function () {
+                        if ((sesion == "0" || sesion == "1") && bandera == 0) {
+                            console.log(bandera);
+                            console.log(sesion);
+                            console.log('Se ve');
+                            $("#<%= CargaFotografia.ClientID %>").css("display", "block");
+                            $('#<%= tabla.ClientID %>').css("display", "block");
+                            $('#<%= tbactualizar.ClientID %>').css("display", "block");
+                            $('#<%= InfePersonal.ClientID %>').css("display", "block");
+                            $('#<%= BtnReload.ClientID %>').css("display", "none");
+                            $('#<%= BtnDownload.ClientID %>').css("display", "none");
+                            $('#<%= BtnReload.ClientID %>').click;
+                            guardarEnSessionStorage("1");
+                            bandera.text = "1";
+                        }
+                        })
+                    .catch(function () {
+                        if ((sesion == "0" || sesion == "2") && bandera == 0) {
+                            console.log(sesion);
+                            console.log(bandera);
+                            console.log('Se oculta');
+                            $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                            $('#<%= tabla.ClientID %>').css("display", "none");
+                            $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                            $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                            mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página... <br>";
+                            lblActualizacion.css("color", "black");
+                            lblActualizacion.html(mensaje);
+                            $('#<%= BtnReload.ClientID %>').css("display", "block");
+                            $('#<%= BtnDownload.ClientID %>').css("display", "block");
+                            guardarEnSessionStorage("2");
+                            bandera.text = "1";
+                        }
+                    });
 
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function () {
-                    $("#<%= CargaFotografia.ClientID %>").css("display", "block");
-                    $('#<%= tabla.ClientID %>').css("display", "block");
-                    $('#<%= tbactualizar.ClientID %>').css("display", "block");
-                    $('#<%= InfePersonal.ClientID %>').css("display", "block");
-                    $('#<%= BtnReload.ClientID %>').css("display", "none");
-                    $('#<%= BtnDownload.ClientID %>').css("display", "none");
-                    $('#<%= BtnReload.ClientID %>').click;
-                })
-                .catch(function () {
-                    $('#<%= CargaFotografia.ClientID %>').css("display", "none");
-                    $('#<%= tabla.ClientID %>').css("display", "none");
-                    $('#<%= tbactualizar.ClientID %>').css("display", "none");
-                    $('#<%= InfePersonal.ClientID %>').css("display", "none");
-                    var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                    mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página... <br>";
-                    lblActualizacion.css("color", "black");
-                    lblActualizacion.html(mensaje);
-                    $('#<%= BtnReload.ClientID %>').css("display", "block");
-                    $('#<%= BtnDownload.ClientID %>').css("display", "block");
-                });
-
-            setTimeout(function () { ValidarEstadoCamara() }, 1);
+                setTimeout(function () {
+                    ValidarEstadoCamara1()
+                }, 1);
+            
         };
 
+        //$(document).ready(function () {
+        //    ValidarEstadoCamara();
 
-        $(document).ready(function () {
-            ValidarEstadoCamara();
-
-        });
-
-    </script>
-    <script>
+        //}); 
         document.addEventListener("DOMContentLoaded", function () {
             // Obtenemos el elemento de video y la imagen en JavaScript
             const videoElement = document.getElementById("videoElement");
@@ -1308,6 +1329,21 @@
             }
             return true;
         }
+
+        // Función para guardar en sessionStorage
+        function guardarEnSessionStorage(valor) {
+            var inputElement = $('#<%= ISESSION.ClientID %>').val().trim(); 
+            // Verificar si sessionStorage está disponible en el navegador
+            if (typeof sessionStorage !== 'undefined') {
+                // Guardar el valor en sessionStorage
+                sessionStorage.setItem("miVariable", valor);
+                console.log("Valor guardado en sessionStorage: " + valor);
+                inputElement.text = valor;
+            } else {
+                console.error("El navegador no admite sessionStorage");
+            }
+        }
+
 
     </script>
 

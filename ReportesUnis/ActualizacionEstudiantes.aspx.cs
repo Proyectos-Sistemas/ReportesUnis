@@ -42,7 +42,9 @@ namespace ReportesUnis
             BtnDownload.Visible = false;
             BtnReload.Visible = false;*/
 
-            controlCamposVisibles(true);
+            banderaSESSION.Value = "0";
+            ISESSION.Value = "0";
+            controlCamposVisibles(true);            
             //BtnDownload.Visible = false;
             //BtnReload.Visible = false;
             LeerInfoTxt();
@@ -344,13 +346,17 @@ namespace ReportesUnis
                         TxtDiRe2.Text = reader["DIRECCION2_NIT"].ToString();
                         TxtDiRe3.Text = reader["DIRECCION3_NIT"].ToString();
                         if (!String.IsNullOrEmpty(reader["PAIS"].ToString()))
+                        {
                             CmbPais.SelectedValue = reader["PAIS"].ToString();
+                            llenadoDepartamento();
+                            CmbDepartamento.SelectedValue = reader["DEPARTAMENTO"].ToString();
+                            llenadoMunicipio();
+                            CmbMunicipio.SelectedValue = reader["MUNICIPIO"].ToString();
+                        }
                         else
+                        {
                             CmbPais.SelectedValue = "";
-                        llenadoDepartamento();
-                        CmbDepartamento.SelectedValue = reader["DEPARTAMENTO"].ToString();
-                        llenadoMunicipio();
-                        CmbMunicipio.SelectedValue = reader["MUNICIPIO"].ToString();
+                        }
 
                         if (!String.IsNullOrEmpty(reader["PAIS_NIT"].ToString()))
                         {
@@ -376,8 +382,6 @@ namespace ReportesUnis
                         else
                         {
                             llenadoPaisnit();
-                            llenadoDepartamentoNit();
-                            llenadoMunicipioNIT();
                         }
                         txtTelefono.Text = reader["PHONE"].ToString();
                         TruePhone.Text = reader["PHONE"].ToString();
@@ -545,6 +549,8 @@ namespace ReportesUnis
         }
         protected void llenadoDepartamento()
         {
+            banderaSESSION.Value = "1";
+            ISESSION.Value = "0";
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -575,9 +581,13 @@ namespace ReportesUnis
                     }
                 }
             }
+            ISESSION.Value = "0";
+            banderaSESSION.Value = "1";
         }
         public void llenadoDepartamentoNit()
         {
+            banderaSESSION.Value = "1";
+            ISESSION.Value = "0";
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -608,6 +618,8 @@ namespace ReportesUnis
                     }
                 }
             }
+            ISESSION.Value = "0";
+            banderaSESSION.Value = "1";
         }
 
         protected void DeptoCF()
@@ -686,9 +698,13 @@ namespace ReportesUnis
                     }
                 }
             }
+            banderaSESSION.Value = "0";
+            ISESSION.Value = "0";
         }
         protected void llenadoMunicipio()
         {
+            banderaSESSION.Value = "0";
+            ISESSION.Value = "0";
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -718,9 +734,13 @@ namespace ReportesUnis
                     }
                 }
             }
+            banderaSESSION.Value = "0";
+            ISESSION.Value = "0";
         }
         protected void llenadoPais()
         {
+            banderaSESSION.Value = "1"; 
+            ISESSION.Value = "0";
             string where = "";
             if (!String.IsNullOrEmpty(CmbPais.Text))
                 where = "WHERE COUNTRY='" + CmbPais.Text + "'";
@@ -742,9 +762,12 @@ namespace ReportesUnis
                     con.Close();
                 }
             }
+            banderaSESSION.Value = "1";
+            ISESSION.Value = "0";
         }
         public void llenadoPaisnit()
         {
+            banderaSESSION.Value = "1";
             string where = "";
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -764,9 +787,10 @@ namespace ReportesUnis
                     con.Close();
                 }
             }
+            banderaSESSION.Value = "1";
         }
         protected void llenadoState()
-        {
+        {           
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -2393,9 +2417,9 @@ namespace ReportesUnis
                     txtNit.Enabled = true;
                     llenadoPaisnit();
                     CmbPaisNIT.SelectedValue = " ";
-                    llenadoDepartamentoNit();
-                    CmbDepartamentoNIT.SelectedValue = " ";
-                    llenadoMunicipioNIT();
+                    //llenadoDepartamentoNit();
+                    //CmbDepartamentoNIT.SelectedValue = " ";
+                    //llenadoMunicipioNIT();
                     string script = "<script>NoExisteNit();</script>";
                     ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                 }
