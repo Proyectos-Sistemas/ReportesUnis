@@ -1217,6 +1217,8 @@
                             $('#<%= BtnReload.ClientID %>').css("display", "none");
                             $('#<%= BtnDownload.ClientID %>').css("display", "none");
                             $('#<%= BtnReload.ClientID %>').click;
+                            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                            lblActualizacion.html("");
                             guardarEnSessionStorage("1");
                             bandera.text = "1";
                         }
