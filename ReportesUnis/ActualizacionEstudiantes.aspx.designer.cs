@@ -15,15 +15,6 @@ namespace ReportesUnis
     {
 
         /// <summary>
-        /// Control CargaFotografia.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl CargaFotografia;
-
-        /// <summary>
         /// Control hdnCameraAvailable.
         /// </summary>
         /// <remarks>
@@ -31,6 +22,24 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdnCameraAvailable;
+
+        /// <summary>
+        /// Control cameraPermissionsGranted.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField cameraPermissionsGranted;
+
+        /// <summary>
+        /// Control CargaFotografia.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl CargaFotografia;
 
         /// <summary>
         /// Control ImgBase.
@@ -582,6 +591,24 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden UD_EMAIL_ADDRESSES;
 
         /// <summary>
+        /// Control ISESSION.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText ISESSION;
+
+        /// <summary>
+        /// Control banderaSESSION.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden banderaSESSION;
+
+        /// <summary>
         /// Control tabla.
         /// </summary>
         /// <remarks>
@@ -948,7 +975,7 @@ namespace ReportesUnis
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table tbactualizar;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tbactualizar;
 
         /// <summary>
         /// Control BtnActualizar.

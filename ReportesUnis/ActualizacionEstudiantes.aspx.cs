@@ -36,6 +36,18 @@ namespace ReportesUnis
         string HoyEffdt = DateTime.Now.ToString("dd-MM-yyyy").Substring(0, 10).TrimEnd();
         protected void Page_Load(object sender, EventArgs e)
         {
+            //Page.ClientScript.RegisterStartupScript(GetType(), "CheckCameraAccess", "checkCameraAccess();", true);
+            //Page.ClientScript.RegisterStartupScript(this.GetType(), "VerificarPermisos", "verificarPermisosCamara(function(permisosVigentes));", true);
+            /*controlCamposVisibles(false);
+            BtnDownload.Visible = false;
+            BtnReload.Visible = false;*/
+
+            banderaSESSION.Value = "0";
+            ISESSION.Value = "0";
+            controlCamposVisibles(true);
+            //BtnDownload.Visible = false;
+            //BtnReload.Visible = false;
+            LeerInfoTxt();
             LeerInfoTxt();
             LeerPathApex();
             controlPantalla = PantallaHabilitada("Carnetización Masiva");
@@ -50,8 +62,7 @@ namespace ReportesUnis
                 }
                 if (!IsPostBack)
                 {
-                    BtnReload.Visible = false;
-                    Page.ClientScript.RegisterStartupScript(GetType(), "CheckCameraAccess", "checkCameraAccess();", true);
+                    //BtnReload.Visible = false;
                     LeerInfoTxtSQL();
                     LeerInfoTxtPath();
                     llenadoPais();
@@ -85,7 +96,7 @@ namespace ReportesUnis
                         {
                             AlmacenarFotografia();
                         }
-                        
+
                         fotoAlmacenada();
 
                         if (String.IsNullOrEmpty(txtCarne.Text))
@@ -100,7 +111,7 @@ namespace ReportesUnis
                     }
                     else
                     {
-                        controlCamposVisibles();
+                        controlCamposVisibles(false);
                         lblActualizacion.ForeColor = System.Drawing.Color.Black;
                         lblActualizacion.Text = "Ha llegado al límite de las renovaciones. <br /> " +
                             "Si desea generar una nueva renovación pongase en contacto con soporte@unis.edu.gt.";
@@ -112,7 +123,7 @@ namespace ReportesUnis
             else
             {
                 lblActualizacion.Text = "¡IMPORTANTE! Esta página no está disponible, ¡Permanece atento a nuevas fechas para actualizar tus datos!";
-                controlCamposVisibles();
+                controlCamposVisibles(false);
             }
         }
 
@@ -163,12 +174,12 @@ namespace ReportesUnis
                 file.Close();
             }
         }
-        public void controlCamposVisibles()
+        public void controlCamposVisibles(bool Condicion)
         {
-            CargaFotografia.Visible = false;
-            tabla.Visible = false;
-            tbactualizar.Visible = false;
-            InfePersonal.Visible = false;
+            CargaFotografia.Visible = Condicion;
+            tabla.Visible = Condicion;
+            tbactualizar.Visible = Condicion;
+            InfePersonal.Visible = Condicion;
         }
         private string mostrarInformación()
         {
@@ -335,13 +346,17 @@ namespace ReportesUnis
                         TxtDiRe2.Text = reader["DIRECCION2_NIT"].ToString();
                         TxtDiRe3.Text = reader["DIRECCION3_NIT"].ToString();
                         if (!String.IsNullOrEmpty(reader["PAIS"].ToString()))
+                        {
                             CmbPais.SelectedValue = reader["PAIS"].ToString();
+                            llenadoDepartamento();
+                            CmbDepartamento.SelectedValue = reader["DEPARTAMENTO"].ToString();
+                            llenadoMunicipio();
+                            CmbMunicipio.SelectedValue = reader["MUNICIPIO"].ToString();
+                        }
                         else
+                        {
                             CmbPais.SelectedValue = "";
-                        llenadoDepartamento();
-                        CmbDepartamento.SelectedValue = reader["DEPARTAMENTO"].ToString();
-                        llenadoMunicipio();
-                        CmbMunicipio.SelectedValue = reader["MUNICIPIO"].ToString();
+                        }
 
                         if (!String.IsNullOrEmpty(reader["PAIS_NIT"].ToString()))
                         {
@@ -367,8 +382,6 @@ namespace ReportesUnis
                         else
                         {
                             llenadoPaisnit();
-                            llenadoDepartamentoNit();
-                            llenadoMunicipioNIT();
                         }
                         txtTelefono.Text = reader["PHONE"].ToString();
                         TruePhone.Text = reader["PHONE"].ToString();
@@ -460,7 +473,7 @@ namespace ReportesUnis
                     }
                     con.Close();
 
-                    
+
                     fotoAlmacenada();
                 }
             }
@@ -536,6 +549,8 @@ namespace ReportesUnis
         }
         protected void llenadoDepartamento()
         {
+            banderaSESSION.Value = "1";
+            ISESSION.Value = "0";
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -566,9 +581,13 @@ namespace ReportesUnis
                     }
                 }
             }
+            ISESSION.Value = "0";
+            banderaSESSION.Value = "1";
         }
         public void llenadoDepartamentoNit()
         {
+            banderaSESSION.Value = "1";
+            ISESSION.Value = "0";
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -599,6 +618,8 @@ namespace ReportesUnis
                     }
                 }
             }
+            ISESSION.Value = "0";
+            banderaSESSION.Value = "1";
         }
 
         protected void DeptoCF()
@@ -677,9 +698,13 @@ namespace ReportesUnis
                     }
                 }
             }
+            banderaSESSION.Value = "0";
+            ISESSION.Value = "0";
         }
         protected void llenadoMunicipio()
         {
+            banderaSESSION.Value = "0";
+            ISESSION.Value = "0";
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -709,9 +734,13 @@ namespace ReportesUnis
                     }
                 }
             }
+            banderaSESSION.Value = "0";
+            ISESSION.Value = "0";
         }
         protected void llenadoPais()
         {
+            banderaSESSION.Value = "1";
+            ISESSION.Value = "0";
             string where = "";
             if (!String.IsNullOrEmpty(CmbPais.Text))
                 where = "WHERE COUNTRY='" + CmbPais.Text + "'";
@@ -733,9 +762,12 @@ namespace ReportesUnis
                     con.Close();
                 }
             }
+            banderaSESSION.Value = "1";
+            ISESSION.Value = "0";
         }
         public void llenadoPaisnit()
         {
+            banderaSESSION.Value = "1";
             string where = "";
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -755,6 +787,7 @@ namespace ReportesUnis
                     con.Close();
                 }
             }
+            banderaSESSION.Value = "1";
         }
         protected void llenadoState()
         {
@@ -920,112 +953,112 @@ namespace ReportesUnis
             {
                 txtNit.Text = "CF";
             }
-            string cameraAvailable = hdnCameraAvailable.Value;
+            /*string cameraAvailable = hdnCameraAvailable.Value;
             if (cameraAvailable == "true")
+            {*/
+            int contador = 0;
+
+            if (txtAInicial.Value == txtApellido.Text && txtNInicial.Value == txtNombre.Text && txtCInicial.Value == txtCasada.Text)
             {
-                int contador = 0;
+                txtAccion.Text = "1";
+                txtTipoAccion.Text = "1.1";
+                txtConfirmacion.Text = "02"; //VALIDACIÓN DE FOTOGRAFÍA
 
-                if (txtAInicial.Value == txtApellido.Text && txtNInicial.Value == txtNombre.Text && txtCInicial.Value == txtCasada.Text)
+                if (RadioButtonNombreNo.Checked)
                 {
-                    txtAccion.Text = "1";
-                    txtTipoAccion.Text = "1.1";
-                    txtConfirmacion.Text = "02"; //VALIDACIÓN DE FOTOGRAFÍA
-
-                    if (RadioButtonNombreNo.Checked)
+                    if (!CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
                     {
-                        if (!CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
-                        {
-                            ValidacionParaIngreso();
-                        }
-                        else
-                        {
-
-                            mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
-                            lblActualizacion.Text = mensaje;
-                        }
-                    }
-
-                    if (RadioButtonNombreSi.Checked)
-                    {
-                        TxtNombreR.Text = txtNombre.Text;
-                        TxtApellidoR.Text = txtApellido.Text;
-                        TxtCasadaR.Text = txtCasada.Text;
-                        TxtDiRe1.Text = txtDireccion.Text;
-                        TxtDiRe2.Text = txtDireccion2.Text;
-                        TxtDiRe3.Text = txtDireccion3.Text;
-                        txtNit.Text = "CF";
                         ValidacionParaIngreso();
-                    }
-
-                }
-                else
-                {
-                    if (FileUpload2.HasFile)
-                    {
-                        int txtCantidad = 0;
-                        string constr = TxtURL.Text;
-                        using (OracleConnection con = new OracleConnection(constr))
-                        {
-                            con.Open();
-                            OracleTransaction transaction;
-                            transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
-                            using (OracleCommand cmd = new OracleCommand())
-                            {
-
-                                cmd.Transaction = transaction;
-                                //Obtener codigo país
-                                cmd.Connection = con;
-                                cmd.CommandText = "SELECT TOTALFOTOS FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + UserEmplid.Text + "'";
-                                OracleDataReader reader = cmd.ExecuteReader();
-                                while (reader.Read())
-                                {
-                                    txtCantidad = Convert.ToInt16(reader["TOTALFOTOS"]);
-                                }
-                            }
-                        }
-                        for (int i = 1; i <= txtCantidad; i++)
-                        {
-                            File.Delete(CurrentDirectory + "/Usuarios/DPI/" + txtCarne.Text + "(" + i + ").jpg");
-                        }
-                        foreach (HttpPostedFile uploadedFile in FileUpload2.PostedFiles)
-                        {
-                            contador++;
-                            string nombreArchivo = txtCarne.Text + "(" + contador + ").jpg";
-                            string ruta = CurrentDirectory + "/Usuarios/DPI/" + nombreArchivo;
-                            uploadedFile.SaveAs(ruta);
-                        }
-                        txtAccion.Text = "1";
-                        txtTipoAccion.Text = "1.1";
-                        txtConfirmacion.Text = "01"; //Requiere confirmación de operador 
-                        txtCantidadImagenesDpi.Text = contador.ToString();
-                        IngresoDatos();
                     }
                     else
                     {
-                        if (txtAInicial.Value != txtApellido.Text || txtNInicial.Value != txtNombre.Text || txtCInicial.Value != txtCasada.Text)
-                        {
-                            string script = "<script>Documentos();</script>";
-                            ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
-                            mensaje = "Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.";
-                            TxtNombreR.Text = txtNombre.Text;
-                            TxtApellidoR.Text = txtApellido.Text;
-                            TxtCasadaR.Text = TxtCasadaR.Text;
-                        }
-                        fotoAlmacenada();
+
+                        mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
+                        lblActualizacion.Text = mensaje;
                     }
                 }
-                return mensaje;
+
+                if (RadioButtonNombreSi.Checked)
+                {
+                    TxtNombreR.Text = txtNombre.Text;
+                    TxtApellidoR.Text = txtApellido.Text;
+                    TxtCasadaR.Text = txtCasada.Text;
+                    TxtDiRe1.Text = txtDireccion.Text;
+                    TxtDiRe2.Text = txtDireccion2.Text;
+                    TxtDiRe3.Text = txtDireccion3.Text;
+                    txtNit.Text = "CF";
+                    ValidacionParaIngreso();
+                }
+
             }
             else
             {
-                lblActualizacion.ForeColor = System.Drawing.Color.Black;
-                lblActualizacion.Text = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br /> " +
-                    "Para asignar los permisos correspondientes, descargué el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página.<br />";
-                mensaje = "0";
-                controlCamposVisibles();
-                BtnDownload.Visible = true;
-                BtnReload.Visible = true;
+                if (FileUpload2.HasFile)
+                {
+                    int txtCantidad = 0;
+                    string constr = TxtURL.Text;
+                    using (OracleConnection con = new OracleConnection(constr))
+                    {
+                        con.Open();
+                        OracleTransaction transaction;
+                        transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                        using (OracleCommand cmd = new OracleCommand())
+                        {
+
+                            cmd.Transaction = transaction;
+                            //Obtener codigo país
+                            cmd.Connection = con;
+                            cmd.CommandText = "SELECT TOTALFOTOS FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + UserEmplid.Text + "'";
+                            OracleDataReader reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                txtCantidad = Convert.ToInt16(reader["TOTALFOTOS"]);
+                            }
+                        }
+                    }
+                    for (int i = 1; i <= txtCantidad; i++)
+                    {
+                        File.Delete(CurrentDirectory + "/Usuarios/DPI/" + txtCarne.Text + "(" + i + ").jpg");
+                    }
+                    foreach (HttpPostedFile uploadedFile in FileUpload2.PostedFiles)
+                    {
+                        contador++;
+                        string nombreArchivo = txtCarne.Text + "(" + contador + ").jpg";
+                        string ruta = CurrentDirectory + "/Usuarios/DPI/" + nombreArchivo;
+                        uploadedFile.SaveAs(ruta);
+                    }
+                    txtAccion.Text = "1";
+                    txtTipoAccion.Text = "1.1";
+                    txtConfirmacion.Text = "01"; //Requiere confirmación de operador 
+                    txtCantidadImagenesDpi.Text = contador.ToString();
+                    IngresoDatos();
+                }
+                else
+                {
+                    if (txtAInicial.Value != txtApellido.Text || txtNInicial.Value != txtNombre.Text || txtCInicial.Value != txtCasada.Text)
+                    {
+                        string script = "<script>Documentos();</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                        mensaje = "Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.";
+                        TxtNombreR.Text = txtNombre.Text;
+                        TxtApellidoR.Text = txtApellido.Text;
+                        TxtCasadaR.Text = TxtCasadaR.Text;
+                    }
+                    fotoAlmacenada();
+                }
             }
+            return mensaje;
+            /* }
+             else
+             {
+                 lblActualizacion.ForeColor = System.Drawing.Color.Black;
+                 lblActualizacion.Text = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br /> " +
+                     "Para asignar los permisos correspondientes, descargué el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página.<br />";
+                 mensaje = "0";
+                 controlCamposVisibles();
+                 BtnDownload.Visible = true;
+                 BtnReload.Visible = true;
+             }*/
             return mensaje;
 
         }
@@ -1051,7 +1084,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            
+
             llenadoState();
             fotoAlmacenada();
             MunicipioNit.Text = CmbMunicipio.SelectedValue;
@@ -1063,7 +1096,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            
+
             llenadoStateNIT();
             fotoAlmacenada();
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
@@ -1074,7 +1107,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            
+
             llenadoMunicipio();
             llenadoState();
             fotoAlmacenada();
@@ -1088,7 +1121,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            
+
             llenadoMunicipioNIT();
             llenadoStateNIT();
             fotoAlmacenada();
@@ -1493,7 +1526,7 @@ namespace ReportesUnis
 
                                     cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "' " +
                                         "AND ADDRESS1 ='" + txtDireccion.Text + "' AND ADDRESS2 = '" + txtDireccion2.Text + "' AND ADDRESS3 = '" + txtDireccion3.Text + "'" +
-                                        "AND COUNTRY='" + codPais + "' AND STATE ='" + State.Text + "' AND EFFDT ='"+ Convert.ToDateTime(EffdtDireccionUltimo).ToString("dd/MM/yyyy")+"' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                        "AND COUNTRY='" + codPais + "' AND STATE ='" + State.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtDireccionUltimo).ToString("dd/MM/yyyy") + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
                                     reader = cmd.ExecuteReader();
                                     while (reader.Read())
                                     {
@@ -1672,7 +1705,7 @@ namespace ReportesUnis
                                                 EffdtNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("dd-MM-yyyy")).ToString();
                                             }
 
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND  EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + UserEmplid.Text + "' AND EFFDT='"+EffdtNitUltimo+"'";
+                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND  EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + UserEmplid.Text + "' AND EFFDT='" + EffdtNitUltimo + "'";
                                             reader = cmd.ExecuteReader();
                                             while (reader.Read())
                                             {
@@ -1933,12 +1966,13 @@ namespace ReportesUnis
                                         {
                                             AlmacenarFotografia();
                                         }
-                                        
+
                                         fotoAlmacenada();
                                         PaisNit.Text = CmbPais.SelectedValue;
                                         DepartamentoNit.Text = CmbDepartamento.SelectedValue;
                                         MunicipioNit.Text = CmbMunicipio.SelectedValue;
                                         mensaje = "Su información fue actualizada correctamente";
+                                        ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                                     }
                                     else
                                     {
@@ -1948,7 +1982,7 @@ namespace ReportesUnis
                                         {
                                             AlmacenarFotografia();
                                         }
-                                        
+
                                         fotoAlmacenada();
                                     }
 
@@ -1962,7 +1996,7 @@ namespace ReportesUnis
                                     {
                                         AlmacenarFotografia();
                                     }
-                                    
+
                                     fotoAlmacenada();
                                 }
                             }
@@ -1981,7 +2015,7 @@ namespace ReportesUnis
                 {
                     AlmacenarFotografia();
                 }
-                
+
                 fotoAlmacenada();
             }
             else
@@ -1994,6 +2028,7 @@ namespace ReportesUnis
 
         protected void BtnActualizar_Click(object sender, EventArgs e)
         {
+
             string informacion = actualizarInformacion();
 
             if (informacion != "0")
@@ -2009,10 +2044,17 @@ namespace ReportesUnis
                             {
                                 AlmacenarFotografia();
                             }
-                            
+
                             fotoAlmacenada();
                             mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
                             lblActualizacion.Text = mensaje;
+                            // Al finalizar la actualización, ocultar el modal
+                            ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalActualizacion();", true);
+                        }
+                        else
+                        {
+                            // Llama a la función JavaScript para mostrar el modal
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                         }
                     }
 
@@ -2022,18 +2064,11 @@ namespace ReportesUnis
                         {
                             AlmacenarFotografia();
                         }
-
-                        
                         fotoAlmacenada();
                     }
                 }
 
             }
-
-            // Al finalizar la actualización, ocultar el modal
-            ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalActualizacion();", true);
-            // Llama a la función JavaScript para mostrar el modal
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
         }
 
         protected void CmbPais_SelectedIndexChanged(object sender, EventArgs e)
@@ -2045,7 +2080,7 @@ namespace ReportesUnis
             llenadoDepartamento();
             llenadoMunicipio();
             llenadoState();
-            
+
             fotoAlmacenada();
             PaisNit.Text = CmbPais.SelectedValue;
             DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -2058,7 +2093,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            
+
             llenadoDepartamentoNit();
             llenadoMunicipioNIT();
             llenadoStateNIT();
@@ -2173,7 +2208,7 @@ namespace ReportesUnis
                             catch (Exception)
                             {
                                 transaction.Rollback();
-                                
+
                                 fotoAlmacenada();
                             }
                         }
@@ -2361,7 +2396,7 @@ namespace ReportesUnis
                         AlmacenarFotografia();
                     }
 
-                    
+
                     fotoAlmacenada();
                     ValidacionNit.Value = "0";
                 }
@@ -2382,9 +2417,9 @@ namespace ReportesUnis
                     txtNit.Enabled = true;
                     llenadoPaisnit();
                     CmbPaisNIT.SelectedValue = " ";
-                    llenadoDepartamentoNit();
-                    CmbDepartamentoNIT.SelectedValue = " ";
-                    llenadoMunicipioNIT();
+                    //llenadoDepartamentoNit();
+                    //CmbDepartamentoNIT.SelectedValue = " ";
+                    //llenadoMunicipioNIT();
                     string script = "<script>NoExisteNit();</script>";
                     ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                 }
@@ -2486,7 +2521,7 @@ namespace ReportesUnis
                             {
                                 AlmacenarFotografia();
                             }
-                            
+
                             fotoAlmacenada();
                             mensaje = "Es necesario seleccionar un País, departamento y municipio para el recibo.";
                             lblActualizacion.Text = mensaje;
@@ -2499,7 +2534,7 @@ namespace ReportesUnis
                         {
                             AlmacenarFotografia();
                         }
-                        
+
                         fotoAlmacenada();
                     }
                 }
