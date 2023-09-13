@@ -476,6 +476,7 @@
     </None>
     <Content Include="PathAlmacenamiento.txt" />
     <Content Include="PathConfirmacion.txt" />
+    <Content Include="PruebaControlPermisos.aspx" />
     <Content Include="ReportesCT\Reporte Camara Termica Empleados 28 11 2022 11_49_37 a.xlsx" />
     <Content Include="ReportesCT\Reporte Camara Termica Estudiantes13 12 2022 03_32_16 p.xlsx" />
     <Content Include="ReportesCT\Reporte Camara Termica Estudiantes13 12 2022 03_34_03 p.xlsx" />
@@ -709,6 +710,13 @@
     </Compile>
     <Compile Include="Models\Modelos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PruebaControlPermisos.aspx.cs">
+      <DependentUpon>PruebaControlPermisos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PruebaControlPermisos.aspx.designer.cs">
+      <DependentUpon>PruebaControlPermisos.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ReporteCamarasTermicas.aspx.cs">
       <DependentUpon>ReporteCamarasTermicas.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

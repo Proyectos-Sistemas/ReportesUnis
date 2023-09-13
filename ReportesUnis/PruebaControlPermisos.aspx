@@ -1,5 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ActualizacionEstudiantes.aspx.cs" Inherits="ReportesUnis.ActualizacionEstudiantes" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PruebaControlPermisos.aspx.cs" Inherits="ReportesUnis.PruebaControlPermisos" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <br />
@@ -304,21 +303,21 @@
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">País*:</asp:Label><br />
-                                    <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
+                                    <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                     </asp:DropDownList>
                                     <br />
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label>
-                                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
+                                    <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                     </asp:DropDownList>
                                     <br />
                                 </div>
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label>
-                                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
+                                    <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                     </asp:DropDownList>
                                     <br />
                                 </div>
@@ -373,8 +372,8 @@
                                 <div class="col-md-4 mx-auto text-center">
                                     <asp:Label runat="server">Desea utilizar CF:  </asp:Label>
                                     <br />
-                                    <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI" OnCheckedChanged="RadioButtonNombreSi_CheckedChanged" />
-                                    <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO" OnCheckedChanged="RadioButtonNombreNo_CheckedChanged" />
+                                    <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI" />
+                                    <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO" />
                                 </div>
                                 <div class="col-md-4 mx-auto text-center">
                                 </div>
@@ -423,7 +422,7 @@
                                     <div class="col-md-4 mx-auto text-center">
                                     </div>
                                     <div class="col-md-4 mx-auto text-center">
-                                        <asp:Button ID="ValidarNIT" runat="server" Text="Validar Nit" CssClass="btn-danger-unis" Enabled="true" OnClick="txtNit_TextChanged" CausesValidation="false" />
+                                        <asp:Button ID="ValidarNIT" runat="server" Text="Validar Nit" CssClass="btn-danger-unis" Enabled="true" CausesValidation="false" />
                                     </div>
                                     <div class="col-md-4 mx-auto text-center">
                                     </div>
@@ -476,21 +475,21 @@
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">País*:</asp:Label>
                                                 <br />
-                                                <asp:DropDownList ID="CmbPaisNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPaisNIT_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
+                                                <asp:DropDownList ID="CmbPaisNIT" runat="server" AutoPostBack="true" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
                                                 <br />
                                             </div>
 
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label>
                                                 <br />
-                                                <asp:DropDownList ID="CmbDepartamentoNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamentoNIT_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
+                                                <asp:DropDownList ID="CmbDepartamentoNIT" runat="server" AutoPostBack="true" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
                                                 <br />
                                             </div>
 
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label>
                                                 <br />
-                                                <asp:DropDownList ID="CmbMunicipioNIT" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipioNIT_SelectedIndexChanged" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
+                                                <asp:DropDownList ID="CmbMunicipioNIT" runat="server" AutoPostBack="true" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
                                                 <br />
                                             </div>
                                         </div>
@@ -536,7 +535,7 @@
                 <div class="col-md-4 mx-auto text-center">
                 </div>
                 <div class="col-md-4 mx-auto text-center">
-                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
+                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" />
                 </div>
                 <div class="col-md-4 mx-auto text-center">
                 </div>
@@ -593,7 +592,7 @@
             <div class="col-md-4 mx-auto text-center">
             </div>
             <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center">
-                <asp:Button ID="BtnDownload" runat="server" Text="Descargar Manual" CssClass="btn-danger-unis" OnClick="BtnDownload_Click" Style="display: none" />
+                <asp:Button ID="BtnDownload" runat="server" Text="Descargar Manual" CssClass="btn-danger-unis" Style="display: none" />
             </div>
             <div class="col-md-4 mx-auto text-center">
             </div>
@@ -603,7 +602,7 @@
             <div class="col-md-4 mx-auto text-center">
             </div>
             <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center">
-                <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" OnClick="BtnReload_Click" Style="display: none" />
+                <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" Style="display: none" />
             </div>
             <div class="col-md-4 mx-auto text-center">
             </div>
@@ -653,7 +652,7 @@
                                             <div class="form-group col-md-5">
                                             </div>
                                             <div class="form-group col-md-2">
-                                                <asp:Button ID="BtnAceptarCarga" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnAceptarCarga_Click" />
+                                                <asp:Button ID="BtnAceptarCarga" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" />
                                             </div>
                                             <div class="form-group col-md-5">
                                             </div>
@@ -680,14 +679,7 @@
             navigator.mozGetUserMedia ||
             navigator.msGetUserMedia);
 
-        // Acceder a la cámara y mostrar el video en el elemento de video
-        navigator.getMedia = (navigator.getUserMedia ||
-            navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia ||
-            navigator.msGetUserMedia);
-
         var userAgent = navigator.userAgent;
-        console.log(userAgent.text);
         // FIREFOX, CHROME
 
 
@@ -703,8 +695,7 @@
             $('#<%= BtnDownload.ClientID %>').css("display", "none");
             var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
             lblActualizacion.html("");
-            $('#<%= BtnReload.ClientID %>').click;
-            console.log("Ingresa 685");
+            console.log("Ingresa 698");
         }, function (error) {
             $('#<%= CargaFotografia.ClientID %>').css("display", "none");
             $('#<%= tabla.ClientID %>').css("display", "none");
@@ -718,6 +709,8 @@
             $('#<%= BtnDownload.ClientID %>').css("display", "block");
             console.log(error);
         });
+
+
 
         $(document).ready(function () {
             var videoElement = $('#videoElement')[0];
@@ -758,12 +751,15 @@
                     console.error('Error al verificar los permisos de la cámara:', error);
                 }
             }
+
             // Ejecutar la función de verificación en tiempo real
             setInterval(verificarPermisosCamara, 10);
-        } else {
+        }
+
+        if (userAgent.indexOf("Firefox") != -1) {
             window.addEventListener('load', function () {
                 ValidarEstadoCamara1();
-            });
+            });;
 
             function ValidarEstadoCamara1() {
                 const date = new Date();
@@ -784,10 +780,14 @@
                             guardarEnSessionStorage("1");
                             bandera.text = "1";
                             lblActualizacion.html("");
+                            console.log("Ingresa 787");
                         }
                     })
                     .catch(function () {
                         if ((sesion == "0" || sesion == "2") && bandera == 0) {
+                            //console.log(sesion);
+                            //console.log(bandera);
+                            //console.log('Se oculta');
                             $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                             $('#<%= tabla.ClientID %>').css("display", "none");
                             $('#<%= tbactualizar.ClientID %>').css("display", "none");
@@ -808,8 +808,8 @@
                 }, 1);
 
             };
-
         }
+
 
         // Función para guardar en sessionStorage
         function guardarEnSessionStorage(valor) {
@@ -825,548 +825,11 @@
             }
         }
 
-        $(document).ready(function () {
-            var videoElement = $('#videoElement')[0];
-            var canvas = $('#canvas')[0];
-            var context = canvas.getContext('2d');
-            var captureBtn = $('#captureBtn');
-            var textarea = $("#urlPath");
-            var imgBase = $("#<%= ImgBase.ClientID %>");
-            var urlPathControl = $("#urlPathControl");
-            captureBtn.on('click', function (event) {
-                event.preventDefault();
-                context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-                var imageData = canvas.toDataURL('image/jpeg');
-                textarea.val(imageData);
-                urlPathControl.val('1');
-                imgBase.attr('src', imageData);
-            });
-        });
-
-        function validarCorreo(correo) {
-            //var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-            var errorCorreoElement = document.getElementById("errorCorreo");
-            var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            if (correo.trim() === "") {
-                errorCorreoElement.textContent = "Ingrese su correo personal.";
-            } else if (!regex.test(correo)) {
-                errorCorreoElement.textContent = "El formato del correo electrónico no es válido.";
-            } else {
-                errorCorreoElement.textContent = " ";
-            }
-        }
-
-        function validarTelefono(Telefono) {
-            //var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-            var errorTelefonoElement = document.getElementById("errorTelefono");
-
-            if (Telefono.trim() === "") {
-                errorTelefonoElement.textContent = "Ingrese su teléfono.";
-            } else if (Telefono.length > 0 && Telefono.length <= 7) {
-                errorTelefonoElement.textContent = "El número de télefono debe de tener 8 caracteres";
-            }
-        }
-
-        function mostrarAlerta() {
-            var mensaje = "";
-            var apellido = document.getElementById('<%= txtApellido.ClientID %>').value;
-            var nombre = document.getElementById('<%= txtNombre.ClientID %>').value;
-            var nombreR = document.getElementById('<%= TxtNombreR.ClientID %>').value;
-            var nit = document.getElementById('<%= txtNit.ClientID %>').value;
-            var direccion1 = document.getElementById('<%= txtDireccion.ClientID %>').value;
-            var direccionR1 = document.getElementById('<%= TxtDiRe1.ClientID %>').value;
-            var telefono = document.getElementById('<%= txtTelefono.ClientID %>').value;
-            var pais = document.getElementById('<%= CmbPais.ClientID %>').value;
-            var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
-            var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
-            var Correo = document.getElementById('<%= TxtCorreoPersonal.ClientID %>').value;
-            var foto = document.getElementById('urlPath').value;
-            var foto2 = document.getElementById('urlPathControl').value;
-            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
-            var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
-            var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
-            var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
-            var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
-            var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
-            var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
-            var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
-            var modal = document.getElementById("myModalActualizacion");
-
-            if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) {
-                $('#myModal').css('display', 'block');
-                return false;
-            } else if (TrueNit !== nit) {
-                // Realiza las acciones necesarias si el valor es diferente de cero
-                if (nit !== "CF") {
-                    alert("El NIT ha cambiado, es necesario validar.");
-                    return false;
-                }
-            } else {
-
-                if (apellido.trim() === "") {
-                    mensaje = "-Los Apellidos son requerido.";
-                }
-
-                if (nombre.trim() === "") {
-                    if (mensaje.trim() == "") {
-                        mensaje = "-Los Nombres son requeridos.";
-                    } else {
-                        mensaje = mensaje + "\n-Los Nombres son requeridos.";
-                    }
-                }
-
-                if (direccion1.trim() === "") {
-                    if (mensaje.trim() == "") {
-                        mensaje = "-La Dirección 1 es requerida.";
-                    } else {
-                        mensaje = mensaje + "\n-La Dirección 1 es requerida.";
-                    }
-                }
-
-                if (pais.trim() === "") {
-                    if (mensaje.trim() == "") {
-                        mensaje = "-El país es requerido.";
-                    } else {
-                        mensaje = mensaje + "\n-El país es requerido.";
-                    }
-                }
-                if (depto.trim() === "") {
-                    if (mensaje.trim() == "") {
-                        mensaje = "-El departamento es requerido.";
-                    } else {
-                        mensaje = mensaje + "\n-El departamento es requerido.";
-                    }
-                }
-                if (muni.trim() === "") {
-                    if (mensaje.trim() == "") {
-                        mensaje = "-El municipio es requerido.";
-                    } else {
-                        mensaje = mensaje + "\n-El municipio es requerido.";
-                    }
-                }
-
-                if (Correo.trim() === "") {
-                    if (mensaje.trim() == "") {
-                        mensaje = "-El Correo Personal es requerido.";
-                    } else {
-                        mensaje = mensaje + "\n-El Correo Personal es requerido.";
-                    }
-                }
-
-                if (telefono.length > 0 && telefono.length <= 7) {
-                    if (mensaje.trim() == "") {
-                        mensaje = "-El Teléfono debe de tener 8 carácteres";
-                    } else {
-                        mensaje = mensaje + "\n-El Teléfono debe de tener 8 carácteres";
-                    }
-                }
-
-                if (foto.trim() === "" && foto2 === "") {
-                    if (mensaje.trim() == "") {
-                        mensaje = "-La fotografía es requerida";
-                    } else {
-                        mensaje = mensaje + "\n-La fotografía es requerida";
-                    }
-                }
-
-                if (nit.trim() === "") {
-                    if (mensaje.trim() == "") {
-                        mensaje = "-El NIT para el recibo es requerido.";
-                    } else {
-                        mensaje = mensaje + "\n-El NIT para el recibo es requerido.";
-                    }
-                }
-
-                if (direccionR1.trim() === "" && nombreR.trim() !== "") {
-                    if (mensaje.trim() == "") {
-                        mensaje = "-La Dirección 1 para el recibo es requerida.";
-                    } else {
-                        mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
-                    }
-                }
-
-                if (mensaje.trim() !== "") {
-                    mensaje = mensaje.replace("/\n/g", "<br>");
-                    alert(mensaje);
-                    return false;
-                } else if (confirm("¿Está seguro de que su información es correcta?")) {
-                    $('#myModalActualizacion').css('display', 'block');
-                    __doPostBack('<%= BtnActualizar.ClientID %>', '');
-                    return true; // Permite continuar con la acción del botón
-                } else {
-                    return false; // Cancela la acción del botón
-                }
-            }
-        }
-
-        function Documentos() {
-            alert("Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.");
-            $('#myModal').css('display', 'block');
-            return false;
-        }
-
-        function NoExisteNit() {
-            alert("El NIT no existe. Intente de nuevo");
-        }
-
-        function ConfirmacionActualizacionSensible() {
-            mensaje = "Su información fue almacenada correctamente. \nLa información ingresada debe ser aprobada antes de ser confirmada.\nActualmente, solo se muestran los datos que han sido previamente confirmados.";
-            mensaje = mensaje.replace("/\n/g", "<br>");
-            alert(mensaje);
-            window.location.href = "ActualizacionEstudiantes.aspx";
-        }
-
-        function ConfirmacionActualizacion() {
-            mensaje = "Su información fue actualizada correctamente.";
-            mensaje = mensaje.replace("/\n/g", "<br>");
-            alert(mensaje);
-            window.location.href = "ActualizacionEstudiantes.aspx";
-        }
-
-        $(document).ready(function () {
-            // Function to add the code
-            function RBSi() {
-                $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
-                    if ($(this).is(':checked')) {
-                        $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
-                        $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
-                        $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
-                        $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
-                        $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
-                        $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
-                        $('#<%= CmbPaisNIT.ClientID %>').val($('#<%= CmbPais.ClientID %>').val());
-                        $('#<%= CmbMunicipioNIT.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
-                        $('#<%= CmbDepartamentoNIT.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
-                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPais.ClientID %>').val());
-                        $('#<%= MunicipioNit.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
-                        $('#<%= DepartamentoNit.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
-                        $('#<%= StateNIT.ClientID %>').val($('#<%= State.ClientID %>').val());
-                        $('#<%= txtNit.ClientID %>').val('CF');
-                        $('#<%= txtNit.ClientID %>').prop('disabled', true);
-                        $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
-                        $('#<%= TxtDiRe1.ClientID %>').prop('disabled', true);
-                        $('#<%= TxtDiRe2.ClientID %>').prop('disabled', true);
-                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', true);
-                        $('#<%= PaisNit.ClientID %>').prop('disabled', true);
-                        $('#<%= MunicipioNit.ClientID %>').prop('disabled', true);
-                        $('#<%= DepartamentoNit.ClientID %>').prop('disabled', true);
-                        $('#<%= lblActualizacion.ClientID %>').text('');
-
-                        // Hacer visible la fila Combos
-                        $('#<%= Combos.ClientID %>').hide();
-                        // Hacer visible la fila sustitucion de Combos
-                        $('#<%= sustituirCombos.ClientID %>').hide();
-                    }
-                });
-            }
-
-            // Call the function
-            RBSi();
-        });
-
-        $(document).ready(function () {
-            // Capturar el cambio de estado del RadioButton
-            $('#<%= RadioButtonNombreSi.ClientID %>').change(function () {
-                if ($(this).is(':checked')) {
-                    // El RadioButton ha sido marcado, ocultar la fila
-                    $('#<%= Combos.ClientID %>').hide();
-                    $('#<%= sustituirCombos.ClientID %>').show();
-                } else {
-                    // El RadioButton ha sido desmarcado, mostrar la fila
-                    $('#<%= Combos.ClientID %>').show();
-                    $('#<%= sustituirCombos.ClientID %>').hide();
-                }
-            });
-
-            // Verificar el estado inicial del RadioButton al cargar la página
-            if ($('#<%= RadioButtonNombreSi.ClientID %>').is(':checked')) {
-                // El RadioButton está marcado, ocultar la fila
-                $('#<%= Combos.ClientID %>').hide();
-                $('#<%= sustituirCombos.ClientID %>').show();
-            } else {
-                // El RadioButton no está marcado, mostrar la fila
-                $('#<%= Combos.ClientID %>').show();
-                $('#<%= sustituirCombos.ClientID %>').hide();
-            }
-        });
-
-        $(document).ready(function () {
-            // Function to add the code
-            function RBNo() {
-                $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
-                    if ($(this).is(':checked')) {
-                        $('#<%= TxtNombreR.ClientID %>').val("");
-                        $('#<%= TxtApellidoR.ClientID %>').val("");
-                        $('#<%= TxtCasadaR.ClientID %>').val("");
-                        $('#<%= txtNit.ClientID %>').val("");
-                        $('#<%= TxtDiRe1.ClientID %>').val("");
-                        $('#<%= TxtDiRe2.ClientID %>').val("");
-                        $('#<%= TxtDiRe3.ClientID %>').val("");
-                        $('#<%= CmbPaisNIT.ClientID %>').val("");
-                        $('#<%= CmbDepartamentoNIT.ClientID %>').val("");
-                        $('#<%= CmbMunicipioNIT.ClientID %>').val("");
-                        $('#<%= StateNIT.ClientID %>').val("");
-                        $('#<%= txtNit.ClientID %>').prop('disabled', false);
-                        $('#<%= ValidarNIT.ClientID %>').prop('disabled', false);
-                        $('#<%= TxtDiRe1.ClientID %>').prop('disabled', false);
-                        $('#<%= TxtDiRe2.ClientID %>').prop('disabled', false);
-                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', false);
-                        $('#<%= CmbPaisNIT.ClientID %>').prop('disabled', false);
-                        $('#<%= CmbDepartamentoNIT.ClientID %>').prop('disabled', false);
-                        $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);
-                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
-                        // Hacer visible la fila Combos
-                        $('#<%= Combos.ClientID %>').show();
-                        $('#<%= sustituirCombos.ClientID %>').hide();
-                        llenadoPaisnit();
-                        llenadoDepartamentoNit();
-                        llenadoMunicipioNIT();
-                    }
-                });
-            }
-
-            // Call the function
-            RBNo();
-
-        });
-
-        $('.close').click(function () {
-            $('#myModal').css('display', 'none');
-        });
-
-        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
-        $(document).ready(function () {
-            $('#<%= txtNombre.ClientID %>').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
-                    $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
-                }
-            });
-        });
-
-        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO EN EL RECIBO 
-        $(document).ready(function () {
-            $('#<%= txtApellido.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
-                    $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
-                }
-            });
-        });
-
-        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO DE CASADA EN EL RECIBO 
-        $(document).ready(function () {
-            $('#<%= txtCasada.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
-                    $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
-                }
-            });
-        });
-
-        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 1 EN EL RECIBO 
-        $(document).ready(function () {
-            $('#<%= txtDireccion.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
-                    $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
-                }
-            });
-        });
-
-        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 2 EN EL RECIBO 
-        $(document).ready(function () {
-            $('#<%= txtDireccion2.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
-                    $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
-                }
-            });
-        });
-
-        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 3 EN EL RECIBO 
-        $(document).ready(function () {
-            $('#<%= txtDireccion3.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
-                    $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
-                }
-            });
-        });
-
-        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO PAIS EN EL RECIBO
-        $(document).ready(function () {
-            $('#<%= CmbPaisNIT.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
-                    $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
-                }
-            });
-        });
-
-        function VerificarCantidadTelefono(sender, args) {
-            args.IsValid = (args.Value.length >= 7);
-        }
-
-        function checkCameraAccess() {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function (stream) {
-                    document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'true';
-                    console.log('Ingresa Funcion')
-                    stream.getTracks().forEach(function (track) {
-                        track.stop();
-                    });
-                })
-                .catch(function (error) {
-                    console.log('Error')
-                });
-        }
-
-        function validarCargaArchivos() {
-            var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
-            var files = fileUpload.files;
-
-            if (files.length > 2) {
-                alert("Solo se permiten cargar 2 archivos.");
-                // Eliminar los archivos adicionales
-                while (files.length > 2) {
-                    fileUpload.remove(files.length - 1);
-                    fileUpload.value = "";
-                }
-            }
-        }
-
-        //FUNCION PARA EVITAR QUE SEA INGRESADO EL -
-        $(document).ready(function () {
-            $('#<%= txtNit.ClientID %>').on('keypress', function (event) {
-                var keyCode = event.which || event.keyCode;
-                var character = String.fromCharCode(keyCode);
-                if (character === '-') {
-                    event.preventDefault();
-                    alert('No se permite el ingreso del guín (-)');
-                }
-            });
-        });
-
-        //Valdar Numeros de telefono
-        $(document).ready(function () {
-            $('#<%= txtTelefono.ClientID %>').on('input', function () {
-                var inputValue = $(this).val();
-                var numericValue = inputValue.replace(/[^0-9]/g, '');
-                $(this).val(numericValue);
-            });
-
-            $('#<%= txtTelefono.ClientID %>').on('keypress', function (event) {
-                var keyCode = event.which || event.keyCode;
-                var character = String.fromCharCode(keyCode);
-
-                if (!/^[0-9]+$/.test(character)) {
-                    event.preventDefault();
-                    alert('Solo se permiten ingresar números.');
-                }
-            });
-        });
-
-        //Detectar cambio de nit
-        $(document).ready(function () {
-            $('#<%= txtNit.ClientID %>').on('input', function () {
-                var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
-                var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
-                var labelValidacion = $('#<%= ValidacionNit.ClientID %>').val().trim();
-                if (txtNit !== TrueNit || txtNit !== 'CF') {
-                    labelValidacion.text("1");
-                } else {
-                    labelValidacion.text("0");
-                    TrueNit.text(txtNit);
-                }
-            });
-        });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            // Obtenemos el elemento de video y la imagen en JavaScript
-            const videoElement = document.getElementById("videoElement");
-            const imgBase = document.getElementById("<%= ImgBase.ClientID %>");
-            const canvas = document.getElementById("canvas");
-            const ctx = canvas.getContext("2d");
-
-            // Cuando el video esté listo, obtenemos las dimensiones y las aplicamos a la imagen y el canvas
-            videoElement.onloadedmetadata = function () {
-                const videoWidth = videoElement.videoWidth;
-                const videoHeight = videoElement.videoHeight;
-
-                const maxWidth = 375;
-                const maxHeight = 275;
-
-                // Calculamos las dimensiones para la imagen considerando la relación de aspecto
-                let newWidth, newHeight;
-                if (videoWidth / videoHeight > maxWidth / maxHeight) {
-                    newWidth = maxWidth;
-                    newHeight = videoHeight * (maxWidth / videoWidth);
-                } else {
-                    newHeight = maxHeight;
-                    newWidth = videoWidth * (maxHeight / videoHeight);
-                }
-
-                // Aplicamos las dimensiones a la imagen
-                imgBase.style.width = newWidth + "px";
-                imgBase.style.height = newHeight + "px";
-
-                // Aplicamos las dimensiones al canvas
-                canvas.style.width = newWidth + "px";
-                canvas.style.height = newHeight + "px";
-                canvas.width = newWidth;
-                canvas.height = newHeight;
-            };
-        });
-
-        function mostrarModalEspera() {
-            var modal = document.getElementById("myModalEspera");
-            modal.style.display = "block";
-        }
-
-        function ocultarModalEspera() {
-            var modal = document.getElementById("myModalEspera");
-            modal.style.display = "none";
-        }
-
-        function ocultarModalActualizacion() {
-            var modal = document.getElementById("myModalActualizacion");
-            modal.style.display = "none";
-        }
-
-        function mostrarModalCorrecto() {
-            var modal = document.getElementById("myModalCorrecto");
-            modal.style.display = "block";
-            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-            lblActualizacion.html("");
-
-            setTimeout(function () {
-                modal.style.display = "none"; // Oculta el modal después de 10 segundos
-                window.location.href = "ActualizacionEstudiantes.aspx";
-            }, 4000); // 4000 milisegundos =  segundos
-        }
-
-        //evitar enter
-        function evitarEnter(e) {
-            if (e.keyCode == 13) {
-                e.preventDefault(); // Evitar que se realice una nueva línea
-                return false;
-            }
-            return true;
-        }
-
-        // Función para guardar en sessionStorage
-        function guardarEnSessionStorage(valor) {
-            var inputElement = $('#<%= ISESSION.ClientID %>').val().trim();
-            // Verificar si sessionStorage está disponible en el navegador
-            if (typeof sessionStorage !== 'undefined') {
-                // Guardar el valor en sessionStorage
-                sessionStorage.setItem("miVariable", valor);
-                console.log("Valor guardado en sessionStorage: " + valor);
-                inputElement.text = valor;
-            } else {
-                console.error("El navegador no admite sessionStorage");
-            }
-        }
 
     </script>
-
 
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>
+
 
