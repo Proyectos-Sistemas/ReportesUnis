@@ -64,16 +64,12 @@
     <link rel="stylesheet" type="text/css" href="Styles/estilo-unis.css" crossorigin="anonymous" />
     <script>
         $(document).ready(function () {
-            console.log("ready");
             DivCargandoNoVisible();
 
         });
         window.onload = function () {
-            console.log("onload");
 
             if ($('#overlay').length) {
-
-                console.log("overlay exists");
             } else {
                 var $div = $('<div />').appendTo('body');
                 $div.attr('id', 'overlay');
@@ -82,31 +78,26 @@
                 var $div2 = $('<div />').appendTo('body');
                 $div2.attr('id', 'loading');
                 $div2.attr('class', 'loading');
-                console.log("overlay does not exists");
                 DivCargandoVisible();
             }
 
         };
         function DivCargandoNoVisible() {
             if ($('#overlay').is(':visible')) {
-                console.log("overlay no visible");
                 $('#overlay').hide();
             };
 
             if ($('#loading').is(':visible')) {
-                console.log("loading no visible");
                 $('#loading').hide();
             };
         }
 
         function DivCargandoVisible() {
             if (!$('#overlay').is(':visible')) {
-                console.log("overlay visible");
                 $('#overlay').show();
             };
 
             if (!$('#loading').is(':visible')) {
-                console.log("loading visible");
                 $('#loading').show();
             };
         }

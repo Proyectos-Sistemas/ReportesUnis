@@ -675,9 +675,8 @@
 
     <script>
         var userAgent = navigator.userAgent;
-        console.log(userAgent);
+        
         if (userAgent.indexOf("Safari") != -1 && userAgent.indexOf("Safari") != -1) {
-            console.log("Safari");
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     var videoElement = document.getElementById('videoElement');
@@ -687,7 +686,6 @@
                     error;
                 });
         } else if (userAgent.indexOf("Chrome") != -1) {
-            console.log("Chrome");
             // Acceder a la cámara y mostrar el video en el elemento de video
             navigator.getMedia = (navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
@@ -707,7 +705,6 @@
                 var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
                 lblActualizacion.html("");
                 $('#<%= BtnReload.ClientID %>').click;
-                console.log("Ingresa 685");
             }, function (error) {
                 $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                 $('#<%= tabla.ClientID %>').css("display", "none");
@@ -719,10 +716,8 @@
                 lblActualizacion.html(mensaje);
                 $('#<%= BtnReload.ClientID %>').css("display", "block");
                 $('#<%= BtnDownload.ClientID %>').css("display", "block");
-                console.log(error);
             });
         } else if (userAgent.indexOf("Firefox") != -1) {
-            console.log("Firefox");
             // Acceder a la cámara y mostrar el video en el elemento de video
             navigator.getMedia = (navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
@@ -742,7 +737,6 @@
                 var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
                 lblActualizacion.html("");
                 $('#<%= BtnReload.ClientID %>').click;
-                console.log("Ingresa 685");
             }, function (error) {
                 $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                 $('#<%= tabla.ClientID %>').css("display", "none");
@@ -754,7 +748,6 @@
                 lblActualizacion.html(mensaje);
                 $('#<%= BtnReload.ClientID %>').css("display", "block");
                 $('#<%= BtnDownload.ClientID %>').css("display", "block");
-                console.log(error);
             });
         } else {
             var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
@@ -786,20 +779,11 @@
                 try {
                     const status = await navigator.permissions.query({ name: 'camera' });
 
-                    if (status.state === 'granted') {
-                        console.log('Permisos de la cámara están concedidos.');
-                    } else if (status.state === 'prompt') {
-                        console.log('Esperando la respuesta del usuario para los permisos de la cámara.');
-                    } else if (status.state === 'denied') {
-                        console.log('Permisos de la cámara están denegados.');
-                    }
-
                     status.onchange = function () {
-                        console.log('Estado de los permisos de la cámara cambió a:', status.state);
                         location.reload();
                     };
                 } catch (error) {
-                    console.error('Error al verificar los permisos de la cámara:', error);
+                    
                 }
             }
             // Ejecutar la función de verificación en tiempo real
@@ -862,11 +846,8 @@
             if (typeof sessionStorage !== 'undefined') {
                 // Guardar el valor en sessionStorage
                 sessionStorage.setItem("miVariable", valor);
-                console.log("Valor guardado en sessionStorage: " + valor);
                 inputElement.text = valor;
-            } else {
-                console.error("El navegador no admite sessionStorage");
-            }
+            } 
         }
 
         $(document).ready(function () {
@@ -1250,13 +1231,11 @@
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'true';
-                    console.log('Ingresa Funcion')
                     stream.getTracks().forEach(function (track) {
                         track.stop();
                     });
                 })
                 .catch(function (error) {
-                    console.log('Error')
                 });
         }
 
@@ -1391,20 +1370,6 @@
                 return false;
             }
             return true;
-        }
-
-        // Función para guardar en sessionStorage
-        function guardarEnSessionStorage(valor) {
-            var inputElement = $('#<%= ISESSION.ClientID %>').val().trim();
-            // Verificar si sessionStorage está disponible en el navegador
-            if (typeof sessionStorage !== 'undefined') {
-                // Guardar el valor en sessionStorage
-                sessionStorage.setItem("miVariable", valor);
-                console.log("Valor guardado en sessionStorage: " + valor);
-                inputElement.text = valor;
-            } else {
-                console.error("El navegador no admite sessionStorage");
-            }
         }
 
     </script>
