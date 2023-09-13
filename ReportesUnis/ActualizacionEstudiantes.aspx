@@ -676,7 +676,7 @@
     <script>
         var userAgent = navigator.userAgent;
         console.log(userAgent);
-        if (userAgent.indexOf("Safari") != -1 && userAgent.indexOf("Chrome") == 0) {
+        if (userAgent.indexOf("Safari") != -1 && userAgent.indexOf("Safari") != -1) {
             console.log("Safari");
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
