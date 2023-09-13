@@ -674,50 +674,94 @@
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
 
     <script>
-        // Acceder a la cámara y mostrar el video en el elemento de video
-        navigator.getMedia = (navigator.getUserMedia ||
-            navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia ||
-            navigator.msGetUserMedia);
-
-        // Acceder a la cámara y mostrar el video en el elemento de video
-        navigator.getMedia = (navigator.getUserMedia ||
-            navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia ||
-            navigator.msGetUserMedia);
-
         var userAgent = navigator.userAgent;
-        console.log(userAgent.text);
-        // FIREFOX, CHROME
+        console.log(userAgent);
+        if (userAgent.indexOf("Safari") != -1 && userAgent.indexOf("Chrome") == 0) {
+            console.log("Safari");
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    var videoElement = document.getElementById('videoElement');
+                    videoElement.srcObject = stream;
+                })
+                .catch(function (error) {
+                    error;
+                });
+        } else if (userAgent.indexOf("Chrome") != -1) {
+            console.log("Chrome");
+            // Acceder a la cámara y mostrar el video en el elemento de video
+            navigator.getMedia = (navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia ||
+                navigator.msGetUserMedia);
 
+            navigator.getMedia({ video: true }, function (stream) {
+                var videoElement = document.getElementById('videoElement');
+                videoElement.srcObject = stream;
+                videoElement.onplay;
+                $("#<%= CargaFotografia.ClientID %>").css("display", "block");
+                $('#<%= tabla.ClientID %>').css("display", "block");
+                $('#<%= tbactualizar.ClientID %>').css("display", "block");
+                $('#<%= InfePersonal.ClientID %>').css("display", "block");
+                $('#<%= BtnReload.ClientID %>').css("display", "none");
+                $('#<%= BtnDownload.ClientID %>').css("display", "none");
+                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                lblActualizacion.html("");
+                $('#<%= BtnReload.ClientID %>').click;
+                console.log("Ingresa 685");
+            }, function (error) {
+                $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                $('#<%= tabla.ClientID %>').css("display", "none");
+                $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página... <br>";
+                lblActualizacion.css("color", "black");
+                lblActualizacion.html(mensaje);
+                $('#<%= BtnReload.ClientID %>').css("display", "block");
+                $('#<%= BtnDownload.ClientID %>').css("display", "block");
+                console.log(error);
+            });
+        } else if (userAgent.indexOf("Firefox") != -1) {
+            console.log("Firefox");
+            // Acceder a la cámara y mostrar el video en el elemento de video
+            navigator.getMedia = (navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia ||
+                navigator.msGetUserMedia);
 
-        navigator.getMedia({ video: true }, function (stream) {
-            var videoElement = document.getElementById('videoElement');
-            videoElement.srcObject = stream;
-            videoElement.onplay;
-            $("#<%= CargaFotografia.ClientID %>").css("display", "block");
-            $('#<%= tabla.ClientID %>').css("display", "block");
-            $('#<%= tbactualizar.ClientID %>').css("display", "block");
-            $('#<%= InfePersonal.ClientID %>').css("display", "block");
-            $('#<%= BtnReload.ClientID %>').css("display", "none");
-            $('#<%= BtnDownload.ClientID %>').css("display", "none");
+            navigator.getMedia({ video: true }, function (stream) {
+                var videoElement = document.getElementById('videoElement');
+                videoElement.srcObject = stream;
+                videoElement.onplay;
+                $("#<%= CargaFotografia.ClientID %>").css("display", "block");
+                $('#<%= tabla.ClientID %>').css("display", "block");
+                $('#<%= tbactualizar.ClientID %>').css("display", "block");
+                $('#<%= InfePersonal.ClientID %>').css("display", "block");
+                $('#<%= BtnReload.ClientID %>').css("display", "none");
+                $('#<%= BtnDownload.ClientID %>').css("display", "none");
+                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                lblActualizacion.html("");
+                $('#<%= BtnReload.ClientID %>').click;
+                console.log("Ingresa 685");
+            }, function (error) {
+                $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                $('#<%= tabla.ClientID %>').css("display", "none");
+                $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página... <br>";
+                lblActualizacion.css("color", "black");
+                lblActualizacion.html(mensaje);
+                $('#<%= BtnReload.ClientID %>').css("display", "block");
+                $('#<%= BtnDownload.ClientID %>').css("display", "block");
+                console.log(error);
+            });
+        } else {
             var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-            lblActualizacion.html("");
-            $('#<%= BtnReload.ClientID %>').click;
-            console.log("Ingresa 685");
-        }, function (error) {
-            $('#<%= CargaFotografia.ClientID %>').css("display", "none");
-            $('#<%= tabla.ClientID %>').css("display", "none");
-            $('#<%= tbactualizar.ClientID %>').css("display", "none");
-            $('#<%= InfePersonal.ClientID %>').css("display", "none");
-            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-            mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página... <br>";
+            mensaje = "El navegador no es compatible";
             lblActualizacion.css("color", "black");
             lblActualizacion.html(mensaje);
-            $('#<%= BtnReload.ClientID %>').css("display", "block");
-            $('#<%= BtnDownload.ClientID %>').css("display", "block");
-            console.log(error);
-        });
+        }
 
         $(document).ready(function () {
             var videoElement = $('#videoElement')[0];
