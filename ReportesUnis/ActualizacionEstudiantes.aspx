@@ -71,9 +71,9 @@
             </div>
             <asp:Label ID="Label3" runat="server" Font-Bold="false" ForeColor="Blue">Para realizar un cambio en su nombre es necesario adjuntar según sea el caso:</asp:Label>
             <br />
-            <asp:Label ID="Label4" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">a.) Fotografia de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
+            <asp:Label ID="Label4" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">a.) Fotografía de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
             <br />
-            <asp:Label ID="Label5" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">b.) Fotografia de su Pasaporte</asp:Label>
+            <asp:Label ID="Label5" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">b.) Fotografía de su Pasaporte</asp:Label>
             <br />
             <br />
 
@@ -675,8 +675,8 @@
 
     <script>
         var userAgent = navigator.userAgent;
-        
-        if (userAgent.indexOf("Safari") != -1 && userAgent.indexOf("Safari") != -1) {
+
+        if (userAgent.indexOf("Safari") != -1 && userAgent.indexOf("Chrome") == 0) {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     var videoElement = document.getElementById('videoElement');
@@ -706,16 +706,32 @@
                 lblActualizacion.html("");
                 $('#<%= BtnReload.ClientID %>').click;
             }, function (error) {
-                $('#<%= CargaFotografia.ClientID %>').css("display", "none");
-                $('#<%= tabla.ClientID %>').css("display", "none");
-                $('#<%= tbactualizar.ClientID %>').css("display", "none");
-                $('#<%= InfePersonal.ClientID %>').css("display", "none");
-                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página... <br>";
-                lblActualizacion.css("color", "black");
-                lblActualizacion.html(mensaje);
-                $('#<%= BtnReload.ClientID %>').css("display", "block");
-                $('#<%= BtnDownload.ClientID %>').css("display", "block");
+                let mensajeError = error.message;
+                if (mensajeError.indexOf("Permission denied" != -1)) {
+                    $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                    $('#<%= tabla.ClientID %>').css("display", "none");
+                    $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                    $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                    var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                    mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página. <br>";
+                    lblActualizacion.css("color", "black");
+                    lblActualizacion.html(mensaje);
+                    $('#<%= BtnReload.ClientID %>').css("display", "block");
+                    $('#<%= BtnDownload.ClientID %>').css("display", "block");
+                }
+
+                if (mensajeError.indexOf("Could not start video source" != -1)) {
+                    $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                    $('#<%= tabla.ClientID %>').css("display", "none");
+                    $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                    $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                    var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                    mensaje = "La cámara está siendo utilizada por otras aplicaciones. <br />  <br>Para poder continuar cierre dichas aplicaciones y luego haga clic en el botón de Recargar Página. <br>";
+                    lblActualizacion.css("color", "black");
+                    lblActualizacion.html(mensaje);
+                    $('#<%= BtnReload.ClientID %>').css("display", "block");
+                    $('#<%= BtnDownload.ClientID %>').css("display", "none");
+                }
             });
         } else if (userAgent.indexOf("Firefox") != -1) {
             // Acceder a la cámara y mostrar el video en el elemento de video
@@ -738,16 +754,33 @@
                 lblActualizacion.html("");
                 $('#<%= BtnReload.ClientID %>').click;
             }, function (error) {
-                $('#<%= CargaFotografia.ClientID %>').css("display", "none");
-                $('#<%= tabla.ClientID %>').css("display", "none");
-                $('#<%= tbactualizar.ClientID %>').css("display", "none");
-                $('#<%= InfePersonal.ClientID %>').css("display", "none");
-                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página... <br>";
-                lblActualizacion.css("color", "black");
-                lblActualizacion.html(mensaje);
-                $('#<%= BtnReload.ClientID %>').css("display", "block");
-                $('#<%= BtnDownload.ClientID %>').css("display", "block");
+                let mensajeError = error.message;
+                console.log(mensajeError);
+                if (mensajeError.indexOf("Permission denied" != -1)) {
+                    $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                    $('#<%= tabla.ClientID %>').css("display", "none");
+                    $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                    $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                    var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                    mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página. <br>";
+                    lblActualizacion.css("color", "black");
+                    lblActualizacion.html(mensaje);
+                    $('#<%= BtnReload.ClientID %>').css("display", "block");
+                    $('#<%= BtnDownload.ClientID %>').css("display", "block");
+                }
+
+                if (mensajeError.indexOf("Could not start video source" != -1)) {
+                    $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                    $('#<%= tabla.ClientID %>').css("display", "none");
+                    $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                    $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                    var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                    mensaje = "La cámara está siendo utilizada por otras aplicaciones. <br />  <br>Para poder continuar cierre dichas aplicaciones y luego haga clic en el botón de Recargar Página. <br>";
+                    lblActualizacion.css("color", "black");
+                    lblActualizacion.html(mensaje);
+                    $('#<%= BtnReload.ClientID %>').css("display", "block");
+                    $('#<%= BtnDownload.ClientID %>').css("display", "none");
+                }
             });
         } else {
             var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
@@ -783,7 +816,7 @@
                         location.reload();
                     };
                 } catch (error) {
-                    
+
                 }
             }
             // Ejecutar la función de verificación en tiempo real
@@ -814,20 +847,35 @@
                             lblActualizacion.html("");
                         }
                     })
-                    .catch(function () {
+                    .catch(function (error) {
                         if ((sesion == "0" || sesion == "2") && bandera == 0) {
-                            $('#<%= CargaFotografia.ClientID %>').css("display", "none");
-                            $('#<%= tabla.ClientID %>').css("display", "none");
-                            $('#<%= tbactualizar.ClientID %>').css("display", "none");
-                            $('#<%= InfePersonal.ClientID %>').css("display", "none");
-                            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                            mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página... <br>";
-                            lblActualizacion.css("color", "black");
-                            lblActualizacion.html(mensaje);
-                            $('#<%= BtnReload.ClientID %>').css("display", "block");
-                            $('#<%= BtnDownload.ClientID %>').css("display", "block");
-                            guardarEnSessionStorage("2");
-                            bandera.text = "1";
+                            let mensajeError = error.message;
+                            console.log(mensajeError);
+                            if (mensajeError.indexOf("Permission denied" != -1)) {
+                                $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                                $('#<%= tabla.ClientID %>').css("display", "none");
+                                $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                                $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                                mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página. <br>";
+                                lblActualizacion.css("color", "black");
+                                lblActualizacion.html(mensaje);
+                                $('#<%= BtnReload.ClientID %>').css("display", "block");
+                                $('#<%= BtnDownload.ClientID %>').css("display", "block");
+                            }
+
+                            if (mensajeError.indexOf("Could not start video source" != -1)) {
+                                $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                                $('#<%= tabla.ClientID %>').css("display", "none");
+                                $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                                $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                                mensaje = "La cámara está siendo utilizada por otras aplicaciones. <br />  <br>Para poder continuar cierre dichas aplicaciones y luego haga clic en el botón de Recargar Página. <br>";
+                                lblActualizacion.css("color", "black");
+                                lblActualizacion.html(mensaje);
+                                $('#<%= BtnReload.ClientID %>').css("display", "block");
+                                $('#<%= BtnDownload.ClientID %>').css("display", "none");
+                            }
                         }
                     });
 
@@ -847,7 +895,7 @@
                 // Guardar el valor en sessionStorage
                 sessionStorage.setItem("miVariable", valor);
                 inputElement.text = valor;
-            } 
+            }
         }
 
         $(document).ready(function () {
