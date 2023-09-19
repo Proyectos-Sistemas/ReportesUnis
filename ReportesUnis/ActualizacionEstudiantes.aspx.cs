@@ -54,7 +54,8 @@ namespace ReportesUnis
             txtExiste.Text = controlPantalla.ToString();
             if (controlPantalla >= 1)
             {
-                TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                TextUser.Text = "2716084200101";
+                //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                 if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
                 {
@@ -403,14 +404,15 @@ namespace ReportesUnis
                     while (reader.Read())
                     {
                         EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();// + reader["EFFDT"].ToString().Substring(9, 2).TrimEnd();
-
-                        if (EFFDT_A_NIT.Value.Length == 9)
-                        {
-                            EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
-                        }
-                        else
-                        {
-                            EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(6, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(3, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                        if (!String.IsNullOrEmpty(EFFDT_A_NIT.Value)){
+                            if (EFFDT_A_NIT.Value.Length == 9)
+                            {
+                                EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
+                            }
+                            else
+                            {
+                                EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(6, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(3, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                            }
                         }
                     }
 
@@ -421,13 +423,15 @@ namespace ReportesUnis
                     {
                         EFFDT_A.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();
 
-                        if (EFFDT_A.Value.Length == 9)
-                        {
-                            EFFDT_A.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
-                        }
-                        else
-                        {
-                            EFFDT_A.Value = reader["EFFDT"].ToString().Substring(6, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(3, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                        if (!String.IsNullOrEmpty(EFFDT_A.Value)){
+                            if (EFFDT_A.Value.Length == 9)
+                            {
+                                EFFDT_A.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
+                            }
+                            else
+                            {
+                                EFFDT_A.Value = reader["EFFDT"].ToString().Substring(6, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(3, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                            }
                         }
                     }
 
@@ -436,14 +440,16 @@ namespace ReportesUnis
                     while (reader.Read())
                     {
                         EFFDT_EC.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();
-
-                        if (EFFDT_EC.Value.Length == 9)
+                        if (!String.IsNullOrEmpty(EFFDT_EC.Value))
                         {
-                            EFFDT_EC.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
-                        }
-                        else
-                        {
-                            EFFDT_EC.Value = reader["EFFDT"].ToString().Substring(6, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(3, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                            if (EFFDT_EC.Value.Length == 9)
+                            {
+                                EFFDT_EC.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
+                            }
+                            else
+                            {
+                                EFFDT_EC.Value = reader["EFFDT"].ToString().Substring(6, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(3, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                            }
                         }
                     }
 
@@ -461,14 +467,16 @@ namespace ReportesUnis
                     while (reader.Read())
                     {
                         EFFDT_NameR.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();
-
-                        if (EFFDT_NameR.Value.Length == 9)
+                        if (!String.IsNullOrEmpty(EFFDT_NameR.Value))
                         {
-                            EFFDT_NameR.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
-                        }
-                        else
-                        {
-                            EFFDT_NameR.Value = reader["EFFDT"].ToString().Substring(6, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(3, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                            if (EFFDT_NameR.Value.Length == 9)
+                            {
+                                EFFDT_NameR.Value = reader["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader["EFFDT"].ToString().Substring(0, 1).TrimEnd();
+                            }
+                            else
+                            {
+                                EFFDT_NameR.Value = reader["EFFDT"].ToString().Substring(6, 4).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(3, 2).TrimEnd() + "-" + reader["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                            }
                         }
                     }
                     con.Close();
@@ -1524,13 +1532,21 @@ namespace ReportesUnis
                                         EffdtDireccionUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
                                     }
 
-                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "' " +
-                                        "AND ADDRESS1 ='" + txtDireccion.Text + "' AND ADDRESS2 = '" + txtDireccion2.Text + "' AND ADDRESS3 = '" + txtDireccion3.Text + "'" +
-                                        "AND COUNTRY='" + codPais + "' AND STATE ='" + State.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtDireccionUltimo).ToString("dd/MM/yyyy") + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                    reader = cmd.ExecuteReader();
-                                    while (reader.Read())
+                                    if (!String.IsNullOrEmpty(EffdtDireccionUltimo))
                                     {
-                                        ContadorDirecciones = Convert.ToInt16(reader["CONTADOR"]);
+
+                                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='HOME' AND EMPLID = '" + UserEmplid.Text + "' " +
+                                            "AND ADDRESS1 ='" + txtDireccion.Text + "' AND ADDRESS2 = '" + txtDireccion2.Text + "' AND ADDRESS3 = '" + txtDireccion3.Text + "'" +
+                                            "AND COUNTRY='" + codPais + "' AND STATE ='" + State.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtDireccionUltimo).ToString("dd/MM/yyyy") + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                        reader = cmd.ExecuteReader();
+                                        while (reader.Read())
+                                        {
+                                            ContadorDirecciones = Convert.ToInt16(reader["CONTADOR"]);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ContadorDirecciones = 0;
                                     }
 
 
@@ -1671,14 +1687,21 @@ namespace ReportesUnis
                                                 EffdtDireccionNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
                                             }
 
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' " +
-                                                "AND ADDRESS1 ='" + TxtDiRe1.Text + "' AND ADDRESS2 = '" + TxtDiRe2.Text + "' AND ADDRESS3 = '" + TxtDiRe3.Text + "' " +
-                                                "AND COUNTRY='" + codPaisNIT + "' AND STATE ='" + StateNIT.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtDireccionNitUltimo).ToString("dd/MM/yyyy") + "'" +
-                                                " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
+                                            if (!String.IsNullOrEmpty(EffdtDireccionNitUltimo))
                                             {
-                                                ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + UserEmplid.Text + "' " +
+                                                    "AND ADDRESS1 ='" + TxtDiRe1.Text + "' AND ADDRESS2 = '" + TxtDiRe2.Text + "' AND ADDRESS3 = '" + TxtDiRe3.Text + "' " +
+                                                    "AND COUNTRY='" + codPaisNIT + "' AND STATE ='" + StateNIT.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtDireccionNitUltimo).ToString("dd/MM/yyyy") + "'" +
+                                                    " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                                reader = cmd.ExecuteReader();
+                                                while (reader.Read())
+                                                {
+                                                    ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                ContadorDirecionNit = 0;
                                             }
 
                                             cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_NAMES WHERE NAME_TYPE = 'REC' AND EMPLID = '" + UserEmplid.Text + "' " +
@@ -1705,11 +1728,17 @@ namespace ReportesUnis
                                                 EffdtNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("dd-MM-yyyy")).ToString();
                                             }
 
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND  EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + UserEmplid.Text + "' AND EFFDT='" + EffdtNitUltimo + "'";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
+                                            if (!String.IsNullOrEmpty(EffdtNitUltimo))
                                             {
-                                                ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND  EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + UserEmplid.Text + "' AND EFFDT='" + EffdtNitUltimo + "'";
+                                                reader = cmd.ExecuteReader();
+                                                while (reader.Read())
+                                                {
+                                                    ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                }
+                                            }
+                                            else { ContadorNit = 0;
+                                                EffdtNitUltimo = Hoy;
                                             }
 
                                             cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSKEY WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + UserEmplid.Text + "'";
@@ -1734,13 +1763,20 @@ namespace ReportesUnis
                                                 ContadorEffdtNit = Convert.ToInt16(reader["CONTADOR"]);
                                             }
 
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoR.Text + "' " +
-                                                "AND FIRST_NAME='" + TxtNombreR.Text + "' AND SECOND_LAST_NAME='" + TxtCasadaR.Text + "' " +
-                                                "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
+                                            if (!String.IsNullOrEmpty(EffdtNombreNitUltimo))
                                             {
-                                                ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoR.Text + "' " +
+                                                    "AND FIRST_NAME='" + TxtNombreR.Text + "' AND SECOND_LAST_NAME='" + TxtCasadaR.Text + "' " +
+                                                    "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                                reader = cmd.ExecuteReader();
+                                                while (reader.Read())
+                                                {
+                                                    ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                ContadorNombreNit = 0;
                                             }
 
                                             string FechaEfectiva = "";

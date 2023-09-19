@@ -706,8 +706,10 @@
                 lblActualizacion.html("");
                 $('#<%= BtnReload.ClientID %>').click;
             }, function (error) {
+                console.log(error);
                 let mensajeError = error.message;
-                if (mensajeError.indexOf("Permission denied" != -1)) {
+                console.log(mensajeError);
+                if (mensajeError == "Permission denied") {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
                     $('#<%= tbactualizar.ClientID %>').css("display", "none");
@@ -718,9 +720,7 @@
                     lblActualizacion.html(mensaje);
                     $('#<%= BtnReload.ClientID %>').css("display", "block");
                     $('#<%= BtnDownload.ClientID %>').css("display", "block");
-                }
-
-                if (mensajeError.indexOf("Could not start video source" != -1)) {
+                } else if (mensajeError == "Could not start video source") {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
                     $('#<%= tbactualizar.ClientID %>').css("display", "none");
