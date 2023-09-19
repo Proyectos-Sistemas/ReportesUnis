@@ -706,9 +706,7 @@
                 lblActualizacion.html("");
                 $('#<%= BtnReload.ClientID %>').click;
             }, function (error) {
-                console.log(error);
                 let mensajeError = error.message;
-                console.log(mensajeError);
                 if (mensajeError == "Permission denied") {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
@@ -755,7 +753,6 @@
                 $('#<%= BtnReload.ClientID %>').click;
             }, function (error) {
                 let mensajeError = error.message;
-                console.log(mensajeError);
                 if (mensajeError.indexOf("Permission denied" != -1)) {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
@@ -850,7 +847,6 @@
                     .catch(function (error) {
                         if ((sesion == "0" || sesion == "2") && bandera == 0) {
                             let mensajeError = error.message;
-                            console.log(mensajeError);
                             if (mensajeError.indexOf("Permission denied" != -1)) {
                                 $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                                 $('#<%= tabla.ClientID %>').css("display", "none");

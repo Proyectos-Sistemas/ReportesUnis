@@ -36,17 +36,9 @@ namespace ReportesUnis
         string HoyEffdt = DateTime.Now.ToString("dd-MM-yyyy").Substring(0, 10).TrimEnd();
         protected void Page_Load(object sender, EventArgs e)
         {
-            //Page.ClientScript.RegisterStartupScript(GetType(), "CheckCameraAccess", "checkCameraAccess();", true);
-            //Page.ClientScript.RegisterStartupScript(this.GetType(), "VerificarPermisos", "verificarPermisosCamara(function(permisosVigentes));", true);
-            /*controlCamposVisibles(false);
-            BtnDownload.Visible = false;
-            BtnReload.Visible = false;*/
-
             banderaSESSION.Value = "0";
             ISESSION.Value = "0";
             controlCamposVisibles(true);
-            //BtnDownload.Visible = false;
-            //BtnReload.Visible = false;
             LeerInfoTxt();
             LeerInfoTxt();
             LeerPathApex();
@@ -54,8 +46,7 @@ namespace ReportesUnis
             txtExiste.Text = controlPantalla.ToString();
             if (controlPantalla >= 1)
             {
-                TextUser.Text = "2716084200101";
-                //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                 if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
                 {
@@ -63,7 +54,6 @@ namespace ReportesUnis
                 }
                 if (!IsPostBack)
                 {
-                    //BtnReload.Visible = false;
                     LeerInfoTxtSQL();
                     LeerInfoTxtPath();
                     llenadoPais();
@@ -506,7 +496,6 @@ namespace ReportesUnis
                         if (contador > 0)
                         {
                             ImgBase.Visible = true;
-                            //ImgBase.ImageUrl = "~/Usuarios/UltimasCargas/" + txtCarne.Text + ".jpg";
                             ImgBase.ImageUrl = (File.Exists(Server.MapPath($"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg"))) ? $"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg?c={DateTime.Now.Ticks}" : string.Empty;
                             byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + txtCarne.Text + ".jpg");
                             string base64String = Convert.ToBase64String(imageBytes);
@@ -961,9 +950,6 @@ namespace ReportesUnis
             {
                 txtNit.Text = "CF";
             }
-            /*string cameraAvailable = hdnCameraAvailable.Value;
-            if (cameraAvailable == "true")
-            {*/
             int contador = 0;
 
             if (txtAInicial.Value == txtApellido.Text && txtNInicial.Value == txtNombre.Text && txtCInicial.Value == txtCasada.Text)
@@ -1055,18 +1041,6 @@ namespace ReportesUnis
                     fotoAlmacenada();
                 }
             }
-            return mensaje;
-            /* }
-             else
-             {
-                 lblActualizacion.ForeColor = System.Drawing.Color.Black;
-                 lblActualizacion.Text = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br /> " +
-                     "Para asignar los permisos correspondientes, descargué el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página.<br />";
-                 mensaje = "0";
-                 controlCamposVisibles();
-                 BtnDownload.Visible = true;
-                 BtnReload.Visible = true;
-             }*/
             return mensaje;
 
         }
@@ -2453,9 +2427,6 @@ namespace ReportesUnis
                     txtNit.Enabled = true;
                     llenadoPaisnit();
                     CmbPaisNIT.SelectedValue = " ";
-                    //llenadoDepartamentoNit();
-                    //CmbDepartamentoNIT.SelectedValue = " ";
-                    //llenadoMunicipioNIT();
                     string script = "<script>NoExisteNit();</script>";
                     ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                 }
