@@ -210,6 +210,9 @@
             <input type="text" id="ISESSION" style="display: none" value="0" runat="server" />
             <input type="hidden" id="banderaSESSION" runat="server" />
 
+            <%-- CREDENCIALES NIT--%>
+            <input type="hidden" id="CREDENCIALES_NIT" runat="server" />
+            <input type="hidden" id="URL_NIT" runat="server" />
 
 
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>

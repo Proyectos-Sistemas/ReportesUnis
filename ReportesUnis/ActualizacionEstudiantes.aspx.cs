@@ -40,8 +40,8 @@ namespace ReportesUnis
             ISESSION.Value = "0";
             controlCamposVisibles(true);
             LeerInfoTxt();
-            LeerInfoTxt();
             LeerPathApex();
+            LeerCredencialesNIT();
             controlPantalla = PantallaHabilitada("Carnetización Masiva");
             txtExiste.Text = controlPantalla.ToString();
             if (controlPantalla >= 1)
@@ -130,6 +130,20 @@ namespace ReportesUnis
                 file.Close();
             }
         }
+        void LeerCredencialesNIT()
+        {
+            string rutaCompleta = CurrentDirectory + "CredencialesNIT.txt";
+
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                CREDENCIALES_NIT.Value= linea1;
+                URL_NIT.Value = linea2;
+                file.Close();
+            }
+        }
+
 
         void LeerPathApex()
         {
@@ -2165,9 +2179,8 @@ namespace ReportesUnis
 
         private string consultaNit(string nit)
         {
-            var credenciales = "d39c940b-c65f-4502-8a94-f1d9109076ab";
-            var body = "{\"Credenciales\" : \"" + credenciales + "\",\"NIT\":\"" + nit + "\"}";
-            string respuesta = api.PostNit("https://felaupar.azurewebsites.net/api/NIT?code=Cw1Olqw4rH0EyEgZdqLD9gQqy62AF5FpAfuBL5spyZoajzNGjhme4A==&Credenciales=d39c940b-c65f-4502-8a94-f1d9109076ab", body);
+            var body = "{\"Credenciales\" : \"" + CREDENCIALES_NIT.Value + "\",\"NIT\":\"" + nit + "\"}";
+            string respuesta = api.PostNit(URL_NIT.Value, body);
             return respuesta;
         }
 

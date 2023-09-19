@@ -609,6 +609,24 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden banderaSESSION;
 
         /// <summary>
+        /// Control CREDENCIALES_NIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden CREDENCIALES_NIT;
+
+        /// <summary>
+        /// Control URL_NIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden URL_NIT;
+
+        /// <summary>
         /// Control tabla.
         /// </summary>
         /// <remarks>
