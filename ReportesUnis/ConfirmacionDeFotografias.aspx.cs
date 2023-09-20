@@ -190,7 +190,7 @@ namespace ReportesUnis
 
                     try
                     {
-                        File.Delete(CurrentDirectory + txtPath2.Text + row.Cells[1].Text);
+                        File.Delete(txtPath2.Text + row.Cells[1].Text);
                         cargaFt = 0;
                     }
                     catch (Exception)
@@ -249,7 +249,7 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
                                    "([Carnet] " +
-                                   ",[Carr] " +
+                                   ",[Carrera] " +
                                    ",[Direccion] " +
                                    ",[Zona] " +
                                    ",[Colonia] " +
@@ -399,6 +399,8 @@ namespace ReportesUnis
         {
             prueba.Text = "0";
             ValidacionCheck();
+            string Merror = "Ocurrió un problema al confirmar la información de:";
+            string MensajeFinal ="";
             if (Convert.ToInt16(prueba.Text) > 0 || prueba.Text.IsNullOrWhiteSpace())
             {
                 lblActualizacion.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
@@ -428,19 +430,29 @@ namespace ReportesUnis
                         }
                     }
 
-
                     if (respuesta == "0")
                     {
-                        lblActualizacion.Text = "Se confirmó correctamente la información";
+                        lblActualizacion.Text = "Se confirmó correctamente la información.";
                         File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
                         llenadoGrid();
                     }
                     else
                     {
-                        lblActualizacion.Text = "Ocurrió un problema al confirmar la información";
+                        if (String.IsNullOrEmpty(MensajeFinal))
+                            MensajeFinal = carnet;
+                        else
+                            MensajeFinal = MensajeFinal + ", " + carnet;
                     }
                 }
+
             }
+
+            if (!String.IsNullOrEmpty(MensajeFinal))
+            {
+                MensajeFinal = Merror + " " + MensajeFinal;
+                lblActualizacion.Text = MensajeFinal;
+            }
+
         }
 
         private void ValidacionCheck()
@@ -483,7 +495,7 @@ namespace ReportesUnis
                         contador = Convert.ToInt32(reader3["CONTADOR"].ToString());
                         if (contador > 0)
                         {
-                            byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + Carnet + ".jpg");
+                            byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/Fotos/" + Carnet + ".jpg");
                             string base64String = Convert.ToBase64String(imageBytes);
                             ImagenData = base64String;
                         }

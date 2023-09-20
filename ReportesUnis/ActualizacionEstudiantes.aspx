@@ -214,6 +214,11 @@
             <input type="hidden" id="CREDENCIALES_NIT" runat="server" />
             <input type="hidden" id="URL_NIT" runat="server" />
 
+            <%-- CONTROL CAMBIO NOMBRES NIT CF--%>
+            <input type="hidden" id="InicialNR1" runat="server" />
+            <input type="hidden" id="InicialNR2" runat="server" />
+            <input type="hidden" id="InicialNR3" runat="server" />
+
 
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
             <div class="container" id="tabla" runat="server" style="display: none">
@@ -376,8 +381,8 @@
                                 <div class="col-md-4 mx-auto text-center">
                                     <asp:Label runat="server">Desea utilizar CF:  </asp:Label>
                                     <br />
-                                    <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI" OnCheckedChanged="RadioButtonNombreSi_CheckedChanged" />
-                                    <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO" OnCheckedChanged="RadioButtonNombreNo_CheckedChanged" />
+                                    <asp:RadioButton ID="RadioButtonNombreSi" runat="server" GroupName="confirmar" Text="SI"  />
+                                    <asp:RadioButton ID="RadioButtonNombreNo" runat="server" GroupName="confirmar" Text="NO"  />
                                 </div>
                                 <div class="col-md-4 mx-auto text-center">
                                 </div>
@@ -578,6 +583,13 @@
         </div>
     </div>
 
+    <div id="myModalError" class="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-message">Ocurrió un error, intente más tarde.</div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -820,7 +832,7 @@
                 }
             }
             // Ejecutar la función de verificación en tiempo real
-            setInterval(verificarPermisosCamara, 10);
+            setInterval(verificarPermisosCamara, 250);
         } else {
             window.addEventListener('load', function () {
                 ValidarEstadoCamara1();
@@ -937,6 +949,8 @@
                 errorTelefonoElement.textContent = "Ingrese su teléfono.";
             } else if (Telefono.length > 0 && Telefono.length <= 7) {
                 errorTelefonoElement.textContent = "El número de télefono debe de tener 8 caracteres";
+            } else {
+                errorTelefonoElement.textContent = "";
             }
         }
 
@@ -953,8 +967,12 @@
             var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
             var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
             var Correo = document.getElementById('<%= TxtCorreoPersonal.ClientID %>').value;
-            var foto = document.getElementById('urlPath').value;
-            var foto2 = document.getElementById('urlPathControl').value;
+            var textarea1 = document.getElementById("urlPath");
+            var textarea2 = document.getElementById("urlPathControl");
+
+            // Obtener el valor del <textarea>
+            var foto = textarea1.value;
+            var foto2 = textarea2.value;
             var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
             var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
             var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
@@ -965,17 +983,15 @@
             var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
             var modal = document.getElementById("myModalActualizacion");
 
+
             if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) {
                 $('#myModal').css('display', 'block');
                 return false;
-            } else if (TrueNit !== nit) {
+            } else if (TrueNit !== nit && nit !== "CF") {
                 // Realiza las acciones necesarias si el valor es diferente de cero
-                if (nit !== "CF") {
-                    alert("El NIT ha cambiado, es necesario validar.");
-                    return false;
-                }
+                alert("El NIT ha cambiado, es necesario validar.");
+                return false;
             } else {
-
                 if (apellido.trim() === "") {
                     mensaje = "-Los Apellidos son requerido.";
                 }
@@ -1032,6 +1048,15 @@
                     } else {
                         mensaje = mensaje + "\n-El Teléfono debe de tener 8 carácteres";
                     }
+                }
+
+                if (telefono.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El Teléfono es requerido";
+                    } else {
+                        mensaje = mensaje + "\n-El Teléfono es requerido";
+                    }
+
                 }
 
                 if (foto.trim() === "" && foto2 === "") {
@@ -1191,9 +1216,18 @@
                         // Hacer visible la fila Combos
                         $('#<%= Combos.ClientID %>').show();
                         $('#<%= sustituirCombos.ClientID %>').hide();
-                        llenadoPaisnit();
-                        llenadoDepartamentoNit();
-                        llenadoMunicipioNIT();
+
+                        var deptos = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>');
+                        var muni = document.getElementById('<%= CmbMunicipioNIT.ClientID %>');
+                        while (deptos.options.length > 0) {
+                            deptos.remove(0);
+                        }
+                        while (muni.options.length > 0) {
+                            muni.remove(0);
+                        }
+                        //llenadoPaisnit();
+                        //llenadoDepartamentoNit();
+                        //llenadoMunicipioNIT();
                     }
                 });
             }
@@ -1210,7 +1244,10 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtNombre.ClientID %>').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
                     $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
                 }
             });
@@ -1219,7 +1256,10 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtApellido.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
                     $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
                 }
             });
@@ -1228,7 +1268,10 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO DE CASADA EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtCasada.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
                     $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
                 }
             });
@@ -1237,7 +1280,10 @@
         //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 1 EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtDireccion.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
                     $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
                 }
             });
@@ -1246,7 +1292,10 @@
         //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 2 EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtDireccion2.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
                     $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
                 }
             });
@@ -1255,7 +1304,10 @@
         //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 3 EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtDireccion3.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
                     $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
                 }
             });
@@ -1264,7 +1316,10 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO PAIS EN EL RECIBO
         $(document).ready(function () {
             $('#<%= CmbPaisNIT.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
                     $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
                 }
             });
@@ -1400,6 +1455,18 @@
 
         function mostrarModalCorrecto() {
             var modal = document.getElementById("myModalCorrecto");
+            modal.style.display = "block";
+            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+            lblActualizacion.html("");
+
+            setTimeout(function () {
+                modal.style.display = "none"; // Oculta el modal después de 10 segundos
+                window.location.href = "ActualizacionEstudiantes.aspx";
+            }, 4000); // 4000 milisegundos =  segundos
+        }
+
+        function mostrarModalError() {
+            var modal = document.getElementById("myModalError");
             modal.style.display = "block";
             var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
             lblActualizacion.html("");
