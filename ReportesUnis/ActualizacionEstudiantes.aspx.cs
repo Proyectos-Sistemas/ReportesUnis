@@ -61,7 +61,7 @@ namespace ReportesUnis
                     llenadoDepartamento();
                     llenadoState();
                     emplid = mostrarInformación();
-                    EliminarAlmacenada();
+                    
                     controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + emplid + "' AND FECH_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
                     controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + emplid + "'");
                     if (controlRenovacion < 2 || (controlRenovacionFecha < 3 && controlRenovacionFecha > 0))
@@ -90,7 +90,7 @@ namespace ReportesUnis
                             CmbMunicipioNIT.Items.Clear();
                         }
 
-                        if (Request.Form["urlPathControl"] == "1")
+                        if (urlPathControl2.Value == "1")
                         {
                             AlmacenarFotografia();
                         }
@@ -549,11 +549,13 @@ namespace ReportesUnis
                             ImgBase.ImageUrl = (File.Exists(Server.MapPath($"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg"))) ? $"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg?c={DateTime.Now.Ticks}" : string.Empty;
                             byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + txtCarne.Text + ".jpg");
                             string base64String = Convert.ToBase64String(imageBytes);
-                            string script = $@"<script type='text/javascript'>
+                            /*string script = $@"<script type='text/javascript'>
                                             document.getElementById('urlPath').value = '{base64String}';
                                             document.getElementById('urlPathControl').value = '0';
                                             </script>";
-                            ClientScript.RegisterStartupScript(this.GetType(), "SetUrlPathValue", script);
+                            ClientScript.RegisterStartupScript(this.GetType(), "SetUrlPathValue", script);        */                    
+                            urlPath2.Value = base64String;
+                            urlPathControl2.Value = "0";
                         }
                     }
                     con.Close();
@@ -1106,11 +1108,12 @@ namespace ReportesUnis
         //Eventos       
         protected void CmbMunicipio_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Request.Form["urlPathControl"] == "1")
+            if (urlPathControl2.Value == "1")
             {
                 AlmacenarFotografia();
             }
 
+            
             llenadoState();
             fotoAlmacenada();
             MunicipioNit.Text = CmbMunicipio.SelectedValue;
@@ -1118,7 +1121,7 @@ namespace ReportesUnis
         }
         protected void CmbMunicipioNIT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Request.Form["urlPathControl"] == "1")
+            if (urlPathControl2.Value == "1")
             {
                 AlmacenarFotografia();
             }
@@ -1129,7 +1132,7 @@ namespace ReportesUnis
         }
         protected void CmbDepartamento_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Request.Form["urlPathControl"] == "1")
+            if (urlPathControl2.Value == "1")
             {
                 AlmacenarFotografia();
             }
@@ -1143,7 +1146,7 @@ namespace ReportesUnis
         }
         protected void CmbDepartamentoNIT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Request.Form["urlPathControl"] == "1")
+            if (urlPathControl2.Value == "1")
             {
                 AlmacenarFotografia();
             }
@@ -1276,7 +1279,7 @@ namespace ReportesUnis
                         string ruta = txtPath.Text + nombreArchivo;
                         int cargaFt = 0;
 
-                        mensaje = SaveCanvasImage(Request.Form["urlPath"], txtPath.Text, txtCarne.Text + ".jpg");
+                        mensaje = SaveCanvasImage(urlPath2.Value, txtPath.Text, txtCarne.Text + ".jpg");
 
                         if (mensaje.Equals("Imagen guardada correctamente."))
                         {
@@ -1293,11 +1296,11 @@ namespace ReportesUnis
 
                             if (txtConfirmacion.Text == "01")
                             {
-                                SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "\\Usuarios\\FotosConfirmacion\\", txtCarne.Text + ".jpg");
+                                SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosConfirmacion\\", txtCarne.Text + ".jpg");
                             }
                             else
                             {
-                                SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "\\Usuarios\\Fotos\\", txtCarne.Text + ".jpg");
+                                SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\Fotos\\", txtCarne.Text + ".jpg");
                             }
 
                             cmd.Transaction = transaction;
@@ -2006,7 +2009,7 @@ namespace ReportesUnis
                                 {
                                     transaction.Commit();
                                     con.Close();
-                                    if (Request.Form["urlPathControl"] == "1")
+                                    if (urlPathControl2.Value == "1")
                                     {
                                         AlmacenarFotografia();
                                     }
@@ -2051,7 +2054,7 @@ namespace ReportesUnis
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
             }
 
-            if (Request.Form["urlPathControl"] == "1")
+            if (urlPathControl2.Value == "1")
             {
                 AlmacenarFotografia();
             }
@@ -2074,7 +2077,7 @@ namespace ReportesUnis
                     {
                         if (CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() || CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() || CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
                         {
-                            if (Request.Form["urlPathControl"] == "1")
+                            if (urlPathControl2.Value == "1")
                             {
                                 AlmacenarFotografia();
                             }
@@ -2088,17 +2091,14 @@ namespace ReportesUnis
                         else
                         {
                             // Llama a la función JavaScript para mostrar el modal
+                            EliminarAlmacenada();
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                         }
                     }
 
                     if (RadioButtonNombreSi.Checked)
                     {
-                        if (Request.Form["urlPathControl"] == "1")
-                        {
-                            AlmacenarFotografia();
-                        }
-                        fotoAlmacenada();
+                        EliminarAlmacenada();
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                     }
                 }
@@ -2108,15 +2108,15 @@ namespace ReportesUnis
 
         protected void CmbPais_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Request.Form["urlPathControl"] == "1")
+            if (urlPathControl2.Value == "1")
             {
                 AlmacenarFotografia();
             }
+            fotoAlmacenada();
             llenadoDepartamento();
             llenadoMunicipio();
             llenadoState();
 
-            fotoAlmacenada();
             if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text)
             {
                 PaisNit.Text = CmbPais.SelectedValue;
@@ -2127,16 +2127,14 @@ namespace ReportesUnis
         }
         protected void CmbPaisNIT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Request.Form["urlPathControl"] == "1")
+            if (urlPathControl2.Value == "1")
             {
                 AlmacenarFotografia();
             }
-
             llenadoDepartamentoNit();
             llenadoMunicipioNIT();
             llenadoStateNIT();
             fotoAlmacenada();
-            ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
         public string divisionApellidos(string apellido)
         {
@@ -2170,7 +2168,7 @@ namespace ReportesUnis
             {
                 int largo = 0;
                 largo = imageData.Length;
-                if (Request.Form["urlPathControl"] == "1")
+                if (urlPathControl2.Value == "1")
                     imageData = imageData.Substring(23, largo - 23);
                 try
                 {
@@ -2200,7 +2198,7 @@ namespace ReportesUnis
 
         public void AlmacenarFotografia()
         {
-            if (!Request.Form["urlPath"].IsNullOrWhiteSpace())
+            if (!urlPath2.Value.IsNullOrWhiteSpace())
             {
                 int ExisteFoto;
                 string constr = TxtURL.Text;
@@ -2235,12 +2233,13 @@ namespace ReportesUnis
                                     cmd.ExecuteNonQuery();
                                 }
 
-                                SaveCanvasImage(Request.Form["urlPath"], CurrentDirectory + "/Usuarios/UltimasCargas/", txtCarne.Text + ".jpg");
+                                SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/", txtCarne.Text + ".jpg");
                                 transaction.Commit();
-                                string script = $@"<script type='text/javascript'>
+                                /*string script = $@"<script type='text/javascript'>
                                             document.getElementById('urlPathControl').value = '';
-                                            </script>";
-                                ClientScript.RegisterStartupScript(this.GetType(), "SetUrlPathValue", script);
+                                            </script>";*/
+                                urlPathControl2.Value = "";
+                                //ClientScript.RegisterStartupScript(this.GetType(), "SetUrlPathValue", script);
                             }
                             catch (Exception)
                             {
@@ -2251,6 +2250,7 @@ namespace ReportesUnis
                         }
                     }
                 }
+
             }
         }
 
@@ -2428,7 +2428,7 @@ namespace ReportesUnis
                     }
 
                     lblActualizacion.Text = "";
-                    if (Request.Form["urlPathControl"] == "1")
+                    if (urlPathControl2.Value == "1")
                     {
                         AlmacenarFotografia();
                     }
@@ -2459,7 +2459,7 @@ namespace ReportesUnis
                 }
             }
             TrueNit.Value = txtNit.Text;
-            if (Request.Form["urlPathControl"] == "1")
+            if (urlPathControl2.Value == "1")
             {
                 AlmacenarFotografia();
             }
@@ -2526,7 +2526,7 @@ namespace ReportesUnis
                     {
                         if (CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() || CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() || CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
                         {
-                            if (Request.Form["urlPathControl"] == "1")
+                            if (urlPathControl2.Value == "1")
                             {
                                 AlmacenarFotografia();
                             }
@@ -2539,7 +2539,7 @@ namespace ReportesUnis
 
                     if (RadioButtonNombreSi.Checked)
                     {
-                        if (Request.Form["urlPathControl"] == "1")
+                        if (urlPathControl2.Value == "1")
                         {
                             AlmacenarFotografia();
                         }

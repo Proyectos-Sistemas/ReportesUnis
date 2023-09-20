@@ -46,8 +46,10 @@
             </div>
         </div>
 
-        <textarea id="urlPath" name="urlPath" style="display: none"></textarea>
-        <textarea id="urlPathControl" name="urlPathControl" style="display: none"></textarea>
+        <%-- Campos para el control de la toma de fotografias  --%>
+        <input type="hidden" id="urlPath2" runat="server" />
+        <input type="hidden" id="urlPathControl2" runat="server" />
+
         <canvas id="canvas" style="max-width: 375px; max-height: 275px; display: none"></canvas>
         <div class="container">
             <div class="row">
@@ -806,9 +808,9 @@
             var canvas = $('#canvas')[0];
             var context = canvas.getContext('2d');
             var captureBtn = $('#captureBtn');
-            var textarea = $("#urlPath");
+            var textarea = $('#<%= urlPath2.ClientID %>');
             var imgBase = $("#<%= ImgBase.ClientID %>");
-            var urlPathControl = $("#urlPathControl");
+            var urlPathControl = $('#<%= urlPathControl2.ClientID %>');
             captureBtn.on('click', function (event) {
                 event.preventDefault();
                 context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
@@ -914,9 +916,9 @@
             var canvas = $('#canvas')[0];
             var context = canvas.getContext('2d');
             var captureBtn = $('#captureBtn');
-            var textarea = $("#urlPath");
+            var textarea = $('#<%= urlPath2.ClientID %>');
             var imgBase = $("#<%= ImgBase.ClientID %>");
-            var urlPathControl = $("#urlPathControl");
+            var urlPathControl = $('#<%= urlPathControl2.ClientID %>');
             captureBtn.on('click', function (event) {
                 event.preventDefault();
                 context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
@@ -928,7 +930,6 @@
         });
 
         function validarCorreo(correo) {
-            //var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
             var errorCorreoElement = document.getElementById("errorCorreo");
             var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -942,7 +943,6 @@
         }
 
         function validarTelefono(Telefono) {
-            //var regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
             var errorTelefonoElement = document.getElementById("errorTelefono");
 
             if (Telefono.trim() === "") {
@@ -967,8 +967,8 @@
             var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
             var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
             var Correo = document.getElementById('<%= TxtCorreoPersonal.ClientID %>').value;
-            var textarea1 = document.getElementById("urlPath");
-            var textarea2 = document.getElementById("urlPathControl");
+            var textarea1 = $('#<%= urlPath2.ClientID %>').val(); 
+            var textarea2 = $('#<%= urlPath2.ClientID %>').val(); 
 
             // Obtener el valor del <textarea>
             var foto = textarea1.value;

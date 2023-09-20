@@ -51,6 +51,24 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Image ImgBase;
 
         /// <summary>
+        /// Control urlPath2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden urlPath2;
+
+        /// <summary>
+        /// Control urlPathControl2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden urlPathControl2;
+
+        /// <summary>
         /// Control CargaDPI.
         /// </summary>
         /// <remarks>
