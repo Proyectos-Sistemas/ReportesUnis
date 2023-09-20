@@ -548,12 +548,7 @@ namespace ReportesUnis
                             ImgBase.Visible = true;
                             ImgBase.ImageUrl = (File.Exists(Server.MapPath($"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg"))) ? $"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg?c={DateTime.Now.Ticks}" : string.Empty;
                             byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + txtCarne.Text + ".jpg");
-                            string base64String = Convert.ToBase64String(imageBytes);
-                            /*string script = $@"<script type='text/javascript'>
-                                            document.getElementById('urlPath').value = '{base64String}';
-                                            document.getElementById('urlPathControl').value = '0';
-                                            </script>";
-                            ClientScript.RegisterStartupScript(this.GetType(), "SetUrlPathValue", script);        */                    
+                            string base64String = Convert.ToBase64String(imageBytes);                   
                             urlPath2.Value = base64String;
                             urlPathControl2.Value = "0";
                         }
@@ -2235,11 +2230,7 @@ namespace ReportesUnis
 
                                 SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/", txtCarne.Text + ".jpg");
                                 transaction.Commit();
-                                /*string script = $@"<script type='text/javascript'>
-                                            document.getElementById('urlPathControl').value = '';
-                                            </script>";*/
                                 urlPathControl2.Value = "";
-                                //ClientScript.RegisterStartupScript(this.GetType(), "SetUrlPathValue", script);
                             }
                             catch (Exception)
                             {
