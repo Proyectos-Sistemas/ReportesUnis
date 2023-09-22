@@ -46,7 +46,8 @@ namespace ReportesUnis
             txtExiste.Text = controlPantalla.ToString();
             if (controlPantalla >= 1)
             {
-                TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                TextUser.Text = "3001605690101";
+                //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                 if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
                 {
@@ -71,7 +72,7 @@ namespace ReportesUnis
                             txtNit.Enabled = false;
                             RadioButtonNombreSi.Checked = true;
                             ValidarNIT.Enabled = false;
-                            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text)
+                            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
                             {
                                 PaisNit.Text = CmbPais.SelectedValue;
                                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -86,8 +87,8 @@ namespace ReportesUnis
                             TxtDiRe3.Enabled = true;
                             ValidarNIT.Enabled = true;
                             txtNit.Enabled = true;
-                            CmbDepartamentoNIT.Items.Clear();
-                            CmbMunicipioNIT.Items.Clear();
+                            //CmbDepartamentoNIT.Items.Clear();
+                            //CmbMunicipioNIT.Items.Clear();
                         }
 
                         if (urlPathControl2.Value == "1")
@@ -399,6 +400,9 @@ namespace ReportesUnis
                         else
                         {
                             llenadoPaisnit();
+                            CmbPaisNIT.SelectedValue = "Guatemala";
+                            llenadoDepartamentoNit();
+                            llenadoMunicipioNIT();
                         }
                         txtTelefono.Text = reader["PHONE"].ToString();
                         TruePhone.Text = reader["PHONE"].ToString();
@@ -1005,7 +1009,7 @@ namespace ReportesUnis
                     }
                 }
 
-                if (RadioButtonNombreSi.Checked && (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text))
+                if (RadioButtonNombreSi.Checked && ((InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text) || String.IsNullOrEmpty(InicialNR1.Value)))
                 {
                     TxtNombreR.Text = txtNombre.Text;
                     TxtApellidoR.Text = txtApellido.Text;
@@ -1072,7 +1076,7 @@ namespace ReportesUnis
                         string script = "<script>Documentos();</script>";
                         ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                         mensaje = "Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.";
-                        if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text)
+                        if ((InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text) || String.IsNullOrEmpty(InicialNR1.Value))
                         {
                             TxtNombreR.Text = txtNombre.Text;
                             TxtApellidoR.Text = txtApellido.Text;
@@ -1322,7 +1326,7 @@ namespace ReportesUnis
                                 StateNIT.Text = State.Text;
 
 
-                            if (RadioButtonNombreSi.Checked && (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text))
+                            if (RadioButtonNombreSi.Checked && ((InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text) || String.IsNullOrEmpty(InicialNR1.Value)))
                             {
                                 TxtNombreR.Text = txtNombre.Text;
                                 TxtApellidoR.Text = txtApellido.Text;
@@ -1655,6 +1659,7 @@ namespace ReportesUnis
                                         contadorUD = contadorUD + 1;
                                     }
                                 }
+
 
                                 if (!String.IsNullOrEmpty(TxtNombreR.Text))
                                 {
@@ -2010,7 +2015,7 @@ namespace ReportesUnis
                                     }
 
                                     fotoAlmacenada();
-                                    if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text)
+                                    if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
                                     {
                                         PaisNit.Text = CmbPais.SelectedValue;
                                         DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -2112,7 +2117,7 @@ namespace ReportesUnis
             llenadoMunicipio();
             llenadoState();
 
-            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text)
+            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
             {
                 PaisNit.Text = CmbPais.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
