@@ -11,16 +11,16 @@ namespace ReportesUnis
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["Grupos"] is null )
+            if (Session["Grupos"] is null)
             {
                 Response.Redirect(@"~/Default.aspx");
             }
             else
             {
-                //if (((List<string>)Session["Grupos"]).Contains("RLI_VistaEmpleados") && ((List<string>)Session["Grupos"]).Contains("RLI_Admin"))
-                //{
-                //    Response.Redirect(@"~/ActualizaciónEmpleados.aspx");
-                //}  DESCOMENTAR EN LA FASE 2
+                if (((List<string>)Session["Grupos"]).Contains("RLI_VistaEmpleados") && ((List<string>)Session["Grupos"]).Contains("RLI_Admin"))
+                {
+                    Response.Redirect(@"~/ActualizaciónEmpleados.aspx");
+                }
 
                 if (((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos"))
                 {
