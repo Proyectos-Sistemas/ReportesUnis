@@ -1374,10 +1374,13 @@
 
             if (files.length > 2) {
                 alert("Solo se permiten cargar 2 archivos.");
-                // Eliminar los archivos adicionales
-                while (files.length > 2) {
-                    fileUpload.remove(files.length - 1);
-                    fileUpload.value = "";
+
+                for (var i = 0; i < fileUpload.files.length; i++) {
+                    var file = fileUpload.files[i];
+
+                    // Elimina el archivo seleccionado
+                    fileUpload.value = '';
+
                 }
             }
         }
