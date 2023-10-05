@@ -542,7 +542,7 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT COUNT(*) CONTADOR FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET ='" + txtCarne.Text + "'";
+                    cmd.CommandText = "SELECT COUNT(*) CONTADOR FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET ='" + txtCarne.Text + "' AND CONTROL = '1'";
                     OracleDataReader reader3 = cmd.ExecuteReader();
                     while (reader3.Read())
                     {
@@ -572,11 +572,28 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
+                    cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE SET FOTOGRAFIA = 'Existe', CONTROL = '2'" +
+                                                        "WHERE CARNET = '" + txtCarne.Text + "'";
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private void EliminarRegistrosFotos()
+        {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
                     cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET ='" + txtCarne.Text + "'";
                     cmd.ExecuteNonQuery();
                 }
             }
         }
+        
         public class DatosDepartamento
         {
             public string Texto { get; set; }
@@ -2198,6 +2215,7 @@ namespace ReportesUnis
 
         public void AlmacenarFotografia()
         {
+            EliminarRegistrosFotos();
             if (!urlPath2.Value.IsNullOrWhiteSpace())
             {
                 int ExisteFoto;
@@ -2212,7 +2230,7 @@ namespace ReportesUnis
                         cmd.Transaction = transaction;
                         //Obtener fotografia
                         cmd.Connection = con;
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET = '" + txtCarne.Text + "'";
+                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET = '" + txtCarne.Text + "' AND CONTROL ='1'";
                         OracleDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
@@ -2223,13 +2241,13 @@ namespace ReportesUnis
                                 cmd.Connection = con;
                                 if (ExisteFoto > 0)
                                 {
-                                    cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE SET FOTOGRAFIA = 'Existe'" +
+                                    cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE SET FOTOGRAFIA = 'Existe', CONTROL = '1'" +
                                                         "WHERE CARNET = '" + txtCarne.Text + "'";
                                     cmd.ExecuteNonQuery();
                                 }
                                 else
                                 {
-                                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE (FOTOGRAFIA, CARNET) VALUES ('Existe', '" + txtCarne.Text + "')";
+                                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE (FOTOGRAFIA, CARNET, CONTROL) VALUES ('Existe', '" + txtCarne.Text + "', '1')";
                                     cmd.ExecuteNonQuery();
                                 }
 

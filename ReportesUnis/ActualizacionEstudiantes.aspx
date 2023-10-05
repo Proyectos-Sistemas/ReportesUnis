@@ -17,7 +17,7 @@
         <div class="container">
             <div class="row">
                 <div class="form-group  col-md">
-                    <h5 style="text-align: center;">Toma de Fografía</h5>
+                    <h5 style="text-align: center;">Toma de Fografía*</h5>
                 </div>
             </div>
         </div>
