@@ -406,6 +406,7 @@
     <Content Include="conexion.txt" />
     <Content Include="conexionSQL.txt" />
     <Content Include="ConfirmacionDeFotografias.aspx" />
+    <Content Include="ConfirmaciónCarneEmpleados.aspx" />
     <Content Include="ConfirmaciónDeCarne.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -612,6 +613,13 @@
     </Compile>
     <Compile Include="ConfirmacionDeFotografias.aspx.designer.cs">
       <DependentUpon>ConfirmacionDeFotografias.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ConfirmaciónCarneEmpleados.aspx.cs">
+      <DependentUpon>ConfirmaciónCarneEmpleados.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConfirmaciónCarneEmpleados.aspx.designer.cs">
+      <DependentUpon>ConfirmaciónCarneEmpleados.aspx</DependentUpon>
     </Compile>
     <Compile Include="ConfirmaciónDeCarne.aspx.cs">
       <DependentUpon>ConfirmaciónDeCarne.aspx</DependentUpon>

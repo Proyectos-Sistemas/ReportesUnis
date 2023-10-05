@@ -700,6 +700,7 @@
                     videoElement.srcObject = stream;
                 })
                 .catch(function (error) {
+                    console.log(error.message);
                     error;
                 });
         } else if (userAgent.indexOf("Chrome") != -1) {
@@ -724,7 +725,7 @@
                 $('#<%= BtnReload.ClientID %>').click;
             }, function (error) {
                 let mensajeError = error.message;
-                if (mensajeError == "Permission denied") {
+                if (mensajeError.indexOf("Permission denied" != -1)) {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
                     $('#<%= tbactualizar.ClientID %>').css("display", "none");
@@ -735,7 +736,8 @@
                     lblActualizacion.html(mensaje);
                     $('#<%= BtnReload.ClientID %>').css("display", "block");
                     $('#<%= BtnDownload.ClientID %>').css("display", "block");
-                } else if (mensajeError == "Could not start video source") {
+                }
+                if (mensajeError.indexOf("Could not start video source" != -1)) {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
                     $('#<%= tbactualizar.ClientID %>').css("display", "none");
@@ -770,6 +772,7 @@
                 $('#<%= BtnReload.ClientID %>').click;
             }, function (error) {
                 let mensajeError = error.message;
+
                 if (mensajeError.indexOf("Permission denied" != -1)) {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
@@ -864,21 +867,22 @@
                     .catch(function (error) {
                         if ((sesion == "0" || sesion == "2") && bandera == 0) {
                             let mensajeError = error.message;
+
                             if (mensajeError.indexOf("Permission denied" != -1)) {
                                 $('#<%= CargaFotografia.ClientID %>').css("display", "none");
-                                    $('#<%= tabla.ClientID %>').css("display", "none");
-                                    $('#<%= tbactualizar.ClientID %>').css("display", "none");
-                                    $('#<%= InfePersonal.ClientID %>').css("display", "none");
-                                    var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                                    mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página. <br>";
-                                    lblActualizacion.css("color", "black");
-                                    lblActualizacion.html(mensaje);
-                                    $('#<%= BtnReload.ClientID %>').css("display", "block");
-                                    $('#<%= BtnDownload.ClientID %>').css("display", "block");
-                                }
+                                $('#<%= tabla.ClientID %>').css("display", "none");
+                                $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                                $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                                mensaje = "La cámara no tiene permisos disponibles o su dispositivo no cuenta con una cámara. <br />  <br>Para asignar los permisos correspondientes, descargue el manual y siga las instrucciones, al finalizar, haga clic en el botón de Recargar Página. <br>";
+                                lblActualizacion.css("color", "black");
+                                lblActualizacion.html(mensaje);
+                                $('#<%= BtnReload.ClientID %>').css("display", "block");
+                                $('#<%= BtnDownload.ClientID %>').css("display", "block");
+                            }
 
-                                if (mensajeError.indexOf("Could not start video source" != -1)) {
-                                    $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                            if (mensajeError.indexOf("Could not start video source" != -1)) {
+                                $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                                     $('#<%= tabla.ClientID %>').css("display", "none");
                                     $('#<%= tbactualizar.ClientID %>').css("display", "none");
                                     $('#<%= InfePersonal.ClientID %>').css("display", "none");
@@ -888,9 +892,9 @@
                                     lblActualizacion.html(mensaje);
                                     $('#<%= BtnReload.ClientID %>').css("display", "block");
                                     $('#<%= BtnDownload.ClientID %>').css("display", "none");
-                                }
                             }
-                        });
+                        }
+                    });
 
 
                 setTimeout(function () {
@@ -1157,30 +1161,30 @@
                 $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
                         $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
-                            $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
-                            $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
-                            $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
-                            $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
-                            $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
-                            $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPais.ClientID %>').val());
-                            $('#<%= MunicipioNit.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
-                            $('#<%= DepartamentoNit.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
-                            $('#<%= StateNIT.ClientID %>').val($('#<%= State.ClientID %>').val());
-                            $('#<%= txtNit.ClientID %>').val('CF');
-                            $('#<%= txtNit.ClientID %>').prop('disabled', true);
-                            $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
-                            $('#<%= TxtDiRe1.ClientID %>').prop('disabled', true);
-                            $('#<%= TxtDiRe2.ClientID %>').prop('disabled', true);
-                            $('#<%= TxtDiRe3.ClientID %>').prop('disabled', true);
-                            $('#<%= PaisNit.ClientID %>').prop('disabled', true);
-                            $('#<%= MunicipioNit.ClientID %>').prop('disabled', true);
-                            $('#<%= DepartamentoNit.ClientID %>').prop('disabled', true);
-                            $('#<%= lblActualizacion.ClientID %>').text('');
+                        $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+                        $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
+                        $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
+                        $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
+                        $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
+                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPais.ClientID %>').val());
+                        $('#<%= MunicipioNit.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
+                        $('#<%= DepartamentoNit.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
+                        $('#<%= StateNIT.ClientID %>').val($('#<%= State.ClientID %>').val());
+                        $('#<%= txtNit.ClientID %>').val('CF');
+                        $('#<%= txtNit.ClientID %>').prop('disabled', true);
+                        $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
+                        $('#<%= TxtDiRe1.ClientID %>').prop('disabled', true);
+                        $('#<%= TxtDiRe2.ClientID %>').prop('disabled', true);
+                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', true);
+                        $('#<%= PaisNit.ClientID %>').prop('disabled', true);
+                        $('#<%= MunicipioNit.ClientID %>').prop('disabled', true);
+                        $('#<%= DepartamentoNit.ClientID %>').prop('disabled', true);
+                        $('#<%= lblActualizacion.ClientID %>').text('');
 
-                            // Hacer visible la fila Combos
-                            $('#<%= Combos.ClientID %>').hide();
-                            // Hacer visible la fila sustitucion de Combos
-                            $('#<%= sustituirCombos.ClientID %>').hide();
+                        // Hacer visible la fila Combos
+                        $('#<%= Combos.ClientID %>').hide();
+                        // Hacer visible la fila sustitucion de Combos
+                        $('#<%= sustituirCombos.ClientID %>').hide();
                     }
                 });
             }
@@ -1195,11 +1199,11 @@
                 if ($(this).is(':checked')) {
                     // El RadioButton ha sido marcado, ocultar la fila
                     $('#<%= Combos.ClientID %>').hide();
-                        $('#<%= sustituirCombos.ClientID %>').show();
-                    } else {
-                        // El RadioButton ha sido desmarcado, mostrar la fila
-                        $('#<%= Combos.ClientID %>').show();
-                        $('#<%= sustituirCombos.ClientID %>').hide();
+                    $('#<%= sustituirCombos.ClientID %>').show();
+                } else {
+                    // El RadioButton ha sido desmarcado, mostrar la fila
+                    $('#<%= Combos.ClientID %>').show();
+                    $('#<%= sustituirCombos.ClientID %>').hide();
                 }
             });
 
@@ -1207,11 +1211,11 @@
             if ($('#<%= RadioButtonNombreSi.ClientID %>').is(':checked')) {
                 // El RadioButton está marcado, ocultar la fila
                 $('#<%= Combos.ClientID %>').hide();
-                    $('#<%= sustituirCombos.ClientID %>').show();
-                } else {
-                    // El RadioButton no está marcado, mostrar la fila
-                    $('#<%= Combos.ClientID %>').show();
-                    $('#<%= sustituirCombos.ClientID %>').hide();
+                $('#<%= sustituirCombos.ClientID %>').show();
+            } else {
+                // El RadioButton no está marcado, mostrar la fila
+                $('#<%= Combos.ClientID %>').show();
+                $('#<%= sustituirCombos.ClientID %>').hide();
             }
         });
 
@@ -1221,31 +1225,31 @@
                 $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
                         $('#<%= TxtNombreR.ClientID %>').val("");
-                            $('#<%= TxtApellidoR.ClientID %>').val("");
-                            $('#<%= TxtCasadaR.ClientID %>').val("");
-                            $('#<%= txtNit.ClientID %>').val("");
-                            $('#<%= TxtDiRe1.ClientID %>').val("");
-                            $('#<%= TxtDiRe2.ClientID %>').val("");
-                            $('#<%= TxtDiRe3.ClientID %>').val("");
-                            $('#<%= CmbPaisNIT.ClientID %>').val("");
-                            $('#<%= CmbDepartamentoNIT.ClientID %>').val("");
-                            $('#<%= CmbMunicipioNIT.ClientID %>').val("");
-                            $('#<%= StateNIT.ClientID %>').val("");
-                            $('#<%= txtNit.ClientID %>').prop('disabled', false);
-                            $('#<%= ValidarNIT.ClientID %>').prop('disabled', false);
-                            $('#<%= TxtDiRe1.ClientID %>').prop('disabled', false);
-                            $('#<%= TxtDiRe2.ClientID %>').prop('disabled', false);
-                            $('#<%= TxtDiRe3.ClientID %>').prop('disabled', false);
-                            $('#<%= CmbPaisNIT.ClientID %>').prop('disabled', false);
-                            $('#<%= CmbDepartamentoNIT.ClientID %>').prop('disabled', false);
-                            $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);
-                            $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
-                            // Hacer visible la fila Combos
-                            $('#<%= Combos.ClientID %>').show();
-                            $('#<%= sustituirCombos.ClientID %>').hide();
+                        $('#<%= TxtApellidoR.ClientID %>').val("");
+                        $('#<%= TxtCasadaR.ClientID %>').val("");
+                        $('#<%= txtNit.ClientID %>').val("");
+                        $('#<%= TxtDiRe1.ClientID %>').val("");
+                        $('#<%= TxtDiRe2.ClientID %>').val("");
+                        $('#<%= TxtDiRe3.ClientID %>').val("");
+                        $('#<%= CmbPaisNIT.ClientID %>').val("");
+                        $('#<%= CmbDepartamentoNIT.ClientID %>').val("");
+                        $('#<%= CmbMunicipioNIT.ClientID %>').val("");
+                        $('#<%= StateNIT.ClientID %>').val("");
+                        $('#<%= txtNit.ClientID %>').prop('disabled', false);
+                        $('#<%= ValidarNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= TxtDiRe1.ClientID %>').prop('disabled', false);
+                        $('#<%= TxtDiRe2.ClientID %>').prop('disabled', false);
+                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbPaisNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbDepartamentoNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
+                        // Hacer visible la fila Combos
+                        $('#<%= Combos.ClientID %>').show();
+                        $('#<%= sustituirCombos.ClientID %>').hide();
 
-                            var deptos = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>');
-                            var muni = document.getElementById('<%= CmbMunicipioNIT.ClientID %>');
+                        var deptos = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>');
+                        var muni = document.getElementById('<%= CmbMunicipioNIT.ClientID %>');
                         while (deptos.options.length > 0) {
                             deptos.remove(0);
                         }
@@ -1273,9 +1277,9 @@
             $('#<%= txtNombre.ClientID %>').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
                     ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                        $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                    $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
                 }
             });
         });
@@ -1285,9 +1289,9 @@
             $('#<%= txtApellido.ClientID %> ').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
                     ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                        $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                    $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
                 }
             });
         });
@@ -1297,9 +1301,9 @@
             $('#<%= txtCasada.ClientID %> ').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
                     ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                        $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                    $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
                 }
             });
         });
@@ -1309,9 +1313,9 @@
             $('#<%= txtDireccion.ClientID %> ').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
                     ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                        $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                    $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
                 }
             });
         });
@@ -1321,9 +1325,9 @@
             $('#<%= txtDireccion2.ClientID %> ').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
                     ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                        $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                    $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
                 }
             });
         });
@@ -1333,9 +1337,9 @@
             $('#<%= txtDireccion3.ClientID %> ').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
                     ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                        $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                    $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
                 }
             });
         });
@@ -1345,9 +1349,9 @@
             $('#<%= CmbPaisNIT.ClientID %> ').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
                     ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
+                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                    $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
                 }
             });
         });
@@ -1422,8 +1426,8 @@
 
                 if (txtNit !== TrueNit || txtNit !== 'CF') {
                     $('#<%= ValidacionNit.ClientID %>').val("1");
-                    } else {
-                        $('#<%= ValidacionNit.ClientID %>').val("0");
+                } else {
+                    $('#<%= ValidacionNit.ClientID %>').val("0");
                     TrueNit.text(txtNit);
                 }
             });

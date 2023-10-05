@@ -57,12 +57,13 @@ namespace ReportesUnis
 
                 if (respuesta.Contains("ACCESO_CARNETIZACION"))
                 {
-                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = true;
+                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = GestionesEmpleados.Visible = true;
                 }
                 else
                 {
                     MantPantallas.Visible = respuesta.Contains(MantPantallas.ValidationGroup);
                     GestionesEstudiantes.Visible = respuesta.Contains(GestionesEstudiantes.ValidationGroup);
+                    GestionesEmpleados.Visible = respuesta.Contains(GestionesEmpleados.ValidationGroup);
                     Confirmacion.Visible = respuesta.Contains(Confirmacion.ValidationGroup);
                 }
             }

@@ -933,6 +933,24 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden Estudiante;
 
         /// <summary>
+        /// Control Carrera.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Carrera;
+
+        /// <summary>
+        /// Control Facultad.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden Facultad;
+
+        /// <summary>
         /// Control ISESSION.
         /// </summary>
         /// <remarks>
@@ -949,6 +967,69 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden banderaSESSION;
+
+        /// <summary>
+        /// Control CREDENCIALES_NIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden CREDENCIALES_NIT;
+
+        /// <summary>
+        /// Control URL_NIT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden URL_NIT;
+
+        /// <summary>
+        /// Control InicialNR1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden InicialNR1;
+
+        /// <summary>
+        /// Control InicialNR2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden InicialNR2;
+
+        /// <summary>
+        /// Control InicialNR3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden InicialNR3;
+
+        /// <summary>
+        /// Control ControlRBS.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden ControlRBS;
+
+        /// <summary>
+        /// Control ControlRoles.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden ControlRoles;
 
         /// <summary>
         /// Control tabla.
@@ -969,15 +1050,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label txtCarne;
 
         /// <summary>
-        /// Control txtdPI.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtdPI;
-
-        /// <summary>
         /// Control txtCumple.
         /// </summary>
         /// <remarks>
@@ -985,6 +1057,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label txtCumple;
+
+        /// <summary>
+        /// Control txtdPI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtdPI;
 
         /// <summary>
         /// Control TxtCorreoInstitucional.
@@ -996,6 +1077,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label TxtCorreoInstitucional;
 
         /// <summary>
+        /// Control lblDependencia.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDependencia;
+
+        /// <summary>
         /// Control txtFacultad.
         /// </summary>
         /// <remarks>
@@ -1003,6 +1093,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label txtFacultad;
+
+        /// <summary>
+        /// Control LblPuesto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LblPuesto;
 
         /// <summary>
         /// Control txtPuesto.

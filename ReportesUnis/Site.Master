@@ -180,6 +180,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a id="MantPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Tiempo Pantallas</a>
                             <a id="GestionesEstudiantes" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónDeCarne">Gestión Estudiantes</a>
+                            <a id="GestionesEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónCarneEmpleados">Gestión Empleados</a>
                             <a id="Confirmacion" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografias">Confirmar Fotografías</a>                            
                         </div>
                     </li>
