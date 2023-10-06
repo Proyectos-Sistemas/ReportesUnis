@@ -591,7 +591,7 @@ namespace ReportesUnis
                     cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET ='" + txtCarne.Text + "'";
                     cmd.ExecuteNonQuery();
                 }
-            }
+            }            
         }
         
         public class DatosDepartamento
@@ -2566,6 +2566,15 @@ namespace ReportesUnis
             else
             {
                 lblActualizacion.Text = mensaje;
+            }
+
+            try
+            {
+                File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\" + txtCarne.Text + ".jpg");
+            }
+            catch
+            {
+
             }
         }
 
