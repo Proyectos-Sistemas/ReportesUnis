@@ -77,12 +77,12 @@ namespace ReportesUnis.API
                 request.AddHeader("content-type", "application/vnd.oracle.adf.resourceitem+json");
                 request.AddHeader("username", user);
                 request.AddHeader("password", pass);
-                if (consulta.Equals("legislativeInfo") || consulta.Equals("addresses"))
+                if (consulta.Equals("legislativeInfo") || consulta.Equals("addresses") )
                 {
                     request.AddHeader("effective-of", range);
                     request.AddParameter("application/json", info, ParameterType.RequestBody);
                 }
-                else if (consulta.Equals("addresses"))
+                else if (consulta.Equals("addresses") || consulta.Equals("names"))
                 {
                     request.AddHeader("effective-of", range);
                     request.AddParameter("application/vnd.oracle.adf.resourceitem+json", info, ParameterType.RequestBody);
@@ -92,7 +92,7 @@ namespace ReportesUnis.API
 
                 IRestResponse response = client.Execute(request);
 
-                dynamic datos = JsonConvert.DeserializeObject(response.Content).ToString();
+                //dynamic datos = JsonConvert.DeserializeObject(response.Content).ToString();
                 if (response.StatusCode.ToString() == "OK")
                     return 0;
                 else

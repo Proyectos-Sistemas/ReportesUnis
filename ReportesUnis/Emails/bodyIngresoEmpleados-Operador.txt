@@ -1,0 +1,5 @@
+﻿<html><body>
+<p>Estimado destinatario,</p>
+<p>Un alumno ha actualizado su información y es necesario que ingreses al siguiente enlace para revisar los cambios:</p>
+<p><a href='https://www.ejemplo.com/enlace-de-actualizacion'>Haga clic aquí para acceder al enlace de actualización</a></p>
+</body></html>

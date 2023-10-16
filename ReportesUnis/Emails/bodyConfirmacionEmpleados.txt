@@ -1,0 +1,8 @@
+<body>
+    <h2>Su información ha sido confirmada</h2>
+    <p>Estimado Colaborador </p>
+    <p>Su información ha sido confirmada, en unos día se le será entregado su carne.</p>
+    <p>Gracias por tu compromiso.</p>
+    <p>Saludos cordiales,<br>Soporte Técnico</p>
+</body>
+</html>

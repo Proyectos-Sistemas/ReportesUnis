@@ -1,0 +1,9 @@
+<body>
+    <h2>Actualización requerida para tu fotografía</h2>
+    <p>Estimado Colaborador </p>
+    <p>Lamentablemente, tu fotografía ha sido rechazada debido a problemas técnicos o de calidad.</p>
+    <p>Por favor, ingresa nuevamente a la <a href='https://www.ejemplo.com/enlace-de-actualizacion'>página</a> y toma nuevamente tu fotografía. Esperamos tu actualización.</p>
+    <p>Gracias por tu compromiso.</p>
+    <p>Saludos cordiales,<br>Soporte Técnico</p>
+</body>
+</html>

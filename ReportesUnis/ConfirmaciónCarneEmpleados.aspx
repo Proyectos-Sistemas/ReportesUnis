@@ -49,6 +49,8 @@
         <input type="hidden" id="ROLES" runat="server" />
         <%-- TEXTBOX ALMACENA EL EMPLID--%>
         <input type="hidden" id="UserEmplid" runat="server" />
+        <%-- TEXTBOX ALMACENA EL CORREO INSTITUCIONAL--%>
+        <input type="hidden" id="EmailInstitucional" runat="server" />
     </div>
    
     

@@ -23,6 +23,7 @@ using System.Web.Services;
 using System.Xml;
 using ReportesUnis.API;
 using System.Text;
+using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace ReportesUnis
 {
@@ -124,7 +125,7 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT ' ' CODIGO FROM DUAL UNION SELECT CODIGO FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE TIPO_PERSONA != 2 AND CONFIRMACION = '" + confirmacion + "'";
+                    cmd.CommandText = "SELECT ' ' CODIGO FROM DUAL UNION SELECT CODIGO FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE (TIPO_PERSONA != 2 OR ROLES IS NOT NULL) AND CONFIRMACION = '" + confirmacion + "'";
                     OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                     DataSet ds = new DataSet();
                     adapter.Fill(ds);
@@ -179,8 +180,8 @@ namespace ReportesUnis
                         "CASE WHEN ESTADO_CIVIL = 1 THEN 'SOLTERO' WHEN ESTADO_CIVIL ='2' THEN 'CASADO' ELSE '' END ESTADO_CIVIL, DIRECCION, " +
                         "DEPTO_RESIDENCIA, MUNI_RESIDENCIA, TOTALFOTOS, NOMBRE_NIT, APELLIDOS_NIT, CASADA_NIT, DIRECCION1_NIT, " +
                         "DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_NIT, PAIS_R, NO_PASAPORTE,  ADDRESS1, ADDRESS2, ADDRESS3, EMAIL_PERSONAL, EMAIL, " +
-                        "CASE WHEN TIPO_PERSONA = '3' THEN 'Administrativo' ELSE 'Docente' END TIPO_PERSONA, ROLES, EMPLID " +
-                        "FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE " + where + " AND TIPO_PERSONA != 2 AND CONFIRMACION = 1";
+                        "CASE WHEN TIPO_PERSONA = '3' THEN 'Docente' WHEN TIPO_PERSONA = '1' THEN 'Administrativo' ELSE 'Estudiante' END TIPO_PERSONA, ROLES, EMPLID " +
+                        "FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE " + where + " AND (TIPO_PERSONA != 2 OR ROLES IS NOT NULL) AND CONFIRMACION = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -216,6 +217,7 @@ namespace ReportesUnis
                         Direccion2 = reader["ADDRESS2"].ToString();
                         Direccion3 = reader["ADDRESS3"].ToString();
                         TxtCorreoInstitucional.Text = reader["EMAIL"].ToString();
+                        EmailInstitucional.Value = reader["EMAIL"].ToString();
                         TxtCorreoPersonal.Text = reader["EMAIL_PERSONAL"].ToString();
                         TxtRol.Text = reader["TIPO_PERSONA"].ToString();
                         ROLES.Value = reader["ROLES"].ToString();
@@ -321,6 +323,7 @@ namespace ReportesUnis
         protected void BtnRechazar_Click(object sender, EventArgs e)
         {
             Rechazar(CmbCarne.Text);
+            EnvioCorreo("bodyRechazoEmpleados.txt","datosRechazoEmpleados.txt");
         }
 
         protected void Confirmar(string Carnet)
@@ -347,49 +350,47 @@ namespace ReportesUnis
                     }
 
                     respuesta = serviciosHCM();
+
+
                     if (respuesta == "0")
                     {
-                        respuesta = ConsumoOracle(txtInsertName.Text);
-
-                        if (respuesta == "0")
+                        respuesta = "";
+                        QueryUpdateApex("0", fecha, fecha, fecha, "1", Carnet);
+                        if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                         {
-                            respuesta = "";
-                            QueryUpdateApex("0", fecha, fecha, fecha, "1", Carnet);
-                            if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+                            //SE INGRESA LA INFORMACIÓN EN EL BANCO
+                            respuesta = ConsumoSQL(txtInsertBI.Text);
+                            if (respuesta == "0")
                             {
-                                //SE INGRESA LA INFORMACIÓN EN EL BANCO
-                                respuesta = ConsumoSQL(txtInsertBI.Text);
+                                respuesta = ConsumoOracle(txtInsertApex.Text);
                                 if (respuesta == "0")
                                 {
-                                    respuesta = ConsumoOracle(txtInsertApex.Text);
-                                    if (respuesta == "0")
+                                    if (controlRenovacion < 2 || (controlRenovacion == 2 && controlRenovacionFecha == 1))
                                     {
-                                        if (controlRenovacion < 2 || (controlRenovacion == 2 && controlRenovacionFecha == 1))
+                                        if (controlRenovacion == 0)
                                         {
-                                            if (controlRenovacion == 0)
+                                            //INSERTA INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
+                                            respuesta = ConsumoOracle("INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO) VALUES ('" + Carnet + "','1','" + DateTime.Now.ToString("dd/MM/yyyy") + "')");
+                                        }
+                                        else
+                                        {
+                                            if (controlRenovacionFecha < 1)
                                             {
-                                                //INSERTA INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
-                                                respuesta = ConsumoOracle("INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO) VALUES ('" + Carnet + "','1','" + DateTime.Now.ToString("dd/MM/yyyy") + "')");
+                                                //ACTUALIZA INFORMACIÓN DE LA RENOVACION
+                                                respuesta = ConsumoOracle("UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "' WHERE EMPLID='" + Carnet + "'");
                                             }
                                             else
                                             {
-                                                if (controlRenovacionFecha < 1)
-                                                {
-                                                    //ACTUALIZA INFORMACIÓN DE LA RENOVACION
-                                                    respuesta = ConsumoOracle("UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "' WHERE EMPLID='" + Carnet + "'");
-                                                }
-                                                else
-                                                {
-                                                    respuesta = "0";
-                                                }
+                                                respuesta = "0";
                                             }
-
                                         }
+
                                     }
                                 }
                             }
                         }
                     }
+
                     // Al finalizar la actualización, ocultar el modal
                     ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalActualizacion();", true);
 
@@ -435,8 +436,11 @@ namespace ReportesUnis
                 {
                     cmd.Transaction = transaction;
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
+                    if (TxtRol.Text.Contains("Estudiante"))
+                    {
+                        cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
                                    "([Carnet] " +
+                                   ",[Carrera] " +
                                    ",[Direccion] " +
                                    ",[Zona] " +
                                    ",[Colonia] " +
@@ -499,20 +503,21 @@ namespace ReportesUnis
                                    ",[Condmig] " +
                                    ",[O_Condmig] " +
                                    ",[Validar_Envio]) " +
-                                "VALUES ('''||CARNET||''','''" + // APELLIDO DE CASADA
+                                "VALUES ('''||CODIGO||''','''" + // APELLIDO DE CASADA
+                                    "||CARGO||''','''" + //Carrera
                                     "||DIRECCION||''','''" + //DIRECCION
                                     "||ZONA||''','''" + //ZONA
                                     "||COLONIA||''','''" + //COLONIA
                                     "||CEDULA||''','''" + //DECULA
                                     "||DEPTO_CEDULA||''',''' " + //DEPARTAMENTO CEDULA
                                     "||MUNI_CEDULA||''',''' " + //MUNICIPIO CEDULA
-                                    "||' '||''','''" + //CARGO
+                                    "||CARGO||''','''" + //CARGO
                                     "||DEPTO||''',''' " + //DEPARTAMENTO 
                                     "||FACULTAD||''','''" + //FACULTAD
-                                    "||CODIGO||''','''" + //CODIGO
+                                    "||CARNET||''','''" + //CODIGO
                                     "||TIPO_PERSONA||''','''" + //TIPO_PERSONA
                                     "||NO_CTA_BI||''',''' " + //NO CTA BI
-                                    "||TO_DATE(FECHANAC, 'YYYY-MM-DD')||''',''' " + //FECHA NACIMIENTO
+                                    "||FECHANAC||''',''' " + //FECHA NACIMIENTO
                                     "||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''','''" + //FECHA_SOLICITADO
                                     "||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''','''" + //FECHA_ENTREGA
                                     "||ACCION||''','''" + //ACCION
@@ -550,7 +555,7 @@ namespace ReportesUnis
                                     "||CASA||''','''" + //CASA
                                     "||APTO||''','''" + //APARTAMENTO
                                     "||CELULAR||''','''" + //CELULAR
-                                    "||EMAIL||''','''" + //CELULAR
+                                    "||EMAIL||''','''" + //EMAIL
                                     "||NO_CUI||''','''" + //CELULAR
                                     "||DEPTO_CUI||''','''" + //DEPARTAMENTO_CUI
                                     "||MUNI_CUI||''','''" + //MUNI_CUI
@@ -563,7 +568,142 @@ namespace ReportesUnis
                                     "||O_CONDMIG||''','''  " + //OTRA CONDICION MIGRANTE
                                     "||VALIDAR_ENVIO||''')'" +//OTRA CONDICION MIGRANTE 
                                     " AS INS " +
-                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + CmbCarne.Text + "')"; 
+                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + CmbCarne.SelectedValue + "')";
+                    }
+                    else
+                    {
+                        cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
+                                       "([Carnet] " +
+                                       ",[Carrera] " +
+                                       ",[Direccion] " +
+                                       ",[Zona] " +
+                                       ",[Colonia] " +
+                                       ",[Cedula] " +
+                                       ",[Depto_Cedula] " +
+                                       ",[Muni_Cedula] " +
+                                       ",[Cargo] " +
+                                       ",[Depto] " +
+                                       ",[Facultad] " +
+                                       ",[Codigo] " +
+                                       ",[Tipo_Persona] " +
+                                       ",[No_Cta_Bi] " +
+                                       ",[FechaNac] " +
+                                       ",[Fecha_Solicitado] " +
+                                       ",[Fecha_Entrega] " +
+                                       ",[Accion] " +
+                                       ",[Telefono] " +
+                                       ",[Nit] " +
+                                       ",[Nombre1] " +
+                                       ",[Apellido1] " +
+                                       ",[Apellido2] " +
+                                       ",[Decasada] " +
+                                       ",[Nombre2] " +
+                                       ",[Nombreimp] " +
+                                       ",[Sexo] " +
+                                       ",[Estado_Civil] " +
+                                       ",[Path_file] " +
+                                       ",[Fecha_Hora] " +
+                                       ",[Tipo_Accion] " +
+                                       ",[IDUNIV] " +
+                                       ",[Codigo_Barras] " +
+                                       ",[Fec_Emision] " +
+                                       ",[Nombre] " +
+                                       ",[Promocion] " +
+                                       ",[No_Recibo] " +
+                                       ",[Tipo_Sangre] " +
+                                       ",[Status] " +
+                                       ",[Tipo_Documento] " +
+                                       ",[ID_AGENCIA] " +
+                                       ",[Muni_Residencia] " +
+                                       ",[Depto_Residencia] " +
+                                       ",[norden] " +
+                                       ",[Observaciones] " +
+                                       ",[Pais_nacionalidad] " +
+                                       ",[Pais_pasaporte] " +
+                                       ",[No_Pasaporte] " +
+                                       ",[Profesion] " +
+                                       ",[Casa] " +
+                                       ",[Apto] " +
+                                       ",[Celular] " +
+                                       ",[Email] " +
+                                       ",[No_Cui] " +
+                                       ",[Depto_Cui] " +
+                                       ",[Muni_Cui] " +
+                                       ",[Pais_Nit] " +
+                                       ",[Flag_cedula] " +
+                                       ",[Flag_dpi] " +
+                                       ",[Flag_pasaporte] " +
+                                       ",[Otra_Na] " +
+                                       ",[Condmig] " +
+                                       ",[O_Condmig] " +
+                                       ",[Validar_Envio]) " +
+                                    "VALUES ('''||CARNET||''','''" + // APELLIDO DE CASADA
+                                        "||CARGO||''','''" + //Carrera
+                                        "||DIRECCION||''','''" + //DIRECCION
+                                        "||ZONA||''','''" + //ZONA
+                                        "||COLONIA||''','''" + //COLONIA
+                                        "||CEDULA||''','''" + //DECULA
+                                        "||DEPTO_CEDULA||''',''' " + //DEPARTAMENTO CEDULA
+                                        "||MUNI_CEDULA||''',''' " + //MUNICIPIO CEDULA
+                                        "||CARGO||''','''" + //CARGO
+                                        "||DEPTO||''',''' " + //DEPARTAMENTO 
+                                        "||FACULTAD||''','''" + //FACULTAD
+                                        "||CODIGO||''','''" + //CODIGO
+                                        "||TIPO_PERSONA||''','''" + //TIPO_PERSONA
+                                        "||NO_CTA_BI||''',''' " + //NO CTA BI
+                                        "||FECHANAC||''',''' " + //FECHA NACIMIENTO
+                                        "||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''','''" + //FECHA_SOLICITADO
+                                        "||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''','''" + //FECHA_ENTREGA
+                                        "||ACCION||''','''" + //ACCION
+                                        "||TELEFONO||''','''" + //TELEFONO
+                                        "||NIT||''','''  " + //NIT
+                                        "||NOMBRE1||''',''' " + //NOMBRE1
+                                        "||APELLIDO1||''','''  " + //APELLIDO1
+                                        "||APELLIDO2||''','''  " + //APELLIDO2
+                                        "||DECASADA||''','''   " + //DE CASADA
+                                        "||NOMBRE2||''',''' " + //NOMBRE2
+                                        "||NOMBREIMP||''','''  " + //NOMBREIMP
+                                        "||SEXO||''',''' " + //SEXO
+                                        "||ESTADO_CIVIL||''',''' " + //ESTADO_CIVIL
+                                        "||PATH_FILE||''',''' " + //PATH
+                                        "||TO_CHAR(SYSDATE,'YYYY-MM-DD HH:MM:SS')||''',''' " + //FECHA_HORA
+                                        "||TIPO_ACCION||''',''' " + //TIPO_ACCION
+                                        "||IDUNIV||''','''  " + //IDUNIV
+                                        "||CODIGO_BARRAS||''',''' " + //CODIGO DE BARRAS
+                                        "||FEC_EMISION||''','''" + //FECHA_EMISION
+                                        "||NOMBRE||''','''" + //NOMBRE
+                                        "||PROMOCION||''','''" + //PROMOCION
+                                        "||NO_RECIBO||''','''" + //NO_RECIBIDO
+                                        "||TIPO_SANGRE||''','''" + //TIPO_SANGRE
+                                        "||STATUS||''','''" + //STATUS
+                                        "||TIPO_DOCUMENTO||''','''" + //TIPO_DOCUMENTO
+                                        "||ID_AGENCIA||''','''" + //ID_AGENCIA
+                                        "||MUNI_RESIDENCIA||''','''" + //MUNI_RESIDENCIA
+                                        "||DEPTO_RESIDENCIA||''','''" + //DEPTO_RESIDENCIA
+                                        "||NORDEN||''','''" + //NO_ORDER
+                                        "||OBSERVACIONES||''','''" + //OBSERVACIONES
+                                        "||PAIS_NACIONALIDAD||''','''" + //PAIS_NACIONALIDAD
+                                        "||PAIS_PASAPORTE||''','''" + //PAIS_PASAPORTE
+                                        "||NO_PASAPORTE||''','''" + //NO_PASAPORTE
+                                        "||PROFESION||''','''" + //PROFESION
+                                        "||CASA||''','''" + //CASA
+                                        "||APTO||''','''" + //APARTAMENTO
+                                        "||CELULAR||''','''" + //CELULAR
+                                        "||EMAIL||''','''" + //EMAIL
+                                        "||NO_CUI||''','''" + //CELULAR
+                                        "||DEPTO_CUI||''','''" + //DEPARTAMENTO_CUI
+                                        "||MUNI_CUI||''','''" + //MUNI_CUI
+                                        "||PAIS_NIT||''','''" + //PAIS_NIT
+                                        "||FLAG_CEDULA||''',''' " +
+                                        "||FLAG_DPI||''',''' " +
+                                        "||FLAG_PASAPORTE||''',''' " +
+                                        "||OTRA_NA||''',''' " + //OTRA_NA 
+                                        "||CONDMIG||''',''' " + //CONDICION MIGRANTE
+                                        "||O_CONDMIG||''','''  " + //OTRA CONDICION MIGRANTE
+                                        "||VALIDAR_ENVIO||''')'" +//OTRA CONDICION MIGRANTE 
+                                        " AS INS " +
+                                        "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + CmbCarne.SelectedValue + "')";
+                    }
                     OracleDataReader reader = cmd.ExecuteReader();
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -859,6 +999,7 @@ namespace ReportesUnis
         {
             string carne = CmbCarne.Text;
             Confirmar(carne);
+            EnvioCorreo("bodyConfirmacionEmpleados.txt", "datosConfirmacionEmpleados.txt");
         }
 
         void LeerInfoTxtPath()
@@ -1494,7 +1635,7 @@ namespace ReportesUnis
                 }
             }
             return Convert.ToInt32(control);
-        }        
+        }
 
         private string consultaGetworkers(string expand, string expandUser)
         {
@@ -1634,12 +1775,10 @@ namespace ReportesUnis
             return Encoding.UTF8.GetString(Convert.FromBase64String(stringToDecode));
         }
 
-
         public string serviciosHCM()
         {
             string constr = TxtURL.Text;
             int contador;
-            string ImagenData = "";
             //Obtener se obtiene toda la información del empleado
             string expand = "names,photos";
             string consulta = consultaGetworkers(expand, "nationalIdentifiers");
@@ -1652,8 +1791,9 @@ namespace ReportesUnis
             string PhotoId = getBetween(consulta, "\"PhotoId\" : ", ",\n");
             string base64String = "";
             string PersonNameId = getBetween(consulta, "\"PersonNameId\" : ", ",\n");
-            string effectivePerson = getBetween(consulta, "\"PersonNameId\" : " + PersonNameId + ",\n      \"EffectiveStartDate\" : \"", "\",\n");
-
+            string effectivePerson = getBetween(consulta, PersonNameId + ",\n      \"EffectiveStartDate\" : \"", "\",\n");
+            string hrefName = getBetween(consulta, "\n      \"LocalNameInformation30\" :", "\n        \"name\" : \"names\",");
+            hrefName = getBetween(hrefName, "/child/names/", "\"");
             try
             {
                 using (OracleConnection con = new OracleConnection(constr))
@@ -1671,7 +1811,6 @@ namespace ReportesUnis
                             {
                                 byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + CmbCarne.SelectedValue + ".jpg");
                                 base64String = Convert.ToBase64String(imageBytes);
-                                ImagenData = base64String;
                             }
                         }
                         con.Close();
@@ -1685,7 +1824,9 @@ namespace ReportesUnis
                 string consultaperfil = pid + ",\n      \"PrimaryFlag\" : ";
                 string perfil = getBetween(consulta, consultaperfil, ",\n");
                 var Imgn = "{\"ImageName\" : \"" + TxtDpi.Text + "\",\"PrimaryFlag\" : \"Y\", \"Image\":\"" + base64String + "\"}";
-
+                string Hoy = DateTime.Now.ToString("yyyy-MM-dd").Substring(0, 10).TrimEnd();
+                string name = "{\"LastName\" : \"" + TxtPrimerApellido.Text + "\",\"FirstName\": \"" + TxtPrimerNombre.Text + "\",\"MiddleNames\": \"" + TxtSegundoNombre.Text + "\"," +
+                    "\"PreviousLastName\": \"" + TxtApellidoCasada.Text + "\",\"NameInformation1\": \"" + TxtSegundoApellido.Text + "\",\"LegislationCode\": \"GT\"}";
                 if (perfil == "true" && ImageId != "")
                 {
                     updatePatch(Imgn, personId, "photo", ImageId, "photo", "", "emps/");
@@ -1695,11 +1836,21 @@ namespace ReportesUnis
                     create(personId, "photo", Imgn, "emps/");
                 }
 
-                //Actualiza por medio del metodo PATCH
-                respuestaPatch = 0;
-                respuestaPost = 0;
-                int au = 0;
-                return "0";
+                //ACTUALIZAR NOMBRE
+                if (respuestaPatch == 0 && respuestaPost == 0)
+                {
+                    updatePatch(name, personId, "names", hrefName, "names", Hoy, "workers/");
+                }
+
+                if (respuestaPatch == 0)
+                {
+                    return "0";
+                }
+                else
+                {
+                    return "1";
+                }
+
             }
             catch (Exception)
             {
@@ -1740,6 +1891,70 @@ namespace ReportesUnis
                     au = au + 1;
                 }
             }*/
+
+        }
+
+        public string LeerBodyEmail(string archivo)
+        {
+            string rutaCompleta = CurrentDirectory + "/Emails/"+archivo;
+            string line = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                line = file.ReadToEnd();
+                file.Close();
+            }
+            return line;
+        }
+        public string[] LeerInfoEmail(string archivo)
+        {
+            string rutaCompleta = CurrentDirectory + "/Emails/"+archivo;
+            string[] datos;
+            string subjet = "";
+            string to = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                string linea4 = file.ReadLine();
+                subjet = linea2;
+                to = linea4;
+                file.Close();
+
+                // Corrección: Inicializa un nuevo array y asigna los valores
+                datos = new string[] { subjet, to };
+            }
+
+            return datos;
+        }
+
+        public void EnvioCorreo(string body, string subject)
+        {
+
+            string htmlBody = LeerBodyEmail(body);
+            string[] datos = LeerInfoEmail(subject);
+
+            //Creación de instancia de la aplicacion de outlook
+            var outlook = new Outlook.Application();
+
+            //Crear un objeto MailItem
+            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+
+
+            //Configuracion campos para envio del correo
+            mailItem.Subject = datos[0]; //Asunto del correo
+            //mailItem.Body = "Se ha detectado una nueva actualización";
+
+            mailItem.HTMLBody = htmlBody;
+            mailItem.To = EmailInstitucional.Value;
+            mailItem.BCC = datos[1];
+
+            //Enviar coreo
+            mailItem.Send();
+
+            //liberar recursos utilizados
+            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
+            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
 
         }
 

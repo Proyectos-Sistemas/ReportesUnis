@@ -16,6 +16,7 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml;
+using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace ReportesUnis
 {
@@ -64,8 +65,8 @@ namespace ReportesUnis
             {
                 //TextUser.Text = "2508045810101";//Profesor;
                 //TextUser.Text = "3006684570101";//Maria Jose - Administrativo Estudiante; 300000057781526
-                //TextUser.Text = "3217767041601";//Mio - Administrativo - Profesor
-                TextUser.Text = "2588604560113";//Erick - Administrativo 
+                TextUser.Text = "3217767041601";//Mio - Administrativo - Profesor
+                //TextUser.Text = "2588604560113";//Erick - Administrativo 
                 //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
                 if (!IsPostBack)
                 {
@@ -272,6 +273,40 @@ namespace ReportesUnis
                 URL_NIT.Value = linea2;
                 file.Close();
             }
+        }
+
+        public string LeerBodyEmail(string archivo)
+        {
+            string rutaCompleta = CurrentDirectory + "/Emails/"+archivo;
+            string line = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                line = file.ReadToEnd();
+                file.Close();
+            }
+            return line;
+        }
+        public string[] LeerInfoEmail(string archivo)
+        {
+            string rutaCompleta = CurrentDirectory + "/Emails/"+archivo;
+            string[] datos;
+            string subjet = "";
+            string to = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                string linea4 = file.ReadLine();
+                subjet = linea2;
+                to = linea4;
+                file.Close();
+
+                // Corrección: Inicializa un nuevo array y asigna los valores
+                datos = new string[] { subjet, to };
+            }
+
+            return datos;
         }
 
         void controlCamposVisibles()
@@ -1901,6 +1936,8 @@ namespace ReportesUnis
                         else
                         {
                             // Llama a la función JavaScript para mostrar el modal
+                            EnvioCorreo();
+                            EnvioCorreoEmpleado();
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                         }
                     }
@@ -2949,6 +2986,8 @@ namespace ReportesUnis
                                                 txtNit.Text = "CF";
                                             }
                                             mensaje = "Su información fue actualizada correctamente";
+                                            EnvioCorreo();
+                                            EnvioCorreoEmpleado();
                                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                                         }
                                     }
@@ -3671,6 +3710,8 @@ namespace ReportesUnis
                             else
                             {
                                 EliminarAlmacenada();
+                                EnvioCorreo();
+                                EnvioCorreoEmpleado();
                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                             }
                         }
@@ -3688,8 +3729,20 @@ namespace ReportesUnis
                 else
                 {
                     EliminarAlmacenada();
+                    EnvioCorreo();
+                    EnvioCorreoEmpleado();
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                 }
+
+            }
+
+
+            try
+            {
+                File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\" + txtCarne.Text + ".jpg");
+            }
+            catch
+            {
 
             }
 
@@ -4202,6 +4255,65 @@ namespace ReportesUnis
                 }
             }
             return codigo;
+        }
+
+        public void EnvioCorreo()
+        {
+
+            string htmlBody = LeerBodyEmail("bodyIngresoEmpleados-Operador.txt");
+            string[] datos = LeerInfoEmail("datosIngresoEmpleados-Operador.txt");
+
+            //Creación de instancia de la aplicacion de outlook
+            var outlook = new Outlook.Application();
+
+            //Crear un objeto MailItem
+            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+
+
+            //Configuracion campos para envio del correo
+            mailItem.Subject = datos[0]; //Asunto del correo
+            //mailItem.Body = "Se ha detectado una nueva actualización";
+
+            mailItem.HTMLBody = htmlBody;
+            mailItem.To = datos[1];
+
+            //Enviar coreo
+            mailItem.Send();
+
+            //liberar recursos utilizados
+            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
+            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+
+        }
+
+        public void EnvioCorreoEmpleado()
+        {
+
+            string htmlBody = LeerBodyEmail("bodyIngresoEmpleados.txt");
+            string[] datos = LeerInfoEmail("datosIngresoEmpleados.txt");
+
+            //Creación de instancia de la aplicacion de outlook
+            var outlook = new Outlook.Application();
+
+            //Crear un objeto MailItem
+            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+
+
+            //Configuracion campos para envio del correo
+            mailItem.Subject = datos[0]; //Asunto del correo
+            //mailItem.Body = "Se ha detectado una nueva actualización";
+
+            mailItem.HTMLBody = htmlBody;
+            mailItem.BCC = datos[1];
+            mailItem.To = TxtCorreoInstitucional.Text;
+
+            //Enviar coreo
+            mailItem.Send();
+
+            //liberar recursos utilizados
+            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
+            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+
         }
 
     }

@@ -154,6 +154,10 @@
     <Reference Include="Microsoft.Net.Http.Headers, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.Headers.2.2.0\lib\netstandard2.0\Microsoft.Net.Http.Headers.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Outlook.15.0.4797.1004\lib\net20\Microsoft.Office.Interop.Outlook.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.ReportViewer.Common, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.WebForms.150.1404.0\lib\net40\Microsoft.ReportViewer.Common.dll</HintPath>
     </Reference>
@@ -416,6 +420,19 @@
     <Content Include="Content\Site.css" />
     <Content Include="CredencialesNIT.txt" />
     <Content Include="Default.aspx" />
+    <Content Include="Emails\bodyConfirmacionEmpleados.txt" />
+    <Content Include="Emails\bodyConfirmacionFotoEmpleados.txt" />
+    <Content Include="Emails\bodyIngresoEmpleados-Operador.txt" />
+    <Content Include="Emails\bodyIngresoEmpleados.txt" />
+    <Content Include="Emails\bodyRechazoEmpleados.txt" />
+    <Content Include="Emails\bodyRechazoFotoEmpleados.txt" />
+    <Content Include="Emails\datosConfirmacionEmpleados.txt" />
+    <Content Include="Emails\datosConfirmacionFotoEmpleados.txt" />
+    <Content Include="Emails\datosIngresoEmpleados-Operador.txt" />
+    <Content Include="Emails\datosIngresoEmpleados.txt" />
+    <Content Include="Emails\datosRechazoEmpleados.txt" />
+    <Content Include="Emails\datosRechazoFotoEmpleados.txt" />
+    <Content Include="EnvioEmail.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -656,6 +673,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EnvioEmail.aspx.cs">
+      <DependentUpon>EnvioEmail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EnvioEmail.aspx.designer.cs">
+      <DependentUpon>EnvioEmail.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

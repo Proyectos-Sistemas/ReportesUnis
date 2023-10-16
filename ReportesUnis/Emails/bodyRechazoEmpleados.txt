@@ -1,0 +1,9 @@
+﻿<body>
+    <h2>Su información ha sido rechazada</h2>
+    <p>Estimado Colaborador </p>
+    <p>Lamentablemente, su información ha sido rechazada debido a que no coincide con su documento de identificación.</p>
+    <p>Por favor, ingrese nuevamente a la <a href='https://www.ejemplo.com/enlace-de-actualizacion'>página</a> y actualice de nuevo su información.</p>
+    <p>Gracias por tu compromiso.</p>
+    <p>Saludos cordiales,<br>Soporte Técnico</p>
+</body>
+</html>

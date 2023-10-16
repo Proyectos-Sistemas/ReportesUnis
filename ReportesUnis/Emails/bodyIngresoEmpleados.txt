@@ -1,0 +1,5 @@
+﻿<html><body>
+<p>Estimado usuario:</p>
+<p>Su información ha sido recibida y sera validada por un operador.</p>
+<p>Se le notificará más adelante si sus datos fueron aceptados o rechazados.</p>
+</body></html>
