@@ -177,6 +177,24 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlAnchor Confirmacion;
 
         /// <summary>
+        /// Control MantenimientoPantallas.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor MantenimientoPantallas;
+
+        /// <summary>
+        /// Control MenuDirectorio.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor MenuDirectorio;
+
+        /// <summary>
         /// Control MainContent.
         /// </summary>
         /// <remarks>

@@ -105,7 +105,8 @@
 </head>
 <body>
     <div class="overlay" id="overlay" style=""></div>
-    <div class="loading" id="loading" style="">Cargando. Espere por favor...<div class="lds-dual-ring"></div>
+    <div class="loading" id="loading" style="">
+        Cargando. Espere por favor...<div class="lds-dual-ring"></div>
     </div>
     <form runat="server" class="needs-validation">
         <asp:ScriptManager runat="server" EnablePageMethods="true">
@@ -156,13 +157,13 @@
                             <a id="MenuHistoricosCXP" runat="server" validationgroup="HISTORICO_FINANZAS" class="dropdown-item" href="~/HistoricoCXP">Históricos Cuentas por pagar</a>
                             <a id="MenuHistoricosGL" runat="server" validationgroup="HISTORICO_FINANZAS" class="dropdown-item" href="~/HistoricoGL">Históricos Contabilidad general</a>
                         </div>
-                    </li>                    
+                    </li>
                     <li class="nav-item dropdown" id="liNavbarInformacion">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarInformacion" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Información
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">                            
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a id="RepCamarasEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicas">Reportes Cámaras Térmicas de Estudiantes</a>
-                           <a id="Actualizacion" runat="server"  class="dropdown-item" href="~/UnificacionActualización">Actualización de información</a>                      
+                            <a id="Actualizacion" runat="server" class="dropdown-item" href="~/UnificacionActualización">Actualización de información</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown" id="liNavbarCarnet">
@@ -171,8 +172,17 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a id="MantPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Tiempo Pantallas</a>
                             <a id="GestionesEstudiantes" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónDeCarne">Gestión Estudiantes</a>
-                            <a id="Confirmacion" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografias">Confirmar Fotografías</a>                            
+                            <a id="Confirmacion" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografias">Confirmar Fotografías</a>
                         </div>
+                    </li>
+                    <li class="nav-item dropdown" id="liNavbarDirectorio">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDirectorio"
+                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Directorio</a>
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a id="MenuDirectorio" runat="server" validationgroup="RLI_VistaEmpleados" class="dropdown-item" href="~/DirectorioUnis">Directorio</a>
+                        </div>
+
                     </li>
                 </ul>
 

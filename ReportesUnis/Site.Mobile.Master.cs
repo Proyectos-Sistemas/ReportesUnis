@@ -23,7 +23,7 @@ namespace ReportesUnis
 
                 if (respuesta.Contains("RLI_Admin"))
                 {
-                    MenuLogServipagos.Visible = MenuLogInterfaz.Visible = MenuLogInterfazHCMCS.Visible = MenuHistoricosHCM.Visible = MenuHistoricosCXC.Visible = MenuHistoricosCXP.Visible = MenuHistoricosGL.Visible = true;
+                    MenuLogServipagos.Visible = MenuLogInterfaz.Visible = MenuLogInterfazHCMCS.Visible = MenuHistoricosHCM.Visible = MenuHistoricosCXC.Visible = MenuHistoricosCXP.Visible = MenuHistoricosGL.Visible = MenuDirectorio.Visible = true;
                 }
                 else
                 {
@@ -34,6 +34,7 @@ namespace ReportesUnis
                     MenuHistoricosCXC.Visible = respuesta.Contains(MenuHistoricosCXC.ValidationGroup);
                     MenuHistoricosCXP.Visible = respuesta.Contains(MenuHistoricosCXP.ValidationGroup);
                     MenuHistoricosGL.Visible = respuesta.Contains(MenuHistoricosGL.ValidationGroup);
+                    MenuDirectorio.Visible = respuesta.Contains(MenuDirectorio.ValidationGroup);
 
                 }
 

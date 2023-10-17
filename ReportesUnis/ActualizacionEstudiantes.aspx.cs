@@ -46,8 +46,8 @@ namespace ReportesUnis
             txtExiste.Text = controlPantalla.ToString();
             if (controlPantalla >= 1)
             {
-                TextUser.Text = "3001605690101";
-                //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                //TextUser.Text = "3001605690101";
+                TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                 if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
                 {
@@ -62,7 +62,7 @@ namespace ReportesUnis
                     llenadoDepartamento();
                     llenadoState();
                     emplid = mostrarInformación();
-                    
+
                     controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + emplid + "' AND FECH_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
                     controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + emplid + "'");
                     if (controlRenovacion < 2 || (controlRenovacionFecha < 3 && controlRenovacionFecha > 0))
@@ -552,7 +552,7 @@ namespace ReportesUnis
                             ImgBase.Visible = true;
                             ImgBase.ImageUrl = (File.Exists(Server.MapPath($"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg"))) ? $"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg?c={DateTime.Now.Ticks}" : string.Empty;
                             byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + txtCarne.Text + ".jpg");
-                            string base64String = Convert.ToBase64String(imageBytes);                   
+                            string base64String = Convert.ToBase64String(imageBytes);
                             urlPath2.Value = base64String;
                             urlPathControl2.Value = "0";
                         }
@@ -591,9 +591,9 @@ namespace ReportesUnis
                     cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET ='" + txtCarne.Text + "'";
                     cmd.ExecuteNonQuery();
                 }
-            }            
+            }
         }
-        
+
         public class DatosDepartamento
         {
             public string Texto { get; set; }
@@ -1034,8 +1034,8 @@ namespace ReportesUnis
                     TxtDiRe1.Text = txtDireccion.Text;
                     TxtDiRe2.Text = txtDireccion2.Text;
                     TxtDiRe3.Text = txtDireccion3.Text;
-                    txtNit.Text = "CF"; 
-                    IngresoDatos(); 
+                    txtNit.Text = "CF";
+                    IngresoDatos();
                 }
                 else
                 {
@@ -1129,7 +1129,7 @@ namespace ReportesUnis
                 AlmacenarFotografia();
             }
 
-            
+
             llenadoState();
             fotoAlmacenada();
             MunicipioNit.Text = CmbMunicipio.SelectedValue;
@@ -2479,7 +2479,7 @@ namespace ReportesUnis
             }
             fotoAlmacenada();
         }
-               
+
         protected void BtnReload_Click(object sender, EventArgs e)
         {
             Response.Redirect(@"~/ActualizacionEstudiantes.aspx");
@@ -2869,6 +2869,12 @@ namespace ReportesUnis
                                       </Update__CompIntfc__CI_PERSONAL_DATA>
                                    </soapenv:Body>
                                 </soapenv:Envelope>";
+        }
+
+        void Session_End(object sender, EventArgs e)
+        {
+            // Ejemplo: Limpiar toda la sesión
+            Session.Clear();
         }
 
     }

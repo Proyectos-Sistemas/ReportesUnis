@@ -892,12 +892,21 @@
                             }
                         });
 
-
-                setTimeout(function () {
-                    ValidarEstadoCamara1()
-                }, 240000);
-
             };
+            var intervalID; // Variable para almacenar el ID del intervalo
+
+            function iniciarValidacionCamara() {
+                ValidarEstadoCamara1(); // Ejecuta la función una vez inmediatamente
+
+                // Establece un intervalo para ejecutar la función cada 10 minutos
+                console.log('ingreso');
+                intervalID = setInterval(ValidarEstadoCamara1, 600000); // 600,000 milisegundos = 10 minutos
+            }
+
+            function detenerValidacionCamara() {
+                // Detiene el intervalo
+                clearInterval(intervalID);
+            }
         }
 
         // Función para guardar en sessionStorage
