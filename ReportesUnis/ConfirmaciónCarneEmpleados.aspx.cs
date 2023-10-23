@@ -295,6 +295,7 @@ namespace ReportesUnis
                                 {
                                     File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
                                 }
+                                EnvioCorreo("bodyRechazoEmpleados.txt", "datosRechazoEmpleados.txt");
                                 ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalActualizacion();", true);
                                 lblActualizacion.Text = "Se ha rechazado la solicitud de carnet.";
                             }
@@ -316,14 +317,21 @@ namespace ReportesUnis
             }
             else
             {
-                lblActualizacion.Text = "Debe de ingresar un número de carnet para poder rechazar la información.";
+                lblActualizacion.Text = "Debe de seleccionar un número de carnet para poder rechazar la información.";
             }
         }
 
         protected void BtnRechazar_Click(object sender, EventArgs e)
         {
-            Rechazar(CmbCarne.Text);
-            EnvioCorreo("bodyRechazoEmpleados.txt","datosRechazoEmpleados.txt");
+            if (CmbCarne.SelectedValue != " ")
+            {
+                Rechazar(CmbCarne.Text);
+            }
+            else
+            {
+                lblActualizacion.Text = "Debe de seleccionar un número de carnet para poder rechazar la información.";
+            }
+            
         }
 
         protected void Confirmar(string Carnet)
@@ -374,7 +382,7 @@ namespace ReportesUnis
                                         }
                                         else
                                         {
-                                            if (controlRenovacionFecha < 1)
+                                            if (controlRenovacionFecha < 2)
                                             {
                                                 //ACTUALIZA INFORMACIÓN DE LA RENOVACION
                                                 respuesta = ConsumoOracle("UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "' WHERE EMPLID='" + Carnet + "'");
@@ -397,6 +405,7 @@ namespace ReportesUnis
                     if (respuesta == "0")
                     {
                         lblActualizacion.Text = "Se confirmó correctamente la información";
+                        EnvioCorreo("bodyConfirmacionEmpleados.txt", "datosConfirmacionEmpleados.txt");
                         Buscar("1");
                         for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
                         {
@@ -997,9 +1006,15 @@ namespace ReportesUnis
 
         protected void BtnConfirmar_Click(object sender, EventArgs e)
         {
-            string carne = CmbCarne.Text;
-            Confirmar(carne);
-            EnvioCorreo("bodyConfirmacionEmpleados.txt", "datosConfirmacionEmpleados.txt");
+            if (CmbCarne.SelectedValue != " ")
+            {
+                string carne = CmbCarne.Text;
+                Confirmar(carne);                
+            }
+            else
+            {
+                lblActualizacion.Text = "Debe de seleccionar un número de carnet para poder confirmar la información.";
+            }
         }
 
         void LeerInfoTxtPath()
@@ -1896,7 +1911,7 @@ namespace ReportesUnis
 
         public string LeerBodyEmail(string archivo)
         {
-            string rutaCompleta = CurrentDirectory + "/Emails/"+archivo;
+            string rutaCompleta = CurrentDirectory + "/Emails/" + archivo;
             string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
             {
@@ -1907,7 +1922,7 @@ namespace ReportesUnis
         }
         public string[] LeerInfoEmail(string archivo)
         {
-            string rutaCompleta = CurrentDirectory + "/Emails/"+archivo;
+            string rutaCompleta = CurrentDirectory + "/Emails/" + archivo;
             string[] datos;
             string subjet = "";
             string to = "";
@@ -1946,8 +1961,9 @@ namespace ReportesUnis
             //mailItem.Body = "Se ha detectado una nueva actualización";
 
             mailItem.HTMLBody = htmlBody;
-            mailItem.To = EmailInstitucional.Value;
-            mailItem.BCC = datos[1];
+            //mailItem.To = EmailInstitucional.Value;
+            //mailItem.BCC = datos[1];
+            mailItem.To = datos[1];
 
             //Enviar coreo
             mailItem.Send();

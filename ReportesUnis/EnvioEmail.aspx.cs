@@ -10,6 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using System.IO;
+using System.Text;
 
 namespace ReportesUnis
 {
@@ -35,6 +36,7 @@ namespace ReportesUnis
 
             //Configuracion campos para envio del correo
             mailItem.Subject = datos[0]; //Asunto del correo
+
             //mailItem.Body = "Se ha detectado una nueva actualización";
 
             mailItem.HTMLBody = htmlBody;
@@ -53,7 +55,7 @@ namespace ReportesUnis
 
         public string LeerBodyEmail()
         {
-            string rutaCompleta = CurrentDirectory + "/Emails/bodyIngresoEstudiantes.txt";
+            string rutaCompleta = CurrentDirectory + "/Emails/bodyConfirmacionEmpleados.txt";
             string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
             {
@@ -64,11 +66,11 @@ namespace ReportesUnis
         }
         public string[] LeerInfoEmail()
         {
-            string rutaCompleta = CurrentDirectory + "/Emails/DatosIngresoEstudiantes.txt";
+            string rutaCompleta = CurrentDirectory + "/Emails/DatosConfirmacionEmpleados.txt";
             string[] datos;
             string subjet = "";
             string to = "";
-            using (StreamReader file = new StreamReader(rutaCompleta))
+            using (StreamReader file = new StreamReader(rutaCompleta, Encoding.UTF8))
             {
                 string linea1 = file.ReadLine();
                 string linea2 = file.ReadLine();

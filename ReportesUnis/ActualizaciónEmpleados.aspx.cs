@@ -64,8 +64,8 @@ namespace ReportesUnis
             if (controlPantalla >= 1)
             {
                 //TextUser.Text = "2508045810101";//Profesor;
-                //TextUser.Text = "3006684570101";//Maria Jose - Administrativo Estudiante; 300000057781526
-                TextUser.Text = "3217767041601";//Mio - Administrativo - Profesor
+                TextUser.Text = "3006684570101";//Maria Jose - Administrativo Estudiante; 300000057781526
+                //TextUser.Text = "3217767041601";//Mio - Administrativo - Profesor
                 //TextUser.Text = "2588604560113";//Erick - Administrativo 
                 //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
                 if (!IsPostBack)
@@ -1936,6 +1936,7 @@ namespace ReportesUnis
                         else
                         {
                             // Llama a la función JavaScript para mostrar el modal
+                            EliminarAlmacenada();
                             EnvioCorreo();
                             EnvioCorreoEmpleado();
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
@@ -1944,11 +1945,15 @@ namespace ReportesUnis
 
                     if (RadioButtonNombreSi.Checked)
                     {
-                        if (urlPathControl2.Value == "1")
-                        {
-                            AlmacenarFotografia();
-                        }
-                        fotoAlmacenada();
+                        //if (urlPathControl2.Value == "1")
+                        //{
+                        //    AlmacenarFotografia();
+                        //}
+                        //fotoAlmacenada();
+                        EliminarAlmacenada();
+                        EnvioCorreo();
+                        EnvioCorreoEmpleado();
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                     }
                 }
 
@@ -2986,8 +2991,6 @@ namespace ReportesUnis
                                                 txtNit.Text = "CF";
                                             }
                                             mensaje = "Su información fue actualizada correctamente";
-                                            EnvioCorreo();
-                                            EnvioCorreoEmpleado();
                                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                                         }
                                     }
@@ -4304,8 +4307,8 @@ namespace ReportesUnis
             //mailItem.Body = "Se ha detectado una nueva actualización";
 
             mailItem.HTMLBody = htmlBody;
-            mailItem.BCC = datos[1];
-            mailItem.To = TxtCorreoInstitucional.Text;
+            //mailItem.BCC = datos[1];
+            mailItem.To = datos[1];//TxtCorreoInstitucional.Text;
 
             //Enviar coreo
             mailItem.Send();
