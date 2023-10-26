@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
+        <div style="background-color: #ffffff; max-width: 600px; margin: 0 auto; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #000;">Su fotografía ha sido aceptada</h3>
+            <p style="color: #000;">En unos d&iacute;as se le ser&aacute; entregado su carne.</p>
+            <p style="color: #000;">Saludos cordiales.</p>
+            <p style="color: #000;">Soporte Técnico.</p>
+        </div>
+    </div>
+</body>
+</html>

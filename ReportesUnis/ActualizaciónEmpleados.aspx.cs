@@ -1,4 +1,5 @@
-﻿using Microsoft.Ajax.Utilities;
+﻿using DocumentFormat.OpenXml.Office.Word;
+using Microsoft.Ajax.Utilities;
 using Oracle.ManagedDataAccess.Client;
 using ReportesUnis.API;
 using System;
@@ -277,7 +278,7 @@ namespace ReportesUnis
 
         public string LeerBodyEmail(string archivo)
         {
-            string rutaCompleta = CurrentDirectory + "/Emails/"+archivo;
+            string rutaCompleta = CurrentDirectory + "/Emails/" + archivo;
             string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
             {
@@ -288,7 +289,7 @@ namespace ReportesUnis
         }
         public string[] LeerInfoEmail(string archivo)
         {
-            string rutaCompleta = CurrentDirectory + "/Emails/"+archivo;
+            string rutaCompleta = CurrentDirectory + "/Emails/" + archivo;
             string[] datos;
             string subjet = "";
             string to = "";
@@ -1945,11 +1946,6 @@ namespace ReportesUnis
 
                     if (RadioButtonNombreSi.Checked)
                     {
-                        //if (urlPathControl2.Value == "1")
-                        //{
-                        //    AlmacenarFotografia();
-                        //}
-                        //fotoAlmacenada();
                         EliminarAlmacenada();
                         EnvioCorreo();
                         EnvioCorreoEmpleado();
@@ -2060,7 +2056,7 @@ namespace ReportesUnis
                                 }
                                 else
                                 {
-                                    SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\Fotos\\", txtCarne.Text + ".jpg");
+                                    SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosColaboradores\\", txtCarne.Text + ".jpg");
                                 }
 
                                 cmd.Transaction = transaction;
@@ -2109,7 +2105,8 @@ namespace ReportesUnis
                                 else if (CmbRoles.SelectedValue.Equals("C"))
                                 {
                                     tipoPersona = "3";
-                                }else if (CmbRoles.SelectedValue.Equals("S"))
+                                }
+                                else if (CmbRoles.SelectedValue.Equals("S"))
                                 {
                                     tipoPersona = "2";
                                 }
@@ -2717,15 +2714,9 @@ namespace ReportesUnis
                                         cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + txtCarne.Text + "'";
                                         cmd.ExecuteNonQuery();
 
-                                        string DeleteBanco = "DELETE FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CODIGO ='" + txtCarne.Text + "'";
-                                        /*string tbBanco = "";
-
-                                        tbBanco = ConsumoSQL("SELECT COUNT (*) FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CODIGO ='" + txtCarne.Text + "'");
-                                        if (Convert.ToInt32(tbBanco) > 0)
-                                        {*/
+                                        string DeleteBanco = "DELETE FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CODIGO ='" + txtCarne.Text + "' OR CARNET '" + txtCarne.Text + "'";
+                                        
                                         ConsumoSQL(DeleteBanco);
-
-                                        //}
 
                                         cmd.CommandText = txtInsert.Text;
                                         cmd.ExecuteNonQuery();
@@ -2744,6 +2735,7 @@ namespace ReportesUnis
                                         cmd.CommandText = txtInsert.Text;
                                         cmd.ExecuteNonQuery();
                                     }
+
 
                                     auxConsulta = 0;
                                     string consultaUP = "1";
@@ -3043,7 +3035,7 @@ namespace ReportesUnis
             {
                 txtNit.Text = "CF";
             }
-
+            string confirmacion = ValidarRegistros();
             int contador = 0;
 
             if (txtAInicial1.Value == txtApellido1.Text && txtAInicial2.Value == txtApellido2.Text && txtNInicial1.Value == txtNombre1.Text && txtNInicial2.Value == txtNombre2.Text && txtCInicial.Value == txtApellidoCasada.Text)
@@ -3051,6 +3043,34 @@ namespace ReportesUnis
                 txtAccion.Text = "1";
                 txtTipoAccion.Text = "1.1";
                 txtConfirmacion.Text = "02"; //VALIDACIÓN DE FOTOGRAFÍA
+
+                if (confirmacion != txtConfirmacion.Text && confirmacion != "0")
+                {
+                    string constr = TxtURL.Text;
+                    using (OracleConnection con = new OracleConnection(constr))
+                    {
+                        con.Open();
+                        OracleTransaction transaction;
+                        transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                        using (OracleCommand cmd = new OracleCommand())
+                        {
+
+                            cmd.Transaction = transaction;
+                            try
+                            {
+                                cmd.Connection = con;
+                                cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + txtCarne.Text + "'";
+                                cmd.ExecuteNonQuery();
+                                transaction.Commit();
+                                con.Close();
+                            }
+                            catch
+                            {
+
+                            }
+                        }
+                    }
+                }
 
                 if (Convert.ToInt16(Estudiante.Value) > 0)
                 {
@@ -3127,6 +3147,34 @@ namespace ReportesUnis
                     txtTipoAccion.Text = "1.1";
                     txtConfirmacion.Text = "01"; //Requiere confirmación de operador 
                     txtCantidadImagenesDpi.Text = contador.ToString();
+
+                    if (confirmacion != txtConfirmacion.Text && confirmacion != "0")
+                    {
+                        using (OracleConnection con = new OracleConnection(constr))
+                        {
+                            con.Open();
+                            OracleTransaction transaction;
+                            transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                            using (OracleCommand cmd = new OracleCommand())
+                            {
+
+                                cmd.Transaction = transaction;
+                                try
+                                {
+                                    cmd.Connection = con;
+                                    cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + txtCarne.Text + "'";
+                                    cmd.ExecuteNonQuery();
+                                    transaction.Commit();
+                                    con.Close();
+                                }
+                                catch
+                                {
+
+                                }
+                            }
+                        }
+                    }
+
                     IngresoDatos();
                 }
                 else
@@ -3280,20 +3328,17 @@ namespace ReportesUnis
             string RegistroCarne = "0";
             using (OracleConnection con = new OracleConnection(constr))
             {
+                con.Open();
                 using (OracleCommand cmd = new OracleCommand())
                 {
-                    cmd.CommandText = "SELECT * FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE";
+                    //SE BUSCA EL ULTIMO REGISTRO DE CONFIRMACION
                     cmd.Connection = con;
-                    con.Open();
-
-                    //SE VALIDA QUE NO EXISTA INFORMACIÓN REGISTRADA
-                    cmd.Connection = con;
-                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARGO = '" + txtPuesto.Text + "' AND FACULTAD ='" + txtFacultad.Text + "' AND CARNET =SUBSTR('" + txtdPI.Text + "',0,13) AND NOMBRE1 = '" + txtNombre1.Text + "' AND NOMBRE2 = '" + txtNombre2.Text + "' AND APELLIDO1 = '" + txtApellido1.Text + "' AND APELLIDO2 = '" + txtApellido2.Text + "' AND UPPER(REPLACE(DECASADA,' ','')) = UPPER(REPLACE('" + txtApellidoCasada.Text + "', ' ', '')))";
+                    cmd.CommandText = "SELECT CONFIRMACION FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + txtCarne.Text + "'";
                     OracleDataReader reader = cmd.ExecuteReader();
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        RegistroCarne = reader["CONTADOR"].ToString();
+                        RegistroCarne = reader["CONFIRMACION"].ToString();
                     }
                 }
             }
@@ -3402,6 +3447,7 @@ namespace ReportesUnis
             }
         }
 
+
         private void EliminarRegistrosFotos()
         {
             string constr = TxtURL.Text;
@@ -3445,6 +3491,10 @@ namespace ReportesUnis
 
         protected void CmbRoles_TextChanged(object sender, EventArgs e)
         {
+            if (urlPathControl2.Value == "1")
+            {
+                AlmacenarFotografia();
+            }
             if (CmbRoles.SelectedValue != "S")
             {
                 listadoDependencia();
@@ -3458,6 +3508,7 @@ namespace ReportesUnis
                 LblPuesto.Text = "Carrera:";
                 lblDependencia.Text = "Facultad:";
             }
+            fotoAlmacenada();
         }
 
         protected void txtNit_TextChanged(object sender, EventArgs e)
@@ -3681,14 +3732,24 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-
-            //llenadoStateNIT();
             fotoAlmacenada();
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
 
         protected void BtnAceptarCarga_Click(object sender, EventArgs e)
         {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET ='" + txtCarne.Text + "'";
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
             string informacion = actualizarInformacion();
 
             if (informacion != "0" && informacion != "")
@@ -3742,7 +3803,7 @@ namespace ReportesUnis
 
             try
             {
-                File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\" + txtCarne.Text + ".jpg");
+                File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\" + txtCarne.Text + ".jpg");
             }
             catch
             {

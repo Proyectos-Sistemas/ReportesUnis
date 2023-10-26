@@ -55,7 +55,7 @@ namespace ReportesUnis
 
         public string LeerBodyEmail()
         {
-            string rutaCompleta = CurrentDirectory + "/Emails/bodyConfirmacionEmpleados.txt";
+            string rutaCompleta = CurrentDirectory + "/Emails/bodyIngresoEmpleados.txt";
             string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
             {
@@ -66,7 +66,7 @@ namespace ReportesUnis
         }
         public string[] LeerInfoEmail()
         {
-            string rutaCompleta = CurrentDirectory + "/Emails/DatosConfirmacionEmpleados.txt";
+            string rutaCompleta = CurrentDirectory + "/Emails/datosIngresoEmpleados.txt";
             string[] datos;
             string subjet = "";
             string to = "";

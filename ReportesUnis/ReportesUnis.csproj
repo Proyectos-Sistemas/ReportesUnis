@@ -410,6 +410,7 @@
     <Content Include="conexion.txt" />
     <Content Include="conexionSQL.txt" />
     <Content Include="ConfirmacionDeFotografias.aspx" />
+    <Content Include="ConfirmacionDeFotografiasEmpleados.aspx" />
     <Content Include="ConfirmaciónCarneEmpleados.aspx" />
     <Content Include="ConfirmaciónDeCarne.aspx" />
     <Content Include="Contact.aspx" />
@@ -494,7 +495,9 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="PathAlmacenamiento.txt" />
+    <Content Include="PathConfirmacionEmpleados.txt" />
     <Content Include="PathConfirmacion.txt" />
+    <Content Include="Recursos\LogoCorreos.png" />
     <Content Include="ReportesCT\Reporte Camara Termica Empleados 28 11 2022 11_49_37 a.xlsx" />
     <Content Include="ReportesCT\Reporte Camara Termica Estudiantes13 12 2022 03_32_16 p.xlsx" />
     <Content Include="ReportesCT\Reporte Camara Termica Estudiantes13 12 2022 03_34_03 p.xlsx" />
@@ -630,6 +633,13 @@
     </Compile>
     <Compile Include="ConfirmacionDeFotografias.aspx.designer.cs">
       <DependentUpon>ConfirmacionDeFotografias.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ConfirmacionDeFotografiasEmpleados.aspx.cs">
+      <DependentUpon>ConfirmacionDeFotografiasEmpleados.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConfirmacionDeFotografiasEmpleados.aspx.designer.cs">
+      <DependentUpon>ConfirmacionDeFotografiasEmpleados.aspx</DependentUpon>
     </Compile>
     <Compile Include="ConfirmaciónCarneEmpleados.aspx.cs">
       <DependentUpon>ConfirmaciónCarneEmpleados.aspx</DependentUpon>

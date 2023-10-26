@@ -4,7 +4,7 @@
     <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
         <div style="background-color: #ffffff; max-width: 600px; margin: 0 auto; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
             <h3 style="color: #000;">Su informaci&oacute;n ha sido Confirmada</h3>
-            <p style="color: #000;">En unos d&iacute;as se le ser&aacute; entrega de su carne.</p>
+            <p style="color: #000;">En unos d&iacute;as se le ser&aacute; entregado su carne.</p>
             <p style="color: #000;">Gracias por tu compromiso.</p>
             <p style="color: #000;">Saludos cordiales,<br>Soporte T&eacute;cnico</p>
         </div>
