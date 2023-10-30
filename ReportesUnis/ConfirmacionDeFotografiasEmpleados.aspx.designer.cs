@@ -11,160 +11,160 @@ namespace ReportesUnis
 {
 
 
-    public partial class SiteMaster
+    public partial class ConfirmacionDeFotografiasEmpleados
     {
 
         /// <summary>
-        /// Control A1.
+        /// Control lblActualizacion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor A1;
+        protected global::System.Web.UI.WebControls.Label lblActualizacion;
 
         /// <summary>
-        /// Control MenuLogServipagos.
+        /// Control CamposAuxiliares.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor MenuLogServipagos;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl CamposAuxiliares;
 
         /// <summary>
-        /// Control MenuLogInterfaz.
+        /// Control txtPath.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor MenuLogInterfaz;
+        protected global::System.Web.UI.WebControls.Label txtPath;
 
         /// <summary>
-        /// Control MenuLogInterfazHCMCS.
+        /// Control txtPath2.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor MenuLogInterfazHCMCS;
+        protected global::System.Web.UI.WebControls.Label txtPath2;
 
         /// <summary>
-        /// Control MenuHistoricosHCM.
+        /// Control TxtURL.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor MenuHistoricosHCM;
+        protected global::System.Web.UI.WebControls.TextBox TxtURL;
 
         /// <summary>
-        /// Control MenuHistoricosCXC.
+        /// Control TxtURLSql.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor MenuHistoricosCXC;
+        protected global::System.Web.UI.WebControls.Label TxtURLSql;
 
         /// <summary>
-        /// Control MenuHistoricosCXP.
+        /// Control txtInsertBI.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor MenuHistoricosCXP;
+        protected global::System.Web.UI.WebControls.TextBox txtInsertBI;
 
         /// <summary>
-        /// Control MenuHistoricosGL.
+        /// Control txtInsertApex.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor MenuHistoricosGL;
+        protected global::System.Web.UI.WebControls.TextBox txtInsertApex;
 
         /// <summary>
-        /// Control RepCamarasEst.
+        /// Control prueba.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor RepCamarasEst;
+        protected global::System.Web.UI.WebControls.TextBox prueba;
 
         /// <summary>
-        /// Control Actualizacion.
+        /// Control TipoPersona.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor Actualizacion;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden TipoPersona;
 
         /// <summary>
-        /// Control MantPantallas.
+        /// Control DPI.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor MantPantallas;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden DPI;
 
         /// <summary>
-        /// Control GestionesEstudiantes.
+        /// Control CODIGO.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor GestionesEstudiantes;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden CODIGO;
 
         /// <summary>
-        /// Control GestionesEmpleados.
+        /// Control EMPLID.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor GestionesEmpleados;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden EMPLID;
 
         /// <summary>
-        /// Control Confirmacion.
+        /// Control GridViewFotos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor Confirmacion;
+        protected global::System.Web.UI.WebControls.GridView GridViewFotos;
 
         /// <summary>
-        /// Control ConfirmacionEmpleados.
+        /// Control TbEliminarD.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor ConfirmacionEmpleados;
+        protected global::System.Web.UI.WebControls.Table TbEliminarD;
 
         /// <summary>
-        /// Control MenuDirectorio.
+        /// Control BtnEliminar.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor MenuDirectorio;
+        protected global::System.Web.UI.WebControls.Button BtnEliminar;
 
         /// <summary>
-        /// Control MainContent.
+        /// Control BtnConfirmar.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.Button BtnConfirmar;
     }
 }

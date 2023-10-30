@@ -26,7 +26,7 @@ namespace ReportesUnis
 
                 if (respuesta.Contains("RLI_Admin"))
                 {
-                    MenuLogServipagos.Visible = MenuLogInterfaz.Visible = MenuLogInterfazHCMCS.Visible = MenuHistoricosHCM.Visible = MenuHistoricosCXC.Visible = MenuHistoricosCXP.Visible = MenuHistoricosGL.Visible = MenuDirectorio.Visible = true ;
+                    MenuLogServipagos.Visible = MenuLogInterfaz.Visible = MenuLogInterfazHCMCS.Visible = MenuHistoricosHCM.Visible = MenuHistoricosCXC.Visible = MenuHistoricosCXP.Visible = MenuHistoricosGL.Visible = MenuDirectorio.Visible = true;
                 }
                 else
                 {
@@ -58,13 +58,15 @@ namespace ReportesUnis
 
                 if (respuesta.Contains("ACCESO_CARNETIZACION"))
                 {
-                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = true;
+                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = GestionesEmpleados.Visible = ConfirmacionEmpleados.Visible = true;
                 }
                 else
                 {
                     MantPantallas.Visible = respuesta.Contains(MantPantallas.ValidationGroup);
                     GestionesEstudiantes.Visible = respuesta.Contains(GestionesEstudiantes.ValidationGroup);
+                    GestionesEmpleados.Visible = respuesta.Contains(GestionesEmpleados.ValidationGroup);
                     Confirmacion.Visible = respuesta.Contains(Confirmacion.ValidationGroup);
+                    ConfirmacionEmpleados.Visible = respuesta.Contains(ConfirmacionEmpleados.ValidationGroup);
                 }
             }
             catch (Exception)

@@ -48,12 +48,6 @@
     <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
       <HintPath>..\packages\AForge.2.2.5\lib\AForge.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
-      <HintPath>..\packages\AForge.Video.2.2.5\lib\AForge.Video.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.DirectShow, Version=2.2.5.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL">
-      <HintPath>..\packages\AForge.Video.DirectShow.2.2.5\lib\AForge.Video.DirectShow.dll</HintPath>
-    </Reference>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.9\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -153,6 +147,10 @@
     </Reference>
     <Reference Include="Microsoft.Net.Http.Headers, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.Headers.2.2.0\lib\netstandard2.0\Microsoft.Net.Http.Headers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Outlook.15.0.4797.1004\lib\net20\Microsoft.Office.Interop.Outlook.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.Common, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.WebForms.150.1404.0\lib\net40\Microsoft.ReportViewer.Common.dll</HintPath>
@@ -406,6 +404,8 @@
     <Content Include="conexion.txt" />
     <Content Include="conexionSQL.txt" />
     <Content Include="ConfirmacionDeFotografias.aspx" />
+    <Content Include="ConfirmacionDeFotografiasEmpleados.aspx" />
+    <Content Include="ConfirmaciónCarneEmpleados.aspx" />
     <Content Include="ConfirmaciónDeCarne.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -415,6 +415,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="CredencialesNIT.txt" />
     <Content Include="Default.aspx" />
+    <Content Include="DirectorioUnis.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -477,6 +478,7 @@
     </None>
     <Content Include="PathAlmacenamiento.txt" />
     <Content Include="PathConfirmacion.txt" />
+    <Content Include="PathConfirmacionEmpleados.txt" />
     <Content Include="PruebaControlPermisos.aspx" />
     <Content Include="ReportesCT\Reporte Camara Termica Empleados 28 11 2022 11_49_37 a.xlsx" />
     <Content Include="ReportesCT\Reporte Camara Termica Estudiantes13 12 2022 03_32_16 p.xlsx" />
@@ -614,6 +616,20 @@
     <Compile Include="ConfirmacionDeFotografias.aspx.designer.cs">
       <DependentUpon>ConfirmacionDeFotografias.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ConfirmacionDeFotografiasEmpleados.aspx.cs">
+      <DependentUpon>ConfirmacionDeFotografiasEmpleados.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConfirmacionDeFotografiasEmpleados.aspx.designer.cs">
+      <DependentUpon>ConfirmacionDeFotografiasEmpleados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ConfirmaciónCarneEmpleados.aspx.cs">
+      <DependentUpon>ConfirmaciónCarneEmpleados.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ConfirmaciónCarneEmpleados.aspx.designer.cs">
+      <DependentUpon>ConfirmaciónCarneEmpleados.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ConfirmaciónDeCarne.aspx.cs">
       <DependentUpon>ConfirmaciónDeCarne.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -649,6 +665,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DirectorioUnis.aspx.cs">
+      <DependentUpon>DirectorioUnis.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DirectorioUnis.aspx.designer.cs">
+      <DependentUpon>DirectorioUnis.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -783,6 +806,7 @@
     <Folder Include="CapturedImages\" />
     <Folder Include="Files\" />
     <Folder Include="Usuarios\DPI\" />
+    <Folder Include="Usuarios\FotosColaboradores\" />
     <Folder Include="Usuarios\FotosConfirmacion\" />
     <Folder Include="Usuarios\Fotos\" />
     <Folder Include="Usuarios\UltimasCargas\" />
