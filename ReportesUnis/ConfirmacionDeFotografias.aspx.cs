@@ -6,7 +6,6 @@ using System.Web;
 using System.Web.UI;
 using System.Data;
 using DocumentFormat.OpenXml.Spreadsheet;
-//using System.Drawing;
 using System.Web.UI.WebControls;
 using DocumentFormat.OpenXml.Office.Word;
 using Microsoft.Ajax.Utilities;

@@ -43,17 +43,13 @@ namespace ReportesUnis
 
                 if (respuesta.Contains("DATOS_FOTOGRAFIAS"))
                 {
-                    //RepEstudiantes.Visible = RepEmpleados.Visible = RepCamarasEst.Visible = RepCamarasEmp.Visible = CargaCTEst.Visible = CargaCTEmp.Visible = true;
+                    //RepCamarasEst.Visible = RepCamarasEmp.Visible = true;
                     RepCamarasEst.Visible = true;
                 }
                 else
                 {
-                    //RepEstudiantes.Visible = respuesta.Contains(RepEstudiantes.ValidationGroup); NO SE UTILIZARÁ
-                    //RepEmpleados.Visible = respuesta.Contains(RepEmpleados.ValidationGroup); NO SE UTILIZARÁ
                     RepCamarasEst.Visible = respuesta.Contains(RepCamarasEst.ValidationGroup);
                     //RepCamarasEmp.Visible = respuesta.Contains(RepCamarasEmp.ValidationGroup); DESCOMENTAR EN LA FASE 2
-                    //CargaCTEst.Visible = respuesta.Contains(CargaCTEst.ValidationGroup); NO SE UTILIZARÁ
-                    //CargaCTEmp.Visible = respuesta.Contains(CargaCTEmp.ValidationGroup); NO SE UTILIZARÁ
                 }
 
                 if (respuesta.Contains("ACCESO_CARNETIZACION"))

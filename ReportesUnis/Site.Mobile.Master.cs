@@ -40,27 +40,26 @@ namespace ReportesUnis
 
                 if (respuesta.Contains("DATOS_FOTOGRAFIAS"))
                 {
-                    RepEstudiantes.Visible = RepEmpleados.Visible = RepCamarasEst.Visible = RepCamarasEmp.Visible = CargaCTEst.Visible = CargaCTEmp.Visible = true;
+                    //RepCamarasEst.Visible = RepCamarasEmp.Visible = true;
+                    RepCamarasEst.Visible = true;
                 }
                 else
                 {
-                    RepEstudiantes.Visible = respuesta.Contains(RepEstudiantes.ValidationGroup);
-                    RepEmpleados.Visible = respuesta.Contains(RepEmpleados.ValidationGroup);
                     RepCamarasEst.Visible = respuesta.Contains(RepCamarasEst.ValidationGroup);
-                    RepCamarasEmp.Visible = respuesta.Contains(RepCamarasEmp.ValidationGroup);
-                    CargaCTEst.Visible = respuesta.Contains(CargaCTEst.ValidationGroup);
-                    CargaCTEmp.Visible = respuesta.Contains(CargaCTEmp.ValidationGroup);
+                    //RepCamarasEmp.Visible = respuesta.Contains(RepCamarasEmp.ValidationGroup); DESCOMENTAR EN LA FASE 2
                 }
 
                 if (respuesta.Contains("ACCESO_CARNETIZACION"))
                 {
-                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = true;
+                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = GestionesEmpleados.Visible = ConfirmacionEmpleados.Visible = true;
                 }
                 else
                 {
                     MantPantallas.Visible = respuesta.Contains(MantPantallas.ValidationGroup);
                     GestionesEstudiantes.Visible = respuesta.Contains(GestionesEstudiantes.ValidationGroup);
+                    GestionesEmpleados.Visible = respuesta.Contains(GestionesEmpleados.ValidationGroup);
                     Confirmacion.Visible = respuesta.Contains(Confirmacion.ValidationGroup);
+                    ConfirmacionEmpleados.Visible = respuesta.Contains(ConfirmacionEmpleados.ValidationGroup);
                 }
             }
             catch (Exception)

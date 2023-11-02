@@ -31,7 +31,6 @@ namespace ReportesUnis
         string mensaje = "";
         int controlRenovacion = 0;
         int controlRenovacionFecha = 0;
-        string emplid;
         int auxConsulta = 0;
         int contadorUP = 0;
         int contadorUD = 0;
@@ -212,7 +211,6 @@ namespace ReportesUnis
                         lblActualizacion.ForeColor = System.Drawing.Color.Black;
                         lblActualizacion.Text = "Ha llegado al límite de las renovaciones. <br /> " +
                             "Si desea generar una nueva renovación pongase en contacto con soporte@unis.edu.gt.";
-                        //BtnDownload.Visible = false;
                     }
                 }
                 else
@@ -381,7 +379,6 @@ namespace ReportesUnis
             XmlNodeList elemList = xmlDocumentoRespuestaCampus.GetElementsByTagName("reportBytes");
             return elemList[0].InnerText.ToString();
         }
-
 
         public string ConsultarCampus()
         {
@@ -976,7 +973,6 @@ namespace ReportesUnis
         {
             string sustituto = DecodeStringFromBase64(Consultar()).Replace('"', '\n');
             sustituto = Regex.Replace(sustituto, @"\n+", "");
-            //sustituto = Regex.Replace(sustituto, @"\|-\|", "||");
 
             try
             {
@@ -1050,8 +1046,6 @@ namespace ReportesUnis
             }
             catch (Exception)
             {
-
-                sustituto = sustituto;
             }
             Txtsustituto.Text = sustituto;
             return sustituto;
@@ -1100,13 +1094,12 @@ namespace ReportesUnis
                         }
                         else
                         {
-                            resultadoValores[j] = result[i].Substring(0, 1);//.Remove(1, usuario.Length);
+                            resultadoValores[j] = result[i].Substring(0, 1);
                         }
                     }
                     else
                     {
                         resultadoValores[j] = result[i];
-                        //resultado[j] = StringExtensions.RemoveEnd(palabra, depto);
                     }
                     i = i + 2;
                     j++;
@@ -1171,7 +1164,6 @@ namespace ReportesUnis
             int datos = 0;
             string[,] arrlist;
             int valor = 28;
-            var insert = "";
 
             registros = result.Count() / valor;
             count = Math.Round(registros, 0);
@@ -1201,13 +1193,11 @@ namespace ReportesUnis
                         //Generacion de matriz para llenado de grid desde una consulta
                         for (int i = 0; i < count; i++)
                         {
-                            //DataRow newFila = dsReporte.Tables["RptEmpleados"].NewRow();
                             txtNombre1.Text = (arrlist[i, 1] ?? "").ToString();
                             txtApellido1.Text = (arrlist[i, 2] ?? "").ToString();
                             txtNInicial1.Value = (arrlist[i, 1] ?? "").ToString();
                             txtAInicial1.Value = (arrlist[i, 2] ?? "").ToString();
                             txtdPI.Text = (arrlist[i, 3] ?? "").ToString();
-                            //txtFacultad.Text = (arrlist[i, 4] ?? "").ToString();
                             txtTelefono.Text = (arrlist[i, 4] ?? "").ToString().TrimEnd().Replace('-', ' ');
                             TelefonoInicial.Value = (arrlist[i, 4] ?? "").ToString().TrimEnd().Replace('-', ' ');
 
@@ -1288,13 +1278,8 @@ namespace ReportesUnis
                             ConMig.Value = (arrlist[i, 20] ?? "").ToString().Replace('-', ' ').TrimEnd();
                             TipoDoc.Value = (arrlist[i, 21] ?? "").ToString();
                             NIT.Value = (arrlist[i, 22] ?? "").ToString();
-                            //aux = 4;
-                            //listaPaisesNit();
                             CmbPaisNIT.SelectedValue = (arrlist[i, 23] ?? "").ToString();
                             PaisNit.Text = (arrlist[i, 23] ?? "").ToString();
-                            //aux = 1;
-                            //listaDepartamentosNit();
-                            //aux = 0;
                             PaisPass.Value = (arrlist[i, 24] ?? "").ToString().Replace('-', ' ').TrimEnd();
                             TxtCorreoInstitucional.Text = (arrlist[i, 25] ?? "").ToString();
                             Sexo.Value = (arrlist[i, 26] ?? "").ToString().TrimEnd().Replace('-', ' ').TrimEnd();
@@ -1313,7 +1298,6 @@ namespace ReportesUnis
                                 DPI.Value = null;
                             }
 
-                            //dsReporte.Tables["RptEmpleados"].Rows.Add(newFila);
                         }
                     }
                 }
@@ -1821,6 +1805,7 @@ namespace ReportesUnis
 
         private string consultaGetworkers(string expand, string expandUser)
         {
+            credencialesWS(archivoWS, "Consultar");
             string consulta = consultaUser(expandUser, UserEmplid.Text);
             int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
@@ -1828,7 +1813,6 @@ namespace ReportesUnis
             string consulta2 = consulta.Replace("\n    \"", "|");
             string[] result = consulta2.Split('|');
             string personID = UserEmplid.Text;
-            credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
@@ -1839,6 +1823,7 @@ namespace ReportesUnis
 
         private string consultaGetImagenes(string consultar)
         {
+            credencialesWS(archivoWS, "Consultar");
             string consulta = consultaUser("nationalIdentifiers", UserEmplid.Text);
             int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
@@ -1846,7 +1831,6 @@ namespace ReportesUnis
             string consulta2 = consulta.Replace("\n    \"", "|");
             string[] result = consulta2.Split('|');
             string personID = getBetween(result[result.Count() - 1], "\"NationalIdentifierId\" : ", ",");
-            credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
@@ -2087,8 +2071,6 @@ namespace ReportesUnis
                                     txtNit.Text = "CF";
                                 }
 
-                                //cmd.Connection = con;
-                                //cmd.CommandText = 
                                 var direccion = txtDireccion.Text;
                                 if (txtDireccion.Text.Length > 29)
                                     direccion = txtDireccion.Text.Substring(0, 29);
@@ -2758,6 +2740,7 @@ namespace ReportesUnis
                                     {
                                         consultaUD = ConsultarCampus();
                                     }
+                                    limpiarVariables();
                                     int au = 0;
                                     if (consultaUD == "1" && consultaUP == "1")
                                     {
@@ -2991,14 +2974,22 @@ namespace ReportesUnis
                                                 TxtDiRe3.Text = txtZona.Text;
                                                 txtNit.Text = "CF";
                                             }
-                                            mensaje = "Su información fue actualizada correctamente";
+                                            mensaje = "0";
                                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
+                                        }
+                                        else
+                                        {
+                                            transaction.Rollback();
+                                            EliminarAlmacenada();
+                                            mensaje = "Error";
+                                            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                         }
                                     }
                                     else
                                     {
                                         transaction.Rollback();
                                         EliminarAlmacenada();
+                                        mensaje = "Error";
                                         ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                     }
                                 }
@@ -3006,6 +2997,7 @@ namespace ReportesUnis
                                 {
                                     transaction.Rollback();
                                     EliminarAlmacenada();
+                                    mensaje = "Error";
                                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                 }
 
@@ -3013,6 +3005,7 @@ namespace ReportesUnis
                             else
                             {
                                 EliminarAlmacenada();
+                                mensaje = "Error";
                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                             }
                         }
@@ -3021,6 +3014,7 @@ namespace ReportesUnis
                 catch (Exception)
                 {
                     EliminarAlmacenada();
+                    mensaje = "Error";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
                 if (urlPathControl2.Value == "1")
@@ -3088,7 +3082,7 @@ namespace ReportesUnis
                     {
                         if (!CmbPaisNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbDepartamentoNIT.SelectedValue.IsNullOrWhiteSpace() && !CmbMunicipioNIT.SelectedValue.IsNullOrWhiteSpace())
                         {
-                            IngresoDatos();
+                            mensaje = IngresoDatos();
                         }
                         else
                         {
@@ -3107,12 +3101,12 @@ namespace ReportesUnis
                         TxtDiRe2.Text = txtDireccion2.Text;
                         TxtDiRe3.Text = txtZona.Text;
                         txtNit.Text = "CF";
-                        IngresoDatos();
+                        mensaje = IngresoDatos();
                     }
                 }
                 else
                 {
-                    IngresoDatos();
+                    mensaje = IngresoDatos();
                 }
 
             }
@@ -3184,7 +3178,7 @@ namespace ReportesUnis
                         }
                     }
 
-                    IngresoDatos();
+                    mensaje = IngresoDatos();
                 }
                 else
                 {
@@ -3357,10 +3351,8 @@ namespace ReportesUnis
         private void AlmacenarFotografia()
         {
             EliminarRegistrosFotos();
-            //lblActualizacion.Text = "";
             if (!urlPath2.Value.IsNullOrWhiteSpace())
             {
-                //SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/", txtCarne.Text + ".jpg");
                 int ExisteFoto;
                 string constr = TxtURL.Text;
                 using (OracleConnection con = new OracleConnection(constr))
@@ -3397,7 +3389,7 @@ namespace ReportesUnis
                                 SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/", txtCarne.Text + ".jpg");
                                 transaction.Commit();
                             }
-                            catch (Exception x)
+                            catch (Exception)
                             {
                                 transaction.Rollback();
                                 fotoAlmacenada();
@@ -3406,7 +3398,6 @@ namespace ReportesUnis
                     }
                 }
             }
-            //lblActualizacion.Text = "Debe de tomar una fotografía.";
         }
 
         private void fotoAlmacenada()
@@ -3455,7 +3446,6 @@ namespace ReportesUnis
                 }
             }
         }
-
 
         private void EliminarRegistrosFotos()
         {
@@ -3715,9 +3705,6 @@ namespace ReportesUnis
                 AlmacenarFotografia();
             }
 
-            /*llenadoDepartamentoNit();
-            llenadoMunicipioNIT();
-            llenadoStateNIT();*/
             fotoAlmacenada();
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
@@ -3729,8 +3716,6 @@ namespace ReportesUnis
                 AlmacenarFotografia();
             }
 
-            /*llenadoMunicipioNIT();
-            llenadoStateNIT();*/
             fotoAlmacenada();
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
@@ -3809,7 +3794,6 @@ namespace ReportesUnis
 
             }
 
-
             try
             {
                 File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\" + txtCarne.Text + ".jpg");
@@ -3818,8 +3802,6 @@ namespace ReportesUnis
             {
 
             }
-
-            //ScriptManager.RegisterStartupScript(this, GetType(), "mostarAlerta", "mostrarAlerta();", true);
         }
 
         public int EsEstudiante()
@@ -4007,7 +3989,6 @@ namespace ReportesUnis
             }
             return emplid;
         }
-
 
         private string mostrarInformaciónProfesores()
         {

@@ -1229,7 +1229,7 @@ namespace ReportesUnis
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
-                            EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();// + reader["EFFDT"].ToString().Substring(9, 2).TrimEnd();
+                            EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();
 
                             if (EFFDT_A_NIT.Value.Length == 9)
                             {
@@ -1654,6 +1654,7 @@ namespace ReportesUnis
 
         private string consultaGetworkers(string expand, string expandUser)
         {
+            credencialesWS(archivoWS, "Consultar");
             string consulta = consultaUser(expandUser, UserEmplid.Value);
             int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
@@ -1661,7 +1662,6 @@ namespace ReportesUnis
             string consulta2 = consulta.Replace("\n    \"", "|");
             string[] result = consulta2.Split('|');
             string personID = UserEmplid.Value;
-            credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
@@ -1672,6 +1672,7 @@ namespace ReportesUnis
 
         private string consultaGetImagenes(string consultar)
         {
+            credencialesWS(archivoWS, "Consultar");
             string consulta = consultaUser("nationalIdentifiers", UserEmplid.Value);
             int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
@@ -1679,7 +1680,6 @@ namespace ReportesUnis
             string consulta2 = consulta.Replace("\n    \"", "|");
             string[] result = consulta2.Split('|');
             string personID = getBetween(result[result.Count() - 1], "\"NationalIdentifierId\" : ", ",");
-            credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
@@ -1870,43 +1870,7 @@ namespace ReportesUnis
             catch (Exception)
             {
                 return "1";
-            }
-            /*
-            if (PaisInicial.Text == Pais.Text)
-            {
-                string primary = getBetween(consulta, "HOME\",\n      \"PrimaryFlag\" : true", "\n        \"name\" ");
-                if (String.IsNullOrEmpty(primary))
-                    primary = getBetween(consulta, "HM\",\n      \"PrimaryFlag\" : true", "\n        \"name\" ");
-                string AddressId = getBetween(primary, "child/addresses", "\",");
-                Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"AddlAddressAttribute3\": \"" + txtZona.Text + "\"}";
-
-                updatePatch(Address, personId, "addresses", AddressId, "addresses", effectiveAdd, "workers/");
-                if (respuestaPatch != 0 && mensajeError.Contains("Ocurrió un problema al actualizar su: "))
-                {
-                    mensajeError = mensajeError + "Dirección ";
-                    au = au + 1;
-                }
-                else if (respuestaPatch != 0)
-                {
-                    mensajeError = mensajeError + "y dirección ";
-                    au = au + 1;
-                }
-            }
-            else
-            {
-                create(personId, "addresses", Address, "workers/");
-                if (respuestaPost != 0 && !mensajeError.Contains("Ocurrió un problema al actualizar su: "))
-                {
-                    mensajeError = mensajeError + "Dirección ";
-                    au = au + 1;
-                }
-                else if (respuestaPost != 0)
-                {
-                    mensajeError = mensajeError + "y dirección ";
-                    au = au + 1;
-                }
-            }*/
-
+            }            
         }
 
         public string LeerBodyEmail(string archivo)
@@ -2178,7 +2142,6 @@ namespace ReportesUnis
             try
             {
                 XmlNodeList elemList = xmlDocumentoRespuestaCampus.GetElementsByTagName("notification");
-                //return elemList[0].InnerText.ToString();
                 return elemList[0].InnerText.ToString();
             }
             catch

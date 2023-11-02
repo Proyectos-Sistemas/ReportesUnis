@@ -850,6 +850,7 @@ namespace ReportesUnis
 
         private string consultaGetworkers(string expand, string expandUser)
         {
+            credencialesWS(archivoWS, "Consultar");
             string consulta = consultaUser(expandUser, EMPLID.Value);
             int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
@@ -857,7 +858,6 @@ namespace ReportesUnis
             string consulta2 = consulta.Replace("\n    \"", "|");
             string[] result = consulta2.Split('|');
             string personID = EMPLID.Value;
-            credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
@@ -868,6 +868,7 @@ namespace ReportesUnis
 
         private string consultaGetImagenes(string consultar)
         {
+            credencialesWS(archivoWS, "Consultar");
             string consulta = consultaUser("nationalIdentifiers", CODIGO.Value);
             int cantidad = consulta.IndexOf(Context.User.Identity.Name.Replace("@unis.edu.gt", ""));
             if (cantidad >= 0)
@@ -875,7 +876,6 @@ namespace ReportesUnis
             string consulta2 = consulta.Replace("\n    \"", "|");
             string[] result = consulta2.Split('|');
             string personID = getBetween(result[result.Count() - 1], "\"NationalIdentifierId\" : ", ",");
-            credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;

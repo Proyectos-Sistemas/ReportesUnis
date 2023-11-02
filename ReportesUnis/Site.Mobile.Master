@@ -164,14 +164,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarInformacion" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Información
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a id="RepEstudiantes" runat="server" class="dropdown-item" href="~/ReporteEstudiantes">Reportes de Carné de Estudiantes</a>
-                            <a id="RepEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteEmpleados">Reportes de Carné  de Empleados</a>
                             <a id="RepCamarasEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicas">Reportes Cámaras Térmicas de Estudiantes</a>
-                            <a id="RepCamarasEmp" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicasEmpleados">Reportes Cámaras Térmicas de Empleados</a>
-                            <a id="CargaCTEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/Cargarfotografia">Carga Masiva de Fotografías Estudiantes</a>
-                            <a id="CargaCTEmp" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/CargarFotografiaEmpleados">Carga Masiva de Fotografías Empleados</a>
-                            <%--<a id="ActEstudiantes" runat="server" validationgroup="RLI_VistaAlumnos" class="dropdown-item" href="~/ActualizacionEstudiantes">Actualización de información de Estudiantes</a>
-                            <a id="ActEmpleados" runat="server" validationgroup="RLI_VistaEmpleados" class="dropdown-item" href="~/ActualizaciónEmpleados">Actualización de información de Empleados</a>--%>
                             <a id="Actualizacion" runat="server" class="dropdown-item" href="~/UnificacionActualización">Actualización de información</a>
                         </div>
                     </li>
@@ -181,18 +174,17 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a id="MantPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Tiempo Pantallas</a>
                             <a id="GestionesEstudiantes" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónDeCarne">Gestión Estudiantes</a>
-                            <a id="Confirmacion" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografias">Confirmar Fotografías</a>
-                            <a id="MantenimientoPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Mantenimiento Pantallas</a>
+                            <a id="GestionesEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónCarneEmpleados">Gestión Empleados</a>
+                            <a id="Confirmacion" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografias">Confirmar Fotografías Estudiantes</a>                            
+                            <a id="ConfirmacionEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografiasEmpleados">Confirmar Fotografías Colaboradores</a>                            
                         </div>
                     </li>
-
                     <li class="nav-item dropdown" id="liNavbarDirectorio">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDirectorio"
                             role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Directorio</a>
 
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a id="MenuDirectorio" runat="server" validationgroup="RLI_VistaEmpleados" class="dropdown-item"
-                                href="~/DirectorioUnis">Directorio</a>
+                            <a id="MenuDirectorio" runat="server" validationgroup="RLI_VistaEmpleados" class="dropdown-item" href="~/DirectorioUnis">Directorio</a>
                         </div>
 
                     </li>

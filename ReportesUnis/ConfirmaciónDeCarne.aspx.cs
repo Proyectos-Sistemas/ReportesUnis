@@ -245,7 +245,6 @@ namespace ReportesUnis
             {
                 lblActualizacion.Text = "";
                 string constr = TxtURL.Text;
-                //int ID = 30000;
                 using (OracleConnection con = new OracleConnection(constr))
                 {
                     con.Open();

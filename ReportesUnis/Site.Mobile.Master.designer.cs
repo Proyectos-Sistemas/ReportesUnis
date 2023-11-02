@@ -87,24 +87,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlAnchor MenuHistoricosGL;
 
         /// <summary>
-        /// Control RepEstudiantes.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor RepEstudiantes;
-
-        /// <summary>
-        /// Control RepEmpleados.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor RepEmpleados;
-
-        /// <summary>
         /// Control RepCamarasEst.
         /// </summary>
         /// <remarks>
@@ -112,33 +94,6 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlAnchor RepCamarasEst;
-
-        /// <summary>
-        /// Control RepCamarasEmp.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor RepCamarasEmp;
-
-        /// <summary>
-        /// Control CargaCTEst.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor CargaCTEst;
-
-        /// <summary>
-        /// Control CargaCTEmp.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor CargaCTEmp;
 
         /// <summary>
         /// Control Actualizacion.
@@ -168,6 +123,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlAnchor GestionesEstudiantes;
 
         /// <summary>
+        /// Control GestionesEmpleados.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor GestionesEmpleados;
+
+        /// <summary>
         /// Control Confirmacion.
         /// </summary>
         /// <remarks>
@@ -177,13 +141,13 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlAnchor Confirmacion;
 
         /// <summary>
-        /// Control MantenimientoPantallas.
+        /// Control ConfirmacionEmpleados.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor MantenimientoPantallas;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor ConfirmacionEmpleados;
 
         /// <summary>
         /// Control MenuDirectorio.
