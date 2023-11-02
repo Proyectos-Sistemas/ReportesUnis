@@ -3252,7 +3252,8 @@ namespace ReportesUnis
         //Crea un archivo .txt para guardar bitácora
         public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
         {
-            using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
+            //using (StreamWriter sw = File.CreateText(archivoBitacora)) 
+            StreamWriter sw = File.CreateText(archivoBitacora);
         }
 
         public int contadorID(int largo, string[] cadena)
