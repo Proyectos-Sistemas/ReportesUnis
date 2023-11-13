@@ -499,7 +499,6 @@
       <DependentUpon>DataSetSebiPagos.xsd</DependentUpon>
     </Content>
     <EmbeddedResource Include="rptLogInterfazHCMCS.rdlc" />
-    <Content Include="Logs\06112023 102136.txt" />
     <Content Include="Manuales\Manual borrador.docx" />
     <Content Include="Manuales\ManualActivacionCamara.pdf" />
     <None Include="Oracle.DataAccess.Common.Configuration.Section.xsd">
@@ -512,24 +511,15 @@
     <Content Include="PathConfirmacion.txt" />
     <Content Include="PathConfirmacionEmpleados.txt" />
     <Content Include="PruebaControlPermisos.aspx" />
-    <Content Include="ReportesCT\Reporte Camara Termica Empleados 28 11 2022 11_49_37 a.xlsx" />
-    <Content Include="ReportesCT\Reporte Camara Termica Estudiantes13 12 2022 03_32_16 p.xlsx" />
-    <Content Include="ReportesCT\Reporte Camara Termica Estudiantes13 12 2022 03_34_03 p.xlsx" />
-    <Content Include="ReportesCT\Reporte Camara Termica Estudiantes28 11 2022 11_46_33 a.xlsx" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="HistoricoCXC.aspx" />
     <Content Include="HistoricoCXP.aspx" />
     <Content Include="HistoricoGL.aspx" />
     <Content Include="HistoricoHCM.aspx" />
-    <Content Include="Imagenes\Fotos\00000000005.jpg" />
-    <Content Include="Imagenes\Fotos\00000000987.jpg" />
     <Content Include="LogInterfazCC.aspx" />
     <Content Include="LogInterfazHCMCS.aspx" />
     <Content Include="LogSerbipagos.aspx" />
     <Content Include="MantenimientoPantallas.aspx" />
-    <Content Include="MyFolder\300000006712889 %281%29.jpg" />
-    <Content Include="MyFolder\300000006712889 %282%29.jpg" />
-    <Content Include="MyFolder\300000006712889 %283%29.jpg" />
     <Content Include="ReporteCamarasTermicas.aspx" />
     <Content Include="ReporteCamarasTermicasEmpleados.aspx" />
     <Content Include="ReporteEmpleados.aspx" />
@@ -837,6 +827,10 @@
     <Folder Include="App_Data\" />
     <Folder Include="CapturedImages\" />
     <Folder Include="Files\" />
+    <Folder Include="Imagenes\" />
+    <Folder Include="Logs\" />
+    <Folder Include="MyFolder\" />
+    <Folder Include="ReportesCT\" />
     <Folder Include="Usuarios\DPI\" />
     <Folder Include="Usuarios\FotosColaboradores\" />
     <Folder Include="Usuarios\FotosConfirmacion\" />
