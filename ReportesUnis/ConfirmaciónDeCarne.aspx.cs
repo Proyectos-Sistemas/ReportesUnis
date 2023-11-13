@@ -1433,12 +1433,10 @@ namespace ReportesUnis
 
             //Configuracion campos para envio del correo
             mailItem.Subject = datos[0]; //Asunto del correo
-            //mailItem.Body = "Se ha detectado una nueva actualización";
+           
 
             mailItem.HTMLBody = htmlBody;
-            //mailItem.To = EmailInstitucional.Value;
-            //mailItem.BCC = datos[1];
-            mailItem.To = datos[1];
+            mailItem.To = TxtCorreoInstitucional.Text;
 
             //Enviar coreo
             mailItem.Send();

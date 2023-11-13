@@ -652,8 +652,8 @@ namespace ReportesUnis
                 {
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT  CASE WHEN TIPO_PERSONA = '3' THEN 'Docente' WHEN TIPO_PERSONA = '1' THEN 'Administrativo' ELSE 'Estudiante' END TIPO_PERSONA, " +
-                        "NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, CODIGO, EMPLID " +
-                        "FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO =" + carne;
+                        "NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, CODIGO, EMPLID, EMAIL " +
+                        "FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO =" + carne + "'  OR CARNET = '" + carne + "'";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -661,6 +661,7 @@ namespace ReportesUnis
                         DPI.Value = reader["CARNET"].ToString();
                         CODIGO.Value = reader["CODIGO"].ToString();
                         EMPLID.Value = reader["EMPLID"].ToString();
+                        EMAIL.Value = reader["EMAIL"].ToString();
                     }
                     con.Close();
                 }
@@ -887,12 +888,9 @@ namespace ReportesUnis
 
             //Configuracion campos para envio del correo
             mailItem.Subject = datos[0]; //Asunto del correo
-            //mailItem.Body = "Se ha detectado una nueva actualización";
 
             mailItem.HTMLBody = htmlBody;
-            //mailItem.To = EmailInstitucional.Value;
-            //mailItem.BCC = datos[1];
-            mailItem.To = datos[1];
+            mailItem.To = EMAIL.Value;
 
             //Enviar coreo
             mailItem.Send();

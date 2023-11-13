@@ -8,6 +8,7 @@ using Microsoft.Ajax.Utilities;
 using Oracle.ManagedDataAccess.Client;
 using System.Data.SqlClient;
 using Outlook = Microsoft.Office.Interop.Outlook;
+using NPOI.Util;
 
 namespace ReportesUnis
 {
@@ -532,6 +533,24 @@ namespace ReportesUnis
         }
         public void EnvioCorreo(string body, string subject)
         {
+            string constr = TxtURL.Text;
+            string EmailInstitucional = "";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "EMAIL_PERSONAL FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO =" + carne.Value + "'  OR CARNET = '" + carne.Value + "'";
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+
+                        EmailInstitucional = reader["EMAIL_PERSONAL"].ToString();
+                    }
+                    con.Close();
+                }
+            }
             string htmlBody = LeerBodyEmail(body);
             string[] datos = LeerInfoEmail(subject);
 
@@ -543,12 +562,9 @@ namespace ReportesUnis
 
             //Configuracion campos para envio del correo
             mailItem.Subject = datos[0]; //Asunto del correo
-            //mailItem.Body = "Se ha detectado una nueva actualización";
 
             mailItem.HTMLBody = htmlBody;
-            //mailItem.To = EmailInstitucional.Value;
-            //mailItem.BCC = datos[1];
-            mailItem.To = datos[1];
+            mailItem.To = EmailInstitucional;
 
             //Enviar coreo
             mailItem.Send();
@@ -580,6 +596,7 @@ namespace ReportesUnis
                     if (cargaFt == 0)
                     {
                         string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                        carne.Value= nombre;
                         string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
                         string respuesta = ConsumoOracle(cadena);
                         if (respuesta == "0")
@@ -629,6 +646,7 @@ namespace ReportesUnis
                     string respuesta = null;
                     string fecha = DateTime.Now.ToString("yyyy-MM-dd");
                     string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                    carne.Value = carnet;
                     QueryInsertBi(carnet);
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());

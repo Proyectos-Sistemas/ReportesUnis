@@ -1157,8 +1157,7 @@ namespace ReportesUnis
             mailItem.Subject = datos[0]; //Asunto del correo
 
             mailItem.HTMLBody = htmlBody;
-            //mailItem.BCC = datos[1];
-            mailItem.To = datos[1];//TxtCorreoInstitucional.Text;
+            mailItem.To = EmailUnis.Text;
 
             //Enviar coreo
             mailItem.Send();

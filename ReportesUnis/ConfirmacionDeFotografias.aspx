@@ -24,7 +24,9 @@
         <asp:TextBox ID="txtInsertBI" runat="server" Visible="false"></asp:TextBox>
         <%-- txtInsertApexI ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
         <asp:TextBox ID="txtInsertApex" runat="server" Visible="false"></asp:TextBox>  
-        <asp:TextBox ID="prueba" runat="server" Visible="false"></asp:TextBox>  
+        <asp:TextBox ID="prueba" runat="server" Visible="false"></asp:TextBox> 
+         <%-- TEXTBOX ALMACENA EL CORREO INSTITUCIONAL--%>
+        <input type="hidden" id="carne" runat="server" />
     </div>
     <div class="container-fluid">
         <div class="row">
