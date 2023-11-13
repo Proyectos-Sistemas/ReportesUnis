@@ -61,12 +61,7 @@ namespace ReportesUnis
 
             if (controlPantalla >= 1)
             {
-                //TextUser.Text = "2508045810101";//Profesor;
-                //TextUser.Text = "2539263430101";//Profesor;
-                TextUser.Text = "3006684570101";//Maria Jose - Administrativo Estudiante; 300000057781526
-                //TextUser.Text = "3217767041601";//Mio - Administrativo - Profesor
-                //TextUser.Text = "2588604560113";//Erick - Administrativo 
-                //TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
                 if (!IsPostBack)
                 {
                     matrizDatos();
