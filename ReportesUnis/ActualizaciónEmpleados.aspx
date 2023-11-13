@@ -17,7 +17,7 @@
         <div class="container">
             <div class="row">
                 <div class="form-group  col-md">
-                    <h5 style="text-align: center;">Toma de Fografía</h5>
+                    <h5 style="text-align: center;">Toma de Fografía *</h5>
                 </div>
             </div>
         </div>
@@ -748,7 +748,7 @@
                                             <div class="form-group col-md-5">
                                             </div>
                                             <div class="form-group col-md-2">
-                                                <asp:Button ID="BtnAceptarCarga" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnAceptarCarga_Click" />
+                                                <asp:Button ID="BtnAceptarCarga" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnAceptarCarga_Click" />
                                             </div>
                                             <div class="form-group col-md-5">
                                             </div>
@@ -1065,9 +1065,15 @@
             var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
             var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
             var nit = document.getElementById('<%= txtNit.ClientID %>').value;
+            var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
+            var files = fileUpload.files;
 
             var modal = document.getElementById("myModalActualizacion");
-            if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial || txtNombre2 !== txtNInicial2 || txtApellido2 !== txtAInicial2) {
+            if ((txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial || txtNombre2 !== txtNInicial2 || txtApellido2 !== txtAInicial2) && $('#myModal').css('display') != 'block') {
+                $('#myModal').css('display', 'block');
+                return false;
+            } else if (files.length == 0 && $('#myModal').css('display') === 'block') {
+                alert("Es necesario adjuntar la imagen de su documento de identificación para continuar con la actualización.");
                 $('#myModal').css('display', 'block');
                 return false;
             } else if (TrueNit !== nit && nit !== "CF" && Estudiante > 0) {
@@ -1155,8 +1161,9 @@
                     mensaje = mensaje.replace("/\n/g", "<br>");
                     alert(mensaje);
                     return false;
-                } else if (confirm("¿Está seguro de que su información es correcta?")) {
+                } else if (confirm("¿Está seguro de que su información es correcta?")) {                    
                     $('#myModalActualizacion').css('display', 'block');
+                    $('#myModal').css('display', 'none'); //Cierra #myModal cuando se abre para cargar documentos
                     __doPostBack('<%= BtnActualizar.ClientID %>', '');
                     return true; // Permite continuar con la acción del botón
                 } else {
@@ -1166,7 +1173,7 @@
         }
 
         function Documentos() {
-            alert("Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.");
+            alert("Es necesario adjuntar la imagen de su documento de identificación para continuar con la actualización.");
             $('#myModal').css('display', 'block');
             return false;
         }
@@ -1426,6 +1433,8 @@
                 }
             }
         }
+
+
 
 
         //FUNCION PARA EVITAR QUE SEA INGRESADO EL -

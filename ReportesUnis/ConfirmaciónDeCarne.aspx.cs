@@ -1,26 +1,15 @@
-﻿using DocumentFormat.OpenXml.Office.Word;
-using Microsoft.Ajax.Utilities;
-using NPOI.SS.Formula.Functions;
+﻿using Microsoft.Ajax.Utilities;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Windows.Resources;
-using static System.Windows.Forms.AxHost;
-using Windows.Devices.Sensors;
-using Windows.UI.Xaml.Automation.Text;
-using DocumentFormat.OpenXml.Spreadsheet;
 using System.Net;
 using System.Web.Services;
 using System.Xml;
+using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace ReportesUnis
 {
@@ -69,44 +58,7 @@ namespace ReportesUnis
             }
         }
 
-        protected void CmbTipo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            llenado("CARNET = '" + CmbCarne.Text + "'");
-            if (txtCantidad.Text != "0" && !txtCantidad.Text.IsNullOrWhiteSpace())
-            {
-                for (int i = 0; i < Convert.ToInt32(txtCantidad.Text); i++)
-                {
-                    HDocumentacion.Visible = true;
-                    if (i == 0)
-                    {
-                        ImgDPI1.Visible = true;
-                        ImgDPI1.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(" + (i + 1) + ").jpg";
-                    }
-                    if (i == 1)
-                    {
-                        ImgDPI2.Visible = true;
-                        ImgDPI2.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(" + (i + 1) + ").jpg";
-                    }
-                }
-                if (txtCantidad.Text == "1")
-                {
-                    ImgDPI2.Visible = false;
-                }
-            }
-            else
-            {
-                ImgDPI1.Visible = false;
-                ImgDPI2.Visible = false;
-                ImgFoto1.Visible = false;
-            }
-            if (!CmbCarne.Text.IsNullOrWhiteSpace())
-            {
-                lblActualizacion.Text = null;
-            }
-            HFoto.Visible = true;
-            ImgFoto1.ImageUrl = "~/Usuarios/FotosConfirmacion/" + CmbCarne.Text + ".jpg";
-        }
-
+        //FUNCIONES
         private void Buscar(string confirmacion)
         {
             string constr = TxtURL.Text;
@@ -128,10 +80,9 @@ namespace ReportesUnis
                 }
             }
         }
-
-        //Lectura de archivo txt para la conexion
         void LeerInfoTxt()
         {
+            //Lectura de archivo txt para la conexion ORACLE
             string rutaCompleta = CurrentDirectory + "conexion.txt";
             string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
@@ -143,6 +94,7 @@ namespace ReportesUnis
         }
         void LeerInfoTxtSQL()
         {
+            //Lectura de archivo txt para la conexion SQL
             string rutaCompleta = CurrentDirectory + "conexionSQL.txt";
             string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
@@ -152,10 +104,20 @@ namespace ReportesUnis
                 file.Close();
             }
         }
-
+        void LeerInfoTxtPath()
+        {
+            //Lectura de archivo txt para el almacenamiento en el servidor
+            string rutaCompleta = CurrentDirectory + "PathAlmacenamiento.txt";
+            string line = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                line = file.ReadToEnd();
+                txtPath.Text = line;
+                file.Close();
+            }
+        }
         private void llenado(string where)
         {
-
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -213,7 +175,6 @@ namespace ReportesUnis
                 }
             }
         }
-
         private void LimpiarCampos()
         {
             TxtDpi.Text = null;
@@ -238,7 +199,6 @@ namespace ReportesUnis
             TxtCorreoInstitucional.Text = null;
             TxtCorreoPersonal.Text = null;
         }
-
         private void Rechazar(string Carnet)
         {
             if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
@@ -257,7 +217,6 @@ namespace ReportesUnis
                             int cargaFt = 0;
                             try
                             {
-
                                 File.Delete(txtPath.Text + Carnet + ".jpg");
                                 cargaFt = 0;
                             }
@@ -279,6 +238,7 @@ namespace ReportesUnis
                                 {
                                     File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
                                 }
+                                EnvioCorreo("bodyRechazoEstudiante.txt", "datosRechazoEstudiante.txt");
                                 ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalActualizacion();", true);
                                 lblActualizacion.Text = "Se ha rechazado la solicitud de carnet.";
                             }
@@ -286,14 +246,12 @@ namespace ReportesUnis
                             {
                                 lblActualizacion.Text = "Ocurrió un error al rechazar la solicitud";
                             }
-
                         }
                         catch (Exception)
                         {
                             lblActualizacion.Text = "No se pudo eliminar la información a causa de un error interno.";
                             transaction.Rollback();
                         }
-
                     }
                 }
                 LimpiarCampos();
@@ -303,12 +261,6 @@ namespace ReportesUnis
                 lblActualizacion.Text = "Debe de ingresar un número de carnet para poder rechazar la información.";
             }
         }
-
-        protected void BtnRechazar_Click(object sender, EventArgs e)
-        {
-            Rechazar(CmbCarne.Text);
-        }
-
         protected void Confirmar(string Carnet)
         {
             if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
@@ -328,7 +280,6 @@ namespace ReportesUnis
                     if (respuesta == "0")
                     {
                         respuesta = ConsumoOracle(txtInsertName.Text);
-
                         if (respuesta == "0")
                         {
                             respuesta = "";
@@ -336,7 +287,7 @@ namespace ReportesUnis
                             if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                             {
                                 //SE INGRESA LA INFORMACIÓN EN EL BANCO
-                                respuesta = ConsumoSQL(txtInsertBI.Text);
+                                respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
                                 if (respuesta == "0")
                                 {
                                     respuesta = ConsumoOracle(txtInsertApex.Text);
@@ -361,7 +312,6 @@ namespace ReportesUnis
                                                     respuesta = "0";
                                                 }
                                             }
-
                                         }
                                     }
                                 }
@@ -374,6 +324,7 @@ namespace ReportesUnis
                     if (respuesta == "0")
                     {
                         lblActualizacion.Text = "Se confirmó correctamente la información";
+                        EnvioCorreo("bodyConfirmacionEstudiante.txt", "datosConfirmacionEstudiante.txt");
                         Buscar("1");
                         for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
                         {
@@ -399,7 +350,6 @@ namespace ReportesUnis
                 lblActualizacion.Text = "Debe de seleccionar un número de carnet para poder confirmar la información.";
             }
         }
-
         protected void QueryInsertBi()
         {
             string constr = TxtURL.Text;
@@ -415,6 +365,7 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
                                    "([Carnet] " +
+                                   ",[Carrera] " +
                                    ",[Direccion] " +
                                    ",[Zona] " +
                                    ",[Colonia] " +
@@ -478,13 +429,14 @@ namespace ReportesUnis
                                    ",[O_Condmig] " +
                                    ",[Validar_Envio]) " +
                                 "VALUES ('''||CARNET||''','''" + // APELLIDO DE CASADA
+                                    "||CARGO||''','''" + //Carrera
                                     "||DIRECCION||''','''" + //DIRECCION
                                     "||ZONA||''','''" + //ZONA
                                     "||COLONIA||''','''" + //COLONIA
                                     "||CEDULA||''','''" + //DECULA
                                     "||DEPTO_CEDULA||''',''' " + //DEPARTAMENTO CEDULA
                                     "||MUNI_CEDULA||''',''' " + //MUNICIPIO CEDULA
-                                    "||' '||''','''" + //CARGO
+                                    "||''||''','''" + //CARGO
                                     "||DEPTO||''',''' " + //DEPARTAMENTO 
                                     "||FACULTAD||''','''" + //FACULTAD
                                     "||CODIGO||''','''" + //CODIGO
@@ -521,14 +473,14 @@ namespace ReportesUnis
                                     "||DEPTO_RESIDENCIA||''','''" + //DEPTO_RESIDENCIA
                                     "||NORDEN||''','''" + //NO_ORDER
                                     "||OBSERVACIONES||''','''" + //OBSERVACIONES
-                                    "||PAIS_NACIONALIDAD||''','''" + //PAIS_NACIONALIDAD
+                                    "||'GUATEMALA'||''','''" + //PAIS_NACIONALIDAD
                                     "||PAIS_PASAPORTE||''','''" + //PAIS_PASAPORTE
                                     "||NO_PASAPORTE||''','''" + //NO_PASAPORTE
                                     "||PROFESION||''','''" + //PROFESION
                                     "||CASA||''','''" + //CASA
                                     "||APTO||''','''" + //APARTAMENTO
                                     "||CELULAR||''','''" + //CELULAR
-                                    "||EMAIL||''','''" + //CELULAR
+                                    "||EMAIL||''','''" + //EMAIL
                                     "||NO_CUI||''','''" + //CELULAR
                                     "||DEPTO_CUI||''','''" + //DEPARTAMENTO_CUI
                                     "||MUNI_CUI||''','''" + //MUNI_CUI
@@ -551,7 +503,6 @@ namespace ReportesUnis
                 }
             }
         }
-
         protected string QueryActualizaNombre(string emplid)
         {
             string constr = TxtURL.Text;
@@ -569,7 +520,6 @@ namespace ReportesUnis
             {
                 Direccion3 = " ";
             }
-
             if (TxtCasada.IsNullOrWhiteSpace())
             {
                 TxtCasada = " ";
@@ -758,7 +708,6 @@ namespace ReportesUnis
                     }
                 }
             }
-
         }
         protected void QueryUpdateApex(string Confirmación, string Solicitado, string Entrega, string FechaHora, string Accion, string Carne)
         {
@@ -801,7 +750,6 @@ namespace ReportesUnis
             }
             return retorno;
         }
-
         protected string ConsumoSQL(string Consulta)
         {
             string constr = TxtURLSql.Text;
@@ -832,25 +780,6 @@ namespace ReportesUnis
             }
             return retorno;
         }
-
-        protected void BtnConfirmar_Click(object sender, EventArgs e)
-        {
-            string carne = CmbCarne.Text;
-            Confirmar(carne);
-        }
-
-        void LeerInfoTxtPath()
-        {
-            string rutaCompleta = CurrentDirectory + "PathAlmacenamiento.txt";
-            string line = "";
-            using (StreamReader file = new StreamReader(rutaCompleta))
-            {
-                line = file.ReadToEnd();
-                txtPath.Text = line;
-                file.Close();
-            }
-        }
-
         private string ActualizarNIT(string emplid)
         {
             string constr = TxtURL.Text;
@@ -1040,7 +969,7 @@ namespace ReportesUnis
                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoR + "' " +
                                                "AND FIRST_NAME='" + TxtNombreR + "' AND SECOND_LAST_NAME='" + TxtCasadaR + "' " +
                                                "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-                        ;
+
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
@@ -1132,7 +1061,6 @@ namespace ReportesUnis
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
                             contadorUD = contadorUD + 1;
-
                         }
 
                         //ACTUALIZA NIT
@@ -1141,7 +1069,6 @@ namespace ReportesUnis
                             //INSERTA EL NIT
                             cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSTEM (EMPLID, EXTERNAL_SYSTEM, EFFDT, EXTERNAL_SYSTEM_ID) VALUES ('" + emplid + "','NRE','" + DateTime.Now.ToString("dd/MM/yyyy") + "','" + NIT + "')";
                             cmd.ExecuteNonQuery();
-
 
                             if (ContadorNit2 == 0)
                             {
@@ -1265,10 +1192,8 @@ namespace ReportesUnis
                         return "1";
                     }
                 }
-
             }
         }
-
         protected string Upload(string Carnet)
         {
             string ImagenData = "";
@@ -1293,7 +1218,6 @@ namespace ReportesUnis
                         }
                     }
                     con.Close();
-
                 }
             }
             string mensaje = "";
@@ -1303,14 +1227,12 @@ namespace ReportesUnis
                 int ContadorArchivos = 0;
                 int ContadorArchivosCorrectos = 0;
                 int ContadorArchivosConError = 0;
-
                 bool Error = false;
 
                 //Ruta del archivo que guarda la bitácora
                 string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
                 //Nombre del archiov que guarda la bitácora
                 string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
-
 
                 //Se crea un nuevo archivo para guardar la bitacora de la ejecución
                 CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
@@ -1320,7 +1242,6 @@ namespace ReportesUnis
                 GuardarBitacora(ArchivoBitacora, "");
                 GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    EMPLID                      Estado                 Descripción                                    ");
                 GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
-
 
                 string EmplidFoto = Carnet;
                 string EmplidExisteFoto = "";
@@ -1364,7 +1285,6 @@ namespace ReportesUnis
 
                     using (OracleCommand cmd = new OracleCommand(query))
                     {
-
                         if (EmplidExisteFoto != "") //Se actualiza la fotografía
                         {
                             cmd.CommandText = "UPDATE SYSADM.PS_EMPL_PHOTO SET PSIMAGEVER=(TO_NUMBER((TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY-MM-DD') - TO_DATE(TO_CHAR('1999-12-31'), 'YYYY-MM-DD'))* 86400) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP,'hh24missff2'))), EMPLOYEE_PHOTO=:Fotografia WHERE EMPLID = '" + EmplidFoto + "'";
@@ -1424,26 +1344,22 @@ namespace ReportesUnis
             }
             catch (Exception)
             {
-
                 mensaje = ". Ocurrió un error al cargar la imagen";
                 mensaje = "1";
             }
             return mensaje;
         }
-
-        //Función para guardar bitacora en el archivo .txt
         public void GuardarBitacora(string ArchivoBitacora, string DescripcionBitacora)
         {
+            //Función para guardar bitacora en el archivo .txt
             //Guarda nueva línea para el registro de bitácora en el serividor
             File.AppendAllText(ArchivoBitacora, DescripcionBitacora + Environment.NewLine);
         }
-
-        //Crea un archivo .txt para guardar bitácora
         public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
         {
-            using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
+            //Crea un archivo .txt para guardar bitácora
+            StreamWriter sw = File.CreateText(archivoBitacora);
         }
-
         protected int ControlRenovacion(string cadena)
         {
             string constr = TxtURL.Text;
@@ -1462,7 +1378,6 @@ namespace ReportesUnis
                         {
                             control = reader["CONTADOR"].ToString();
                         }
-
                         con.Close();
                     }
                     catch (Exception)
@@ -1473,11 +1388,119 @@ namespace ReportesUnis
             }
             return Convert.ToInt32(control);
         }
-        /*-------------------------------------------INICIAN FUNCIONES PARA METODO SOAP-------------------------------------------*/
+        public string LeerBodyEmail(string archivo)
+        {
+            string rutaCompleta = CurrentDirectory + "/Emails/Estudiantes/" + archivo;
+            string line = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                line = file.ReadToEnd();
+                file.Close();
+            }
+            return line;
+        }
+        public string[] LeerInfoEmail(string archivo)
+        {
+            string rutaCompleta = CurrentDirectory + "/Emails/Estudiantes/" + archivo;
+            string[] datos;
+            string subjet = "";
+            string to = "";
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                string linea4 = file.ReadLine();
+                subjet = linea2;
+                to = linea4;
+                file.Close();
+                // Corrección: Inicializa un nuevo array y asigna los valores
+                datos = new string[] { subjet, to };
+            }
+            return datos;
+        }
+        public void EnvioCorreo(string body, string subject)
+        {
 
-        //Función para limpiar variables
+            string htmlBody = LeerBodyEmail(body);
+            string[] datos = LeerInfoEmail(subject);
+
+            //Creación de instancia de la aplicacion de outlook
+            var outlook = new Outlook.Application();
+
+            //Crear un objeto MailItem
+            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+
+            //Configuracion campos para envio del correo
+            mailItem.Subject = datos[0]; //Asunto del correo
+            //mailItem.Body = "Se ha detectado una nueva actualización";
+
+            mailItem.HTMLBody = htmlBody;
+            //mailItem.To = EmailInstitucional.Value;
+            //mailItem.BCC = datos[1];
+            mailItem.To = datos[1];
+
+            //Enviar coreo
+            mailItem.Send();
+
+            //liberar recursos utilizados
+            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
+            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+
+        }
+
+        //EVENTOS
+        protected void BtnRechazar_Click(object sender, EventArgs e)
+        {
+            Rechazar(CmbCarne.Text);
+        }
+        protected void BtnConfirmar_Click(object sender, EventArgs e)
+        {
+            string carne = CmbCarne.Text;
+            Confirmar(carne);
+        }
+        protected void CmbTipo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            llenado("CARNET = '" + CmbCarne.Text + "'");
+            if (txtCantidad.Text != "0" && !txtCantidad.Text.IsNullOrWhiteSpace())
+            {
+                for (int i = 0; i < Convert.ToInt32(txtCantidad.Text); i++)
+                {
+                    HDocumentacion.Visible = true;
+                    if (i == 0)
+                    {
+                        ImgDPI1.Visible = true;
+                        ImgDPI1.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(" + (i + 1) + ").jpg";
+                    }
+                    if (i == 1)
+                    {
+                        ImgDPI2.Visible = true;
+                        ImgDPI2.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(" + (i + 1) + ").jpg";
+                    }
+                }
+                if (txtCantidad.Text == "1")
+                {
+                    ImgDPI2.Visible = false;
+                }
+            }
+            else
+            {
+                ImgDPI1.Visible = false;
+                ImgDPI2.Visible = false;
+                ImgFoto1.Visible = false;
+            }
+            if (!CmbCarne.Text.IsNullOrWhiteSpace())
+            {
+                lblActualizacion.Text = null;
+            }
+            HFoto.Visible = true;
+            ImgFoto1.ImageUrl = "~/Usuarios/FotosConfirmacion/" + CmbCarne.Text + ".jpg";
+        }
+
+        /*-------------------------------------------INICIAN FUNCIONES PARA METODO SOAP-------------------------------------------*/
         private static void limpiarVariables()
         {
+            //Función para limpiar variables
             //Cuerpo del servicio web (enviar información) 
             Variables.soapBody = "";
             Variables.strDocumentoRespuesta = "";
@@ -1488,13 +1511,11 @@ namespace ReportesUnis
             //Contraseña del servicio web
             Variables.wsPassword = "";
         }
-
         public class Variables
         {
             //Cuerpo del servicio web (enviar información) 
             public static string soapBody;
             public static string strDocumentoRespuesta;
-
             //Direción del serivicio web
             public static string wsUrl = "";
             //Usuario del servicio web
@@ -1504,12 +1525,10 @@ namespace ReportesUnis
             //Acción del servicio web
             public static string wsAction = "";
         }
-
-        //Función para obtener información de acceso al servicio de Campus
         private static void credencialesEndPoint(string RutaConfiguracion, string strMetodo)
         {
+            //Función para obtener información de acceso al servicio de Campus
             int cont = 0;
-
             foreach (var line in File.ReadLines(RutaConfiguracion))
             {
                 if (cont == 1)
@@ -1521,17 +1540,16 @@ namespace ReportesUnis
                 cont++;
             }
         }
-        //Función para crear el elemento raíz para solicitud web 
         private static XmlDocument CreateSoapEnvelope(string xmlString)
         {
+            //Función para crear el elemento raíz para solicitud web 
             XmlDocument soapEnvelopeDocument = new XmlDocument();
             soapEnvelopeDocument.LoadXml(xmlString);
             return soapEnvelopeDocument;
         }
-
-        //Función para crear el encabezado para la Solicitud web
         private static HttpWebRequest CreateWebRequest(string url, string action)
         {
+            //Función para crear el encabezado para la Solicitud web
             HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
             webRequest.Headers.Add("SOAPAction", action);
             webRequest.ContentType = "text/xml;charset=\"utf-8\"";
@@ -1539,19 +1557,17 @@ namespace ReportesUnis
             webRequest.Method = "POST";
             return webRequest;
         }
-
-        //Función para crear unificar toda la estructura de la solicitud web
         private static void InsertSoapEnvelopeIntoWebRequest(XmlDocument soapEnvelopeXml, HttpWebRequest webRequest)
         {
+            //Función para crear unificar toda la estructura de la solicitud web
             using (Stream stream = webRequest.GetRequestStream())
             {
                 soapEnvelopeXml.Save(stream);
             }
         }
-
-        //Función para llamar un servicio web de Campus
         public string LlamarWebServiceCampus(string _url, string _action, string _xmlString)
         {
+            //Función para llamar un servicio web de Campus
             XmlDocument soapEnvelopeXml = CreateSoapEnvelope(_xmlString);
             HttpWebRequest webRequest = CreateWebRequest(_url, _action);
             InsertSoapEnvelopeIntoWebRequest(soapEnvelopeXml, webRequest);
@@ -1635,7 +1651,6 @@ namespace ReportesUnis
             }
         }
 
-
         [WebMethod]
         public string Consultar()
         {
@@ -1672,8 +1687,8 @@ namespace ReportesUnis
                 //Crea la respuesta cuando se genera una excepción web.
                 Variables.strDocumentoRespuesta = Respuesta("05", "ERROR AL CONSULTAR EL REPORTE");
                 return Variables.strDocumentoRespuesta;
-
             }
+
             try
             {
                 XmlNodeList elemList = xmlDocumentoRespuestaCampus.GetElementsByTagName("notification");
@@ -1685,10 +1700,9 @@ namespace ReportesUnis
                 return "0";
             }
         }
-
-        //Crea el cuerpo que se utiliza para hacer PATCH
         private static void CuerpoConsultaUD(string Usuario, string Pass, string EMPLID, string COLL_NAMES_PRI, string COLL_NAMES_PRF, string COLL_NAMES_NIT, string COLL_ADDRESSES_NIT)
         {
+            //Crea el cuerpo que se utiliza para hacer PATCH
             Variables.soapBody = @"<?xml version=""1.0""?>
                                  <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/M644328134.V1"">
                                     <soapenv:Header xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
@@ -1710,9 +1724,9 @@ namespace ReportesUnis
                                    </soapenv:Body>
                                 </soapenv:Envelope>";
         }
-        //Crea el cuerpo que se utiliza para hacer POST
         private static void CuerpoConsultaUP(string Usuario, string Pass, string EMPLID, string COLL_NAMES_PRI, string COLL_NAMES_PRF, string COLL_NAMES_NIT, string COLL_ADDRESSES_NIT)
         {
+            //Crea el cuerpo que se utiliza para hacer POST
             Variables.soapBody = @"<?xml version=""1.0""?>
                                  <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/M780623797.V1"">
                                     <soapenv:Header xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
@@ -1734,6 +1748,5 @@ namespace ReportesUnis
                                    </soapenv:Body>
                                 </soapenv:Envelope>";
         }
-
     }
 }

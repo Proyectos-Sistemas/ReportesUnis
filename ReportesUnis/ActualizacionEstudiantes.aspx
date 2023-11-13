@@ -670,7 +670,7 @@
                                             <div class="form-group col-md-5">
                                             </div>
                                             <div class="form-group col-md-2">
-                                                <asp:Button ID="BtnAceptarCarga" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnAceptarCarga_Click" />
+                                                <asp:Button ID="BtnAceptarCarga" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnAceptarCarga_Click" />
                                             </div>
                                             <div class="form-group col-md-5">
                                             </div>
@@ -849,23 +849,23 @@
                     .then(function () {
                         if ((sesion == "0" || sesion == "1") && bandera == 0) {
                             var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                                $("#<%= CargaFotografia.ClientID %>").css("display", "block");
-                                $('#<%= tabla.ClientID %>').css("display", "block");
-                                $('#<%= tbactualizar.ClientID %>').css("display", "block");
-                                $('#<%= InfePersonal.ClientID %>').css("display", "block");
-                                $('#<%= BtnReload.ClientID %>').css("display", "none");
-                                $('#<%= BtnDownload.ClientID %>').css("display", "none");
-                                $('#<%= BtnReload.ClientID %>').click;
-                                guardarEnSessionStorage("1");
-                                bandera.text = "1";
-                                lblActualizacion.html("");
-                            }
-                        })
-                        .catch(function (error) {
-                            if ((sesion == "0" || sesion == "2") && bandera == 0) {
-                                let mensajeError = error.message;
-                                if (mensajeError.indexOf("Permission denied" != -1)) {
-                                    $('#<%= CargaFotografia.ClientID %>').css("display", "none");
+                            $("#<%= CargaFotografia.ClientID %>").css("display", "block");
+                            $('#<%= tabla.ClientID %>').css("display", "block");
+                            $('#<%= tbactualizar.ClientID %>').css("display", "block");
+                            $('#<%= InfePersonal.ClientID %>').css("display", "block");
+                            $('#<%= BtnReload.ClientID %>').css("display", "none");
+                            $('#<%= BtnDownload.ClientID %>').css("display", "none");
+                            $('#<%= BtnReload.ClientID %>').click;
+                            guardarEnSessionStorage("1");
+                            bandera.text = "1";
+                            lblActualizacion.html("");
+                        }
+                    })
+                    .catch(function (error) {
+                        if ((sesion == "0" || sesion == "2") && bandera == 0) {
+                            let mensajeError = error.message;
+                            if (mensajeError.indexOf("Permission denied" != -1)) {
+                                $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                                     $('#<%= tabla.ClientID %>').css("display", "none");
                                     $('#<%= tbactualizar.ClientID %>').css("display", "none");
                                     $('#<%= InfePersonal.ClientID %>').css("display", "none");
@@ -927,17 +927,17 @@
             var context = canvas.getContext('2d');
             var captureBtn = $('#captureBtn');
             var textarea = $('#<%= urlPath2.ClientID %>');
-                var imgBase = $("#<%= ImgBase.ClientID %>");
-                var urlPathControl = $('#<%= urlPathControl2.ClientID %>');
-                captureBtn.on('click', function (event) {
-                    event.preventDefault();
-                    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-                    var imageData = canvas.toDataURL('image/jpeg');
-                    textarea.val(imageData);
-                    urlPathControl.val('1');
-                    imgBase.attr('src', imageData);
-                });
+            var imgBase = $("#<%= ImgBase.ClientID %>");
+            var urlPathControl = $('#<%= urlPathControl2.ClientID %>');
+            captureBtn.on('click', function (event) {
+                event.preventDefault();
+                context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+                var imageData = canvas.toDataURL('image/jpeg');
+                textarea.val(imageData);
+                urlPathControl.val('1');
+                imgBase.attr('src', imageData);
             });
+        });
 
         function validarCorreo(correo) {
             var errorCorreoElement = document.getElementById("errorCorreo");
@@ -967,168 +967,175 @@
         function mostrarAlerta() {
             var mensaje = "";
             var apellido = document.getElementById('<%= txtApellido.ClientID %>').value;
-                var nombre = document.getElementById('<%= txtNombre.ClientID %>').value;
-                var nombreR = document.getElementById('<%= TxtNombreR.ClientID %>').value;
-                var nit = document.getElementById('<%= txtNit.ClientID %>').value;
-                var direccion1 = document.getElementById('<%= txtDireccion.ClientID %>').value;
-                var direccionR1 = document.getElementById('<%= TxtDiRe1.ClientID %>').value;
-                var telefono = document.getElementById('<%= txtTelefono.ClientID %>').value;
-                var pais = document.getElementById('<%= CmbPais.ClientID %>').value;
-                var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
-                var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
-                var paisN = document.getElementById('<%= CmbPaisNIT.ClientID %>').value;
-                var deptoN = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>').value;
-                var muniN = document.getElementById('<%= CmbMunicipioNIT.ClientID %>').value;
-                var Correo = document.getElementById('<%= TxtCorreoPersonal.ClientID %>').value;
-                var foto = $('#<%= urlPath2.ClientID %>').val();
-                var foto2 = $('#<%= urlPath2.ClientID %>').val();
+            var nombre = document.getElementById('<%= txtNombre.ClientID %>').value;
+            var nombreR = document.getElementById('<%= TxtNombreR.ClientID %>').value;
+            var nit = document.getElementById('<%= txtNit.ClientID %>').value;
+            var direccion1 = document.getElementById('<%= txtDireccion.ClientID %>').value;
+            var direccionR1 = document.getElementById('<%= TxtDiRe1.ClientID %>').value;
+            var telefono = document.getElementById('<%= txtTelefono.ClientID %>').value;
+            var pais = document.getElementById('<%= CmbPais.ClientID %>').value;
+            var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
+            var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
+            var paisN = document.getElementById('<%= CmbPaisNIT.ClientID %>').value;
+            var deptoN = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>').value;
+            var muniN = document.getElementById('<%= CmbMunicipioNIT.ClientID %>').value;
+            var Correo = document.getElementById('<%= TxtCorreoPersonal.ClientID %>').value;
+            var foto = $('#<%= urlPath2.ClientID %>').val();
+            var foto2 = $('#<%= urlPath2.ClientID %>').val();
 
-                // Obtener el valor del <textarea>
-                var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
-                var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
-                var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
-                var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
-                var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
-                var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
-                var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
-                var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
-                var modal = document.getElementById("myModalActualizacion");
-                var divCombos = $('#<%= Combos.ClientID %>');
+            // Obtener el valor del <textarea>
+            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
+            var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
+            var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
+            var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
+            var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
+            var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
+            var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
+            var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
+            var modal = document.getElementById("myModalActualizacion");
+            var divCombos = $('#<%= Combos.ClientID %>');
+            var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
+            var files = fileUpload.files;
 
-                if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) {
-                    $('#myModal').css('display', 'block');
+            if ((txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) && $('#myModal').css('display') != 'block') {
+                $('#myModal').css('display', 'block');
+                return false;
+            } else if (files.length == 0 && $('#myModal').css('display') === 'block') {
+                alert("Es necesario adjuntar la imagen de su documento de identificación para continuar con la actualización.");
+                $('#myModal').css('display', 'block');
+                return false;
+            } else if (TrueNit !== nit && nit !== "CF") {
+                // Realiza las acciones necesarias si el valor es diferente de cero
+                alert("El NIT ha cambiado, es necesario validar.");
+                return false;
+            } else {
+                if (apellido.trim() === "") {
+                    mensaje = "-Los Apellidos son requerido.";
+                }
+
+                if (nombre.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Los Nombres son requeridos.";
+                    } else {
+                        mensaje = mensaje + "\n-Los Nombres son requeridos.";
+                    }
+                }
+
+                if (direccion1.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-La Dirección 1 es requerida.";
+                    } else {
+                        mensaje = mensaje + "\n-La Dirección 1 es requerida.";
+                    }
+                }
+
+                if (pais.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El país es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El país es requerido.";
+                    }
+                }
+
+                if (depto.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El departamento es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El departamento es requerido.";
+                    }
+                }
+
+                if (muni.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El municipio es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El municipio es requerido.";
+                    }
+                }
+
+                if (Correo.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El Correo Personal es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El Correo Personal es requerido.";
+                    }
+                }
+
+                if (telefono.length > 0 && telefono.length <= 7) {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El Teléfono debe de tener 8 carácteres.";
+                    } else {
+                        mensaje = mensaje + "\n-El Teléfono debe de tener 8 carácteres.";
+                    }
+                }
+
+                if (telefono.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El Teléfono es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El Teléfono es requerido.";
+                    }
+
+                }
+
+                if (foto.trim() === "" && foto2.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-La fotografía es requerida.";
+                    } else {
+                        mensaje = mensaje + "\n-La fotografía es requerida.";
+                    }
+                }
+
+                if (nit.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El NIT para el recibo es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El NIT para el recibo es requerido.";
+                    }
+                }
+
+                if (direccionR1.trim() === "" && nombreR.trim() !== "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-La Dirección 1 para el recibo es requerida.";
+                    } else {
+                        mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
+                    }
+                }
+
+
+
+                if (paisN.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El país para el recibo es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El país para el recibo es requerido.";
+                    }
+                }
+
+                if (deptoN.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El departamento para el recibo es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El departamento para el recibo es requerido.";
+                    }
+                }
+
+                if (muniN.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El municipio para el recibo es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El municipio para el recibo es requerido.";
+                    }
+                }
+
+                if (mensaje.trim() !== "") {
+                    mensaje = mensaje.replace("/\n/g", "<br>");
+                    alert(mensaje);
                     return false;
-                } else if (TrueNit !== nit && nit !== "CF") {
-                    // Realiza las acciones necesarias si el valor es diferente de cero
-                    alert("El NIT ha cambiado, es necesario validar.");
-                    return false;
-                } else {
-                    if (apellido.trim() === "") {
-                        mensaje = "-Los Apellidos son requerido.";
-                    }
-
-                    if (nombre.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-Los Nombres son requeridos.";
-                        } else {
-                            mensaje = mensaje + "\n-Los Nombres son requeridos.";
-                        }
-                    }
-
-                    if (direccion1.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-La Dirección 1 es requerida.";
-                        } else {
-                            mensaje = mensaje + "\n-La Dirección 1 es requerida.";
-                        }
-                    }
-
-                    if (pais.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El país es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El país es requerido.";
-                        }
-                    }
-
-                    if (depto.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El departamento es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El departamento es requerido.";
-                        }
-                    }
-
-                    if (muni.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El municipio es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El municipio es requerido.";
-                        }
-                    }
-
-                    if (Correo.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El Correo Personal es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El Correo Personal es requerido.";
-                        }
-                    }
-
-                    if (telefono.length > 0 && telefono.length <= 7) {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El Teléfono debe de tener 8 carácteres.";
-                        } else {
-                            mensaje = mensaje + "\n-El Teléfono debe de tener 8 carácteres.";
-                        }
-                    }
-
-                    if (telefono.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El Teléfono es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El Teléfono es requerido.";
-                        }
-
-                    }
-
-                    if (foto.trim() === "" && foto2.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-La fotografía es requerida.";
-                        } else {
-                            mensaje = mensaje + "\n-La fotografía es requerida.";
-                        }
-                    }
-
-                    if (nit.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El NIT para el recibo es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El NIT para el recibo es requerido.";
-                        }
-                    }
-
-                    if (direccionR1.trim() === "" && nombreR.trim() !== "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-La Dirección 1 para el recibo es requerida.";
-                        } else {
-                            mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
-                        }
-                    }
-
-
-
-                    if (paisN.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El país para el recibo es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El país para el recibo es requerido.";
-                        }
-                    }
-
-                    if (deptoN.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El departamento para el recibo es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El departamento para el recibo es requerido.";
-                        }
-                    }
-
-                    if (muniN.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El municipio para el recibo es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El municipio para el recibo es requerido.";
-                        }
-                    }
-
-                    if (mensaje.trim() !== "") {
-                        mensaje = mensaje.replace("/\n/g", "<br>");
-                        alert(mensaje);
-                        return false;
-                    } else if (confirm("¿Está seguro de que su información es correcta?")) {
-                        $('#myModalActualizacion').css('display', 'block');
-                        __doPostBack('<%= BtnActualizar.ClientID %>', '');
+                } else if (confirm("¿Está seguro de que su información es correcta?")) {
+                    $('#myModal').css('display', 'none'); // Cierra #myModal cuando se abre para cargar documentos
+                    $('#myModalActualizacion').css('display', 'block');
+                    __doPostBack('<%= BtnActualizar.ClientID %>', '');
                     return true; // Permite continuar con la acción del botón
                 } else {
                     return false; // Cancela la acción del botón
@@ -1164,114 +1171,114 @@
             // Function to add the code
             function RBSi() {
                 $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
-                        if ($(this).is(':checked')) {
-                            $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
-                        $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
-                        $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
-                        $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
-                        $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
-                        $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
-                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPais.ClientID %>').val());
-                        $('#<%= MunicipioNit.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
-                        $('#<%= DepartamentoNit.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
-                        $('#<%= StateNIT.ClientID %>').val($('#<%= State.ClientID %>').val());
-                        $('#<%= txtNit.ClientID %>').val('CF');
-                        $('#<%= txtNit.ClientID %>').prop('disabled', true);
-                        $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
-                        $('#<%= TxtDiRe1.ClientID %>').prop('disabled', true);
-                        $('#<%= TxtDiRe2.ClientID %>').prop('disabled', true);
-                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', true);
-                        $('#<%= PaisNit.ClientID %>').prop('disabled', true);
-                        $('#<%= MunicipioNit.ClientID %>').prop('disabled', true);
-                        $('#<%= DepartamentoNit.ClientID %>').prop('disabled', true);
-                        $('#<%= lblActualizacion.ClientID %>').text('');
+                    if ($(this).is(':checked')) {
+                        $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+                            $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+                            $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
+                            $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
+                            $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
+                            $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
+                            $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPais.ClientID %>').val());
+                            $('#<%= MunicipioNit.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
+                            $('#<%= DepartamentoNit.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
+                            $('#<%= StateNIT.ClientID %>').val($('#<%= State.ClientID %>').val());
+                            $('#<%= txtNit.ClientID %>').val('CF');
+                            $('#<%= txtNit.ClientID %>').prop('disabled', true);
+                            $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
+                            $('#<%= TxtDiRe1.ClientID %>').prop('disabled', true);
+                            $('#<%= TxtDiRe2.ClientID %>').prop('disabled', true);
+                            $('#<%= TxtDiRe3.ClientID %>').prop('disabled', true);
+                            $('#<%= PaisNit.ClientID %>').prop('disabled', true);
+                            $('#<%= MunicipioNit.ClientID %>').prop('disabled', true);
+                            $('#<%= DepartamentoNit.ClientID %>').prop('disabled', true);
+                            $('#<%= lblActualizacion.ClientID %>').text('');
 
-                        // Hacer visible la fila Combos
-                        $('#<%= Combos.ClientID %>').hide();
-                        // Hacer visible la fila sustitucion de Combos
-                        $('#<%= sustituirCombos.ClientID %>').hide();
-                        }
-                    });
-                }
+                            // Hacer visible la fila Combos
+                            $('#<%= Combos.ClientID %>').hide();
+                            // Hacer visible la fila sustitucion de Combos
+                            $('#<%= sustituirCombos.ClientID %>').hide();
+                    }
+                });
+            }
 
-                // Call the function
-                RBSi();
-            });
+            // Call the function
+            RBSi();
+        });
 
         $(document).ready(function () {
             // Capturar el cambio de estado del RadioButton
             $('#<%= RadioButtonNombreSi.ClientID %>').change(function () {
-                    if ($(this).is(':checked')) {
-                        // El RadioButton ha sido marcado, ocultar la fila
-                        $('#<%= Combos.ClientID %>').hide();
-                    $('#<%= sustituirCombos.ClientID %>').show();
-                } else {
-                    // El RadioButton ha sido desmarcado, mostrar la fila
-                    $('#<%= Combos.ClientID %>').show();
-                    $('#<%= sustituirCombos.ClientID %>').hide();
-                    }
-                });
-
-                // Verificar el estado inicial del RadioButton al cargar la página
-                if ($('#<%= RadioButtonNombreSi.ClientID %>').is(':checked')) {
-                    // El RadioButton está marcado, ocultar la fila
+                if ($(this).is(':checked')) {
+                    // El RadioButton ha sido marcado, ocultar la fila
                     $('#<%= Combos.ClientID %>').hide();
-                $('#<%= sustituirCombos.ClientID %>').show();
-            } else {
-                // El RadioButton no está marcado, mostrar la fila
-                $('#<%= Combos.ClientID %>').show();
-                $('#<%= sustituirCombos.ClientID %>').hide();
+                        $('#<%= sustituirCombos.ClientID %>').show();
+                    } else {
+                        // El RadioButton ha sido desmarcado, mostrar la fila
+                        $('#<%= Combos.ClientID %>').show();
+                        $('#<%= sustituirCombos.ClientID %>').hide();
                 }
             });
+
+            // Verificar el estado inicial del RadioButton al cargar la página
+            if ($('#<%= RadioButtonNombreSi.ClientID %>').is(':checked')) {
+                // El RadioButton está marcado, ocultar la fila
+                $('#<%= Combos.ClientID %>').hide();
+                    $('#<%= sustituirCombos.ClientID %>').show();
+                } else {
+                    // El RadioButton no está marcado, mostrar la fila
+                    $('#<%= Combos.ClientID %>').show();
+                    $('#<%= sustituirCombos.ClientID %>').hide();
+            }
+        });
 
         $(document).ready(function () {
             // Function to add the code
             function RBNo() {
                 $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
-                        if ($(this).is(':checked')) {
-                            $('#<%= TxtNombreR.ClientID %>').val("");
-                        $('#<%= TxtApellidoR.ClientID %>').val("");
-                        $('#<%= TxtCasadaR.ClientID %>').val("");
-                        $('#<%= txtNit.ClientID %>').val("");
-                        $('#<%= TxtDiRe1.ClientID %>').val("");
-                        $('#<%= TxtDiRe2.ClientID %>').val("");
-                        $('#<%= TxtDiRe3.ClientID %>').val("");
-                        $('#<%= CmbPaisNIT.ClientID %>').val("");
-                        $('#<%= CmbDepartamentoNIT.ClientID %>').val("");
-                        $('#<%= CmbMunicipioNIT.ClientID %>').val("");
-                        $('#<%= StateNIT.ClientID %>').val("");
-                        $('#<%= txtNit.ClientID %>').prop('disabled', false);
-                        $('#<%= ValidarNIT.ClientID %>').prop('disabled', false);
-                        $('#<%= TxtDiRe1.ClientID %>').prop('disabled', false);
-                        $('#<%= TxtDiRe2.ClientID %>').prop('disabled', false);
-                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', false);
-                        $('#<%= CmbPaisNIT.ClientID %>').prop('disabled', false);
-                        $('#<%= CmbDepartamentoNIT.ClientID %>').prop('disabled', false);
-                        $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);
-                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
-                        // Hacer visible la fila Combos
-                        $('#<%= Combos.ClientID %>').show();
-                        $('#<%= sustituirCombos.ClientID %>').hide();
+                    if ($(this).is(':checked')) {
+                        $('#<%= TxtNombreR.ClientID %>').val("");
+                            $('#<%= TxtApellidoR.ClientID %>').val("");
+                            $('#<%= TxtCasadaR.ClientID %>').val("");
+                            $('#<%= txtNit.ClientID %>').val("");
+                            $('#<%= TxtDiRe1.ClientID %>').val("");
+                            $('#<%= TxtDiRe2.ClientID %>').val("");
+                            $('#<%= TxtDiRe3.ClientID %>').val("");
+                            $('#<%= CmbPaisNIT.ClientID %>').val("");
+                            $('#<%= CmbDepartamentoNIT.ClientID %>').val("");
+                            $('#<%= CmbMunicipioNIT.ClientID %>').val("");
+                            $('#<%= StateNIT.ClientID %>').val("");
+                            $('#<%= txtNit.ClientID %>').prop('disabled', false);
+                            $('#<%= ValidarNIT.ClientID %>').prop('disabled', false);
+                            $('#<%= TxtDiRe1.ClientID %>').prop('disabled', false);
+                            $('#<%= TxtDiRe2.ClientID %>').prop('disabled', false);
+                            $('#<%= TxtDiRe3.ClientID %>').prop('disabled', false);
+                            $('#<%= CmbPaisNIT.ClientID %>').prop('disabled', false);
+                            $('#<%= CmbDepartamentoNIT.ClientID %>').prop('disabled', false);
+                            $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);
+                            $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
+                            // Hacer visible la fila Combos
+                            $('#<%= Combos.ClientID %>').show();
+                            $('#<%= sustituirCombos.ClientID %>').hide();
 
-                        var deptos = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>');
-                        var muni = document.getElementById('<%= CmbMunicipioNIT.ClientID %>');
-                            while (deptos.options.length > 0) {
-                                deptos.remove(0);
-                            }
-                            while (muni.options.length > 0) {
-                                muni.remove(0);
-                            }
-                            //llenadoPaisnit();
-                            //llenadoDepartamentoNit();
-                            //llenadoMunicipioNIT();
+                            var deptos = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>');
+                            var muni = document.getElementById('<%= CmbMunicipioNIT.ClientID %>');
+                        while (deptos.options.length > 0) {
+                            deptos.remove(0);
                         }
-                    });
-                }
+                        while (muni.options.length > 0) {
+                            muni.remove(0);
+                        }
+                        //llenadoPaisnit();
+                        //llenadoDepartamentoNit();
+                        //llenadoMunicipioNIT();
+                    }
+                });
+            }
 
-                // Call the function
-                RBNo();
+            // Call the function
+            RBNo();
 
-            });
+        });
 
         $('.close').click(function () {
             $('#myModal').css('display', 'none');
@@ -1280,86 +1287,86 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtNombre.ClientID %>').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                        ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                    $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
-                    }
-                });
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                        $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+                }
             });
+        });
 
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtApellido.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                        ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                    $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
-                    }
-                });
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                        $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+                }
             });
+        });
 
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO DE CASADA EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtCasada.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                        ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                    $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
-                    }
-                });
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                        $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
+                }
             });
+        });
 
         //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 1 EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtDireccion.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                        ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                    $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
-                    }
-                });
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                        $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
+                }
             });
+        });
 
         //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 2 EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtDireccion2.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                        ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                    $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
-                    }
-                });
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                        $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
+                }
             });
+        });
 
         //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 3 EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtDireccion3.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                        ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                    $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
-                    }
-                });
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                        $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
+                }
             });
+        });
 
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO PAIS EN EL RECIBO
         $(document).ready(function () {
             $('#<%= CmbPaisNIT.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                        ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
-                    $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
-                    }
-                });
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
+                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
+                            $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
+                        $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
+                }
             });
+        });
 
         function VerificarCantidadTelefono(sender, args) {
             args.IsValid = (args.Value.length >= 7);
@@ -1369,10 +1376,10 @@
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'true';
-                        stream.getTracks().forEach(function (track) {
-                            track.stop();
-                        });
-                    })
+                    stream.getTracks().forEach(function (track) {
+                        track.stop();
+                    });
+                })
                 .catch(function (error) {
                 });
         }
@@ -1397,86 +1404,86 @@
         //FUNCION PARA EVITAR QUE SEA INGRESADO EL -
         $(document).ready(function () {
             $('#<%= txtNit.ClientID %>').on('keypress', function (event) {
-                    var keyCode = event.which || event.keyCode;
-                    var character = String.fromCharCode(keyCode);
-                    if (character === '-') {
-                        event.preventDefault();
-                        alert('No se permite el ingreso del guín (-)');
-                    }
-                });
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+                if (character === '-') {
+                    event.preventDefault();
+                    alert('No se permite el ingreso del guín (-)');
+                }
             });
+        });
 
         //Valdar Numeros de telefono
         $(document).ready(function () {
             $('#<%= txtTelefono.ClientID %>').on('input', function () {
-                    var inputValue = $(this).val();
-                    var numericValue = inputValue.replace(/[^0-9]/g, '');
-                    $(this).val(numericValue);
-                });
-
-                $('#<%= txtTelefono.ClientID %>').on('keypress', function (event) {
-                    var keyCode = event.which || event.keyCode;
-                    var character = String.fromCharCode(keyCode);
-
-                    if (!/^[0-9]+$/.test(character)) {
-                        event.preventDefault();
-                        alert('Solo se permiten ingresar números.');
-                    }
-                });
+                var inputValue = $(this).val();
+                var numericValue = inputValue.replace(/[^0-9]/g, '');
+                $(this).val(numericValue);
             });
+
+            $('#<%= txtTelefono.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+
+                if (!/^[0-9]+$/.test(character)) {
+                    event.preventDefault();
+                    alert('Solo se permiten ingresar números.');
+                }
+            });
+        });
 
         //Detectar cambio de nit
         $(document).ready(function () {
             $('#<%= txtNit.ClientID %>').on('input', function () {
-                    var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
-                    var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
-                    var labelValidacion = $('#<%= ValidacionNit.ClientID %>').val().trim();
+                var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
+                var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
+                var labelValidacion = $('#<%= ValidacionNit.ClientID %>').val().trim();
 
-                    if (txtNit !== TrueNit || txtNit !== 'CF') {
-                        $('#<%= ValidacionNit.ClientID %>').val("1");
-                } else {
-                    $('#<%= ValidacionNit.ClientID %>').val("0");
-                        TrueNit.text(txtNit);
-                    }
-                });
+                if (txtNit !== TrueNit || txtNit !== 'CF') {
+                    $('#<%= ValidacionNit.ClientID %>').val("1");
+                    } else {
+                        $('#<%= ValidacionNit.ClientID %>').val("0");
+                    TrueNit.text(txtNit);
+                }
             });
+        });
 
         document.addEventListener("DOMContentLoaded", function () {
             // Obtenemos el elemento de video y la imagen en JavaScript
             const videoElement = document.getElementById("videoElement");
             const imgBase = document.getElementById("<%= ImgBase.ClientID %>");
-                const canvas = document.getElementById("canvas");
-                const ctx = canvas.getContext("2d");
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
 
-                // Cuando el video esté listo, obtenemos las dimensiones y las aplicamos a la imagen y el canvas
-                videoElement.onloadedmetadata = function () {
-                    const videoWidth = videoElement.videoWidth;
-                    const videoHeight = videoElement.videoHeight;
+            // Cuando el video esté listo, obtenemos las dimensiones y las aplicamos a la imagen y el canvas
+            videoElement.onloadedmetadata = function () {
+                const videoWidth = videoElement.videoWidth;
+                const videoHeight = videoElement.videoHeight;
 
-                    const maxWidth = 375;
-                    const maxHeight = 275;
+                const maxWidth = 375;
+                const maxHeight = 275;
 
-                    // Calculamos las dimensiones para la imagen considerando la relación de aspecto
-                    let newWidth, newHeight;
-                    if (videoWidth / videoHeight > maxWidth / maxHeight) {
-                        newWidth = maxWidth;
-                        newHeight = videoHeight * (maxWidth / videoWidth);
-                    } else {
-                        newHeight = maxHeight;
-                        newWidth = videoWidth * (maxHeight / videoHeight);
-                    }
+                // Calculamos las dimensiones para la imagen considerando la relación de aspecto
+                let newWidth, newHeight;
+                if (videoWidth / videoHeight > maxWidth / maxHeight) {
+                    newWidth = maxWidth;
+                    newHeight = videoHeight * (maxWidth / videoWidth);
+                } else {
+                    newHeight = maxHeight;
+                    newWidth = videoWidth * (maxHeight / videoHeight);
+                }
 
-                    // Aplicamos las dimensiones a la imagen
-                    imgBase.style.width = newWidth + "px";
-                    imgBase.style.height = newHeight + "px";
+                // Aplicamos las dimensiones a la imagen
+                imgBase.style.width = newWidth + "px";
+                imgBase.style.height = newHeight + "px";
 
-                    // Aplicamos las dimensiones al canvas
-                    canvas.style.width = newWidth + "px";
-                    canvas.style.height = newHeight + "px";
-                    canvas.width = newWidth;
-                    canvas.height = newHeight;
-                };
-            });
+                // Aplicamos las dimensiones al canvas
+                canvas.style.width = newWidth + "px";
+                canvas.style.height = newHeight + "px";
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+            };
+        });
 
         function mostrarModalEspera() {
             var modal = document.getElementById("myModalEspera");

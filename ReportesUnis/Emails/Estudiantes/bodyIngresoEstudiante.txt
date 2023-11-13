@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>    
+<body>
+    <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
+        <div style="background-color: #ffffff; max-width: 600px; margin: 0 auto; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #000;">Infirmación recibida</h3>
+            <p style="color: #000;">Su información ha sido recibida y sera validada por un operador.</p>
+            <p style="color: #000;">Se le notificará más adelante si sus datos fueron aceptados o rechazados..</p>
+        </div>
+    </div>
+</body>
+</html>

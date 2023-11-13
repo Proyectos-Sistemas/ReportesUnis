@@ -96,6 +96,9 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Build.Framework, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Build.Framework.17.7.2\lib\net472\Microsoft.Build.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Extensions.Configuration, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Configuration.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.dll</HintPath>
@@ -172,6 +175,10 @@
     </Reference>
     <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.1016.290\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Setup.Configuration.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\lib\net35\Microsoft.VisualStudio.Setup.Configuration.Interop.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -416,6 +423,30 @@
     <Content Include="CredencialesNIT.txt" />
     <Content Include="Default.aspx" />
     <Content Include="DirectorioUnis.aspx" />
+    <Content Include="Emails\bodyConfirmacionEmpleados.txt" />
+    <Content Include="Emails\bodyConfirmacionFotoEmpleados.txt" />
+    <Content Include="Emails\bodyIngresoEmpleados-Operador.txt" />
+    <Content Include="Emails\bodyIngresoEmpleados.txt" />
+    <Content Include="Emails\bodyRechazoEmpleados.txt" />
+    <Content Include="Emails\bodyRechazoFotoEmpleados.txt" />
+    <Content Include="Emails\datosConfirmacionEmpleados.txt" />
+    <Content Include="Emails\datosConfirmacionFotoEmpleados.txt" />
+    <Content Include="Emails\datosIngresoEmpleados-Operador.txt" />
+    <Content Include="Emails\datosIngresoEmpleados.txt" />
+    <Content Include="Emails\datosRechazoEmpleados.txt" />
+    <Content Include="Emails\datosRechazoFotoEmpleados.txt" />
+    <Content Include="Emails\Estudiantes\bodyConfirmacionEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\bodyConfirmacionFotoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\bodyIngresoEstudiante-Operador.txt" />
+    <Content Include="Emails\Estudiantes\bodyIngresoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\bodyRechazoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\bodyRechazoFotoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\datosConfirmacionEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\datosConfirmacionFotoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\datosIngresoEstudiante-Operador.txt" />
+    <Content Include="Emails\Estudiantes\datosIngresoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\datosRechazoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\datosRechazoFotoEstudiante.txt" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -468,6 +499,7 @@
       <DependentUpon>DataSetSebiPagos.xsd</DependentUpon>
     </Content>
     <EmbeddedResource Include="rptLogInterfazHCMCS.rdlc" />
+    <Content Include="Logs\06112023 102136.txt" />
     <Content Include="Manuales\Manual borrador.docx" />
     <Content Include="Manuales\ManualActivacionCamara.pdf" />
     <None Include="Oracle.DataAccess.Common.Configuration.Section.xsd">
@@ -860,9 +892,11 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets'))" />
     <Error Condition="!Exists('..\packages\Uno.SourceGenerationTasks.4.1.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Uno.SourceGenerationTasks.4.1.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\build\Microsoft.VisualStudio.Setup.Configuration.Interop.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\build\Microsoft.VisualStudio.Setup.Configuration.Interop.targets'))" />
   </Target>
   <Import Project="..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" />
   <Import Project="..\packages\Uno.SourceGenerationTasks.4.1.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets" Condition="Exists('..\packages\Uno.SourceGenerationTasks.4.1.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" />
+  <Import Project="..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\build\Microsoft.VisualStudio.Setup.Configuration.Interop.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\build\Microsoft.VisualStudio.Setup.Configuration.Interop.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,23 +1,12 @@
-﻿using DocumentFormat.OpenXml.Office.Word;
-using Microsoft.Ajax.Utilities;
-using NPOI.SS.Formula.Functions;
+﻿using Microsoft.Ajax.Utilities;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Windows.Resources;
-using static System.Windows.Forms.AxHost;
-using Windows.Devices.Sensors;
-using Windows.UI.Xaml.Automation.Text;
-using DocumentFormat.OpenXml.Spreadsheet;
 using System.Net;
 using System.Web.Services;
 using System.Xml;
@@ -58,11 +47,11 @@ namespace ReportesUnis
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
             if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("ACCESO_CARNETIZACION") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
             {
                 Response.Redirect(@"~/Default.aspx");
             }
+
             if (!IsPostBack)
             {
                 LeerInfoTxt();
@@ -78,44 +67,7 @@ namespace ReportesUnis
             }
         }
 
-        protected void CmbTipo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            llenado("CODIGO = '" + CmbCarne.Text + "'");
-            if (txtCantidad.Text != "0" && !txtCantidad.Text.IsNullOrWhiteSpace())
-            {
-                for (int i = 0; i < Convert.ToInt32(txtCantidad.Text); i++)
-                {
-                    HDocumentacion.Visible = true;
-                    if (i == 0)
-                    {
-                        ImgDPI1.Visible = true;
-                        ImgDPI1.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(" + (i + 1) + ").jpg";
-                    }
-                    if (i == 1)
-                    {
-                        ImgDPI2.Visible = true;
-                        ImgDPI2.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(" + (i + 1) + ").jpg";
-                    }
-                }
-                if (txtCantidad.Text == "1")
-                {
-                    ImgDPI2.Visible = false;
-                }
-            }
-            else
-            {
-                ImgDPI1.Visible = false;
-                ImgDPI2.Visible = false;
-                ImgFoto1.Visible = false;
-            }
-            if (!CmbCarne.Text.IsNullOrWhiteSpace())
-            {
-                lblActualizacion.Text = null;
-            }
-            HFoto.Visible = true;
-            ImgFoto1.ImageUrl = "~/Usuarios/FotosConfirmacion/" + CmbCarne.Text + ".jpg";
-        }
-
+        //FUNCIONES
         private void Buscar(string confirmacion)
         {
             string constr = TxtURL.Text;
@@ -137,10 +89,9 @@ namespace ReportesUnis
                 }
             }
         }
-
-        //Lectura de archivo txt para la conexion
         void LeerInfoTxt()
         {
+            //Lectura de archivo txt para la conexion ORACLE
             string rutaCompleta = CurrentDirectory + "conexion.txt";
             string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
@@ -152,6 +103,7 @@ namespace ReportesUnis
         }
         void LeerInfoTxtSQL()
         {
+            //Lectura de archivo txt para la conexion SQL
             string rutaCompleta = CurrentDirectory + "conexionSQL.txt";
             string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
@@ -161,10 +113,8 @@ namespace ReportesUnis
                 file.Close();
             }
         }
-
         private void llenado(string where)
         {
-
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -227,7 +177,6 @@ namespace ReportesUnis
                 }
             }
         }
-
         private void LimpiarCampos()
         {
             TxtDpi.Text = null;
@@ -253,14 +202,12 @@ namespace ReportesUnis
             TxtCorreoPersonal.Text = null;
             TxtRol.Text = null;
         }
-
         private void Rechazar(string Carnet)
         {
             if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
             {
                 lblActualizacion.Text = "";
                 string constr = TxtURL.Text;
-                //int ID = 30000;
                 using (OracleConnection con = new OracleConnection(constr))
                 {
                     con.Open();
@@ -273,7 +220,6 @@ namespace ReportesUnis
                             int cargaFt = 0;
                             try
                             {
-
                                 File.Delete(txtPath.Text + Carnet + ".jpg");
                                 cargaFt = 0;
                             }
@@ -281,6 +227,7 @@ namespace ReportesUnis
                             {
                                 cargaFt = 1;
                             }
+
                             if (cargaFt == 0)
                             {
                                 cmd.Connection = con;
@@ -291,6 +238,7 @@ namespace ReportesUnis
                                 Buscar("1");
                                 File.Delete(txtPath.Text + Carnet + ".jpg");
                                 File.Delete(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + Carnet + ".jpg");
+                                File.Delete(CurrentDirectory + "/Usuarios/UltimasCargas/" + Carnet + ".jpg");
                                 for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
                                 {
                                     File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
@@ -303,14 +251,12 @@ namespace ReportesUnis
                             {
                                 lblActualizacion.Text = "Ocurrió un error al rechazar la solicitud";
                             }
-
                         }
                         catch (Exception)
                         {
                             lblActualizacion.Text = "No se pudo eliminar la información a causa de un error interno.";
                             transaction.Rollback();
                         }
-
                     }
                 }
                 LimpiarCampos();
@@ -320,20 +266,6 @@ namespace ReportesUnis
                 lblActualizacion.Text = "Debe de seleccionar un número de carnet para poder rechazar la información.";
             }
         }
-
-        protected void BtnRechazar_Click(object sender, EventArgs e)
-        {
-            if (CmbCarne.SelectedValue != " ")
-            {
-                Rechazar(CmbCarne.Text);
-            }
-            else
-            {
-                lblActualizacion.Text = "Debe de seleccionar un número de carnet para poder rechazar la información.";
-            }
-
-        }
-
         protected void Confirmar(string Carnet)
         {
             if (!TxtPrimerNombre.Text.IsNullOrWhiteSpace())
@@ -342,10 +274,13 @@ namespace ReportesUnis
                 string respuesta = null;
                 string fecha = DateTime.Now.ToString("yyyy-MM-dd");
                 QueryInsertBi();
+
                 if (ROLES.Value.Contains("Estudiante") || ROLES.Value.Contains("Profesor"))
                     respuesta = QueryActualizaNombre(Carnet);
+
                 controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + Carnet + "' AND FECH_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
                 controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + Carnet + "'");
+
                 if (respuesta == null)
                     respuesta = "0";
 
@@ -358,8 +293,6 @@ namespace ReportesUnis
                     }
 
                     respuesta = serviciosHCM();
-
-
                     if (respuesta == "0")
                     {
                         respuesta = "";
@@ -367,7 +300,7 @@ namespace ReportesUnis
                         if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                         {
                             //SE INGRESA LA INFORMACIÓN EN EL BANCO
-                            respuesta = ConsumoSQL(txtInsertBI.Text);
+                            respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
                             if (respuesta == "0")
                             {
                                 respuesta = ConsumoOracle(txtInsertApex.Text);
@@ -392,7 +325,6 @@ namespace ReportesUnis
                                                 respuesta = "0";
                                             }
                                         }
-
                                     }
                                 }
                             }
@@ -412,6 +344,7 @@ namespace ReportesUnis
                             File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
                         }
                         File.Delete(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + Carnet + ".jpg");
+                        File.Delete(CurrentDirectory + "/Usuarios/UltimasCargas/" + Carnet + ".jpg");
                         LimpiarCampos();
                     }
                     else
@@ -431,7 +364,6 @@ namespace ReportesUnis
                 lblActualizacion.Text = "Debe de seleccionar un número de carnet para poder confirmar la información.";
             }
         }
-
         protected void QueryInsertBi()
         {
             string constr = TxtURL.Text;
@@ -520,9 +452,9 @@ namespace ReportesUnis
                                     "||CEDULA||''','''" + //DECULA
                                     "||DEPTO_CEDULA||''',''' " + //DEPARTAMENTO CEDULA
                                     "||MUNI_CEDULA||''',''' " + //MUNICIPIO CEDULA
-                                    "||CARGO||''','''" + //CARGO
-                                    "||DEPTO||''',''' " + //DEPARTAMENTO 
-                                    "||FACULTAD||''','''" + //FACULTAD
+                                    "||FACULTAD||''','''" + //CARGO
+                                    "||FACULTAD||''',''' " + //DEPARTAMENTO 
+                                    "||DEPTO||''','''" + //FACULTAD
                                     "||CARNET||''','''" + //CODIGO
                                     "||TIPO_PERSONA||''','''" + //TIPO_PERSONA
                                     "||NO_CTA_BI||''',''' " + //NO CTA BI
@@ -557,7 +489,7 @@ namespace ReportesUnis
                                     "||DEPTO_RESIDENCIA||''','''" + //DEPTO_RESIDENCIA
                                     "||NORDEN||''','''" + //NO_ORDER
                                     "||OBSERVACIONES||''','''" + //OBSERVACIONES
-                                    "||PAIS_NACIONALIDAD||''','''" + //PAIS_NACIONALIDAD
+                                    "||'GUATEMALA'||''','''" + //PAIS_NACIONALIDAD
                                     "||PAIS_PASAPORTE||''','''" + //PAIS_PASAPORTE
                                     "||NO_PASAPORTE||''','''" + //NO_PASAPORTE
                                     "||PROFESION||''','''" + //PROFESION
@@ -647,7 +579,7 @@ namespace ReportesUnis
                                        ",[O_Condmig] " +
                                        ",[Validar_Envio]) " +
                                     "VALUES ('''||CARNET||''','''" + // APELLIDO DE CASADA
-                                        "||CARGO||''','''" + //Carrera
+                                        "||FACULTAD||''','''" + //Carrera
                                         "||DIRECCION||''','''" + //DIRECCION
                                         "||ZONA||''','''" + //ZONA
                                         "||COLONIA||''','''" + //COLONIA
@@ -722,9 +654,9 @@ namespace ReportesUnis
                 }
             }
         }
-
-        protected string QueryActualizaNombre(string emplid) //EN CAMPUS
+        protected string QueryActualizaNombre(string emplid) 
         {
+            //EN CAMPUS
             string constr = TxtURL.Text;
             string vchrApellidosCompletos = (TxtPrimerApellido.Text + " " + TxtSegundoApellido.Text + " " + TxtApellidoCasada.Text).TrimEnd();
             string TxtNombre = (TxtPrimerNombre.Text + " " + TxtSegundoNombre.Text).TrimEnd();
@@ -919,7 +851,6 @@ namespace ReportesUnis
                             lblActualizacion.Text = "Ocurrió un problema al confirmar la información ";
                             return "1";
                         }
-
                     }
                     catch (Exception)
                     {
@@ -929,7 +860,6 @@ namespace ReportesUnis
                     }
                 }
             }
-
         }
         protected void QueryUpdateApex(string Confirmación, string Solicitado, string Entrega, string FechaHora, string Accion, string Carne)
         {
@@ -972,7 +902,6 @@ namespace ReportesUnis
             }
             return retorno;
         }
-
         protected string ConsumoSQL(string Consulta)
         {
             string constr = TxtURLSql.Text;
@@ -1003,22 +932,9 @@ namespace ReportesUnis
             }
             return retorno;
         }
-
-        protected void BtnConfirmar_Click(object sender, EventArgs e)
-        {
-            if (CmbCarne.SelectedValue != " ")
-            {
-                string carne = CmbCarne.Text;
-                Confirmar(carne);
-            }
-            else
-            {
-                lblActualizacion.Text = "Debe de seleccionar un número de carnet para poder confirmar la información.";
-            }
-        }
-
         void LeerInfoTxtPath()
         {
+            //Lectura de archivo txt para la ruta de almacenamiento en el servidor
             string rutaCompleta = CurrentDirectory + "PathAlmacenamiento.txt";
             string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
@@ -1028,7 +944,6 @@ namespace ReportesUnis
                 file.Close();
             }
         }
-
         private string ActualizarNIT(string emplid)
         {
             string constr = TxtURL.Text;
@@ -1218,7 +1133,7 @@ namespace ReportesUnis
                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoR + "' " +
                                                "AND FIRST_NAME='" + TxtNombreR + "' AND SECOND_LAST_NAME='" + TxtCasadaR + "' " +
                                                "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-                        ;
+
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
@@ -1280,7 +1195,6 @@ namespace ReportesUnis
                         }
                         else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit >= 0 && ContadorEffdtNombreNit > 0)
                         {//UPDATE
-
                             UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
                                                 "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
                                                 "        <COLL_NAMES>" +
@@ -1293,11 +1207,9 @@ namespace ReportesUnis
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
                             contadorUD = contadorUD + 1;
-
                         }
                         else
                         {//UPDATE
-
                             UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
                                                 "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
                                                 "        <COLL_NAMES>" +
@@ -1310,7 +1222,6 @@ namespace ReportesUnis
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
                             contadorUD = contadorUD + 1;
-
                         }
 
                         //ACTUALIZA NIT
@@ -1319,7 +1230,6 @@ namespace ReportesUnis
                             //INSERTA EL NIT
                             cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSTEM (EMPLID, EXTERNAL_SYSTEM, EFFDT, EXTERNAL_SYSTEM_ID) VALUES ('" + emplid + "','NRE','" + DateTime.Now.ToString("dd/MM/yyyy") + "','" + NIT + "')";
                             cmd.ExecuteNonQuery();
-
 
                             if (ContadorNit2 == 0)
                             {
@@ -1443,10 +1353,8 @@ namespace ReportesUnis
                         return "1";
                     }
                 }
-
             }
         }
-
         protected string Upload(string Carnet)
         {
             string ImagenData = "";
@@ -1471,7 +1379,6 @@ namespace ReportesUnis
                         }
                     }
                     con.Close();
-
                 }
             }
             string mensaje = "";
@@ -1489,7 +1396,6 @@ namespace ReportesUnis
                 //Nombre del archiov que guarda la bitácora
                 string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
 
-
                 //Se crea un nuevo archivo para guardar la bitacora de la ejecución
                 CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
 
@@ -1498,7 +1404,6 @@ namespace ReportesUnis
                 GuardarBitacora(ArchivoBitacora, "");
                 GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    EMPLID                      Estado                 Descripción                                    ");
                 GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
-
 
                 string EmplidFoto = Carnet;
                 string EmplidExisteFoto = "";
@@ -1539,10 +1444,8 @@ namespace ReportesUnis
                 using (OracleConnection con = new OracleConnection(constr))
                 {
                     string query = "";
-
                     using (OracleCommand cmd = new OracleCommand(query))
                     {
-
                         if (EmplidExisteFoto != "") //Se actualiza la fotografía
                         {
                             cmd.CommandText = "UPDATE SYSADM.PS_EMPL_PHOTO SET PSIMAGEVER=(TO_NUMBER((TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY-MM-DD') - TO_DATE(TO_CHAR('1999-12-31'), 'YYYY-MM-DD'))* 86400) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP,'hh24missff2'))), EMPLOYEE_PHOTO=:Fotografia WHERE EMPLID = '" + EmplidFoto + "'";
@@ -1561,7 +1464,6 @@ namespace ReportesUnis
                         try
                         {
                             con.Open();
-
                             int FilasAfectadas = cmd.ExecuteNonQuery();
                             con.Close();
                             if (FilasAfectadas == 0)
@@ -1608,20 +1510,17 @@ namespace ReportesUnis
             }
             return mensaje;
         }
-
-        //Función para guardar bitacora en el archivo .txt
         public void GuardarBitacora(string ArchivoBitacora, string DescripcionBitacora)
         {
+            //Función para guardar bitacora en el archivo .txt
             //Guarda nueva línea para el registro de bitácora en el serividor
             File.AppendAllText(ArchivoBitacora, DescripcionBitacora + Environment.NewLine);
         }
-
-        //Crea un archivo .txt para guardar bitácora
         public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
         {
-            using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
+            //Crea un archivo .txt para guardar bitácora
+            StreamWriter sw = File.CreateText(archivoBitacora);
         }
-
         protected int ControlRenovacion(string cadena)
         {
             string constr = TxtURL.Text;
@@ -1640,7 +1539,6 @@ namespace ReportesUnis
                         {
                             control = reader["CONTADOR"].ToString();
                         }
-
                         con.Close();
                     }
                     catch (Exception)
@@ -1651,7 +1549,6 @@ namespace ReportesUnis
             }
             return Convert.ToInt32(control);
         }
-
         private string consultaGetworkers(string expand, string expandUser)
         {
             credencialesWS(archivoWS, "Consultar");
@@ -1669,7 +1566,6 @@ namespace ReportesUnis
             string respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/workers?q=PersonId=" + personID + "&effectiveDate=" + dtFechaBuscarPersona + "&expand=" + expand, user, pass);
             return respuesta;
         }
-
         private string consultaGetImagenes(string consultar)
         {
             credencialesWS(archivoWS, "Consultar");
@@ -1687,7 +1583,6 @@ namespace ReportesUnis
             string respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/emps/" + consultar, user, pass);
             return respuesta;
         }
-
         private string consultaUser(string expand, string personId)
         {
             credencialesWS(archivoWS, "Consultar");
@@ -1696,13 +1591,10 @@ namespace ReportesUnis
             var pass = Variables.wsPassword;
             var dtFechaBuscarPersona = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             string respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/workers?q=PersonId=" + personId + "&effectiveDate=" + dtFechaBuscarPersona + "&expand=" + expand, user, pass);
-
             return respuesta;
         }
-
         private void updatePatch(string info, string personId, string tables, string ID, string consulta, string effective, string esquema)
         {
-
             credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
@@ -1710,7 +1602,6 @@ namespace ReportesUnis
             int respuesta = api.Patch(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/" + esquema + personId + "/child/" + tables + "/" + ID, user, pass, info, consulta, effective);
             respuestaPatch = respuesta + respuestaPatch;
         }
-
         private void create(string personId, string tables, string datos, string EXTEN)
         {
             credencialesWS(archivoWS, "Consultar");
@@ -1720,11 +1611,9 @@ namespace ReportesUnis
             int respuesta = api.Post(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/" + EXTEN + personId + "/child/" + tables, datos, user, pass);
             respuestaPost = respuestaPost + respuesta;
         }
-
-
-        //Funcion para extraerlos Id's
         public static string getBetween(string strSource, string strStart, string strEnd)
         {
+            //Funcion para extraer contenido que se encuentre en una cadena
             int Start, End;
             if (strSource.Contains(strStart) && strSource.Contains(strEnd))
             {
@@ -1737,12 +1626,10 @@ namespace ReportesUnis
                 return "";
             }
         }
-
-        //Función para obtener información de acceso al servicio de Campus
         private static void credencialesWS(string RutaConfiguracion, string strMetodo)
         {
+            //Función para obtener información de acceso al servicio de Campus
             int cont = 0;
-
             foreach (var line in File.ReadLines(RutaConfiguracion))
             {
                 if (cont == 1)
@@ -1754,7 +1641,6 @@ namespace ReportesUnis
                 cont++;
             }
         }
-
         public int contadorID(int largo, string[] cadena)
         {
             int posicion = 0;
@@ -1767,16 +1653,13 @@ namespace ReportesUnis
             }
             return posicion;
         }
-
         public int contadorSlash(int largo, string cadena)
         {
             int contador = 0;
             string letra;
-
             for (int i = 0; i < largo; i++)
             {
                 letra = cadena.Substring(i, 1);
-
                 if (letra == "\"")
                 {
                     contador++;
@@ -1784,12 +1667,10 @@ namespace ReportesUnis
             }
             return contador;
         }
-
         public string DecodeStringFromBase64(string stringToDecode)
         {
             return Encoding.UTF8.GetString(Convert.FromBase64String(stringToDecode));
         }
-
         public string serviciosHCM()
         {
             string constr = TxtURL.Text;
@@ -1829,12 +1710,10 @@ namespace ReportesUnis
                             }
                         }
                         con.Close();
-
                     }
                 }
 
                 //ACTUALIZACION-CREACION DE FOTOGRAFIA
-
                 string pid = getBetween(consulta, "\"PhotoId\" :", ",");
                 string consultaperfil = pid + ",\n      \"PrimaryFlag\" : ";
                 string perfil = getBetween(consulta, consultaperfil, ",\n");
@@ -1865,14 +1744,12 @@ namespace ReportesUnis
                 {
                     return "1";
                 }
-
             }
             catch (Exception)
             {
                 return "1";
-            }            
+            }
         }
-
         public string LeerBodyEmail(string archivo)
         {
             string rutaCompleta = CurrentDirectory + "/Emails/" + archivo;
@@ -1899,14 +1776,11 @@ namespace ReportesUnis
                 subjet = linea2;
                 to = linea4;
                 file.Close();
-
                 // Corrección: Inicializa un nuevo array y asigna los valores
                 datos = new string[] { subjet, to };
             }
-
             return datos;
         }
-
         public void EnvioCorreo(string body, string subject)
         {
 
@@ -1918,7 +1792,6 @@ namespace ReportesUnis
 
             //Crear un objeto MailItem
             var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
-
 
             //Configuracion campos para envio del correo
             mailItem.Subject = datos[0]; //Asunto del correo
@@ -1938,11 +1811,77 @@ namespace ReportesUnis
 
         }
 
+        //EVENTOS
+        protected void CmbTipo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            llenado("CODIGO = '" + CmbCarne.Text + "'");
+            if (txtCantidad.Text != "0" && !txtCantidad.Text.IsNullOrWhiteSpace())
+            {
+                for (int i = 0; i < Convert.ToInt32(txtCantidad.Text); i++)
+                {
+                    HDocumentacion.Visible = true;
+                    if (i == 0)
+                    {
+                        ImgDPI1.Visible = true;
+                        ImgDPI1.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(" + (i + 1) + ").jpg";
+                    }
+
+                    if (i == 1)
+                    {
+                        ImgDPI2.Visible = true;
+                        ImgDPI2.ImageUrl = "~/Usuarios/DPI/" + CmbCarne.Text + "(" + (i + 1) + ").jpg";
+                    }
+                }
+
+                if (txtCantidad.Text == "1")
+                {
+                    ImgDPI2.Visible = false;
+                }
+            }
+            else
+            {
+                ImgDPI1.Visible = false;
+                ImgDPI2.Visible = false;
+                ImgFoto1.Visible = false;
+            }
+
+            if (!CmbCarne.Text.IsNullOrWhiteSpace())
+            {
+                lblActualizacion.Text = null;
+            }
+
+            HFoto.Visible = true;
+            ImgFoto1.ImageUrl = "~/Usuarios/FotosConfirmacion/" + CmbCarne.Text + ".jpg";
+        }
+        protected void BtnRechazar_Click(object sender, EventArgs e)
+        {
+            if (CmbCarne.SelectedValue != " ")
+            {
+                Rechazar(CmbCarne.Text);
+            }
+            else
+            {
+                lblActualizacion.Text = "Debe de seleccionar un número de carnet para poder rechazar la información.";
+            }
+        }
+        protected void BtnConfirmar_Click(object sender, EventArgs e)
+        {
+            if (CmbCarne.SelectedValue != " ")
+            {
+                string carne = CmbCarne.Text;
+                Confirmar(carne);
+            }
+            else
+            {
+                lblActualizacion.Text = "Debe de seleccionar un número de carnet para poder confirmar la información.";
+            }
+        }
+
         /*-------------------------------------------INICIAN FUNCIONES PARA METODO SOAP-------------------------------------------*/
 
-        //Función para limpiar variables
         private static void limpiarVariables()
         {
+            //Función para limpiar variables
             //Cuerpo del servicio web (enviar información) 
             Variables.soapBody = "";
             Variables.strDocumentoRespuesta = "";
@@ -1953,13 +1892,11 @@ namespace ReportesUnis
             //Contraseña del servicio web
             Variables.wsPassword = "";
         }
-
         public class Variables
         {
             //Cuerpo del servicio web (enviar información) 
             public static string soapBody;
             public static string strDocumentoRespuesta;
-
             //Direción del serivicio web
             public static string wsUrl = "";
             //Usuario del servicio web
@@ -1969,12 +1906,10 @@ namespace ReportesUnis
             //Acción del servicio web
             public static string wsAction = "";
         }
-
-        //Función para obtener información de acceso al servicio de Campus
         private static void credencialesEndPoint(string RutaConfiguracion, string strMetodo)
         {
+            //Función para obtener información de acceso al servicio de Campus
             int cont = 0;
-
             foreach (var line in File.ReadLines(RutaConfiguracion))
             {
                 if (cont == 1)
@@ -1986,17 +1921,16 @@ namespace ReportesUnis
                 cont++;
             }
         }
-        //Función para crear el elemento raíz para solicitud web 
         private static XmlDocument CreateSoapEnvelope(string xmlString)
         {
+            //Función para crear el elemento raíz para solicitud web 
             XmlDocument soapEnvelopeDocument = new XmlDocument();
             soapEnvelopeDocument.LoadXml(xmlString);
             return soapEnvelopeDocument;
         }
-
-        //Función para crear el encabezado para la Solicitud web
         private static HttpWebRequest CreateWebRequest(string url, string action)
         {
+            //Función para crear el encabezado para la Solicitud web
             HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
             webRequest.Headers.Add("SOAPAction", action);
             webRequest.ContentType = "text/xml;charset=\"utf-8\"";
@@ -2004,19 +1938,17 @@ namespace ReportesUnis
             webRequest.Method = "POST";
             return webRequest;
         }
-
-        //Función para crear unificar toda la estructura de la solicitud web
         private static void InsertSoapEnvelopeIntoWebRequest(XmlDocument soapEnvelopeXml, HttpWebRequest webRequest)
         {
+            //Función para crear unificar toda la estructura de la solicitud web
             using (Stream stream = webRequest.GetRequestStream())
             {
                 soapEnvelopeXml.Save(stream);
             }
         }
-
-        //Función para llamar un servicio web de Campus
         public string LlamarWebServiceCampus(string _url, string _action, string _xmlString)
         {
+            //Función para llamar un servicio web de Campus
             XmlDocument soapEnvelopeXml = CreateSoapEnvelope(_xmlString);
             HttpWebRequest webRequest = CreateWebRequest(_url, _action);
             InsertSoapEnvelopeIntoWebRequest(soapEnvelopeXml, webRequest);
@@ -2047,7 +1979,6 @@ namespace ReportesUnis
                     soapResult = stream.ReadToEnd();
                 }
                 return soapResult;
-
             }
             catch (Exception ex)
             {
@@ -2100,7 +2031,6 @@ namespace ReportesUnis
             }
         }
 
-
         [WebMethod]
         public string Consultar()
         {
@@ -2137,7 +2067,6 @@ namespace ReportesUnis
                 //Crea la respuesta cuando se genera una excepción web.
                 Variables.strDocumentoRespuesta = Respuesta("05", "ERROR AL CONSULTAR EL REPORTE");
                 return Variables.strDocumentoRespuesta;
-
             }
             try
             {
@@ -2149,10 +2078,9 @@ namespace ReportesUnis
                 return "0";
             }
         }
-
-        //Crea el cuerpo que se utiliza para hacer PATCH
         private static void CuerpoConsultaUD(string Usuario, string Pass, string EMPLID, string COLL_NAMES_PRI, string COLL_NAMES_PRF, string COLL_NAMES_NIT, string COLL_ADDRESSES_NIT)
         {
+            //Crea el cuerpo que se utiliza para hacer PATCH
             Variables.soapBody = @"<?xml version=""1.0""?>
                                  <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/M644328134.V1"">
                                     <soapenv:Header xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
@@ -2174,9 +2102,9 @@ namespace ReportesUnis
                                    </soapenv:Body>
                                 </soapenv:Envelope>";
         }
-        //Crea el cuerpo que se utiliza para hacer POST
         private static void CuerpoConsultaUP(string Usuario, string Pass, string EMPLID, string COLL_NAMES_PRI, string COLL_NAMES_PRF, string COLL_NAMES_NIT, string COLL_ADDRESSES_NIT)
         {
+            //Crea el cuerpo que se utiliza para hacer POST
             Variables.soapBody = @"<?xml version=""1.0""?>
                                  <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/M780623797.V1"">
                                     <soapenv:Header xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
@@ -2198,6 +2126,5 @@ namespace ReportesUnis
                                    </soapenv:Body>
                                 </soapenv:Envelope>";
         }
-
     }
 }

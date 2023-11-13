@@ -6,11 +6,8 @@ using System.Data.SqlClient;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using System.Web.Security;
 using ReportesUnis.API;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
@@ -39,15 +36,14 @@ namespace ReportesUnis
             if (!IsPostBack)
             {
                 llenadoGrid();
-
             }
             if (GridViewFotos.Rows.Count == 0)
             {
                 lblActualizacion.Text = "No hay información para confirmar.";
             }
-
         }
 
+        //FUNCIONES
         void llenadoGrid()
         {
             string[] archivos = Directory.GetFiles(rutaFisica);
@@ -58,11 +54,9 @@ namespace ReportesUnis
                 string nombreImagen = Path.GetFileName(archivo);
                 imagenes.Add(new { NombreImagen = nombreImagen });
             }
-
             GridViewFotos.DataSource = imagenes;
             GridViewFotos.DataBind();
         }
-
         void LeerInfoTxtPath()
         {
             string rutaCompleta = CurrentDirectory + "PathAlmacenamiento.txt";
@@ -118,10 +112,8 @@ namespace ReportesUnis
                 transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
                 using (OracleCommand cmd = new OracleCommand())
                 {
-
                     try
                     {
-
                         if (!ComandoConsulta.IsNullOrWhiteSpace())
                         {
                             cmd.Transaction = transaction;
@@ -129,7 +121,6 @@ namespace ReportesUnis
                             cmd.CommandText = ComandoConsulta;
                             cmd.ExecuteNonQuery();
                         }
-
                         transaction.Commit();
                         con.Close();
                         retorno = "0";
@@ -139,12 +130,10 @@ namespace ReportesUnis
                         transaction.Rollback();
                         retorno = "1";
                     }
-
                 }
             }
             return retorno;
         }
-
         protected string ConsumoSQL(string Consulta)
         {
             string constr = TxtURLSql.Text;
@@ -174,44 +163,6 @@ namespace ReportesUnis
             }
             return retorno;
         }
-
-        protected void ButtonSubmit_Click(object sender, EventArgs e)
-        {
-            foreach (GridViewRow row in GridViewFotos.Rows)
-            {
-                CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
-                if (checkBox.Checked)
-                {
-                    string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
-                    string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + nombre + "'";
-                    string respuesta = ConsumoOracle(cadena);
-                    if (respuesta == "0")
-                    {
-                        File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
-                        File.Delete(txtPath2.Text + row.Cells[1].Text);
-                        llenadoGrid();
-                        lblActualizacion.Text = "Se rechazaron las fotos seleccionadas.";
-                        EnvioCorreo("bodyRechazoFotoEmpleados.txt", "datosRechazoFotoEmpleados.txt");
-                    }
-                    else
-                    {
-                        lblActualizacion.Text = "Ocurrió un error al eliminar los registros";
-                    }
-                }
-            }
-        }
-
-        protected void GridViewFotos_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                Image image = (Image)e.Row.FindControl("Image1");
-                string nombreImagen = DataBinder.Eval(e.Row.DataItem, "NombreImagen").ToString();
-                string rutaImagen = Path.Combine("~" + txtPath.Text, nombreImagen);
-                image.ImageUrl = rutaImagen;
-            }
-        }
-
         protected void QueryInsertBi(string Carnet)
         {
             tipoPersona(Carnet);
@@ -301,9 +252,9 @@ namespace ReportesUnis
                                     "||CEDULA||''','''" + //DECULA
                                     "||DEPTO_CEDULA||''',''' " + //DEPARTAMENTO CEDULA
                                     "||MUNI_CEDULA||''',''' " + //MUNICIPIO CEDULA
-                                    "||CARGO||''','''" + //CARGO
-                                    "||DEPTO||''',''' " + //DEPARTAMENTO 
-                                    "||FACULTAD||''','''" + //FACULTAD
+                                    "||FACULTAD||''','''" + //CARGO
+                                    "||FACULTAD||''',''' " + //DEPARTAMENTO 
+                                    "||DEPTO||''','''" + //FACULTAD
                                     "||CARNET||''','''" + //CODIGO
                                     "||TIPO_PERSONA||''','''" + //TIPO_PERSONA
                                     "||NO_CTA_BI||''',''' " + //NO CTA BI
@@ -338,7 +289,7 @@ namespace ReportesUnis
                                     "||DEPTO_RESIDENCIA||''','''" + //DEPTO_RESIDENCIA
                                     "||NORDEN||''','''" + //NO_ORDER
                                     "||OBSERVACIONES||''','''" + //OBSERVACIONES
-                                    "||PAIS_NACIONALIDAD||''','''" + //PAIS_NACIONALIDAD
+                                    "||'GUATEMALA'||''','''" + //PAIS_NACIONALIDAD
                                     "||PAIS_PASAPORTE||''','''" + //PAIS_PASAPORTE
                                     "||NO_PASAPORTE||''','''" + //NO_PASAPORTE
                                     "||PROFESION||''','''" + //PROFESION
@@ -358,7 +309,7 @@ namespace ReportesUnis
                                     "||O_CONDMIG||''','''  " + //OTRA CONDICION MIGRANTE
                                     "||VALIDAR_ENVIO||''')'" +//OTRA CONDICION MIGRANTE 
                                     " AS INS " +
-                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + Carnet + "' AND CONFIRMACION = 2)";
+                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + Carnet + "')";
                     }
                     else
                     {
@@ -428,7 +379,7 @@ namespace ReportesUnis
                                        ",[O_Condmig] " +
                                        ",[Validar_Envio]) " +
                                     "VALUES ('''||CARNET||''','''" + // APELLIDO DE CASADA
-                                        "||CARGO||''','''" + //Carrera
+                                        "||FACULTAD||''','''" + //Carrera
                                         "||DIRECCION||''','''" + //DIRECCION
                                         "||ZONA||''','''" + //ZONA
                                         "||COLONIA||''','''" + //COLONIA
@@ -492,7 +443,7 @@ namespace ReportesUnis
                                         "||O_CONDMIG||''','''  " + //OTRA CONDICION MIGRANTE
                                         "||VALIDAR_ENVIO||''')'" +//OTRA CONDICION MIGRANTE 
                                         " AS INS " +
-                                        "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + Carnet + "' AND CONFIRMACION = 2)";
+                                        "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + Carnet + "')";
                     }
                     OracleDataReader reader = cmd.ExecuteReader();
                     reader = cmd.ExecuteReader();
@@ -503,68 +454,12 @@ namespace ReportesUnis
                 }
             }
         }
-
         protected void QueryUpdateApex(string Confirmación, string Solicitado, string Entrega, string FechaHora, string Accion, string Carne)
         {
             txtInsertApex.Text = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION = '" + Confirmación + "', FECHA_SOLICITADO='" + Solicitado + "', FECHA_ENTREGA='" + Entrega + "', " +
                 "ACCION='" + Accion + "', FECHA_HORA='" + FechaHora + "'" +
                 " WHERE CODIGO = '" + Carne + "'";
         }
-
-        protected void BtnConfirmar_Click(object sender, EventArgs e)
-        {
-            prueba.Text = "0";
-            ValidacionCheck();
-            if (Convert.ToInt16(prueba.Text) > 0 || prueba.Text.IsNullOrWhiteSpace())
-            {
-                lblActualizacion.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
-            }
-            else
-            {
-                foreach (GridViewRow row in GridViewFotos.Rows)
-                {
-                    string respuesta = null;
-                    string fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                    string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
-                    QueryInsertBi(carnet);
-                    //SE INGRESA LA INFORMACIÓN EN EL BANCO
-                    respuesta = ConsumoSQL(txtInsertBI.Text);
-
-                    if (respuesta == "0")
-                    {
-                        respuesta = "";
-                        QueryUpdateApex("0", fecha, fecha, fecha, "1", carnet);
-                        if (!txtInsertApex.Text.IsNullOrWhiteSpace())
-                        {
-                            respuesta = ConsumoOracle(txtInsertApex.Text);
-                            if (respuesta == "0")
-                            {
-                                respuesta = serviciosHCM();
-
-                                if (respuesta == "0" && TipoPersona.Value == "Estudiante")
-                                {
-                                    Upload(carnet);
-                                }
-                            }
-                        }
-                    }
-
-
-                    if (respuesta == "0")
-                    {
-                        lblActualizacion.Text = "Se confirmó correctamente la información";
-                        File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
-                        llenadoGrid();
-                        EnvioCorreo("bodyConfirmacionFotoEmpleados.txt", "datosConfirmacionFotoEmpleados.txt");
-                    }
-                    else
-                    {
-                        lblActualizacion.Text = "Ocurrió un problema al confirmar la información";
-                    }
-                }
-            }
-        }
-
         private void ValidacionCheck()
         {
             foreach (GridViewRow row in GridViewFotos.Rows)
@@ -572,7 +467,6 @@ namespace ReportesUnis
                 CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
                 if (checkBox.Checked)
                 {
-
                     if (prueba.Text.IsNullOrWhiteSpace())
                     {
                         prueba.Text = "1";
@@ -580,13 +474,10 @@ namespace ReportesUnis
                     else
                     {
                         prueba.Text = (Convert.ToInt16(prueba.Text) + 1).ToString();
-
                     }
                 }
             }
-
         }
-
         protected string Upload(string Carnet)
         {
             string ImagenData = "";
@@ -611,9 +502,9 @@ namespace ReportesUnis
                         }
                     }
                     con.Close();
-
                 }
             }
+
             string mensaje = "";
             try
             {
@@ -621,14 +512,12 @@ namespace ReportesUnis
                 int ContadorArchivos = 0;
                 int ContadorArchivosCorrectos = 0;
                 int ContadorArchivosConError = 0;
-
                 bool Error = false;
 
                 //Ruta del archivo que guarda la bitácora
                 string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
                 //Nombre del archiov que guarda la bitácora
                 string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
-
 
                 //Se crea un nuevo archivo para guardar la bitacora de la ejecución
                 CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
@@ -638,7 +527,6 @@ namespace ReportesUnis
                 GuardarBitacora(ArchivoBitacora, "");
                 GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    EMPLID                      Estado                 Descripción                                    ");
                 GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
-
 
                 string EmplidFoto = Carnet;
                 string EmplidExisteFoto = "";
@@ -678,10 +566,8 @@ namespace ReportesUnis
                 using (OracleConnection con = new OracleConnection(constr))
                 {
                     string query = "";
-
                     using (OracleCommand cmd = new OracleCommand(query))
                     {
-
                         if (EmplidExisteFoto != "") //Se actualiza la fotografía
                         {
                             cmd.CommandText = "UPDATE SYSADM.PS_EMPL_PHOTO SET PSIMAGEVER=(TO_NUMBER((TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM-DD'), 'YYYY-MM-DD') - TO_DATE(TO_CHAR('1999-12-31'), 'YYYY-MM-DD'))* 86400) + TO_NUMBER(TO_CHAR(SYSTIMESTAMP,'hh24missff2'))), EMPLOYEE_PHOTO=:Fotografia WHERE EMPLID = '" + EmplidFoto + "'";
@@ -700,7 +586,6 @@ namespace ReportesUnis
                         try
                         {
                             con.Open();
-
                             int FilasAfectadas = cmd.ExecuteNonQuery();
                             con.Close();
                             if (FilasAfectadas == 0)
@@ -746,20 +631,17 @@ namespace ReportesUnis
             }
             return mensaje;
         }
-
-        //Función para guardar bitacora en el archivo .txt
         public void GuardarBitacora(string ArchivoBitacora, string DescripcionBitacora)
         {
+            //Función para guardar bitacora en el archivo .txt
             //Guarda nueva línea para el registro de bitácora en el serividor
             File.AppendAllText(ArchivoBitacora, DescripcionBitacora + Environment.NewLine);
         }
-
-        //Crea un archivo .txt para guardar bitácora
         public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
         {
-            using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
+            //Crea un archivo .txt para guardar bitácora
+            StreamWriter sw = File.CreateText(archivoBitacora);
         }
-
         public void tipoPersona(string carne)
         {
             string constr = TxtURL.Text;
@@ -784,7 +666,6 @@ namespace ReportesUnis
                 }
             }
         }
-
         public string serviciosHCM()
         {
             string base64String = "";
@@ -793,7 +674,6 @@ namespace ReportesUnis
             //Obtener se obtiene toda la información del empleado
             string expand = "names,photos";
             string consulta = consultaGetworkers(expand, "nationalIdentifiers");
-
 
             try
             {
@@ -815,7 +695,6 @@ namespace ReportesUnis
                             }
                         }
                         con.Close();
-
                     }
                 }
 
@@ -840,14 +719,12 @@ namespace ReportesUnis
                 }
 
                 return "0";
-
             }
             catch (Exception)
             {
                 return "1";
             }
         }
-
         private string consultaGetworkers(string expand, string expandUser)
         {
             credencialesWS(archivoWS, "Consultar");
@@ -865,7 +742,6 @@ namespace ReportesUnis
             string respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/workers?q=PersonId=" + personID + "&effectiveDate=" + dtFechaBuscarPersona + "&expand=" + expand, user, pass);
             return respuesta;
         }
-
         private string consultaGetImagenes(string consultar)
         {
             credencialesWS(archivoWS, "Consultar");
@@ -883,7 +759,6 @@ namespace ReportesUnis
             string respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/emps/" + consultar, user, pass);
             return respuesta;
         }
-
         private string consultaUser(string expand, string personId)
         {
             credencialesWS(archivoWS, "Consultar");
@@ -892,13 +767,10 @@ namespace ReportesUnis
             var pass = Variables.wsPassword;
             var dtFechaBuscarPersona = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             string respuesta = api.Get(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/workers?q=PersonId=" + personId + "&effectiveDate=" + dtFechaBuscarPersona + "&expand=" + expand, user, pass);
-
             return respuesta;
         }
-
         private void updatePatch(string info, string personId, string tables, string ID, string consulta, string effective, string esquema)
         {
-
             credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
@@ -906,7 +778,6 @@ namespace ReportesUnis
             int respuesta = api.Patch(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/" + esquema + personId + "/child/" + tables + "/" + ID, user, pass, info, consulta, effective);
             respuestaPatch = respuesta + respuestaPatch;
         }
-
         private void create(string personId, string tables, string datos, string EXTEN)
         {
             credencialesWS(archivoWS, "Consultar");
@@ -916,11 +787,9 @@ namespace ReportesUnis
             int respuesta = api.Post(vchrUrlWS + "/hcmRestApi/resources/11.13.18.05/" + EXTEN + personId + "/child/" + tables, datos, user, pass);
             respuestaPost = respuestaPost + respuesta;
         }
-
-
-        //Funcion para extraerlos Id's
         public static string getBetween(string strSource, string strStart, string strEnd)
         {
+            //Funcion para extraerlos Id's
             int Start, End;
             if (strSource.Contains(strStart) && strSource.Contains(strEnd))
             {
@@ -933,12 +802,10 @@ namespace ReportesUnis
                 return "";
             }
         }
-
-        //Función para obtener información de acceso al servicio de Campus
         private static void credencialesWS(string RutaConfiguracion, string strMetodo)
         {
+            //Función para obtener información de acceso al servicio de Campus
             int cont = 0;
-
             foreach (var line in File.ReadLines(RutaConfiguracion))
             {
                 if (cont == 1)
@@ -950,7 +817,6 @@ namespace ReportesUnis
                 cont++;
             }
         }
-
         private static void limpiarVariables()
         {
             //Cuerpo del servicio web (enviar información) 
@@ -963,13 +829,11 @@ namespace ReportesUnis
             //Contraseña del servicio web
             Variables.wsPassword = "";
         }
-
         public class Variables
         {
             //Cuerpo del servicio web (enviar información) 
             public static string soapBody;
             public static string strDocumentoRespuesta;
-
             //Direción del serivicio web
             public static string wsUrl = "";
             //Usuario del servicio web
@@ -979,7 +843,6 @@ namespace ReportesUnis
             //Acción del servicio web
             public static string wsAction = "";
         }
-
         public string LeerBodyEmail(string archivo)
         {
             string rutaCompleta = CurrentDirectory + "/Emails/" + archivo;
@@ -1006,17 +869,13 @@ namespace ReportesUnis
                 subjet = linea2;
                 to = linea4;
                 file.Close();
-
                 // Corrección: Inicializa un nuevo array y asigna los valores
                 datos = new string[] { subjet, to };
             }
-
             return datos;
         }
-
         public void EnvioCorreo(string body, string subject)
         {
-
             string htmlBody = LeerBodyEmail(body);
             string[] datos = LeerInfoEmail(subject);
 
@@ -1025,7 +884,6 @@ namespace ReportesUnis
 
             //Crear un objeto MailItem
             var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
-
 
             //Configuracion campos para envio del correo
             mailItem.Subject = datos[0]; //Asunto del correo
@@ -1042,7 +900,93 @@ namespace ReportesUnis
             //liberar recursos utilizados
             System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
             System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+        }
 
+        //EVENTOS
+        protected void ButtonSubmit_Click(object sender, EventArgs e)
+        {
+            foreach (GridViewRow row in GridViewFotos.Rows)
+            {
+                CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
+                if (checkBox.Checked)
+                {
+                    string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                    string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + nombre + "'";
+                    string respuesta = ConsumoOracle(cadena);
+                    if (respuesta == "0")
+                    {
+                        File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
+                        File.Delete(txtPath2.Text + row.Cells[1].Text);
+                        llenadoGrid();
+                        lblActualizacion.Text = "Se rechazaron las fotos seleccionadas.";
+                        EnvioCorreo("bodyRechazoFotoEmpleados.txt", "datosRechazoFotoEmpleados.txt");
+                    }
+                    else
+                    {
+                        lblActualizacion.Text = "Ocurrió un error al eliminar los registros";
+                    }
+                }
+            }
+        }
+        protected void GridViewFotos_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Image image = (Image)e.Row.FindControl("Image1");
+                string nombreImagen = DataBinder.Eval(e.Row.DataItem, "NombreImagen").ToString();
+                string rutaImagen = Path.Combine("~" + txtPath.Text, nombreImagen);
+                image.ImageUrl = rutaImagen;
+            }
+        }
+        protected void BtnConfirmar_Click(object sender, EventArgs e)
+        {
+            prueba.Text = "0";
+            ValidacionCheck();
+            if (Convert.ToInt16(prueba.Text) > 0 || prueba.Text.IsNullOrWhiteSpace())
+            {
+                lblActualizacion.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
+            }
+            else
+            {
+                foreach (GridViewRow row in GridViewFotos.Rows)
+                {
+                    string respuesta = null;
+                    string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                    string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                    QueryInsertBi(carnet);
+                    //SE INGRESA LA INFORMACIÓN EN EL BANCO
+                    respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+                    if (respuesta == "0")
+                    {
+                        respuesta = "";
+                        QueryUpdateApex("0", fecha, fecha, fecha, "1", carnet);
+                        if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+                        {
+                            respuesta = ConsumoOracle(txtInsertApex.Text);
+                            if (respuesta == "0")
+                            {
+                                respuesta = serviciosHCM();
+                                if (respuesta == "0" && TipoPersona.Value == "Estudiante")
+                                {
+                                    Upload(carnet);
+                                }
+                            }
+                        }
+                    }
+
+                    if (respuesta == "0")
+                    {
+                        lblActualizacion.Text = "Se confirmó correctamente la información";
+                        File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
+                        llenadoGrid();
+                        EnvioCorreo("bodyConfirmacionFotoEmpleados.txt", "datosConfirmacionFotoEmpleados.txt");
+                    }
+                    else
+                    {
+                        lblActualizacion.Text = "Ocurrió un problema al confirmar la información";
+                    }
+                }
+            }
         }
     }
 }

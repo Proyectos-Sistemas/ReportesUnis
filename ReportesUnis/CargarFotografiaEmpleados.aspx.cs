@@ -816,7 +816,7 @@ namespace ReportesUnis
         //Crea un archivo .txt para guardar bitácora
         public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
         {
-            using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
+            StreamWriter sw = File.CreateText(archivoBitacora);
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por DPI
