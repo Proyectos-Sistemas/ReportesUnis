@@ -12,7 +12,10 @@ using System.Web.Services;
 using System.Xml;
 using ReportesUnis.API;
 using System.Text;
-using Outlook = Microsoft.Office.Interop.Outlook;
+using MailKit.Net.Smtp;
+using MimeKit;
+using MailKit.Security;
+
 
 namespace ReportesUnis
 {
@@ -324,6 +327,11 @@ namespace ReportesUnis
                                             {
                                                 respuesta = "0";
                                             }
+
+                                            if (respuesta == "0" && ROLES.Value.Contains("Estudiante"))
+                                            {
+                                                Upload(Carnet);
+                                            }
                                         }
                                     }
                                 }
@@ -377,7 +385,7 @@ namespace ReportesUnis
                 {
                     cmd.Transaction = transaction;
                     cmd.Connection = con;
-                    if (TxtRol.Text.Contains("Estudiante"))
+                    if (ROLES.Value.Contains("Estudiante"))
                     {
                         cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
                                    "([Carnet] " +
@@ -1373,7 +1381,7 @@ namespace ReportesUnis
                         contador = Convert.ToInt32(reader3["CONTADOR"].ToString());
                         if (contador > 0)
                         {
-                            byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + Carnet + ".jpg");
+                            byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + Carnet + ".jpg");
                             string base64String = Convert.ToBase64String(imageBytes);
                             ImagenData = base64String;
                         }
@@ -1381,35 +1389,13 @@ namespace ReportesUnis
                     con.Close();
                 }
             }
+
             string mensaje = "";
             try
             {
-                string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                int ContadorArchivos = 0;
-                int ContadorArchivosCorrectos = 0;
-                int ContadorArchivosConError = 0;
-
-                bool Error = false;
-
-                //Ruta del archivo que guarda la bitácora
-                string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
-                //Nombre del archiov que guarda la bitácora
-                string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
-
-                //Se crea un nuevo archivo para guardar la bitacora de la ejecución
-                CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
-
-                //Guadar encabezado de la bitácora
-                GuardarBitacora(ArchivoBitacora, "                              Informe de ejecución de importación de fotografías Campus Fecha: " + FechaHoraInicioEjecución + "              ");
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    EMPLID                      Estado                 Descripción                                    ");
-                GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
-
                 string EmplidFoto = Carnet;
                 string EmplidExisteFoto = "";
                 string mensajeValidacion = "";
-                //Nombre de la fotografía cargada (Sin extensión)
-                string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                 //Busca si la persona ya tiene fotografía registrada para proceder a actualizar
                 using (OracleConnection conEmplid = new OracleConnection(constr))
@@ -1431,18 +1417,12 @@ namespace ReportesUnis
                     catch (OracleException ex)
                     {
                         mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
-                        GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
-                        if (Error == false)
-                        {
-                            ContadorArchivosConError++;
-                        }
                     }
                 }
-
                 byte[] bytes = Convert.FromBase64String(ImagenData);
-
                 using (OracleConnection con = new OracleConnection(constr))
                 {
+                    con.Open();
                     string query = "";
                     using (OracleCommand cmd = new OracleCommand(query))
                     {
@@ -1461,50 +1441,14 @@ namespace ReportesUnis
 
                         cmd.Connection = con;
                         cmd.Parameters.Add(new OracleParameter("Fotografia", bytes));
-                        try
-                        {
-                            con.Open();
-                            int FilasAfectadas = cmd.ExecuteNonQuery();
-                            con.Close();
-                            if (FilasAfectadas == 0)
-                            {
-                                mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus";
-                                GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
-                                if (Error == false)
-                                {
-                                    ContadorArchivosConError++;
-                                    Error = true;
-                                }
-                            }
-                            else
-                            {
-                                GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "  " + EmplidFoto.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
-                                ContadorArchivosCorrectos++;
-                            }
-                        }
-                        catch (OracleException ex)
-                        {
-                            mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
-                            GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
-                            if (Error == false)
-                            {
-                                ContadorArchivosConError++;
-                            }
-                        }
+                        cmd.ExecuteNonQuery();
+
                     }
                 }
-
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
-                GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
-                GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
-                GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
                 mensaje = "0";
             }
-            catch (Exception)
+            catch (Exception X)
             {
-
                 mensaje = ". Ocurrió un error al cargar la imagen";
                 mensaje = "1";
             }
@@ -1781,30 +1725,73 @@ namespace ReportesUnis
             }
             return datos;
         }
+        public string[] LeerCredencialesMail()
+        {
+            string rutaCompleta = CurrentDirectory + "/Emails/Credenciales.txt";
+            string[] datos;
+            string nombre = "";
+            string correo = "";
+            string pass = "";
+            string correoVisible = "";
+            using (StreamReader file = new StreamReader(rutaCompleta, Encoding.UTF8))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                string linea4 = file.ReadLine();
+                string linea5 = file.ReadLine();
+                string linea6 = file.ReadLine();
+                
+                
+                nombre = linea2;
+                correo = linea4;
+                pass = linea6;
+                correoVisible = linea4;
+                file.Close();
+
+                // Corrección: Inicializa un nuevo array y asigna los valores
+                datos = new string[] { nombre, correo, pass, correoVisible };
+            }
+
+            return datos;
+        }
         public void EnvioCorreo(string body, string subject)
         {
 
             string htmlBody = LeerBodyEmail(body);
             string[] datos = LeerInfoEmail(subject);
+            string[] credenciales = LeerCredencialesMail();
+            var email = new MimeMessage();
+            var para = TxtPrimerNombre.Text+" "+TxtPrimerApellido.Text;
 
-            //Creación de instancia de la aplicacion de outlook
-            var outlook = new Outlook.Application();
+            email.From.Add(new MailboxAddress(credenciales[0], credenciales[3]));
+            email.To.Add(new MailboxAddress(para, EmailInstitucional.Value));
 
-            //Crear un objeto MailItem
-            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            email.Subject = datos[0];
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = htmlBody
+            };
 
-            //Configuracion campos para envio del correo
-            mailItem.Subject = datos[0]; //Asunto del correo
+            using (var smtp = new SmtpClient())
+            {
+                try
+                {
+                    //smtp.Connect("smtp.gmail.com", 587, false);
+                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
-            mailItem.HTMLBody = htmlBody;
-            mailItem.To = EmailInstitucional.Value;
+                    // Note: only needed if the SMTP server requires authentication
+                    smtp.Authenticate(credenciales[1], credenciales[2]);
 
-            //Enviar coreo
-            mailItem.Send();
+                    smtp.Send(email);
+                    smtp.Disconnect(true);
 
-            //liberar recursos utilizados
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+                }
+                catch (Exception ex)
+                {
+                    lblActualizacion.Text = ex.ToString();
+                }
+            }
 
         }
 

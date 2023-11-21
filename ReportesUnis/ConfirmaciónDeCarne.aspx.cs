@@ -9,7 +9,11 @@ using System.Web.UI;
 using System.Net;
 using System.Web.Services;
 using System.Xml;
-using Outlook = Microsoft.Office.Interop.Outlook;
+using System.Text;
+using MailKit.Security;
+using MimeKit;
+using MailKit.Net.Smtp;
+
 
 namespace ReportesUnis
 {
@@ -1419,31 +1423,73 @@ namespace ReportesUnis
             }
             return datos;
         }
+        public string[] LeerCredencialesMail()
+        {
+            string rutaCompleta = CurrentDirectory + "/Emails/Credenciales.txt";
+            string[] datos;
+            string nombre = "";
+            string correo = "";
+            string pass = "";
+            string correoVisible = "";
+            using (StreamReader file = new StreamReader(rutaCompleta, Encoding.UTF8))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                string linea4 = file.ReadLine();
+                string linea5 = file.ReadLine();
+                string linea6 = file.ReadLine();
+                
+                
+                nombre = linea2;
+                correo = linea4;
+                pass = linea6;
+                correoVisible = linea4;
+                file.Close();
+
+                // Corrección: Inicializa un nuevo array y asigna los valores
+                datos = new string[] { nombre, correo, pass, correoVisible };
+            }
+
+            return datos;
+        }
         public void EnvioCorreo(string body, string subject)
         {
 
             string htmlBody = LeerBodyEmail(body);
             string[] datos = LeerInfoEmail(subject);
+            string[] credenciales = LeerCredencialesMail();
+            var email = new MimeMessage();
+            var para = TxtPrimerNombre.Text+" "+TxtPrimerApellido.Text;
 
-            //Creación de instancia de la aplicacion de outlook
-            var outlook = new Outlook.Application();
+            email.From.Add(new MailboxAddress(credenciales[0], credenciales[3]));
+            email.To.Add(new MailboxAddress(para, TxtCorreoInstitucional.Text));
 
-            //Crear un objeto MailItem
-            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            email.Subject = datos[0];
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = htmlBody
+            };
 
-            //Configuracion campos para envio del correo
-            mailItem.Subject = datos[0]; //Asunto del correo
-           
+            using (var smtp = new SmtpClient())
+            {
+                try
+                {
+                    //smtp.Connect("smtp.gmail.com", 587, false);
+                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
-            mailItem.HTMLBody = htmlBody;
-            mailItem.To = TxtCorreoInstitucional.Text;
+                    // Note: only needed if the SMTP server requires authentication
+                    smtp.Authenticate(credenciales[1], credenciales[2]);
 
-            //Enviar coreo
-            mailItem.Send();
+                    smtp.Send(email);
+                    smtp.Disconnect(true);
 
-            //liberar recursos utilizados
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+                }
+                catch (Exception ex)
+                {
+                    lblActualizacion.Text = ex.ToString();
+                }
+            }
 
         }
 

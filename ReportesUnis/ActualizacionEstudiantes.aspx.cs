@@ -14,7 +14,12 @@ using System.Web.Services;
 using ReportesUnis.API;
 using System.Globalization;
 using System.Xml;
-using Outlook = Microsoft.Office.Interop.Outlook;
+using MailKit.Net.Smtp;
+using MimeKit;
+using MailKit.Security;
+using System.Text;
+using NPOI.Util;
+using System.Web.UI.WebControls.WebParts;
 
 namespace ReportesUnis
 {
@@ -299,6 +304,11 @@ namespace ReportesUnis
                             posicion = txtApellido.Text.Substring(6, largoApellido - 6).IndexOf(" ");
                             txtContaador.Text = txtAInicial.Value.Length.ToString() + " " + posicion.ToString();
                             txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 6);
+                        } else if ((txtApellido.Text.Substring(0, 6)).ToUpper().Equals("DE LAS"))
+                        {
+                            posicion = txtApellido.Text.Substring(7, largoApellido - 7).IndexOf(" ");
+                            txtContaador.Text = txtAInicial.Value.Length.ToString() + " " + posicion.ToString();
+                            txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 7);
                         }
                         else
                         {
@@ -1040,7 +1050,7 @@ namespace ReportesUnis
                 }
                 else
                 {
-                    txtNit.Text = "CF";
+                    //txtNit.Text = "CF";
                     IngresoDatos();
                 }
             }
@@ -1122,49 +1132,75 @@ namespace ReportesUnis
         {
             string htmlBody = LeerBodyEmail("bodyIngresoEstudiante-Operador.txt");
             string[] datos = LeerInfoEmail("datosIngresoEstudiante-Operador.txt");
+            string[] credenciales = LeerCredencialesMail();
+            var email = new MimeMessage();
 
-            //Creación de instancia de la aplicacion de outlook
-            var outlook = new Outlook.Application();
+            email.From.Add(new MailboxAddress("Actualización Alumnos", credenciales[3]));
+            email.To.Add(new MailboxAddress(credenciales[0], credenciales[3]));
 
-            //Crear un objeto MailItem
-            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            email.Subject = datos[0];
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = htmlBody
+            };
 
-            //Configuracion campos para envio del correo
-            mailItem.Subject = datos[0]; //Asunto del correo
+            using (var smtp = new SmtpClient())
+            {
+                try
+                {
+                    //smtp.Connect("smtp.gmail.com", 587, false);
+                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
-            mailItem.HTMLBody = htmlBody;
-            mailItem.To = datos[1];
+                    // Note: only needed if the SMTP server requires authentication
+                    smtp.Authenticate(credenciales[1], credenciales[2]);
 
-            //Enviar coreo
-            mailItem.Send();
+                    smtp.Send(email);
+                    smtp.Disconnect(true);
 
-            //liberar recursos utilizados
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+                }
+                catch (Exception ex)
+                {
+                    lblActualizacion.Text = ex.ToString();
+                }
+            }
+
         }
         public void EnvioCorreoEmpleado()
         {
             string htmlBody = LeerBodyEmail("bodyIngresoEstudiante.txt");
             string[] datos = LeerInfoEmail("datosIngresoEstudiante.txt");
+            string[] credenciales = LeerCredencialesMail();
+            var email = new MimeMessage();
+            var para = txtNombre.Text + " " + txtPrimerApellido.Text;
 
-            //Creación de instancia de la aplicacion de outlook
-            var outlook = new Outlook.Application();
 
-            //Crear un objeto MailItem
-            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            email.From.Add(new MailboxAddress(credenciales[0], credenciales[3]));
+            email.To.Add(new MailboxAddress(para, EmailUnis.Text));
 
-            //Configuracion campos para envio del correo
-            mailItem.Subject = datos[0]; //Asunto del correo
+            email.Subject = datos[0];
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = htmlBody
+            };
 
-            mailItem.HTMLBody = htmlBody;
-            mailItem.To = EmailUnis.Text;
+            using (var smtp = new SmtpClient())
+            {
+                try
+                {
+                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
-            //Enviar coreo
-            mailItem.Send();
+                    // Note: only needed if the SMTP server requires authentication
+                    smtp.Authenticate(credenciales[1], credenciales[2]);
 
-            //liberar recursos utilizados
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+                    smtp.Send(email);
+                    smtp.Disconnect(true);
+
+                }
+                catch (Exception ex)
+                {
+                    lblActualizacion.Text = ex.ToString();
+                }
+            }
         }
         public string LeerBodyEmail(string archivo)
         {
@@ -1198,6 +1234,36 @@ namespace ReportesUnis
             }
             return datos;
         }
+        public string[] LeerCredencialesMail()
+        {
+            string rutaCompleta = CurrentDirectory + "/Emails/Credenciales.txt";
+            string[] datos;
+            string nombre = "";
+            string correo = "";
+            string pass = "";
+            string correoVisible = "";
+            using (StreamReader file = new StreamReader(rutaCompleta, Encoding.UTF8))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                string linea4 = file.ReadLine();
+                string linea5 = file.ReadLine();
+                string linea6 = file.ReadLine();
+                
+                
+                nombre = linea2;
+                correo = linea4;
+                pass = linea6;
+                correoVisible = linea4;
+                file.Close();
+
+                // Corrección: Inicializa un nuevo array y asigna los valores
+                datos = new string[] { nombre, correo, pass, correoVisible };
+            }
+            return datos;
+        }
+
         private string ValidarRegistros()
         {
             string constr = TxtURL.Text;
@@ -2514,6 +2580,9 @@ namespace ReportesUnis
                     }
                     fotoAlmacenada();
                     ValidacionNit.Value = "0";
+                    TxtDiRe1.Enabled = true;
+                    TxtDiRe2.Enabled = true;
+                    TxtDiRe3.Enabled = true;
                 }
                 else
                 {

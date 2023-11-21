@@ -9,6 +9,10 @@ using Oracle.ManagedDataAccess.Client;
 using System.Data.SqlClient;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using NPOI.Util;
+using System.Text;
+using MailKit.Security;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 namespace ReportesUnis
 {
@@ -531,47 +535,100 @@ namespace ReportesUnis
             }
             return datos;
         }
-        public void EnvioCorreo(string body, string subject)
+
+        public string[] LeerCredencialesMail()
         {
+            string rutaCompleta = CurrentDirectory + "/Emails/Credenciales.txt";
+            string[] datos;
+            string nombre = "";
+            string correo = "";
+            string pass = "";
+            string correoVisible = "";
+            using (StreamReader file = new StreamReader(rutaCompleta, Encoding.UTF8))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                string linea4 = file.ReadLine();
+                string linea5 = file.ReadLine();
+                string linea6 = file.ReadLine();
+                
+                
+                nombre = linea2;
+                correo = linea4;
+                pass = linea6;
+                correoVisible = linea4;
+                file.Close();
+
+                // Corrección: Inicializa un nuevo array y asigna los valores
+                datos = new string[] { nombre, correo, pass, correoVisible };
+            }
+
+            return datos;
+        }
+
+        public string[] DatosCorreo()
+        {
+            string[] datos;
             string constr = TxtURL.Text;
             string EmailInstitucional = "";
+            string Nombre = "";
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "EMAIL_PERSONAL FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO =" + carne.Value + "'  OR CARNET = '" + carne.Value + "'";
+                    cmd.CommandText = "SELECT EMAIL, NOMBRE1||' '||APELLIDO1 AS NOMBRE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + carne.Value + "'  OR CARNET = '" + carne.Value + "'";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
 
-                        EmailInstitucional = reader["EMAIL_PERSONAL"].ToString();
+                        EmailInstitucional = reader["EMAIL"].ToString();
+                        Nombre = reader["NOMBRE"].ToString();
                     }
                     con.Close();
                 }
             }
+            datos = new string[] { EmailInstitucional, Nombre };
+            return datos;
+        }
+        public void EnvioCorreo(string body, string subject, string Nombre, string EmailInstitucional)
+        {            
             string htmlBody = LeerBodyEmail(body);
             string[] datos = LeerInfoEmail(subject);
+            string[] credenciales = LeerCredencialesMail();
+            var email = new MimeMessage();
+            var para = Nombre;
 
-            //Creación de instancia de la aplicacion de outlook
-            var outlook = new Outlook.Application();
+            email.From.Add(new MailboxAddress(credenciales[0], credenciales[3]));
+            email.To.Add(new MailboxAddress(para, EmailInstitucional));
 
-            //Crear un objeto MailItem
-            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            email.Subject = datos[0];
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = htmlBody
+            };
 
-            //Configuracion campos para envio del correo
-            mailItem.Subject = datos[0]; //Asunto del correo
+            using (var smtp = new SmtpClient())
+            {
+                try
+                {
+                    //smtp.Connect("smtp.gmail.com", 587, false);
+                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
-            mailItem.HTMLBody = htmlBody;
-            mailItem.To = EmailInstitucional;
+                    // Note: only needed if the SMTP server requires authentication
+                    smtp.Authenticate(credenciales[1], credenciales[2]);
 
-            //Enviar coreo
-            mailItem.Send();
+                    smtp.Send(email);
+                    smtp.Disconnect(true);
 
-            //liberar recursos utilizados
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+                }
+                catch
+                {
+                   
+                }
+            }
 
         }
 
@@ -596,16 +653,17 @@ namespace ReportesUnis
                     if (cargaFt == 0)
                     {
                         string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
-                        carne.Value= nombre;
+                        carne.Value = nombre;
+                        string[] datos = DatosCorreo();
                         string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
                         string respuesta = ConsumoOracle(cadena);
                         if (respuesta == "0")
                         {
+                            EnvioCorreo("bodyRechazoFotoEstudiante.txt", "datosRechazoFotoEstudiante.txt", datos[1], datos[0]);
                             File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
                             File.Delete(txtPath2.Text + row.Cells[1].Text);
                             llenadoGrid();
                             lblActualizacion.Text = "Se rechazaron las fotos seleccionadas.";
-                            EnvioCorreo("bodyRechazoFotoEstudiante.txt", "datosRechazoFotoEstudiante.txt");
                         }
                         else
                         {
@@ -670,7 +728,8 @@ namespace ReportesUnis
                         lblActualizacion.Text = "Se confirmó correctamente la información.";
                         File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
                         llenadoGrid();
-                        EnvioCorreo("bodyConfirmacionFotoEstudiante.txt", "datosConfirmacionFotoEstudiante.txt");
+                        string[] datos = DatosCorreo();
+                        EnvioCorreo("bodyConfirmacionFotoEstudiante.txt", "datosConfirmacionFotoEstudiante.txt", datos[1], datos[0]);
                     }
                     else
                     {

@@ -190,6 +190,8 @@
             <input type="hidden" id="ValidacionNit" runat="server" />
             <%-- TEXTBOX ALMACENA SI EL USUARIO TIENE NIT O NO--%>
             <input type="hidden" id="TrueNit" runat="server" />
+            <%-- TEXTBOX VALIDA SI EL USUARIO MODIFICO EL NIT O NO--%>
+            <input type="hidden" id="ChangeNIT" runat="server" />
             <%-- PAIS 1 INICIAL--%>
             <asp:TextBox ID="TextBox2" runat="server" Visible="false"></asp:TextBox>
             <%-- FLAG DPI --%>
@@ -492,7 +494,7 @@
                                                 <div class="col-md-4 mx-auto text-center">
                                                 </div>
                                                 <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
-                                                    <asp:TextBox ID="txtNit" runat="server" Width="275px" CssClass="form-control"></asp:TextBox>
+                                                    <asp:TextBox ID="txtNit" runat="server" Width="275px" CssClass="form-control" OnTextChanged="txtNit_TextChanged1"></asp:TextBox>
                                                 </div>
                                                 <div class="col-md-4 mx-auto text-center">
                                                 </div>
@@ -782,7 +784,6 @@
                     error;
                 });
         } else if (userAgent.indexOf("Chrome") != -1) {
-            console.log("Chrome");
             // Acceder a la cámara y mostrar el video en el elemento de video
             navigator.getMedia = (navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
@@ -815,7 +816,7 @@
                     lblActualizacion.html(mensaje);
                     $('#<%= BtnReload.ClientID %>').css("display", "block");
                     $('#<%= BtnDownload.ClientID %>').css("display", "block");
-                } else if (mensajeError == "Could not start video source") {
+                } else if (mensajeError == "Could not start video source" || mensajeError == "Device in use") {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
                     $('#<%= tbactualizar.ClientID %>').css("display", "none");
@@ -829,7 +830,6 @@
                 }
             });
         } else if (userAgent.indexOf("Firefox") != -1) {
-            console.log("Firefox");
             // Acceder a la cámara y mostrar el video en el elemento de video
             navigator.getMedia = (navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
@@ -864,7 +864,7 @@
                     $('#<%= BtnDownload.ClientID %>').css("display", "block");
                 }
 
-                if (mensajeError.indexOf("Could not start video source" != -1)) {
+                if (mensajeError.indexOf("Could not start video source" != -1) || mensajeError.indexOf("Device in use" != -1)) {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
                     $('#<%= tbactualizar.ClientID %>').css("display", "none");
@@ -877,6 +877,15 @@
                     $('#<%= BtnDownload.ClientID %>').css("display", "none");
                 }
             });
+        } else if (userAgent.indexOf("Mozilla") != -1) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    var videoElement = document.getElementById('videoElement');
+                    videoElement.srcObject = stream;
+                })
+                .catch(function (error) {
+                    error;
+                });
         } else {
             var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
             mensaje = "El navegador no es compatible";
@@ -958,7 +967,7 @@
                                 $('#<%= BtnDownload.ClientID %>').css("display", "block");
                             }
 
-                            if (mensajeError.indexOf("Could not start video source" != -1)) {
+                            if (mensajeError.indexOf("Could not start video source" != -1) || mensajeError.indexOf("Device in use" != -1)) {
                                 $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                                 $('#<%= tabla.ClientID %>').css("display", "none");
                                 $('#<%= tbactualizar.ClientID %>').css("display", "none");
@@ -1161,7 +1170,7 @@
                     mensaje = mensaje.replace("/\n/g", "<br>");
                     alert(mensaje);
                     return false;
-                } else if (confirm("¿Está seguro de que su información es correcta?")) {                    
+                } else if (confirm("¿Está seguro de que su información es correcta?")) {
                     $('#myModalActualizacion').css('display', 'block');
                     $('#myModal').css('display', 'none'); //Cierra #myModal cuando se abre para cargar documentos
                     __doPostBack('<%= BtnActualizar.ClientID %>', '');

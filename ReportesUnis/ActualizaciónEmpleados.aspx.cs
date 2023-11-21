@@ -16,7 +16,9 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml;
-using Outlook = Microsoft.Office.Interop.Outlook;
+using MailKit.Net.Smtp;
+using MimeKit;
+using MailKit.Security;
 
 namespace ReportesUnis
 {
@@ -37,6 +39,7 @@ namespace ReportesUnis
         string Hoy = DateTime.Now.ToString("yyyy-MM-dd").Substring(0, 10).TrimEnd();
         string HoyEffdt = DateTime.Now.ToString("dd-MM-yyyy").Substring(0, 10).TrimEnd();
         int aux = 0;
+        string mensajeError = "Ocurrió un problema al actualizar su: ";
 
         public static class StringExtensions
         {
@@ -125,7 +128,7 @@ namespace ReportesUnis
                         {
                             recibos.Style["display"] = "block";
                             mostrarInformaciónEstudiante();
-                            CmbRoles.Items.Add(new ListItem("Estudiante", "S"));
+                            CmbRoles.Items.Add(new ListItem("Estudiante", "A"));
                             ControlRoles.Value = ControlRoles.Value + " Estudiante";
                         }
                         else if (containsProf.Value == "1")
@@ -163,7 +166,7 @@ namespace ReportesUnis
                             txtNit.Enabled = false;
                             RadioButtonNombreSi.Checked = true;
                             ValidarNIT.Enabled = false;
-                            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
+                            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value) && ChangeNIT.Value == "1")
                             {
                                 PaisNit.Text = cMBpAIS.SelectedValue;
                                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -420,7 +423,7 @@ namespace ReportesUnis
                     {
                         if (result[i].Substring(0, 1) == "O" || result[i].Substring(0, 1) == "S" || result[i].Substring(0, 1) == "N")
                         {
-                            resultadoValores[j] = "E";
+                            resultadoValores[j] = (result[i].Substring(0, 1));
                         }
                         else
                         {
@@ -1086,6 +1089,7 @@ namespace ReportesUnis
                         StateNIT.Text = reader["STATE_NIT"].ToString();
                         txtNit.Text = reader["NIT"].ToString();
                         TrueNit.Value = txtNit.Text;
+                        ChangeNIT.Value = "0";
                         TxtDiRe1.Text = reader["DIRECCION1_NIT"].ToString();
                         TxtDiRe2.Text = reader["DIRECCION2_NIT"].ToString();
                         TxtDiRe3.Text = reader["DIRECCION3_NIT"].ToString();
@@ -1449,50 +1453,104 @@ namespace ReportesUnis
         {
             string htmlBody = LeerBodyEmail("bodyIngresoEmpleados-Operador.txt");
             string[] datos = LeerInfoEmail("datosIngresoEmpleados-Operador.txt");
+            string[] credenciales = LeerCredencialesMail();
+            var email = new MimeMessage();
+            var para = txtNombre1.Text + " " + txtPrimerApellido.Text;
 
-            //Creación de instancia de la aplicacion de outlook
-            var outlook = new Outlook.Application();
+            email.From.Add(new MailboxAddress("Actualización Empleados", credenciales[3]));
+            email.To.Add(new MailboxAddress(credenciales[0], credenciales[3]));
 
-            //Crear un objeto MailItem
-            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            email.Subject = datos[0];
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = htmlBody
+            };
 
-            //Configuracion campos para envio del correo
-            mailItem.Subject = datos[0]; //Asunto del correo
+            using (var smtp = new SmtpClient())
+            {
+                try
+                {
+                    //smtp.Connect("smtp.gmail.com", 587, false);
+                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
-            mailItem.HTMLBody = htmlBody;
-            mailItem.To = datos[1];
+                    // Note: only needed if the SMTP server requires authentication
+                    smtp.Authenticate(credenciales[1], credenciales[2]);
 
-            //Enviar coreo
-            mailItem.Send();
+                    smtp.Send(email);
+                    smtp.Disconnect(true);
 
-            //liberar recursos utilizados
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+                }
+                catch (Exception ex)
+                {
+                    lblActualizacion.Text = ex.ToString();
+                }
+            }
+        }
+
+        public string[] LeerCredencialesMail()
+        {
+            string rutaCompleta = CurrentDirectory + "/Emails/Credenciales.txt";
+            string[] datos;
+            string nombre = "";
+            string correo = "";
+            string pass = "";
+            string correoVisible = "";
+            using (StreamReader file = new StreamReader(rutaCompleta, Encoding.UTF8))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                string linea4 = file.ReadLine();
+                string linea5 = file.ReadLine();
+                string linea6 = file.ReadLine();
+                nombre = linea2;
+                correo = linea4;
+                pass = linea6;
+                correoVisible = linea4;
+                file.Close();
+
+                // Corrección: Inicializa un nuevo array y asigna los valores
+                datos = new string[] { nombre, correo, pass, correoVisible };
+            }
+
+            return datos;
         }
         public void EnvioCorreoEmpleado()
         {
             string htmlBody = LeerBodyEmail("bodyIngresoEmpleados.txt");
             string[] datos = LeerInfoEmail("datosIngresoEmpleados.txt");
+            string[] credenciales = LeerCredencialesMail();
+            var email = new MimeMessage();
+            var para = txtNombre1.Text + " " + txtPrimerApellido.Text;
 
-            //Creación de instancia de la aplicacion de outlook
-            var outlook = new Outlook.Application();
+            email.To.Add(new MailboxAddress(para, TxtCorreoInstitucional.Text));
+            email.From.Add(new MailboxAddress(credenciales[0], credenciales[3]));
 
-            //Crear un objeto MailItem
-            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            email.Subject = datos[0];
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = htmlBody
+            };
 
-            //Configuracion campos para envio del correo
-            mailItem.Subject = datos[0]; //Asunto del correo
+            using (var smtp = new SmtpClient())
+            {
+                try
+                {
+                    //smtp.Connect("smtp.gmail.com", 587, false);
+                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
-            mailItem.HTMLBody = htmlBody;
-            //mailItem.BCC = datos[1];
-            mailItem.To = TxtCorreoInstitucional.Text;
+                    // Note: only needed if the SMTP server requires authentication
+                    smtp.Authenticate(credenciales[1], credenciales[2]);
 
-            //Enviar coreo
-            mailItem.Send();
+                    smtp.Send(email);
+                    smtp.Disconnect(true);
 
-            //liberar recursos utilizados
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+                }
+                catch (Exception ex)
+                {
+                    lblActualizacion.Text = ex.ToString();
+                }
+            }
         }
         protected string ConsumoSQL(string Consulta)
         {
@@ -1598,7 +1656,7 @@ namespace ReportesUnis
                                 if (String.IsNullOrEmpty(StateNIT.Text))
                                     StateNIT.Text = State.Text;
 
-                                if (RadioButtonNombreSi.Checked && ControlRBS.Value == "1")
+                                if (RadioButtonNombreSi.Checked && ControlRBS.Value == "1" && ChangeNIT.Value == "1")
                                 {
                                     TxtNombreR.Text = txtNombre1.Text + " " + txtNombre2.Text;
                                     TxtApellidoR.Text = txtApellido1.Text + " " + txtApellido2.Text;
@@ -1627,7 +1685,7 @@ namespace ReportesUnis
                                 }
 
                                 var tipoPersona = "";
-                                if (CmbRoles.SelectedValue.Equals("E"))
+                                if (CmbRoles.SelectedValue.Equals("E") || CmbRoles.SelectedValue.Equals("O") || CmbRoles.SelectedValue.Equals("N") || CmbRoles.SelectedValue.Equals("S"))
                                 {
                                     tipoPersona = "1";
                                 }
@@ -1635,7 +1693,7 @@ namespace ReportesUnis
                                 {
                                     tipoPersona = "3";
                                 }
-                                else if (CmbRoles.SelectedValue.Equals("S"))
+                                else if (CmbRoles.SelectedValue.Equals("A"))
                                 {
                                     tipoPersona = "2";
                                 }
@@ -2244,8 +2302,13 @@ namespace ReportesUnis
                                         ConsumoSQL(DeleteBanco);
 
                                         cmd.CommandText = txtInsert.Text;
+                                        RegistroCarne = "1";
                                         cmd.ExecuteNonQuery();
                                         matrizDatos();
+                                        mensaje = "Su información fue almacenada correctamente. </br> La información ingresada debe ser aprobada antes de ser confirmada. </br> Actualmente, solo se muestran los datos que han sido previamente confirmados.";
+                                        string script = "<script>ConfirmacionActualizacionSensible();</script>";
+                                        ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+
 
                                     }
 
@@ -2255,8 +2318,7 @@ namespace ReportesUnis
                                         cmd.ExecuteNonQuery();
                                     }
 
-                                    transaction.Commit();
-                                    con.Close();
+
 
                                     auxConsulta = 0;
                                     string consultaUP = "1";
@@ -2304,7 +2366,7 @@ namespace ReportesUnis
                                             }
                                             string PersonLegislativeId = getBetween(consulta, "child/legislativeInfo/", "\",\n");
                                             string EmailId = getBetween(consulta, "\"EmailAddressId\" : ", "\"" + CorreoInicial.Value + "\",");
-                                            if (EmailId.Contains("EmailAddressId"))
+                                            if (EmailId.Contains("EmailAddressId") || EmailId.Contains("\"W1\""))
                                             {
                                                 EmailId = getBetween(EmailId, "\"EmailAddressId\" : ", "\"H1\",");
                                                 EmailId = getBetween(EmailId, "", ",\n");
@@ -2349,7 +2411,7 @@ namespace ReportesUnis
                                             var email = "{\"EmailAddress\": \"" + TxtCorreoPersonal.Text + "\"}";
                                             respuestaPatch = 0;
                                             respuestaPost = 0;
-                                            string mensajeError = "Ocurrió un problema al actualizar su: ";
+
                                             string body = "";
 
                                             //TELEFONO
@@ -2475,12 +2537,14 @@ namespace ReportesUnis
 
                                         if (au == 0)
                                         {
+                                            transaction.Commit();
+                                            con.Close();
                                             if (Request.Form["urlPathControl"] == "1")
                                             {
                                                 AlmacenarFotografia();
                                             }
                                             fotoAlmacenada();
-                                            if (ControlRBS.Value == "1")
+                                            if (ControlRBS.Value == "1" && ChangeNIT.Value == "1")
                                             {
                                                 PaisNit.Text = cMBpAIS.SelectedValue;
                                                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -2499,8 +2563,10 @@ namespace ReportesUnis
                                         else
                                         {
                                             transaction.Rollback();
+                                            con.Close();
                                             EliminarAlmacenada();
                                             mensaje = "Error";
+                                            //log(mensajeError);
                                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                         }
                                     }
@@ -2509,14 +2575,16 @@ namespace ReportesUnis
                                         transaction.Rollback();
                                         EliminarAlmacenada();
                                         mensaje = "Error";
+                                        //log("Error en almacenamiento Campus");
                                         ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                     }
                                 }
-                                catch (Exception)
+                                catch (Exception X)
                                 {
                                     transaction.Rollback();
                                     EliminarAlmacenada();
                                     mensaje = "Error";
+                                    //log(X.Message);
                                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                 }
                             }
@@ -2524,15 +2592,17 @@ namespace ReportesUnis
                             {
                                 EliminarAlmacenada();
                                 mensaje = "Error";
+                                //log("No se almaceno la fotografía de manera correcta");
                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                             }
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception X)
                 {
                     EliminarAlmacenada();
                     mensaje = "Error";
+                    log(X.Message);
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
                 if (urlPathControl2.Value == "1")
@@ -2582,9 +2652,9 @@ namespace ReportesUnis
                                 transaction.Commit();
                                 con.Close();
                             }
-                            catch
+                            catch (Exception x)
                             {
-
+                                //log(x.Message);
                             }
                         }
                     }
@@ -2608,13 +2678,16 @@ namespace ReportesUnis
 
                     if (RadioButtonNombreSi.Checked)
                     {
-                        TxtNombreR.Text = txtNombre1.Text + " " + txtNombre2.Text;
-                        TxtApellidoR.Text = txtApellido1.Text + " " + txtApellido2.Text;
-                        TxtCasadaR.Text = TxtCasadaR.Text;
-                        TxtDiRe1.Text = txtDireccion.Text;
-                        TxtDiRe2.Text = txtDireccion2.Text;
-                        TxtDiRe3.Text = txtZona.Text;
-                        txtNit.Text = "CF";
+                        if (ChangeNIT.Value == "1")
+                        {
+                            TxtNombreR.Text = txtNombre1.Text + " " + txtNombre2.Text;
+                            TxtApellidoR.Text = txtApellido1.Text + " " + txtApellido2.Text;
+                            TxtCasadaR.Text = TxtCasadaR.Text;
+                            TxtDiRe1.Text = txtDireccion.Text;
+                            TxtDiRe2.Text = txtDireccion2.Text;
+                            TxtDiRe3.Text = txtZona.Text;
+                            txtNit.Text = "CF";
+                        }
                         mensaje = IngresoDatos();
                     }
                 }
@@ -2682,9 +2755,9 @@ namespace ReportesUnis
                                     transaction.Commit();
                                     con.Close();
                                 }
-                                catch
+                                catch (Exception x)
                                 {
-
+                                    //log(x.Message);
                                 }
                             }
                         }
@@ -2699,16 +2772,19 @@ namespace ReportesUnis
                         ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                         mensaje = "Es necesario adjuntar la imagen de su documento de identificación para continuar con la actualización.";
 
-                        PaisNit.Text = cMBpAIS.SelectedValue;
-                        DepartamentoNit.Text = CmbDepartamento.SelectedValue;
-                        MunicipioNit.Text = CmbMunicipio.SelectedValue;
-                        TxtNombreR.Text = txtNombre1.Text + " " + txtNombre2.Text;
-                        TxtApellidoR.Text = txtApellido1.Text + " " + txtApellido2.Text;
-                        TxtCasadaR.Text = txtApellidoCasada.Text;
-                        TxtDiRe1.Text = txtDireccion.Text;
-                        TxtDiRe2.Text = txtDireccion2.Text;
-                        TxtDiRe3.Text = txtZona.Text;
-                        txtNit.Text = "CF";
+                        if (ChangeNIT.Value == "1")
+                        {
+                            PaisNit.Text = cMBpAIS.SelectedValue;
+                            DepartamentoNit.Text = CmbDepartamento.SelectedValue;
+                            MunicipioNit.Text = CmbMunicipio.SelectedValue;
+                            TxtNombreR.Text = txtNombre1.Text + " " + txtNombre2.Text;
+                            TxtApellidoR.Text = txtApellido1.Text + " " + txtApellido2.Text;
+                            TxtCasadaR.Text = txtApellidoCasada.Text;
+                            TxtDiRe1.Text = txtDireccion.Text;
+                            TxtDiRe2.Text = txtDireccion2.Text;
+                            TxtDiRe3.Text = txtZona.Text;
+                            txtNit.Text = "CF";
+                        }
                     }
                     fotoAlmacenada();
                 }
@@ -2886,13 +2962,33 @@ namespace ReportesUnis
                                 SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/", txtCarne.Text + ".jpg");
                                 transaction.Commit();
                             }
-                            catch (Exception)
+                            catch (Exception X)
                             {
                                 transaction.Rollback();
+                                //log(X.Message);
                                 fotoAlmacenada();
                             }
                         }
                     }
+                }
+            }
+        }
+
+        private void log(string ErrorLog)
+        {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + txtCarne.Text + "','" + ErrorLog + "','EMPLEADOS',SYSDATE)";
+                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
+
                 }
             }
         }
@@ -2974,6 +3070,7 @@ namespace ReportesUnis
                 }
                 catch (Exception ex)
                 {
+                    //log(ex.Message);
                     return "Error al guardar la imagen: " + ex.Message;
                 }
             }
@@ -2997,7 +3094,7 @@ namespace ReportesUnis
             listadoZonas();
             llenadoState();
 
-            if (ControlRBS.Value == "1")
+            if (ControlRBS.Value == "1" && ChangeNIT.Value == "1")
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -3025,7 +3122,7 @@ namespace ReportesUnis
             aux = 3;
             listadoZonas();
             llenadoState();
-            if (ControlRBS.Value == "1")
+            if (ControlRBS.Value == "1" & ChangeNIT.Value == "1")
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -3051,7 +3148,7 @@ namespace ReportesUnis
             aux = 3;
             listadoZonas();
             llenadoState();
-            if (ControlRBS.Value == "1")
+            if (ControlRBS.Value == "1" && ChangeNIT.Value == "1")
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -3173,6 +3270,7 @@ namespace ReportesUnis
                 else
                 {
                     EliminarAlmacenada();
+                    //log("Es necesario seleccionar un País, departamento y municipio para el recibo.");
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
             }
@@ -3192,7 +3290,7 @@ namespace ReportesUnis
             {
                 AlmacenarFotografia();
             }
-            if (CmbRoles.SelectedValue != "S")
+            if (CmbRoles.SelectedValue != "A")
             {
                 listadoDependencia();
                 LblPuesto.Text = "Puesto:";
@@ -3503,7 +3601,7 @@ namespace ReportesUnis
         protected void BtnReload_Click(object sender, EventArgs e)
         {
             Response.Redirect(@"~/ActualizaciónEmpleados.aspx");
-        } 
+        }
 
 
         [WebMethod]
@@ -4222,5 +4320,9 @@ namespace ReportesUnis
             respuestaPost = respuestaPost + respuesta;
         }
 
+        protected void txtNit_TextChanged1(object sender, EventArgs e)
+        {
+            ChangeNIT.Value = "1";
+        }
     }
 }

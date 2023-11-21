@@ -9,7 +9,10 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using ReportesUnis.API;
-using Outlook = Microsoft.Office.Interop.Outlook;
+using System.Text;
+using MailKit.Net.Smtp;
+using MimeKit;
+using MailKit.Security;
 
 namespace ReportesUnis
 {
@@ -509,12 +512,12 @@ namespace ReportesUnis
             try
             {
                 string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                int ContadorArchivos = 0;
+               /* int ContadorArchivos = 0;
                 int ContadorArchivosCorrectos = 0;
                 int ContadorArchivosConError = 0;
-                bool Error = false;
+                bool Error = false;*/
 
-                //Ruta del archivo que guarda la bitácora
+                /*//Ruta del archivo que guarda la bitácora
                 string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
                 //Nombre del archiov que guarda la bitácora
                 string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
@@ -527,12 +530,10 @@ namespace ReportesUnis
                 GuardarBitacora(ArchivoBitacora, "");
                 GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    EMPLID                      Estado                 Descripción                                    ");
                 GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
-
+                */
                 string EmplidFoto = Carnet;
                 string EmplidExisteFoto = "";
                 string mensajeValidacion = "";
-                //Nombre de la fotografía cargada (Sin extensión)
-                string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                 //Busca si la persona ya tiene fotografía registrada para proceder a actualizar
                 using (OracleConnection conEmplid = new OracleConnection(constr))
@@ -554,17 +555,12 @@ namespace ReportesUnis
                     catch (OracleException ex)
                     {
                         mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
-                        GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
-                        if (Error == false)
-                        {
-                            ContadorArchivosConError++;
-                        }
                     }
                 }
                 byte[] bytes = Convert.FromBase64String(ImagenData);
-
                 using (OracleConnection con = new OracleConnection(constr))
                 {
+                    con.Open();
                     string query = "";
                     using (OracleCommand cmd = new OracleCommand(query))
                     {
@@ -583,48 +579,13 @@ namespace ReportesUnis
 
                         cmd.Connection = con;
                         cmd.Parameters.Add(new OracleParameter("Fotografia", bytes));
-                        try
-                        {
-                            con.Open();
-                            int FilasAfectadas = cmd.ExecuteNonQuery();
-                            con.Close();
-                            if (FilasAfectadas == 0)
-                            {
-                                mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus";
-                                GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
-                                if (Error == false)
-                                {
-                                    ContadorArchivosConError++;
-                                    Error = true;
-                                }
-                            }
-                            else
-                            {
-                                GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "  " + EmplidFoto.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
-                                ContadorArchivosCorrectos++;
-                            }
-                        }
-                        catch (OracleException ex)
-                        {
-                            mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
-                            GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
-                            if (Error == false)
-                            {
-                                ContadorArchivosConError++;
-                            }
-                        }
+                        cmd.ExecuteNonQuery();
+                        
                     }
                 }
-
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
-                GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
-                GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
-                GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
                 mensaje = "0";
             }
-            catch (Exception)
+            catch (Exception X)
             {
                 mensaje = ". Ocurrió un error al cargar la imagen";
                 mensaje = "1";
@@ -651,17 +612,18 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT  CASE WHEN TIPO_PERSONA = '3' THEN 'Docente' WHEN TIPO_PERSONA = '1' THEN 'Administrativo' ELSE 'Estudiante' END TIPO_PERSONA, " +
-                        "NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, CODIGO, EMPLID, EMAIL " +
-                        "FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO =" + carne + "'  OR CARNET = '" + carne + "'";
+                    cmd.CommandText = "SELECT ROLES, " +
+                        "NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, CODIGO, EMPLID, EMAIL, NOMBRE1||' '||APELLIDO1 AS NOMBRE " +
+                        "FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + carne + "'  OR CARNET = '" + carne + "'";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        TipoPersona.Value = reader["TIPO_PERSONA"].ToString();
+                        TipoPersona.Value = reader["ROLES"].ToString();
                         DPI.Value = reader["CARNET"].ToString();
                         CODIGO.Value = reader["CODIGO"].ToString();
                         EMPLID.Value = reader["EMPLID"].ToString();
                         EMAIL.Value = reader["EMAIL"].ToString();
+                        NOMBRE.Value = reader["NOMBRE"].ToString();
                     }
                     con.Close();
                 }
@@ -875,29 +837,72 @@ namespace ReportesUnis
             }
             return datos;
         }
+        public string[] LeerCredencialesMail()
+        {
+            string rutaCompleta = CurrentDirectory + "/Emails/Credenciales.txt";
+            string[] datos;
+            string nombre = "";
+            string correo = "";
+            string pass = "";
+            string correoVisible = "";
+            using (StreamReader file = new StreamReader(rutaCompleta, Encoding.UTF8))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                string linea4 = file.ReadLine();
+                string linea5 = file.ReadLine();
+                string linea6 = file.ReadLine();
+
+
+                nombre = linea2;
+                correo = linea4;
+                pass = linea6;
+                correoVisible = linea4;
+                file.Close();
+
+                // Corrección: Inicializa un nuevo array y asigna los valores
+                datos = new string[] { nombre, correo, pass, correoVisible };
+            }
+
+            return datos;
+        }
         public void EnvioCorreo(string body, string subject)
         {
             string htmlBody = LeerBodyEmail(body);
             string[] datos = LeerInfoEmail(subject);
+            string[] credenciales = LeerCredencialesMail();
+            var email = new MimeMessage();
+            var para = NOMBRE.Value;
 
-            //Creación de instancia de la aplicacion de outlook
-            var outlook = new Outlook.Application();
+            email.From.Add(new MailboxAddress(credenciales[0], credenciales[3]));
+            email.To.Add(new MailboxAddress(para, EMAIL.Value));
 
-            //Crear un objeto MailItem
-            var mailItem = (Outlook.MailItem)outlook.CreateItem(Outlook.OlItemType.olMailItem);
+            email.Subject = datos[0];
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = htmlBody
+            };
 
-            //Configuracion campos para envio del correo
-            mailItem.Subject = datos[0]; //Asunto del correo
+            using (var smtp = new SmtpClient())
+            {
+                try
+                {
+                    //smtp.Connect("smtp.gmail.com", 587, false);
+                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 
-            mailItem.HTMLBody = htmlBody;
-            mailItem.To = EMAIL.Value;
+                    // Note: only needed if the SMTP server requires authentication
+                    smtp.Authenticate(credenciales[1], credenciales[2]);
 
-            //Enviar coreo
-            mailItem.Send();
+                    smtp.Send(email);
+                    smtp.Disconnect(true);
 
-            //liberar recursos utilizados
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(mailItem);
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(outlook);
+                }
+                catch
+                {
+
+                }
+            }
         }
 
         //EVENTOS
@@ -909,6 +914,7 @@ namespace ReportesUnis
                 if (checkBox.Checked)
                 {
                     string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                    tipoPersona(nombre);
                     string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + nombre + "'";
                     string respuesta = ConsumoOracle(cadena);
                     if (respuesta == "0")
@@ -964,7 +970,7 @@ namespace ReportesUnis
                             if (respuesta == "0")
                             {
                                 respuesta = serviciosHCM();
-                                if (respuesta == "0" && TipoPersona.Value == "Estudiante")
+                                if (respuesta == "0" && TipoPersona.Value.Contains("Estudiante"))
                                 {
                                     Upload(carnet);
                                 }

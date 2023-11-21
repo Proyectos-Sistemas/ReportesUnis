@@ -31,6 +31,7 @@
         <input type="hidden" id="CODIGO" runat="server" />
         <input type="hidden" id="EMPLID" runat="server" />
         <input type="hidden" id="EMAIL" runat="server" />
+        <input type="hidden" id="NOMBRE" runat="server" />
     </div>
     <div class="container-fluid">
         <div class="row">
