@@ -2558,7 +2558,8 @@ namespace ReportesUnis
                                                 txtNit.Text = "CF";
                                             }
                                             mensaje = "0";
-                                            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
+                                            //log("La información de: " + txtdPI.Text + ", con el carne : "+ txtCarne.Text +" fue actualizada de forma correcta");
+                                            //ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                                         }
                                         else
                                         {
@@ -2566,7 +2567,7 @@ namespace ReportesUnis
                                             con.Close();
                                             EliminarAlmacenada();
                                             mensaje = "Error";
-                                            //log(mensajeError);
+                                            log("ERROR - " + mensajeError + " en HCM");
                                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                         }
                                     }
@@ -2575,7 +2576,7 @@ namespace ReportesUnis
                                         transaction.Rollback();
                                         EliminarAlmacenada();
                                         mensaje = "Error";
-                                        //log("Error en almacenamiento Campus");
+                                        log("ERROR - Error en almacenamiento Campus: UD = " + consultaUD + "; UP = " + consultaUP);
                                         ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                     }
                                 }
@@ -2584,7 +2585,7 @@ namespace ReportesUnis
                                     transaction.Rollback();
                                     EliminarAlmacenada();
                                     mensaje = "Error";
-                                    //log(X.Message);
+                                    log("ERROR - Error en el ingreso de datos Estudiante: " + X.Message);
                                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                 }
                             }
@@ -2592,7 +2593,7 @@ namespace ReportesUnis
                             {
                                 EliminarAlmacenada();
                                 mensaje = "Error";
-                                //log("No se almaceno la fotografía de manera correcta");
+                                log("ERROR - No se almaceno la fotografía de manera correcta");
                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                             }
                         }
@@ -2602,9 +2603,10 @@ namespace ReportesUnis
                 {
                     EliminarAlmacenada();
                     mensaje = "Error";
-                    log(X.Message);
+                    log("ERROR - Error en la funcion IngresoDatos: " + X.Message);
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
+
                 if (urlPathControl2.Value == "1")
                 {
                     AlmacenarFotografia();
@@ -2654,7 +2656,7 @@ namespace ReportesUnis
                             }
                             catch (Exception x)
                             {
-                                //log(x.Message);
+                                log("ERROR - Error en la funcion actualizarInformacion: " + x.Message);
                             }
                         }
                     }
@@ -2757,7 +2759,7 @@ namespace ReportesUnis
                                 }
                                 catch (Exception x)
                                 {
-                                    //log(x.Message);
+                                    log("ERROR - Error en la eliminacion de historial tabla intermedia: " + x.Message);
                                 }
                             }
                         }
@@ -2965,7 +2967,7 @@ namespace ReportesUnis
                             catch (Exception X)
                             {
                                 transaction.Rollback();
-                                //log(X.Message);
+                                log("ERROR - Error en el almacenamiento de Fotografía: " + X.Message);
                                 fotoAlmacenada();
                             }
                         }
@@ -3070,7 +3072,7 @@ namespace ReportesUnis
                 }
                 catch (Exception ex)
                 {
-                    //log(ex.Message);
+                    log("ERROR - Error en la funcion SaveCanvasImage: " + ex.Message);
                     return "Error al guardar la imagen: " + ex.Message;
                 }
             }
@@ -3255,6 +3257,7 @@ namespace ReportesUnis
                             EliminarAlmacenada();
                             EnvioCorreo();
                             EnvioCorreoEmpleado();
+                            log("La información de: " + txtdPI.Text + ", con el carne : " + txtCarne.Text + " fue actualizada de forma correcta");
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                         }
                     }
@@ -3264,13 +3267,14 @@ namespace ReportesUnis
                         EliminarAlmacenada();
                         EnvioCorreo();
                         EnvioCorreoEmpleado();
+                        log("La información de: " + txtdPI.Text + ", con el carne : " + txtCarne.Text + " fue actualizada de forma correcta");
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                     }
                 }
                 else
                 {
                     EliminarAlmacenada();
-                    //log("Es necesario seleccionar un País, departamento y municipio para el recibo.");
+                    log("ERROR - Es necesario seleccionar un País, departamento y municipio para el recibo.");
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
             }
@@ -3570,6 +3574,7 @@ namespace ReportesUnis
                     EliminarAlmacenada();
                     EnvioCorreo();
                     EnvioCorreoEmpleado();
+                    log("La información de: " + txtdPI.Text + ", con el carne : " + txtCarne.Text + " fue actualizada de forma correcta");
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                 }
             }
