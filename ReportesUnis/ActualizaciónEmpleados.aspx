@@ -300,6 +300,7 @@
             <input type="hidden" id="InicialNR3" runat="server" />
             <input type="hidden" id="ControlRBS" runat="server" />
             <input type="hidden" id="ControlRoles" runat="server" />
+            <input type="text" id="ControlCF" runat="server" />
 
 
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
@@ -314,14 +315,14 @@
                                     <br />
                                     <asp:Label ID="txtCarne" runat="server" Enabled="false"></asp:Label>
                                 </div>
-                                
+
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Fecha de nacimiento:</asp:Label>
                                     <br />
                                     <asp:Label ID="txtCumple" runat="server" Enabled="false"></asp:Label>
                                     <br />
                                 </div>
-                                
+
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">DPI/Pasaporte:</asp:Label>
                                     <br />
@@ -336,13 +337,13 @@
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <asp:Label id="lblDependencia" runat="server" Font-Bold="true">Facultad o Dependencia:</asp:Label>
+                                    <asp:Label ID="lblDependencia" runat="server" Font-Bold="true">Facultad o Dependencia:</asp:Label>
                                     <br />
                                     <asp:Label ID="txtFacultad" runat="server" Enabled="false" TextMode="MultiLine" Rows="2"></asp:Label>
                                     <br />
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <asp:Label id="LblPuesto" runat="server" Font-Bold="true">Puesto:</asp:Label>
+                                    <asp:Label ID="LblPuesto" runat="server" Font-Bold="true">Puesto:</asp:Label>
                                     <br />
                                     <asp:Label ID="txtPuesto" runat="server" Enabled="true" TextMode="MultiLine" Rows="2"></asp:Label>
                                     <br />
@@ -394,7 +395,7 @@
                                     <asp:Label runat="server" Font-Bold="true">Dirección2:</asp:Label>
                                     <asp:TextBox ID="txtDireccion2" runat="server" TextMode="MultiLine" Rows="2" MaxLength="150" Width="275px" CssClass="form-control" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                 </div>
-                                
+
 
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">País*:</asp:Label>
@@ -1209,7 +1210,10 @@
             // Function to add the code
             function RBSi() {
                 $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
-                    if ($(this).is(':checked')) {
+                    if ($(this).is(':checked')) {        
+                        $('#<%= ControlCF.ClientID %>').val(" ");
+
+
                         var apellido1 = $('#<%= txtApellido1.ClientID %>').val();
                         var apellido2 = $('#<%= txtApellido2.ClientID %>').val();
                         var apellidos = apellido1 + ' ' + apellido2;
@@ -1219,9 +1223,9 @@
                         var nombre1 = $('#<%= txtNombre1.ClientID %>').val();
                         var nombre2 = $('#<%= txtNombre2.ClientID %>').val();
                         var nombres = nombre1 + ' ' + nombre2;
-                        console.log(nombres);
-                        $('#<%= TxtNombreR.ClientID %>').val(nombres);
 
+                        $('#<%= TxtNombreR.ClientID %>').val(nombres);
+                        $('#<%= TxtNombreR.ClientID %>').val(apellidos);
                         $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtApellidoCasada.ClientID %>').val());
                         $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
                         $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
@@ -1229,25 +1233,27 @@
                         $('#<%= CmbPaisNIT.ClientID %>').val($('#<%= cMBpAIS.ClientID %>').val());
                         $('#<%= CmbMunicipioNIT.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
                         $('#<%= CmbDepartamentoNIT.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
-                        $('#<%= PaisNit.ClientID %>').val($('#<%= cMBpAIS.ClientID %>').val());
-                        $('#<%= MunicipioNit.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
-                        $('#<%= DepartamentoNit.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
                         $('#<%= StateNIT.ClientID %>').val($('#<%= State.ClientID %>').val());
                         $('#<%= txtNit.ClientID %>').val('CF');
                         $('#<%= txtNit.ClientID %>').prop('disabled', true);
                         $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
                         $('#<%= TxtDiRe1.ClientID %>').prop('disabled', true);
-                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', true);
                         $('#<%= TxtDiRe2.ClientID %>').prop('disabled', true);
+                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', true);
                         $('#<%= PaisNit.ClientID %>').prop('disabled', true);
                         $('#<%= MunicipioNit.ClientID %>').prop('disabled', true);
                         $('#<%= DepartamentoNit.ClientID %>').prop('disabled', true);
-                        $('#<%= lblActualizacion.ClientID %>').text('');
 
                         // Hacer visible la fila Combos
                         $('#<%= Combos.ClientID %>').hide();
                         // Hacer visible la fila sustitucion de Combos
                         $('#<%= sustituirCombos.ClientID %>').hide();
+
+                        $('#<%= PaisNit.ClientID %>').val($('#<%= cMBpAIS.ClientID %>').val());
+                        $('#<%= MunicipioNit.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
+                        $('#<%= DepartamentoNit.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
+                        $('#<%= lblActualizacion.ClientID %>').text('');
+
                     }
                 });
             }
@@ -1287,6 +1293,7 @@
             function RBNo() {
                 $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
+                        $('#<%= ControlCF.ClientID %>').val("");
                         $('#<%= TxtNombreR.ClientID %>').val("");
                         $('#<%= TxtApellidoR.ClientID %>').val("");
                         $('#<%= TxtCasadaR.ClientID %>').val("");
@@ -1303,13 +1310,25 @@
                         $('#<%= TxtDiRe1.ClientID %>').prop('disabled', false);
                         $('#<%= TxtDiRe2.ClientID %>').prop('disabled', false);
                         $('#<%= TxtDiRe3.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbPaisNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbDepartamentoNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
+                        $('#<%= Combos.ClientID %>').show();
+                        $('#<%= sustituirCombos.ClientID %>').hide();
+                        var deptos = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>');
+                        var muni = document.getElementById('<%= CmbMunicipioNIT.ClientID %>');
+                        while (deptos.options.length > 0) {
+                            deptos.remove(0);
+                        }
+                        while (muni.options.length > 0) {
+                            muni.remove(0);
+                        }
+
                         <%--$('#<%= CmbPaisNIT.ClientID %>').prop('disabled', false);
                         $('#<%= CmbDepartamentoNIT.ClientID %>').prop('disabled', false);
                         $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);--%>
-                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
                         // Hacer visible la fila Combos
-                        $('#<%= Combos.ClientID %>').show();
-                        $('#<%= sustituirCombos.ClientID %>').hide();
                         //llenadoPaisnit();
                         //llenadoDepartamentoNit();
                         //llenadoMunicipioNIT();
@@ -1330,7 +1349,7 @@
         $(document).ready(function () {
             $('#<%= txtNombre1.ClientID %>, #<%= txtNombre2.ClientID %>').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    $('#<%= ControlRBS.ClientID %>').val().trim() == "1") {
+                    $('#<%= ControlRBS.ClientID %>').val().trim() == "1" && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     var nombre1 = $('#<%= txtNombre1.ClientID %>').val();
                     var nombre2 = $('#<%= txtNombre2.ClientID %>').val();
                     var nombres = nombre1 + ' ' + nombre2;
@@ -1344,7 +1363,7 @@
         $(document).ready(function () {
             $('#<%= txtApellido1.ClientID %>, #<%= txtApellido2.ClientID %>').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    $('#<%= ControlRBS.ClientID %>').val().trim() == "1") {
+                    $('#<%= ControlRBS.ClientID %>').val().trim() == "1" && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     var apellido1 = $('#<%= txtApellido1.ClientID %>').val();
                     var apellido2 = $('#<%= txtApellido2.ClientID %>').val();
                     var apellidos = apellido1 + ' ' + apellido2;
@@ -1357,7 +1376,7 @@
         $(document).ready(function () {
             $('#<%= txtApellidoCasada.ClientID %> ').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    $('#<%= ControlRBS.ClientID %>').val().trim() == "1") {
+                    $('#<%= ControlRBS.ClientID %>').val().trim() == "1" && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtApellidoCasada.ClientID %>').val());
                 }
             });
@@ -1368,7 +1387,7 @@
             $('#<%= txtDireccion.ClientID %> ').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
                     if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                        $('#<%= ControlRBS.ClientID %>').val().trim() == "1") {
+                        $('#<%= ControlRBS.ClientID %>').val().trim() == "1" && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                         $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
                     }
                 }
@@ -1380,7 +1399,7 @@
             $('#<%= txtDireccion2.ClientID %> ').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
                     if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                        $('#<%= ControlRBS.ClientID %>').val().trim() == "1") {
+                        $('#<%= ControlRBS.ClientID %>').val().trim() == "1" && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                         $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
                     }
                 }
@@ -1391,7 +1410,7 @@
         $(document).ready(function () {
             $('#<%= txtZona.ClientID %> ').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    $('#<%= ControlRBS.ClientID %>').val().trim() == "1") {
+                    $('#<%= ControlRBS.ClientID %>').val().trim() == "1" && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtZona.ClientID %>').val());
                 }
             });
@@ -1400,7 +1419,7 @@
         $(document).ready(function () {
             $('#<%= cMBpAIS.ClientID %> ').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    $('#<%= ControlRBS.ClientID %>').val().trim() == "1") {
+                    $('#<%= ControlRBS.ClientID %>').val().trim() == "1" && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= PaisNit.ClientID %>').val($('#<%= cMBpAIS.ClientID %>').val());
                 }
             });

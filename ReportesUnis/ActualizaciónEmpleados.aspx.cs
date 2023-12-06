@@ -167,6 +167,7 @@ namespace ReportesUnis
                         {
                             txtNit.Enabled = false;
                             RadioButtonNombreSi.Checked = true;
+                            ControlCF.Value = "CF";
                             ValidarNIT.Enabled = false;
                             if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value) && ChangeNIT.Value == "1")
                             {
@@ -1091,6 +1092,7 @@ namespace ReportesUnis
                         StateNIT.Text = reader["STATE_NIT"].ToString();
                         txtNit.Text = reader["NIT"].ToString();
                         TrueNit.Value = txtNit.Text;
+                        ControlCF.Value = reader["NIT"].ToString();
                         ChangeNIT.Value = "0";
                         TxtDiRe1.Text = reader["DIRECCION1_NIT"].ToString();
                         TxtDiRe2.Text = reader["DIRECCION2_NIT"].ToString();
@@ -3102,7 +3104,7 @@ namespace ReportesUnis
             listadoZonas();
             llenadoState();
 
-            if (ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text)
+            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text) || ControlCF.Value != "CF")
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -3114,6 +3116,11 @@ namespace ReportesUnis
                 TxtDiRe2.Text = txtDireccion2.Text;
                 TxtDiRe3.Text = txtZona.Text;
                 txtNit.Text = "CF";
+                TxtDiRe1.Enabled = false;
+                TxtDiRe2.Enabled = false;
+                TxtDiRe3.Enabled = false;
+                ValidarNIT.Enabled = false;
+                txtNit.Enabled = false;
             }
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
@@ -3130,7 +3137,7 @@ namespace ReportesUnis
             aux = 3;
             listadoZonas();
             llenadoState();
-            if (ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text)
+            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text) || ControlCF.Value != "CF")
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -3142,6 +3149,11 @@ namespace ReportesUnis
                 TxtDiRe2.Text = txtDireccion2.Text;
                 TxtDiRe3.Text = txtZona.Text;
                 txtNit.Text = "CF";
+                TxtDiRe1.Enabled = false;
+                TxtDiRe2.Enabled = false;
+                TxtDiRe3.Enabled = false;
+                ValidarNIT.Enabled = false;
+                txtNit.Enabled = false;
             }
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
@@ -3156,7 +3168,7 @@ namespace ReportesUnis
             aux = 3;
             listadoZonas();
             llenadoState();
-            if (ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text)
+            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text) || ControlCF.Value != "CF")
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -3168,6 +3180,11 @@ namespace ReportesUnis
                 TxtDiRe2.Text = txtDireccion2.Text;
                 TxtDiRe3.Text = txtZona.Text;
                 txtNit.Text = "CF";
+                TxtDiRe1.Enabled = false;
+                TxtDiRe2.Enabled = false;
+                TxtDiRe3.Enabled = false;
+                ValidarNIT.Enabled = false;
+                txtNit.Enabled = false;
             }
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
