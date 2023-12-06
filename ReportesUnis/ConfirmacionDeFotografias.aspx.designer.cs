@@ -105,6 +105,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden carne;
 
         /// <summary>
+        /// Control DPI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden DPI;
+
+        /// <summary>
         /// Control GridViewFotos.
         /// </summary>
         /// <remarks>

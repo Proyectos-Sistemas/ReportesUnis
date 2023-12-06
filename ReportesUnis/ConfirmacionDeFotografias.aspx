@@ -27,6 +27,8 @@
         <asp:TextBox ID="prueba" runat="server" Visible="false"></asp:TextBox> 
          <%-- TEXTBOX ALMACENA EL CORREO INSTITUCIONAL--%>
         <input type="hidden" id="carne" runat="server" />
+        
+        <input type="hidden" id="DPI" runat="server" />
     </div>
     <div class="container-fluid">
         <div class="row">

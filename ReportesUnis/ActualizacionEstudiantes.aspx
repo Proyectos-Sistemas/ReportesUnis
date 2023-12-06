@@ -220,6 +220,7 @@
             <input type="hidden" id="InicialNR1" runat="server" />
             <input type="hidden" id="InicialNR2" runat="server" />
             <input type="hidden" id="InicialNR3" runat="server" />
+            <input type="hidden" id="ControlCF" runat="server" />
 
 
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
@@ -720,7 +721,7 @@
                 $('#<%= BtnDownload.ClientID %>').css("display", "none");
                 var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
                 lblActualizacion.html("");
-                $('#<%= BtnReload.ClientID %>').click;
+               <%-- $('#<%= BtnReload.ClientID %>').click;--%>
             }, function (error) {
                 let mensajeError = error.message;
                 if (mensajeError == "Permission denied") {
@@ -766,7 +767,7 @@
                 $('#<%= BtnDownload.ClientID %>').css("display", "none");
                 var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
                 lblActualizacion.html("");
-                $('#<%= BtnReload.ClientID %>').click;
+                <%--$('#<%= BtnReload.ClientID %>').click;--%>
             }, function (error) {
                 let mensajeError = error.message;
                 if (mensajeError.indexOf("Permission denied" != -1)) {
@@ -835,7 +836,7 @@
                     const status = await navigator.permissions.query({ name: 'camera' });
 
                     status.onchange = function () {
-                        location.reload();
+                        /*location.reload();*/
                     };
                 } catch (error) {
 
@@ -863,7 +864,7 @@
                             $('#<%= InfePersonal.ClientID %>').css("display", "block");
                             $('#<%= BtnReload.ClientID %>').css("display", "none");
                             $('#<%= BtnDownload.ClientID %>').css("display", "none");
-                            $('#<%= BtnReload.ClientID %>').click;
+                            <%--$('#<%= BtnReload.ClientID %>').click;--%>
                             guardarEnSessionStorage("1");
                             bandera.text = "1";
                             lblActualizacion.html("");
@@ -1180,6 +1181,7 @@
             function RBSi() {
                 $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
+                        $('#<%= ControlCF.ClientID %>').val(" ");
                         $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
                         $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
                         $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
@@ -1244,6 +1246,7 @@
             function RBNo() {
                 $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
+                        $('#<%= ControlCF.ClientID %>').val(" ");
                         $('#<%= TxtNombreR.ClientID %>').val("");
                         $('#<%= TxtApellidoR.ClientID %>').val("");
                         $('#<%= TxtCasadaR.ClientID %>').val("");
@@ -1276,9 +1279,6 @@
                         while (muni.options.length > 0) {
                             muni.remove(0);
                         }
-                        //llenadoPaisnit();
-                        //llenadoDepartamentoNit();
-                        //llenadoMunicipioNIT();
                     }
                 });
             }
@@ -1292,13 +1292,10 @@
             $('#myModal').css('display', 'none');
         });
 
-        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
+       //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtNombre.ClientID %>').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
                 }
             });
@@ -1307,10 +1304,7 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtApellido.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
                 }
             });
@@ -1319,10 +1313,7 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO DE CASADA EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtCasada.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
                 }
             });
@@ -1331,22 +1322,16 @@
         //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 1 EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtDireccion.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if(!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
                 }
             });
         });
 
-        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 2 EN EL RECIBO 
+        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 2 EN EL RECIBO 2.0
         $(document).ready(function () {
             $('#<%= txtDireccion2.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
                 }
             });
@@ -1355,10 +1340,7 @@
         //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 3 EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtDireccion3.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
                 }
             });
@@ -1367,10 +1349,7 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO PAIS EN EL RECIBO
         $(document).ready(function () {
             $('#<%= CmbPaisNIT.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if(!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
                 }
             });
@@ -1416,7 +1395,10 @@
                 var character = String.fromCharCode(keyCode);
                 if (character === '-') {
                     event.preventDefault();
-                    alert('No se permite el ingreso del guín (-)');
+                    alert('No se permite el ingreso del guión (-)');
+                } else if (character === 'C' || character === 'c') {
+                    event.preventDefault();
+                    alert('Para ingresar CF, seleccione la casilla NO, que se encuentra arriba del campo del ingreso del NIT');
                 }
             });
         });
@@ -1446,7 +1428,8 @@
                 var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
                 var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
                 var labelValidacion = $('#<%= ValidacionNit.ClientID %>').val().trim();
-
+                
+                
                 if (txtNit !== TrueNit || txtNit !== 'CF') {
                     $('#<%= ValidacionNit.ClientID %>').val("1");
                 } else {

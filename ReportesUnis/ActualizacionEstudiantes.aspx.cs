@@ -73,6 +73,7 @@ namespace ReportesUnis
                         {
                             txtNit.Enabled = false;
                             RadioButtonNombreSi.Checked = true;
+                            ControlCF.Value = "CF";
                             ValidarNIT.Enabled = false;
                             if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
                             {
@@ -292,6 +293,7 @@ namespace ReportesUnis
                         InicialNR3.Value = reader["CASADA_NIT"].ToString();
                         txtNit.Text = reader["NIT"].ToString();
                         TrueNit.Value = reader["NIT"].ToString();
+                        ControlCF.Value = reader["NIT"].ToString();
                         State.Text = reader["STATE"].ToString();
                         StateNIT.Text = reader["STATE_NIT"].ToString();
                         largoApellido = txtAInicial.Value.Length;
@@ -304,7 +306,8 @@ namespace ReportesUnis
                             posicion = txtApellido.Text.Substring(6, largoApellido - 6).IndexOf(" ");
                             txtContaador.Text = txtAInicial.Value.Length.ToString() + " " + posicion.ToString();
                             txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 6);
-                        } else if ((txtApellido.Text.Substring(0, 6)).ToUpper().Equals("DE LAS"))
+                        }
+                        else if ((txtApellido.Text.Substring(0, 6)).ToUpper().Equals("DE LAS"))
                         {
                             posicion = txtApellido.Text.Substring(7, largoApellido - 7).IndexOf(" ");
                             txtContaador.Text = txtAInicial.Value.Length.ToString() + " " + posicion.ToString();
@@ -1016,9 +1019,9 @@ namespace ReportesUnis
                                 transaction.Commit();
                                 con.Close();
                             }
-                            catch
+                            catch (Exception x)
                             {
-
+                                log("ERROR - Error en la funcion actualizarInformacion: " + x.Message);
                             }
                         }
                     }
@@ -1046,11 +1049,6 @@ namespace ReportesUnis
                     TxtDiRe2.Text = txtDireccion2.Text;
                     TxtDiRe3.Text = txtDireccion3.Text;
                     txtNit.Text = "CF";
-                    IngresoDatos();
-                }
-                else
-                {
-                    //txtNit.Text = "CF";
                     IngresoDatos();
                 }
             }
@@ -1148,8 +1146,7 @@ namespace ReportesUnis
             {
                 try
                 {
-                    //smtp.Connect("smtp.gmail.com", 587, false);
-                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                    smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
 
                     // Note: only needed if the SMTP server requires authentication
                     smtp.Authenticate(credenciales[1], credenciales[2]);
@@ -1160,6 +1157,7 @@ namespace ReportesUnis
                 }
                 catch (Exception ex)
                 {
+                    log("ERROR - Envio de correo para operador");
                     lblActualizacion.Text = ex.ToString();
                 }
             }
@@ -1187,7 +1185,7 @@ namespace ReportesUnis
             {
                 try
                 {
-                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                    smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
 
                     // Note: only needed if the SMTP server requires authentication
                     smtp.Authenticate(credenciales[1], credenciales[2]);
@@ -1198,6 +1196,7 @@ namespace ReportesUnis
                 }
                 catch (Exception ex)
                 {
+                    log("ERROR - Envio de correo para " + EmailUnis.Text);
                     lblActualizacion.Text = ex.ToString();
                 }
             }
@@ -1250,8 +1249,8 @@ namespace ReportesUnis
                 string linea4 = file.ReadLine();
                 string linea5 = file.ReadLine();
                 string linea6 = file.ReadLine();
-                
-                
+
+
                 nombre = linea2;
                 correo = linea4;
                 pass = linea6;
@@ -1572,6 +1571,9 @@ namespace ReportesUnis
                             cmd.Transaction = transaction;
                             cmd.Connection = con;
 
+
+                            string consultaUP = "1";
+                            string consultaUD = "1";
                             try
                             {
                                 //Numero de Telefono
@@ -2017,7 +2019,8 @@ namespace ReportesUnis
                                                             "                                            </COLL_ADDRESSES> \n" +
                                                          "                                        </COLL_ADDRESS_TYPE_VW> \n";
                                             contadorUD = contadorUD + 1;
-                                        }else
+                                        }
+                                        else
                                         {//UPDATE
                                             UD_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
                                                                 "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
@@ -2072,12 +2075,10 @@ namespace ReportesUnis
                                     cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + txtCarne.Text + "'";
                                     cmd.ExecuteNonQuery();
                                     ConsumoSQL("DELETE FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CARNET ='" + txtCarne.Text + "'");
-                                    cmd.CommandText = txtInsert.Text; 
+                                    cmd.CommandText = txtInsert.Text;
                                     cmd.ExecuteNonQuery();
                                     FileUpload2.Visible = false;
                                     CargaDPI.Visible = false;
-                                    transaction.Commit();
-                                    con.Close();
                                     mostrarInformación();
                                     mensaje = "Su información fue almacenada correctamente. </br> La información ingresada debe ser aprobada antes de ser confirmada. </br> Actualmente, solo se muestran los datos que han sido previamente confirmados.";
                                     string script = "<script>ConfirmacionActualizacionSensible();</script>";
@@ -2091,8 +2092,6 @@ namespace ReportesUnis
                                 }
 
                                 auxConsulta = 0;
-                                string consultaUP = "1";
-                                string consultaUD = "1";
                                 if (contadorUP > 0)
                                 {
                                     consultaUP = Consultar();
@@ -2127,6 +2126,7 @@ namespace ReportesUnis
                                 {
                                     transaction.Rollback();
                                     EliminarAlmacenada();
+                                    log("ERROR - Error en almacenamiento Campus: UD = " + consultaUD + "; UP = " + consultaUP + " SOAP: " + Variables.soapBody);
                                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                 }
                             }
@@ -2134,20 +2134,23 @@ namespace ReportesUnis
                             {
                                 transaction.Rollback();
                                 EliminarAlmacenada();
+                                log("ERROR - Error en almacenamiento Campus: UD = " + consultaUD + "; UP = " + consultaUP + " SOAP: " + Variables.soapBody);
                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                             }
                         }
                         else
                         {
                             EliminarAlmacenada();
+                            log("ERROR - No se almaceno la fotografía de manera correcta");
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                         }
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception X)
             {
                 EliminarAlmacenada();
+                log("ERROR - Error en la funcion IngresoDatos: " + X.Message);
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
             }
 
@@ -2273,7 +2276,24 @@ namespace ReportesUnis
             }
             llenadoState();
             fotoAlmacenada();
-            MunicipioNit.Text = CmbMunicipio.SelectedValue;
+
+            if (RadioButtonNombreSi.Checked && ControlCF.Value != "CF")
+            {
+                txtNit.Text = "CF";
+                TxtDiRe1.Enabled = false;
+                TxtDiRe2.Enabled = false;
+                TxtDiRe3.Enabled = false;
+                ValidarNIT.Enabled = false;
+                txtNit.Enabled = false;
+                TxtDiRe1.Text = txtDireccion.Text;
+                TxtDiRe2.Text = txtDireccion2.Text;
+                TxtDiRe3.Text = txtDireccion3.Text;
+                DepartamentoNit.Text = CmbDepartamento.SelectedValue;
+                MunicipioNit.Text = CmbMunicipio.SelectedValue;
+                TxtNombreR.Text = txtNombre.Text;
+                TxtApellidoR.Text = txtApellido.Text;
+                TxtCasadaR.Text = txtCasada.Text;
+            }
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
         protected void CmbMunicipioNIT_SelectedIndexChanged(object sender, EventArgs e)
@@ -2295,8 +2315,23 @@ namespace ReportesUnis
             llenadoMunicipio();
             llenadoState();
             fotoAlmacenada();
-            DepartamentoNit.Text = CmbDepartamento.SelectedValue;
-            MunicipioNit.Text = CmbMunicipio.SelectedValue;
+            if (RadioButtonNombreSi.Checked && ControlCF.Value != "CF")
+            {
+                txtNit.Text = "CF";
+                TxtDiRe1.Enabled = false;
+                TxtDiRe2.Enabled = false;
+                TxtDiRe3.Enabled = false;
+                ValidarNIT.Enabled = false;
+                txtNit.Enabled = false;
+                TxtDiRe1.Text = txtDireccion.Text;
+                TxtDiRe2.Text = txtDireccion2.Text;
+                TxtDiRe3.Text = txtDireccion3.Text;
+                DepartamentoNit.Text = CmbDepartamento.SelectedValue;
+                MunicipioNit.Text = CmbMunicipio.SelectedValue;
+                TxtNombreR.Text = txtNombre.Text;
+                TxtApellidoR.Text = txtApellido.Text;
+                TxtCasadaR.Text = txtCasada.Text;
+            }
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
         protected void CmbDepartamentoNIT_SelectedIndexChanged(object sender, EventArgs e)
@@ -2353,6 +2388,7 @@ namespace ReportesUnis
                             EliminarAlmacenada();
                             EnvioCorreo();
                             EnvioCorreoEmpleado();
+                            log("La información fue actualizada de forma correcta");
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                         }
                     }
@@ -2362,12 +2398,14 @@ namespace ReportesUnis
                         EliminarAlmacenada();
                         EnvioCorreo();
                         EnvioCorreoEmpleado();
+                        log("La información fue actualizada de forma correcta");
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                     }
                 }
                 else
                 {
                     EliminarAlmacenada();
+                    log("ERROR - Es necesario seleccionar un teléfono, estado civil, país, departamento y municipio ");
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
             }
@@ -2382,6 +2420,23 @@ namespace ReportesUnis
             llenadoDepartamento();
             llenadoMunicipio();
             llenadoState();
+            if (RadioButtonNombreSi.Checked && ControlCF.Value != "CF")
+            {
+                txtNit.Text = "CF";
+                TxtDiRe1.Enabled = false;
+                TxtDiRe2.Enabled = false;
+                TxtDiRe3.Enabled = false;
+                ValidarNIT.Enabled = false;
+                txtNit.Enabled = false;
+                TxtDiRe1.Text = txtDireccion.Text;
+                TxtDiRe2.Text = txtDireccion2.Text;
+                TxtDiRe3.Text = txtDireccion3.Text;
+                DepartamentoNit.Text = CmbDepartamento.SelectedValue;
+                MunicipioNit.Text = CmbMunicipio.SelectedValue;
+                TxtNombreR.Text = txtNombre.Text;
+                TxtApellidoR.Text = txtApellido.Text;
+                TxtCasadaR.Text = txtCasada.Text;
+            }
 
             if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
             {
@@ -2389,6 +2444,8 @@ namespace ReportesUnis
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
                 MunicipioNit.Text = CmbMunicipio.SelectedValue;
             }
+
+
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
         protected void CmbPaisNIT_SelectedIndexChanged(object sender, EventArgs e)
@@ -2402,7 +2459,7 @@ namespace ReportesUnis
             llenadoStateNIT();
             fotoAlmacenada();
         }
-       
+
 
         [WebMethod]
         public static object GetChildDropDownData(string CmbPais)
@@ -2440,6 +2497,13 @@ namespace ReportesUnis
         }
         protected void txtNit_TextChanged(object sender, EventArgs e)
         {
+            TxtNombreR.Text = "";
+            TxtApellidoR.Text = "";
+            TxtCasadaR.Text = "";
+            TxtDiRe1.Text = "";
+            TxtDiRe2.Text = "";
+            TxtDiRe3.Text = "";
+
             string respuesta;
             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
             respuesta = consultaNit(txtNit.Text);
@@ -2583,6 +2647,8 @@ namespace ReportesUnis
                     TxtDiRe1.Enabled = true;
                     TxtDiRe2.Enabled = true;
                     TxtDiRe3.Enabled = true;
+                    txtNit.Enabled = true;
+                    ValidarNIT.Enabled = true;
                 }
                 else
                 {
@@ -2680,15 +2746,17 @@ namespace ReportesUnis
                             EliminarAlmacenada();
                             EnvioCorreo();
                             EnvioCorreoEmpleado();
+                            log("La información sensible fue actualizada de forma correcta");
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalSensible", "ConfirmacionActualizacionSensible();", true);
                         }
-                    }                   
+                    }
 
                     if (RadioButtonNombreSi.Checked)
                     {
                         EliminarAlmacenada();
                         EnvioCorreo();
                         EnvioCorreoEmpleado();
+                        log("La información sensible fue actualizada de forma correcta");
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalSensible", "ConfirmacionActualizacionSensible();", true);
                     }
                 }
@@ -2697,12 +2765,14 @@ namespace ReportesUnis
                     EliminarAlmacenada();
                     EnvioCorreo();
                     EnvioCorreoEmpleado();
+                    log("La información fue actualizada de forma correcta");
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                 }
             }
             else
             {
                 EliminarAlmacenada();
+                log("ERROR - Error en la funcion actualizarInformacion en AceptarCarga ");
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
             }
 
@@ -2744,6 +2814,25 @@ namespace ReportesUnis
                 }
             }
             return Convert.ToInt32(control);
+        }
+
+        private void log(string ErrorLog)
+        {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + txtCarne.Text + "','" + ErrorLog + "','ACTUALIZACION ESTUDIANTES',SYSDATE)";
+                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
+
+                }
+            }
         }
 
         /*-------------------------------------------INICIAN FUNCIONES PARA METODO SOAP-------------------------------------------*/
@@ -2995,6 +3084,8 @@ namespace ReportesUnis
                                       </Update__CompIntfc__CI_PERSONAL_DATA>
                                    </soapenv:Body>
                                 </soapenv:Envelope>";
-        }        
+        }
+
+
     }
 }

@@ -381,7 +381,7 @@ namespace ReportesUnis
                                        ",[Condmig] " +
                                        ",[O_Condmig] " +
                                        ",[Validar_Envio]) " +
-                                    "VALUES ('''||CARNET||''','''" + // APELLIDO DE CASADA
+                                    "VALUES ('''||CODIGO||''','''" + // APELLIDO DE CASADA
                                         "||FACULTAD||''','''" + //Carrera
                                         "||DIRECCION||''','''" + //DIRECCION
                                         "||ZONA||''','''" + //ZONA
@@ -512,10 +512,10 @@ namespace ReportesUnis
             try
             {
                 string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-               /* int ContadorArchivos = 0;
-                int ContadorArchivosCorrectos = 0;
-                int ContadorArchivosConError = 0;
-                bool Error = false;*/
+                /* int ContadorArchivos = 0;
+                 int ContadorArchivosCorrectos = 0;
+                 int ContadorArchivosConError = 0;
+                 bool Error = false;*/
 
                 /*//Ruta del archivo que guarda la bitácora
                 string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
@@ -580,7 +580,7 @@ namespace ReportesUnis
                         cmd.Connection = con;
                         cmd.Parameters.Add(new OracleParameter("Fotografia", bytes));
                         cmd.ExecuteNonQuery();
-                        
+
                     }
                 }
                 mensaje = "0";
@@ -889,7 +889,7 @@ namespace ReportesUnis
                 try
                 {
                     //smtp.Connect("smtp.gmail.com", 587, false);
-                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                    smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
 
                     // Note: only needed if the SMTP server requires authentication
                     smtp.Authenticate(credenciales[1], credenciales[2]);
@@ -898,9 +898,9 @@ namespace ReportesUnis
                     smtp.Disconnect(true);
 
                 }
-                catch
+                catch (Exception x)
                 {
-
+                    log("ERROR - Al enviar el correo para : " + EMAIL.Value , "");
                 }
             }
         }
@@ -922,11 +922,13 @@ namespace ReportesUnis
                         File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
                         File.Delete(txtPath2.Text + row.Cells[1].Text);
                         llenadoGrid();
+                        log("La fotografía fue rechazada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), nombre);
                         lblActualizacion.Text = "Se rechazaron las fotos seleccionadas.";
                         EnvioCorreo("bodyRechazoFotoEmpleados.txt", "datosRechazoFotoEmpleados.txt");
                     }
                     else
                     {
+                        log("ERROR - Error al eliminar el registro", nombre);
                         lblActualizacion.Text = "Ocurrió un error al eliminar los registros";
                     }
                 }
@@ -974,8 +976,24 @@ namespace ReportesUnis
                                 {
                                     Upload(carnet);
                                 }
+                                else if (respuesta != "0")
+                                {
+                                    log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet);
+                                }
+                            }
+                            else
+                            {
+                                log("ERROR - Inserta APEX del carnet: " + carnet, carnet);
                             }
                         }
+                        else
+                        {
+                            log("ERROR - al armar consulta Update APEX del carnet: " + carnet, carnet);
+                        }
+                    }
+                    else
+                    {
+                        log("ERROR - Inserta BI del carnet: " + carnet, carnet);
                     }
 
                     if (respuesta == "0")
@@ -983,12 +1001,40 @@ namespace ReportesUnis
                         lblActualizacion.Text = "Se confirmó correctamente la información";
                         File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
                         llenadoGrid();
+                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet+ " fue confirmada de forma correcta por el usuario "+ Context.User.Identity.Name.Replace("@unis.edu.gt", ""),carnet);
                         EnvioCorreo("bodyConfirmacionFotoEmpleados.txt", "datosConfirmacionFotoEmpleados.txt");
                     }
                     else
                     {
+                        if (TipoPersona.Value.Contains("Estudiante"))
+                        {
+                            log("ERROR - Actualizacion foto Campus: " + carnet, carnet);
+                        }
+                        else 
+                        {
+                            log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet);
+                        }
                         lblActualizacion.Text = "Ocurrió un problema al confirmar la información";
                     }
+                }
+            }
+        }
+
+        private void log(string ErrorLog, string carnet)
+        {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + carnet + "','" + ErrorLog + "','CONFIRMACIÓN FOTOS EMPLEADOS',SYSDATE)";
+                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
+
                 }
             }
         }

@@ -357,7 +357,7 @@ namespace ReportesUnis
                         contador = Convert.ToInt32(reader3["CONTADOR"].ToString());
                         if (contador > 0)
                         {
-                            byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/Fotos/" + Carnet + ".jpg");
+                            byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + Carnet + ".jpg");
                             string base64String = Convert.ToBase64String(imageBytes);
                             ImagenData = base64String;
                         }
@@ -365,34 +365,14 @@ namespace ReportesUnis
                     con.Close();
                 }
             }
+
             string mensaje = "";
             try
             {
                 string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                int ContadorArchivos = 0;
-                int ContadorArchivosCorrectos = 0;
-                int ContadorArchivosConError = 0;
-                bool Error = false;
-
-                //Ruta del archivo que guarda la bitácora
-                string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
-                //Nombre del archiov que guarda la bitácora
-                string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
-
-                //Se crea un nuevo archivo para guardar la bitacora de la ejecución
-                CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
-
-                //Guadar encabezado de la bitácora
-                GuardarBitacora(ArchivoBitacora, "                              Informe de ejecución de importación de fotografías Campus Fecha: " + FechaHoraInicioEjecución + "              ");
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    EMPLID                      Estado                 Descripción                                    ");
-                GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
-
                 string EmplidFoto = Carnet;
                 string EmplidExisteFoto = "";
                 string mensajeValidacion = "";
-                //Nombre de la fotografía cargada (Sin extensión)
-                string NombreFoto = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                 //Busca si la persona ya tiene fotografía registrada para proceder a actualizar
                 using (OracleConnection conEmplid = new OracleConnection(constr))
@@ -414,19 +394,13 @@ namespace ReportesUnis
                     catch (OracleException ex)
                     {
                         mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
-                        GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
-                        if (Error == false)
-                        {
-                            ContadorArchivosConError++;
-                        }
                     }
                 }
                 byte[] bytes = Convert.FromBase64String(ImagenData);
-
                 using (OracleConnection con = new OracleConnection(constr))
                 {
+                    con.Open();
                     string query = "";
-
                     using (OracleCommand cmd = new OracleCommand(query))
                     {
                         if (EmplidExisteFoto != "") //Se actualiza la fotografía
@@ -444,48 +418,13 @@ namespace ReportesUnis
 
                         cmd.Connection = con;
                         cmd.Parameters.Add(new OracleParameter("Fotografia", bytes));
-                        try
-                        {
-                            con.Open();
-                            int FilasAfectadas = cmd.ExecuteNonQuery();
-                            con.Close();
-                            if (FilasAfectadas == 0)
-                            {
-                                mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus";
-                                GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
-                                if (Error == false)
-                                {
-                                    ContadorArchivosConError++;
-                                    Error = true;
-                                }
-                            }
-                            else
-                            {
-                                GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "  " + EmplidFoto.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
-                                ContadorArchivosCorrectos++;
-                            }
-                        }
-                        catch (OracleException ex)
-                        {
-                            mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
-                            GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
-                            if (Error == false)
-                            {
-                                ContadorArchivosConError++;
-                            }
-                        }
+                        cmd.ExecuteNonQuery();
+
                     }
                 }
-
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
-                GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
-                GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
-                GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
                 mensaje = "0";
             }
-            catch (Exception)
+            catch (Exception X)
             {
                 mensaje = ". Ocurrió un error al cargar la imagen";
                 mensaje = "1";
@@ -579,13 +518,14 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT EMAIL, NOMBRE1||' '||APELLIDO1 AS NOMBRE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + carne.Value + "'  OR CARNET = '" + carne.Value + "'";
+                    cmd.CommandText = "SELECT EMAIL, NOMBRE1||' '||APELLIDO1 AS NOMBRE, NO_CUI||DEPTO_CUI||MUNI_CUI CARNET FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + carne.Value + "'  OR CARNET = '" + carne.Value + "'";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
 
                         EmailInstitucional = reader["EMAIL"].ToString();
                         Nombre = reader["NOMBRE"].ToString();
+                        DPI.Value = reader["CARNET"].ToString();
                     }
                     con.Close();
                 }
@@ -615,7 +555,7 @@ namespace ReportesUnis
                 try
                 {
                     //smtp.Connect("smtp.gmail.com", 587, false);
-                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                    smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
 
                     // Note: only needed if the SMTP server requires authentication
                     smtp.Authenticate(credenciales[1], credenciales[2]);
@@ -626,7 +566,7 @@ namespace ReportesUnis
                 }
                 catch
                 {
-                   
+                    log("ERROR - Al enviar el correo para : " + EmailInstitucional, "");
                 }
             }
 
@@ -659,14 +599,16 @@ namespace ReportesUnis
                         string respuesta = ConsumoOracle(cadena);
                         if (respuesta == "0")
                         {
-                            EnvioCorreo("bodyRechazoFotoEstudiante.txt", "datosRechazoFotoEstudiante.txt", datos[1], datos[0]);
                             File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
                             File.Delete(txtPath2.Text + row.Cells[1].Text);
                             llenadoGrid();
+                            log("La fotografía de fue rechazada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), nombre);
                             lblActualizacion.Text = "Se rechazaron las fotos seleccionadas.";
+                            EnvioCorreo("bodyRechazoFotoEstudiante.txt", "datosRechazoFotoEstudiante.txt", datos[1], datos[0]);
                         }
                         else
                         {
+                            log("ERROR - Error al eliminar el registro", nombre);
                             lblActualizacion.Text = "Ocurrió un error al eliminar los registros";
                         }
                     }
@@ -691,6 +633,7 @@ namespace ReportesUnis
         {
             prueba.Text = "0";
             ValidacionCheck();
+            string Ncarnet = "";
             string Merror = "Ocurrió un problema al confirmar la información de:";
             string MensajeFinal = "";
             if (Convert.ToInt16(prueba.Text) > 0 || prueba.Text.IsNullOrWhiteSpace())
@@ -704,6 +647,7 @@ namespace ReportesUnis
                     string respuesta = null;
                     string fecha = DateTime.Now.ToString("yyyy-MM-dd");
                     string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                    Ncarnet = carnet;
                     carne.Value = carnet;
                     QueryInsertBi(carnet);
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
@@ -720,7 +664,15 @@ namespace ReportesUnis
                             {
                                 Upload(carnet);
                             }
+                            else
+                            {
+                                log("ERROR - Actualización de Fotografía", carnet);
+                            }
                         }
+                    }
+                    else
+                    {
+                        log("ERROR - Inserta BI del carnet: " + carnet, carnet);
                     }
 
                     if (respuesta == "0")
@@ -729,6 +681,7 @@ namespace ReportesUnis
                         File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
                         llenadoGrid();
                         string[] datos = DatosCorreo();
+                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet);
                         EnvioCorreo("bodyConfirmacionFotoEstudiante.txt", "datosConfirmacionFotoEstudiante.txt", datos[1], datos[0]);
                     }
                     else
@@ -745,8 +698,29 @@ namespace ReportesUnis
             {
                 MensajeFinal = Merror + " " + MensajeFinal;
                 lblActualizacion.Text = MensajeFinal;
+                log("ERROR - " +MensajeFinal, Ncarnet);
+
             }
 
+        }
+
+        private void log(string ErrorLog, string carnet)
+        {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + carnet + "','" + ErrorLog + "','CONFIRMACIÓN FOTOS EMPLEADOS',SYSDATE)";
+                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
+
+                }
+            }
         }
 
     }

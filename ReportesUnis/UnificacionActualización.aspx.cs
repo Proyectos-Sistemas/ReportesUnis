@@ -17,7 +17,9 @@ namespace ReportesUnis
             }
             else
             {
-                if (((List<string>)Session["Grupos"]).Contains("RLI_VistaEmpleados"))
+                List<string> grupos = (List<string>)Session["Grupos"];
+
+                if (grupos.Contains("RLI_VistaEmpleados") )
                 {
                     Response.Redirect(@"~/ActualizaciónEmpleados.aspx");
                 }

@@ -15,6 +15,7 @@ using System.Text;
 using MailKit.Net.Smtp;
 using MimeKit;
 using MailKit.Security;
+using NPOI.Util;
 
 
 namespace ReportesUnis
@@ -247,17 +248,21 @@ namespace ReportesUnis
                                     File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
                                 }
                                 EnvioCorreo("bodyRechazoEmpleados.txt", "datosRechazoEmpleados.txt");
+                                log("La información de: " + TxtDpi.Text + ", con el carne : " + Carnet + " fue rechazada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), Carnet);
                                 ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalActualizacion();", true);
                                 lblActualizacion.Text = "Se ha rechazado la solicitud de carnet.";
                             }
                             else
                             {
                                 lblActualizacion.Text = "Ocurrió un error al rechazar la solicitud";
+                                log("Ocurrió un error al eliminar la fotografía de: " + TxtDpi.Text + ", con el carne : " + Carnet, Carnet);
+
                             }
                         }
-                        catch (Exception)
+                        catch (Exception x)
                         {
                             lblActualizacion.Text = "No se pudo eliminar la información a causa de un error interno.";
+                            log("No se pudo eliminar la información de:" + TxtDpi.Text + ", con el carne : " + Carnet + " a causa de un error interno. " + x, Carnet);
                             transaction.Rollback();
                         }
                     }
@@ -294,48 +299,82 @@ namespace ReportesUnis
                     {
                         respuesta = ActualizarNIT(CmbCarne.Text);
                     }
-
-                    respuesta = serviciosHCM();
                     if (respuesta == "0")
                     {
-                        respuesta = "";
-                        QueryUpdateApex("0", fecha, fecha, fecha, "1", Carnet);
-                        if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+                        respuesta = serviciosHCM();
+                        if (respuesta == "0")
                         {
-                            //SE INGRESA LA INFORMACIÓN EN EL BANCO
-                            respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
-                            if (respuesta == "0")
+                            respuesta = "";
+                            QueryUpdateApex("0", fecha, fecha, fecha, "1", Carnet);
+                            if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                             {
-                                respuesta = ConsumoOracle(txtInsertApex.Text);
+                                //SE INGRESA LA INFORMACIÓN EN EL BANCO
+                                respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
                                 if (respuesta == "0")
                                 {
-                                    if (controlRenovacion < 2 || (controlRenovacion == 2 && controlRenovacionFecha == 1))
+                                    respuesta = ConsumoOracle(txtInsertApex.Text);
+                                    if (respuesta == "0")
                                     {
-                                        if (controlRenovacion == 0)
+                                        if (controlRenovacion < 2 || (controlRenovacion == 2 && controlRenovacionFecha == 1))
                                         {
-                                            //INSERTA INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
-                                            respuesta = ConsumoOracle("INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO) VALUES ('" + Carnet + "','1','" + DateTime.Now.ToString("dd/MM/yyyy") + "')");
-                                        }
-                                        else
-                                        {
-                                            if (controlRenovacionFecha < 2)
+                                            if (controlRenovacion == 0)
                                             {
-                                                //ACTUALIZA INFORMACIÓN DE LA RENOVACION
-                                                respuesta = ConsumoOracle("UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "' WHERE EMPLID='" + Carnet + "'");
+                                                //INSERTA INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
+                                                respuesta = ConsumoOracle("INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO) VALUES ('" + Carnet + "','1','" + DateTime.Now.ToString("dd/MM/yyyy") + "')");
                                             }
                                             else
                                             {
-                                                respuesta = "0";
-                                            }
+                                                if (controlRenovacionFecha < 2)
+                                                {
+                                                    //ACTUALIZA INFORMACIÓN DE LA RENOVACION
+                                                    respuesta = ConsumoOracle("UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "' WHERE EMPLID='" + Carnet + "'");
+                                                }
+                                                else
+                                                {
+                                                    respuesta = "0";
+                                                }
 
-                                            if (respuesta == "0" && ROLES.Value.Contains("Estudiante"))
-                                            {
-                                                Upload(Carnet);
+                                                if (respuesta == "0" && ROLES.Value.Contains("Estudiante"))
+                                                {
+                                                    Upload(Carnet);
+                                                }
+                                                else if (respuesta != "0")
+                                                {
+                                                    log("ERROR - Actualizacion de fotografia en campus del carnet: " + Carnet, Carnet);
+                                                }
                                             }
                                         }
+                                        else
+                                        {
+                                            log("ERROR - El carnet " + Carnet + " llegó al límite de renovacines", Carnet);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        log("ERROR - Inserta APEX del carnet: " + Carnet, Carnet);
                                     }
                                 }
+                                else
+                                {
+                                    log("ERROR - Inserta BI del carnet: " + Carnet, Carnet);
+                                }
                             }
+                            else
+                            {
+                                log("ERROR - al armar consulta Update APEX del carnet: " + Carnet, Carnet);
+                            }
+                        }
+                        else
+                        {
+                            log("ERROR - Actualizacion HCM del carnet: " + Carnet, Carnet);
+                        }
+                    }
+                    else
+                    {
+                        if (ROLES.Value.Contains("Estudiante"))
+                        {
+                            log("ERROR - al actualizar en el NIT en Campus del carnet: " + Carnet, Carnet);
+
                         }
                     }
 
@@ -345,6 +384,7 @@ namespace ReportesUnis
                     if (respuesta == "0")
                     {
                         lblActualizacion.Text = "Se confirmó correctamente la información";
+                        log("La información de: " + TxtDpi.Text + ", con el carne : " + Carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), Carnet);
                         EnvioCorreo("bodyConfirmacionEmpleados.txt", "datosConfirmacionEmpleados.txt");
                         Buscar("1");
                         for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
@@ -357,6 +397,14 @@ namespace ReportesUnis
                     }
                     else
                     {
+                        if (ROLES.Value.Contains("Estudiante"))
+                        {
+                            log("ERROR - Actualizacion foto Campus del carnet: " + Carnet, Carnet);
+                        }
+                        else
+                        {
+                            log("ERROR - Actualizacion HCM del carnet: " + Carnet, Carnet);
+                        }
                         lblActualizacion.Text = "Ocurrió un problema al confirmar la información";
                         ConsumoSQL("DELETE FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CODIGO ='" + Carnet + "'");
                     }
@@ -364,6 +412,7 @@ namespace ReportesUnis
                 else
                 {
                     lblActualizacion.Text = "Ocurrió un problema al confirmar la información";
+                    log("ERROR - Actualizacion nombre en Campus del carnet: " + Carnet, Carnet);
                     ConsumoSQL("DELETE FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CODIGO ='" + Carnet + "'");
                 }
             }
@@ -586,7 +635,7 @@ namespace ReportesUnis
                                        ",[Condmig] " +
                                        ",[O_Condmig] " +
                                        ",[Validar_Envio]) " +
-                                    "VALUES ('''||CARNET||''','''" + // APELLIDO DE CASADA
+                                    "VALUES ('''||CODIGO||''','''" + // APELLIDO DE CASADA
                                         "||FACULTAD||''','''" + //Carrera
                                         "||DIRECCION||''','''" + //DIRECCION
                                         "||ZONA||''','''" + //ZONA
@@ -662,7 +711,7 @@ namespace ReportesUnis
                 }
             }
         }
-        protected string QueryActualizaNombre(string emplid) 
+        protected string QueryActualizaNombre(string emplid)
         {
             //EN CAMPUS
             string constr = TxtURL.Text;
@@ -1741,8 +1790,8 @@ namespace ReportesUnis
                 string linea4 = file.ReadLine();
                 string linea5 = file.ReadLine();
                 string linea6 = file.ReadLine();
-                
-                
+
+
                 nombre = linea2;
                 correo = linea4;
                 pass = linea6;
@@ -1762,7 +1811,7 @@ namespace ReportesUnis
             string[] datos = LeerInfoEmail(subject);
             string[] credenciales = LeerCredencialesMail();
             var email = new MimeMessage();
-            var para = TxtPrimerNombre.Text+" "+TxtPrimerApellido.Text;
+            var para = TxtPrimerNombre.Text + " " + TxtPrimerApellido.Text;
 
             email.From.Add(new MailboxAddress(credenciales[0], credenciales[3]));
             email.To.Add(new MailboxAddress(para, EmailInstitucional.Value));
@@ -1778,7 +1827,7 @@ namespace ReportesUnis
                 try
                 {
                     //smtp.Connect("smtp.gmail.com", 587, false);
-                    smtp.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                    smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
 
                     // Note: only needed if the SMTP server requires authentication
                     smtp.Authenticate(credenciales[1], credenciales[2]);
@@ -1789,10 +1838,30 @@ namespace ReportesUnis
                 }
                 catch (Exception ex)
                 {
-                    lblActualizacion.Text = ex.ToString();
+                    //lblActualizacion.Text = ex.ToString();
+                    log("ERROR - Al enviar el correo para : " + EmailInstitucional.Value, "");
                 }
             }
 
+        }
+
+        private void log(string ErrorLog, string carnet)
+        {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + carnet + "','" + ErrorLog + "','CONFIRMACIÓN DATOS SENSIBLES EMPLEADOS',SYSDATE)";
+                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
+
+                }
+            }
         }
 
         //EVENTOS
