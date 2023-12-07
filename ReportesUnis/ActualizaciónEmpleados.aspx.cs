@@ -21,6 +21,7 @@ using MimeKit;
 using MailKit.Security;
 using System.Security.Authentication;
 using Windows.Media.Protection.PlayReady;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace ReportesUnis
 {
@@ -60,6 +61,7 @@ namespace ReportesUnis
             LeerInfoTxtPath();
             LeerCredencialesNIT();
             LeerInfoTxtSQL();
+            LeerVersionesSOAPCampus();
             controlPantalla = PantallaHabilitada("Carnetización Masiva");
             banderaSESSION.Value = "0";
             ISESSION.Value = "0";
@@ -267,6 +269,21 @@ namespace ReportesUnis
                 string linea2 = file.ReadLine();
                 CREDENCIALES_NIT.Value = linea1;
                 URL_NIT.Value = linea2;
+                file.Close();
+            }
+        }
+        void LeerVersionesSOAPCampus()
+        {
+            string rutaCompleta = CurrentDirectory + "VersionesCampus.txt";
+
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                string linea4 = file.ReadLine();
+                VersionUP.Value = linea2;
+                VersionUD.Value = linea3;
                 file.Close();
             }
         }
@@ -3710,12 +3727,12 @@ namespace ReportesUnis
             if (auxConsulta == 0)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UP.V1";
-                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UP_NAMES_NIT.Value, UP_PERS_DATA_EFFDT.Value, UP_ADDRESSES_NIT.Value, UP_ADDRESSES.Value, UP_PERSONAL_PHONE.Value, UP_EMAIL_ADDRESSES.Value);
+                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UP_NAMES_NIT.Value, UP_PERS_DATA_EFFDT.Value, UP_ADDRESSES_NIT.Value, UP_ADDRESSES.Value, UP_PERSONAL_PHONE.Value, UP_EMAIL_ADDRESSES.Value, VersionUP.Value);
             }
             else if (auxConsulta == 1)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UD.V1";
-                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UD_NAMES_NIT.Value, UD_PERS_DATA_EFFDT.Value, UD_ADDRESSES_NIT.Value, UD_ADDRESSES.Value, UD_PERSONAL_PHONE.Value, UD_EMAIL_ADDRESSES.Value);
+                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UD_NAMES_NIT.Value, UD_PERS_DATA_EFFDT.Value, UD_ADDRESSES_NIT.Value, UD_ADDRESSES.Value, UD_PERSONAL_PHONE.Value, UD_EMAIL_ADDRESSES.Value, VersionUD.Value);
             }
 
             //Crea un documento de respuesta Campus
@@ -4004,11 +4021,11 @@ namespace ReportesUnis
                                 </soapenv:Envelope>";
         }
         private static void CuerpoConsultaUD(string Usuario, string Pass, string EMPLID, string COLL_NAMES, string COLL_PERS_DATA_EFFDT, string COLL_ADDRESSES_NIT, string COLL_ADDRESSES, string COLL_PERSONAL_PHONE,
-            string COLL_EMAIL_ADDRESSES)
+            string COLL_EMAIL_ADDRESSES, string VersionUD)
         {
             //Crea el cuerpo que se utiliza para hacer PATCH en CAMPUS
             Variables.soapBody = @"<?xml version=""1.0""?>
-                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/M644328134.V1"">
+                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/" + VersionUD + @""">
                                     <soapenv:Header xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
                                     <wsse:Security soap:mustUnderstand=""1"" xmlns:soap=""http://schemas.xmlsoap.org/wsdl/soap/"" xmlns:wsse=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"">
                                       <wsse:UsernameToken wsu:Id=""UsernameToken-1"" xmlns:wsu=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"">
@@ -4031,11 +4048,11 @@ namespace ReportesUnis
                                 </soapenv:Envelope>";
         }
         private static void CuerpoConsultaUP(string Usuario, string Pass, string EMPLID, string COLL_NAMES, string COLL_PERS_DATA_EFFDT, string COLL_ADDRESSES_NIT, string COLL_ADDRESSES, string COLL_PERSONAL_PHONE,
-            string COLL_EMAIL_ADDRESSES)
+            string COLL_EMAIL_ADDRESSES, string VersionUP)
         {
             //Crea el cuerpo que se utiliza para hacer POST en CAMPUS
             Variables.soapBody = @"<?xml version=""1.0""?>
-                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/M780623797.V1"">
+                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas" + VersionUP + @""">
                                     <soapenv:Header xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
                                     <wsse:Security soap:mustUnderstand=""1"" xmlns:soap=""http://schemas.xmlsoap.org/wsdl/soap/"" xmlns:wsse=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"">
                                       <wsse:UsernameToken wsu:Id=""UsernameToken-1"" xmlns:wsu=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"">

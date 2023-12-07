@@ -278,6 +278,8 @@
             <input type="hidden" id="UD_PERSONAL_PHONE" runat="server" />
             <%-- TEXTBOX ALMACENA UD CORREO PERSONAL--%>
             <input type="hidden" id="UD_EMAIL_ADDRESSES" runat="server" />
+            <input type="hidden" id="VersionUP" runat="server" />
+            <input type="hidden" id="VersionUD" runat="server" />
             <%-- TEXTBOX ALMACENA SI LA PERSONA ES PROFESOR--%>
             <input type="hidden" id="containsProf" runat="server" />
             <%-- TEXTBOX ALMACENA LA HOMOLGOACION DEL PAIS--%>

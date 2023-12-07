@@ -422,6 +422,7 @@
     <Content Include="Cargarfotografia.aspx" />
     <Content Include="CargarFotografiaEmpleados.aspx" />
     <Content Include="conexion.txt" />
+    <Content Include="VersionesCampus.txt" />
     <Content Include="conexionSQL.txt" />
     <Content Include="ConfirmacionDeFotografias.aspx" />
     <Content Include="ConfirmacionDeFotografiasEmpleados.aspx" />
