@@ -2489,14 +2489,14 @@ namespace ReportesUnis
                                             respuestaPost = 0;
 
                                             //DIRECCION
-                                            string primary = getBetween(consulta, "HOME\",\n      \"PrimaryFlag\" : true", "\n        \"name\" ");
+                                            string primary = getBetween(consulta, "HOME\"", "\n        \"name\" ");
                                             string typeAdd = "HOME";
                                             string URLDelete = getBetween(consulta, "\"AddressId\"", "\"name\"");
                                             URLDelete = getBetween(URLDelete, "\"href\" : \"", "\",");
 
                                             if (String.IsNullOrEmpty(primary))
                                             {
-                                                primary = getBetween(consulta, "HM\",\n      \"PrimaryFlag\" : true", "\n        \"name\" ");
+                                                primary = getBetween(consulta, "HM\"", "\n        \"name\" ");
                                                 typeAdd = "HM";
                                             }
                                             var Address = "{\"AddressLine1\": \"" + txtDireccion.Text + "\", \"AddressLine2\": \"" + txtDireccion2.Text + "\",\"AddressType\" :\"" + typeAdd + "\",\"Region1\": \"" + departamento + "\",\"TownOrCity\": \"" + CmbMunicipio.Text + "\",\"PrimaryFlag\": true,\"AddlAddressAttribute3\": \"" + txtZona.Text + "\",\"Country\": \"" + country + "\"}";
@@ -3479,6 +3479,7 @@ namespace ReportesUnis
 
                     fotoAlmacenada();
                     ValidacionNit.Value = "0";
+                    ValidarNIT.Enabled = true;
                 }
                 else
                 {

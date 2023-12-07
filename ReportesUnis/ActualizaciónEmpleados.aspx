@@ -300,7 +300,7 @@
             <input type="hidden" id="InicialNR3" runat="server" />
             <input type="hidden" id="ControlRBS" runat="server" />
             <input type="hidden" id="ControlRoles" runat="server" />
-            <input type="text" id="ControlCF" runat="server" />
+            <input type="hidden" id="ControlCF" runat="server" />
 
 
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
@@ -803,7 +803,7 @@
                 $('#<%= BtnDownload.ClientID %>').css("display", "none");
                 var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
                 lblActualizacion.html("");
-                $('#<%= BtnReload.ClientID %>').click;
+                //$('#<%= BtnReload.ClientID %>').click;
             }, function (error) {
                 let mensajeError = error.message;
                 if (mensajeError == "Permission denied") {
@@ -849,7 +849,7 @@
                 $('#<%= BtnDownload.ClientID %>').css("display", "none");
                 var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
                 lblActualizacion.html("");
-                $('#<%= BtnReload.ClientID %>').click;
+                //$('#<%= BtnReload.ClientID %>').click;
             }, function (error) {
                 let mensajeError = error.message;
                 if (mensajeError.indexOf("Permission denied" != -1)) {
@@ -946,7 +946,7 @@
                             $('#<%= InfePersonal.ClientID %>').css("display", "block");
                             $('#<%= BtnReload.ClientID %>').css("display", "none");
                             $('#<%= BtnDownload.ClientID %>').css("display", "none");
-                            $('#<%= BtnReload.ClientID %>').click;
+                            //$('#<%= BtnReload.ClientID %>').click;
                             guardarEnSessionStorage("1");
                             bandera.text = "1";
                             lblActualizacion.html("");
@@ -1463,8 +1463,6 @@
         }
 
 
-
-
         //FUNCION PARA EVITAR QUE SEA INGRESADO EL -
         $(document).ready(function () {
             $('#<%= txtNit.ClientID %>').on('keypress', function (event) {
@@ -1472,7 +1470,10 @@
                 var character = String.fromCharCode(keyCode);
                 if (character === '-') {
                     event.preventDefault();
-                    alert('No se permite el ingreso del guín (-)');
+                    alert('No se permite el ingreso del guión (-)');
+                } else if (character === 'C' || character === 'c') {
+                    event.preventDefault();
+                    alert('Para ingresar CF, seleccione la casilla NO, que se encuentra arriba del campo del ingreso del NIT');
                 }
             });
         });
