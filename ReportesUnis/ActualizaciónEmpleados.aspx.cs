@@ -282,8 +282,8 @@ namespace ReportesUnis
                 string linea2 = file.ReadLine();
                 string linea3 = file.ReadLine();
                 string linea4 = file.ReadLine();
-                VersionUP.Value = linea2;
-                VersionUD.Value = linea3;
+                VersionUP.Value = linea4;
+                VersionUD.Value = linea2;
                 file.Close();
             }
         }
@@ -4052,7 +4052,7 @@ namespace ReportesUnis
         {
             //Crea el cuerpo que se utiliza para hacer POST en CAMPUS
             Variables.soapBody = @"<?xml version=""1.0""?>
-                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas" + VersionUP + @""">
+                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/" + VersionUP + @""">
                                     <soapenv:Header xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
                                     <wsse:Security soap:mustUnderstand=""1"" xmlns:soap=""http://schemas.xmlsoap.org/wsdl/soap/"" xmlns:wsse=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"">
                                       <wsse:UsernameToken wsu:Id=""UsernameToken-1"" xmlns:wsu=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"">
