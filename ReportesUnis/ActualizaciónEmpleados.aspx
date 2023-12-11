@@ -1227,7 +1227,7 @@
                         var nombres = nombre1 + ' ' + nombre2;
 
                         $('#<%= TxtNombreR.ClientID %>').val(nombres);
-                        $('#<%= TxtNombreR.ClientID %>').val(apellidos);
+                        $('#<%= TxtApellidoR.ClientID %>').val(apellidos);
                         $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtApellidoCasada.ClientID %>').val());
                         $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
                         $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());

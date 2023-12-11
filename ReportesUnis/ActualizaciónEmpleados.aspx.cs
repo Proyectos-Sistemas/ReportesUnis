@@ -2705,7 +2705,7 @@ namespace ReportesUnis
 
                     if (RadioButtonNombreSi.Checked)
                     {
-                        if (TrueNit.Value !=  txtNit.Text)
+                        if (TrueNit.Value !=  txtNit.Text || ControlCF.Value != "CF")
                         {
                             TxtNombreR.Text = txtNombre1.Text + " " + txtNombre2.Text;
                             TxtApellidoR.Text = txtApellido1.Text + " " + txtApellido2.Text;

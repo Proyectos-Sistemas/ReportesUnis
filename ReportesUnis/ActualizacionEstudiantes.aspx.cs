@@ -48,6 +48,7 @@ namespace ReportesUnis
             LeerInfoTxt();
             LeerPathApex();
             LeerCredencialesNIT();
+            LeerVersionesSOAPCampus();
             controlPantalla = PantallaHabilitada("Carnetización Masiva");
             txtExiste.Text = controlPantalla.ToString();
             if (controlPantalla >= 1)
@@ -1056,7 +1057,7 @@ namespace ReportesUnis
                     }
                 }
 
-                if (RadioButtonNombreSi.Checked && ((InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text) || String.IsNullOrEmpty(InicialNR1.Value)))
+                if (RadioButtonNombreSi.Checked && (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text) || String.IsNullOrEmpty(InicialNR1.Value) || ControlCF.Value != "CF")
                 {
                     TxtNombreR.Text = txtNombre.Text;
                     TxtApellidoR.Text = txtApellido.Text;
