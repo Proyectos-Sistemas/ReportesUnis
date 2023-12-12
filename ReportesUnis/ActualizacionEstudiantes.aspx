@@ -9,7 +9,25 @@
                 <h2 style="text-align: center;">ACTUALIZACIÓN DE INFORMACIÓN</h2>
             </div>
         </div>
+        <div class="row">
+            <div class="form-group col">
+                <h6 style="text-align: center;">¿Qué desea realizar el día de hoy?*</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 mx-auto text-center">
+            </div>
+            <div class="col-md-4 mx-auto text-center">
+                <asp:RadioButton ID="RadioButtonCarne" runat="server" GroupName="Accion" Text="Solicitar carné y actualizar información" />
+            </div>
+            <div class="col-md-4 mx-auto text-center">
+                <asp:RadioButton ID="RadioButtonActualiza" runat="server" GroupName="Accion" Text="Solo actualizar información" />
+            </div>
+            <div class="col-md-2 mx-auto text-center">
+            </div>
+        </div>
     </div>
+
     <asp:HiddenField ID="hdnCameraAvailable" runat="server" ClientIDMode="Static" />
     <asp:HiddenField ID="cameraPermissionsGranted" runat="server" ClientIDMode="Static" />
     <div id="CargaFotografia" runat="server" style="display: none">
@@ -27,7 +45,8 @@
                 </div>
                 <div class="col-md-10 mx-auto">
                     <h6>Recomendaciones:</h6>
-                    <ul><li>Ret&iacute;rate cualquier accesorio que pueda interferir con la fotograf&iacute;a. Por ejemplo: mascarillas, lentes de sol, gorras o headset.</li>
+                    <ul>
+                        <li>Ret&iacute;rate cualquier accesorio que pueda interferir con la fotograf&iacute;a. Por ejemplo: mascarillas, lentes de sol, gorras o headset.</li>
                         <li>Ub&iacute;quese en un entorno con fondo uniforme (de preferencia una pared o fondo color blanco). Recuerde que el carn&eacute; es un documento formal.</li>
                     </ul>
                 </div>
@@ -240,6 +259,9 @@
             <input type="hidden" id="InicialNR2" runat="server" />
             <input type="hidden" id="InicialNR3" runat="server" />
             <input type="hidden" id="ControlCF" runat="server" />
+
+            <%-- CONTROL PARA ACTUALIZAR O SOLICITAR CARNE--%>
+            <input type="hidden" id="ControlAct" runat="server" />
 
 
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>

@@ -15,6 +15,24 @@ namespace ReportesUnis
     {
 
         /// <summary>
+        /// Control RadioButtonCarne.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton RadioButtonCarne;
+
+        /// <summary>
+        /// Control RadioButtonActualiza.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton RadioButtonActualiza;
+
+        /// <summary>
         /// Control hdnCameraAvailable.
         /// </summary>
         /// <remarks>
@@ -697,6 +715,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden ControlCF;
+
+        /// <summary>
+        /// Control ControlAct.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden ControlAct;
 
         /// <summary>
         /// Control tabla.
