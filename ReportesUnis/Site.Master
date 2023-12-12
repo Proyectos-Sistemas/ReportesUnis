@@ -162,13 +162,13 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a id="RepCamarasEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicas">Reportes Cámaras Térmicas de Estudiantes</a>
-                            <a id="Actualizacion" runat="server" class="dropdown-item" href="~/UnificacionActualización">Actualización de información</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown" id="liNavbarCarnet">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarCarnet" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Carnetización
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a id="Actualizacion" runat="server" class="dropdown-item" href="~/UnificacionActualización">Actualización de información</a>
                             <a id="MantPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Tiempo Pantallas</a>
                             <a id="GestionesEstudiantes" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónDeCarne">Gestión Estudiantes</a>
                             <a id="GestionesEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónCarneEmpleados">Gestión Empleados</a>

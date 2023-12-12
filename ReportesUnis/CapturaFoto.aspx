@@ -9,11 +9,14 @@
 
     <div class="container2">
         <video id="videoElement" width="400" height="300" autoplay></video>
-        <canvas id="canvas" width="400" height="300" ></canvas>
+        <canvas id="canvas" width="400" height="300"></canvas>
     </div>
-    <button id="captureBtn" class="btn-danger-unis">Capturar imagen</button>
-    <textarea id="urlPath" name="urlPath" style="display:none"></textarea>
+    <button id="captureBtn" class="btn-danger-unis" title="Este es un mensaje emergente">Capturar imagen</button>
+    <textarea id="urlPath" name="urlPath" style="display: none"></textarea>
     <button id="BtnAlmacenar" class="btn-danger-unis">Almacenar imagen</button>
+
+    
+
 
     <script>
         // Acceder a la cámara y mostrar el video en el elemento de video
@@ -38,7 +41,7 @@
             //Convertir la imagen del lienzo en base64
             var imageData = canvas.toDataURL('image/jpeg');
             textarea.value = imageData;
-            
-        });        
+
+        });
     </script>
 </asp:Content>

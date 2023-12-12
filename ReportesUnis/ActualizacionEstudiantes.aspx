@@ -21,6 +21,22 @@
                 </div>
             </div>
         </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-1 mx-auto text-center">
+                </div>
+                <div class="col-md-10 mx-auto">
+                    <h6>Recomendaciones:</h6>
+                    <ul><li>Ret&iacute;rate cualquier accesorio que pueda interferir con la fotograf&iacute;a. Por ejemplo: mascarillas, lentes de sol, gorras o headset.</li>
+                        <li>Ub&iacute;quese en un entorno con fondo uniforme (de preferencia una pared o fondo color blanco). Recuerde que el carn&eacute; es un documento formal.</li>
+                    </ul>
+                </div>
+                <div class="col-md-1 mx-auto text-center">
+                </div>
+            </div>
+        </div>
+
+
         <br />
 
 
@@ -57,7 +73,7 @@
                 </div>
 
                 <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
-                    <button id="captureBtn" name="captureBtn" class="btn-danger-unis">Capturar imagen</button>
+                    <button id="captureBtn" name="captureBtn" class="btn-danger-unis" title="Asi se verian &#10;Las indicaciones">Capturar imagen</button>
                 </div>
 
                 <div class="col-md-4">
@@ -208,7 +224,7 @@
             <input type="hidden" id="UD_PERSONAL_PHONE" runat="server" />
             <%-- TEXTBOX ALMACENA UD CORREO PERSONAL--%>
             <input type="hidden" id="UD_EMAIL_ADDRESSES" runat="server" />
-            
+
             <input type="hidden" id="VersionUP" runat="server" />
             <input type="hidden" id="VersionUD" runat="server" />
             <%-- TEXTBOX ALMACENA LA VARIABLE DE SESION--%>
@@ -309,9 +325,9 @@
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <asp:Label runat="server" Font-Bold="true">Dirección 3:</asp:Label>
+                                    <asp:Label runat="server" Font-Bold="true">Zona:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" onkeypress="return evitarEnter(event)"></asp:TextBox>
+                                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="2" Width="275px" CssClass="form-control" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                 </div>
 
 
@@ -371,12 +387,12 @@
                         <hr />
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-4 mx-auto text-center">
+                                <div class="col-md-2 mx-auto text-center">
                                 </div>
-                                <div class="col-md-4 mx-auto text-center">
-                                    <h5 style="text-align: center;">Información para recibos de pago</h5>
+                                <div class="col-md-8 mx-auto text-center">
+                                    <h5 style="text-align: center;">Información para recibos de pago para futuras transacciones en la universidad</h5>
                                 </div>
-                                <div class="col-md-4 mx-auto text-center">
+                                <div class="col-md-2 mx-auto text-center">
                                 </div>
                             </div>
                         </div>
@@ -480,8 +496,8 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Dirección 3:</asp:Label>
-                                        <asp:TextBox ID="TxtDiRe3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false" onkeypress="return evitarEnter(event)"></asp:TextBox>
+                                        <asp:Label runat="server" Font-Bold="true">Zona:</asp:Label>
+                                        <asp:TextBox ID="TxtDiRe3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="2" Width="275px" CssClass="form-control" Enabled="false" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                         <br />
                                     </div>
 
@@ -891,15 +907,15 @@
 
                             if (mensajeError.indexOf("Could not start video source" != -1) || mensajeError.indexOf("Device in use" != -1)) {
                                 $('#<%= CargaFotografia.ClientID %>').css("display", "none");
-                                    $('#<%= tabla.ClientID %>').css("display", "none");
-                                    $('#<%= tbactualizar.ClientID %>').css("display", "none");
-                                    $('#<%= InfePersonal.ClientID %>').css("display", "none");
-                                    var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                                    mensaje = "La cámara está siendo utilizada por otras aplicaciones. <br />  <br>Para poder continuar cierre dichas aplicaciones y luego haga clic en el botón de Recargar Página. <br>";
-                                    lblActualizacion.css("color", "black");
-                                    lblActualizacion.html(mensaje);
-                                    $('#<%= BtnReload.ClientID %>').css("display", "block");
-                                    $('#<%= BtnDownload.ClientID %>').css("display", "none");
+                                $('#<%= tabla.ClientID %>').css("display", "none");
+                                $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                                $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                                mensaje = "La cámara está siendo utilizada por otras aplicaciones. <br />  <br>Para poder continuar cierre dichas aplicaciones y luego haga clic en el botón de Recargar Página. <br>";
+                                lblActualizacion.css("color", "black");
+                                lblActualizacion.html(mensaje);
+                                $('#<%= BtnReload.ClientID %>').css("display", "block");
+                                $('#<%= BtnDownload.ClientID %>').css("display", "none");
                             }
                         }
                     });
@@ -1295,7 +1311,7 @@
             $('#myModal').css('display', 'none');
         });
 
-       //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
+        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtNombre.ClientID %>').on('input', function () {
                 if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
@@ -1325,7 +1341,7 @@
         //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 1 EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtDireccion.ClientID %> ').on('input', function () {
-                if(!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
                 }
             });
@@ -1352,7 +1368,7 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO PAIS EN EL RECIBO
         $(document).ready(function () {
             $('#<%= CmbPaisNIT.ClientID %> ').on('input', function () {
-                if(!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
                 }
             });
@@ -1431,8 +1447,8 @@
                 var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
                 var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
                 var labelValidacion = $('#<%= ValidacionNit.ClientID %>').val().trim();
-                
-                
+
+
                 if (txtNit !== TrueNit || txtNit !== 'CF') {
                     $('#<%= ValidacionNit.ClientID %>').val("1");
                 } else {
@@ -1441,6 +1457,8 @@
                 }
             });
         });
+
+
 
         document.addEventListener("DOMContentLoaded", function () {
             // Obtenemos el elemento de video y la imagen en JavaScript
@@ -1518,13 +1536,16 @@
             }, 4000); // 4000 milisegundos =  segundos
         }
 
-        //evitar enter
+        //evitar enter y letras, permite ingresar solo numeros
         function evitarEnter(e) {
-            if (e.keyCode == 13) {
-                e.preventDefault(); // Evitar que se realice una nueva línea
-                return false;
+            var charCode = (e.which) ? e.which : event.keyCode;
+
+            // Verifica si la tecla presionada es un número y no es Enter
+            if ((charCode >= 48 && charCode <= 57) && charCode !== 13) {
+                return true;
             }
-            return true;
+
+            return false;
         }
 
     </script>

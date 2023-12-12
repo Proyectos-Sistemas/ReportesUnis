@@ -1212,7 +1212,7 @@
             // Function to add the code
             function RBSi() {
                 $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
-                    if ($(this).is(':checked')) {        
+                    if ($(this).is(':checked')) {
                         $('#<%= ControlCF.ClientID %>').val(" ");
 
 
