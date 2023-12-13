@@ -9,21 +9,23 @@
                 <h2 style="text-align: center;">ACTUALIZACIÓN DE INFORMACIÓN</h2>
             </div>
         </div>
-        <div class="row">
-            <div class="form-group col">
-                <h6 style="text-align: center;">¿Qué desea realizar el día de hoy?*</h6>
+        <div id="divActividad" runat="server" style="display: block">
+            <div class="row">
+                <div class="form-group col">
+                    <h6 style="text-align: center;">¿Qué desea realizar el día de hoy?*</h6>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2 mx-auto text-center">
-            </div>
-            <div class="col-md-4 mx-auto text-center">
-                <asp:RadioButton ID="RadioButtonCarne" runat="server" GroupName="Accion" Text="Solicitar carné y actualizar información" />
-            </div>
-            <div class="col-md-4 mx-auto text-center">
-                <asp:RadioButton ID="RadioButtonActualiza" runat="server" GroupName="Accion" Text="Solo actualizar información" />
-            </div>
-            <div class="col-md-2 mx-auto text-center">
+            <div class="row">
+                <div class="col-md-2 mx-auto text-center">
+                </div>
+                <div class="col-md-4 mx-auto text-center">
+                    <asp:RadioButton ID="RadioButtonCarne" runat="server" GroupName="Accion" Text="Solicitar carné y actualizar información" />
+                </div>
+                <div class="col-md-4 mx-auto text-center">
+                    <asp:RadioButton ID="RadioButtonActualiza" runat="server" GroupName="Accion" Text="Solo actualizar información" />
+                </div>
+                <div class="col-md-2 mx-auto text-center">
+                </div>
             </div>
         </div>
     </div>
@@ -162,6 +164,9 @@
             <asp:Label ID="txtDepartamentoDPI" runat="server" Visible="false"></asp:Label>
             <%-- TXTPath ALMACENA EL PATH DONDE SE ALMACENARA LA IMAGEN --%>
             <asp:Label ID="txtPath" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="txtPathAC" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="txtPathPC" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="txtPathRC" runat="server" Visible="false"></asp:Label>
             <%-- TXTPath URL APEX SERVICIO --%>
             <asp:Label ID="txtApex" runat="server" Visible="false"></asp:Label>
             <%-- APELLIDO PARA APEX --%>
@@ -1046,8 +1051,14 @@
             var divCombos = $('#<%= Combos.ClientID %>');
             var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
             var files = fileUpload.files;
+            var radioButtonCarne = document.getElementById('<%= RadioButtonCarne.ClientID %>');
+            var radioButtonActualiza = document.getElementById('<%= RadioButtonActualiza.ClientID %>');
 
-            if ((txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) && $('#myModal').css('display') != 'block') {
+
+            if (!(radioButtonCarne.checked || radioButtonActualiza.checked)) {
+                alert('Por favor, selecciona al menos una opción de lo que deseas realizar el dia de hoy.');
+                return false; // Evitar que la función continúe si no hay ninguna opción seleccionada
+            } else if ((txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) && $('#myModal').css('display') != 'block') {
                 $('#myModal').css('display', 'block');
                 return false;
             } else if (files.length == 0 && $('#myModal').css('display') === 'block') {
@@ -1326,6 +1337,34 @@
 
             // Call the function
             RBNo();
+
+        });
+
+        $(document).ready(function () {
+            // Function to add the code
+            function RBAC() {
+                $('#<%= RadioButtonActualiza.ClientID %>').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        $('#<%= ControlAct.ClientID %>').val("AC");
+                    }
+                });
+            }
+            // Call the function
+            RBAC();
+
+        });
+
+        $(document).ready(function () {
+            // Function to add the code
+            function RBAC() {
+                $('#<%= RadioButtonCarne.ClientID %>').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        $('#<%= ControlAct.ClientID %>').val("");
+                    }
+                });
+            }
+            // Call the function
+            RBAC();
 
         });
 

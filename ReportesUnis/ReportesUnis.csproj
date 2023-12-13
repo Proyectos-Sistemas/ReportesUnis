@@ -422,6 +422,7 @@
     <Content Include="Cargarfotografia.aspx" />
     <Content Include="CargarFotografiaEmpleados.aspx" />
     <Content Include="conexion.txt" />
+    <Content Include="Tabs.aspx" />
     <Content Include="VersionesCampus.txt" />
     <Content Include="conexionSQL.txt" />
     <Content Include="ConfirmacionDeFotografias.aspx" />
@@ -828,6 +829,13 @@
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Tabs.aspx.cs">
+      <DependentUpon>Tabs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tabs.aspx.designer.cs">
+      <DependentUpon>Tabs.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UnificacionActualización.aspx.cs">
       <DependentUpon>UnificacionActualización.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

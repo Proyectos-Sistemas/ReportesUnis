@@ -19,32 +19,61 @@ namespace ReportesUnis
     public partial class ConfirmacionDeFotografias : System.Web.UI.Page
     {
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        string rutaFisica = "";
+        string rutaFisicaAC = "";
+        string rutaFisicaPC = "";
+        string rutaFisicaRC = "";
         protected void Page_Load(object sender, EventArgs e)
         {
             LeerInfoTxtPath();
             LeerInfoTxtPathGrid();
             LeerInfoTxtSQL();
             LeerInfoTxt();
-            rutaFisica = Server.MapPath("~" + txtPath.Text);
+            rutaFisicaAC = Server.MapPath("~" + txtPathAC.Text);
+            rutaFisicaPC = Server.MapPath("~" + txtPathPC.Text);
+            rutaFisicaRC = Server.MapPath("~" + txtPathRC.Text);
             if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("ACCESO_CARNETIZACION") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
             {
                 Response.Redirect(@"~/Default.aspx");
             }
             if (!IsPostBack)
             {
-                llenadoGrid();
+                // Establecer el índice de la pestaña activa por defecto en la primera carga
+                ViewState["ActiveTabIndex"] = 0;
+                ControlTabs.Value = "AC";
+                // Establecer la pestaña activa y su estilo correspondiente
+                SetActiveTab(0);
+                llenadoGridAC();
+                llenadoGridPC();
+                llenadoGridRC();
             }
-            if (GridViewFotos.Rows.Count == 0)
+            else
             {
-                lblActualizacion.Text = "No hay información para confirmar.";
+                // Restaurar el índice de la pestaña activa desde el ViewState en las cargas posteriores
+                int activeTabIndex = Convert.ToInt32(ViewState["ActiveTabIndex"]);
+                // Establecer la pestaña activa y su estilo correspondiente
+                SetActiveTab(activeTabIndex);
+            }
+            if (GridViewFotosAC.Rows.Count == 0)
+            {
+                lblActualizacionAC.Text = "No hay fotografías para confirmar en este apartado.";
+                TbEliminarAC.Visible = false;
+            }
+            if (GridViewFotosPC.Rows.Count == 0)
+            {
+                lblActualizacionPC.Text = "No hay fotografías para confirmar en este apartado.";
+                TbEliminarPC.Visible = false;
+            }
+            if (GridViewFotosRC.Rows.Count == 0)
+            {
+                lblActualizacionRC.Text = "No hay fotografías para confirmar en este apartado.";
+                TbEliminarRC.Visible = false;
             }
         }
 
         //FUNCIONES
-        void llenadoGrid()
+        void llenadoGridAC()
         {
-            string[] archivos = Directory.GetFiles(rutaFisica);
+            string[] archivos = Directory.GetFiles(rutaFisicaAC);
             List<object> imagenes = new List<object>();
 
             foreach (string archivo in archivos)
@@ -52,8 +81,49 @@ namespace ReportesUnis
                 string nombreImagen = Path.GetFileName(archivo);
                 imagenes.Add(new { NombreImagen = nombreImagen });
             }
-            GridViewFotos.DataSource = imagenes;
-            GridViewFotos.DataBind();
+            GridViewFotosAC.DataSource = imagenes;
+            GridViewFotosAC.DataBind();
+            if (GridViewFotosAC.Rows.Count == 0)
+            {
+                lblActualizacionAC.Text = "No hay fotografías para confirmar en este apartado.";
+                TbEliminarAC.Visible = false;
+            }
+        }
+        void llenadoGridPC()
+        {
+            string[] archivos = Directory.GetFiles(rutaFisicaPC);
+            List<object> imagenes = new List<object>();
+
+            foreach (string archivo in archivos)
+            {
+                string nombreImagen = Path.GetFileName(archivo);
+                imagenes.Add(new { NombreImagen = nombreImagen });
+            }
+            GridViewFotosPC.DataSource = imagenes;
+            GridViewFotosPC.DataBind();
+            if (GridViewFotosPC.Rows.Count == 0)
+            {
+                lblActualizacionPC.Text = "No hay fotografías para confirmar en este apartado.";
+                TbEliminarPC.Visible = false;
+            }
+        }
+        void llenadoGridRC()
+        {
+            string[] archivos = Directory.GetFiles(rutaFisicaRC);
+            List<object> imagenes = new List<object>();
+
+            foreach (string archivo in archivos)
+            {
+                string nombreImagen = Path.GetFileName(archivo);
+                imagenes.Add(new { NombreImagen = nombreImagen });
+            }
+            GridViewFotosRC.DataSource = imagenes;
+            GridViewFotosRC.DataBind();
+            if (GridViewFotosRC.Rows.Count == 0)
+            {
+                lblActualizacionRC.Text = "No hay fotografías para confirmar en este apartado.";
+                TbEliminarRC.Visible = false;
+            }
         }
         void LeerInfoTxtPath()
         {
@@ -69,11 +139,15 @@ namespace ReportesUnis
         void LeerInfoTxtPathGrid()
         {
             string rutaCompleta = CurrentDirectory + "PathConfirmacion.txt";
-            string line = "";
+
             using (StreamReader file = new StreamReader(rutaCompleta))
             {
-                line = file.ReadToEnd();
-                txtPath.Text = line;
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                txtPathAC.Text = linea1;
+                txtPathPC.Text = linea2;
+                txtPathRC.Text = linea3;
                 file.Close();
             }
         }
@@ -161,7 +235,7 @@ namespace ReportesUnis
             }
             return retorno;
         }
-        protected void QueryInsertBi(string Carnet)
+        protected void QueryInsertBi(string Carnet, string CONTROL)
         {
             string constr = TxtURL.Text;
             txtInsertBI.Text = null;
@@ -304,7 +378,7 @@ namespace ReportesUnis
                                     "||O_CONDMIG||''','''  " + //OTRA CONDICION MIGRANTE
                                     "||VALIDAR_ENVIO||''')'" +//OTRA CONDICION MIGRANTE 
                                     " AS INS " +
-                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET ='" + Carnet + "' AND CONFIRMACION != 1 AND CONTROL_ACCION = 'PC')";
+                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET ='" + Carnet + "' AND CONFIRMACION != 1 AND CONTROL_ACCION != '" + CONTROL + "')";
                     OracleDataReader reader = cmd.ExecuteReader();
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -320,9 +394,48 @@ namespace ReportesUnis
                 "ACCION='" + Accion + "', FECHA_HORA='" + FechaHora + "'" +
                 " WHERE CARNET = '" + Carne + "'";
         }
-        private void ValidacionCheck()
+        private void ValidacionCheckAC()
         {
-            foreach (GridViewRow row in GridViewFotos.Rows)
+            foreach (GridViewRow row in GridViewFotosAC.Rows)
+            {
+                CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
+                if (checkBox.Checked)
+                {
+                    if (prueba.Text.IsNullOrWhiteSpace())
+                    {
+                        prueba.Text = "1";
+                    }
+                    else
+                    {
+                        prueba.Text = (Convert.ToInt16(prueba.Text) + 1).ToString();
+
+                    }
+                }
+            }
+        }
+
+        private void ValidacionCheckPC()
+        {
+            foreach (GridViewRow row in GridViewFotosPC.Rows)
+            {
+                CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
+                if (checkBox.Checked)
+                {
+                    if (prueba.Text.IsNullOrWhiteSpace())
+                    {
+                        prueba.Text = "1";
+                    }
+                    else
+                    {
+                        prueba.Text = (Convert.ToInt16(prueba.Text) + 1).ToString();
+
+                    }
+                }
+            }
+        }
+        private void ValidacionCheckRC()
+        {
+            foreach (GridViewRow row in GridViewFotosRC.Rows)
             {
                 CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
                 if (checkBox.Checked)
@@ -344,6 +457,7 @@ namespace ReportesUnis
             string ImagenData = "";
             string constr = TxtURL.Text;
             int contador;
+            byte[] imageBytes = null;
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -357,7 +471,20 @@ namespace ReportesUnis
                         contador = Convert.ToInt32(reader3["CONTADOR"].ToString());
                         if (contador > 0)
                         {
-                            byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + Carnet + ".jpg");
+
+                            if (ControlTabs.Value == "AC")
+                            {
+                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/ACTUALIZACION-AC/" + Carnet + ".jpg");
+                            }
+                            if (ControlTabs.Value == "PC")
+                            {
+                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/PRIMER_CARNET-PC/" + Carnet + ".jpg");
+                            }
+                            if (ControlTabs.Value == "RC")
+                            {
+                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/RENOVACION_CARNE-RC/" + Carnet + ".jpg");
+                            }
+
                             string base64String = Convert.ToBase64String(imageBytes);
                             ImagenData = base64String;
                         }
@@ -491,8 +618,8 @@ namespace ReportesUnis
                 string linea4 = file.ReadLine();
                 string linea5 = file.ReadLine();
                 string linea6 = file.ReadLine();
-                
-                
+
+
                 nombre = linea2;
                 correo = linea4;
                 pass = linea6;
@@ -534,7 +661,7 @@ namespace ReportesUnis
             return datos;
         }
         public void EnvioCorreo(string body, string subject, string Nombre, string EmailInstitucional)
-        {            
+        {
             string htmlBody = LeerBodyEmail(body);
             string[] datos = LeerInfoEmail(subject);
             string[] credenciales = LeerCredencialesMail();
@@ -566,16 +693,146 @@ namespace ReportesUnis
                 }
                 catch
                 {
-                    log("ERROR - Al enviar el correo para : " + EmailInstitucional, "");
+                    log("ERROR - Al enviar el correo para : " + EmailInstitucional, "", "CONFIRMACION FOTOGRAFIA ESTUDIANTE");
                 }
             }
 
         }
 
         //EVENTOS
-        protected void ButtonSubmit_Click(object sender, EventArgs e)
+        protected void ButtonSubmitAC_Click(object sender, EventArgs e)
         {
-            foreach (GridViewRow row in GridViewFotos.Rows)
+            foreach (GridViewRow row in GridViewFotosAC.Rows)
+            {
+                CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
+                if (checkBox.Checked)
+                {
+                    int cargaFt = 0;
+                    /*try
+                    {
+                        File.Delete(txtPath2.Text + row.Cells[1].Text);
+                        cargaFt = 0;
+                    }
+                    catch (Exception)
+                    {
+                        cargaFt = 1;
+                    }*/
+                    if (cargaFt == 0)
+                    {
+                        string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                        carne.Value = nombre;
+                        string[] datos = DatosCorreo();
+                        string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
+                        string respuesta = ConsumoOracle(cadena);
+                        if (respuesta == "0")
+                        {
+                            File.Delete(CurrentDirectory + txtPathAC.Text + "/" + row.Cells[1].Text);
+                            //File.Delete(txtPath2.Text + row.Cells[1].Text);
+                            llenadoGridAC();
+                            log("La fotografía de fue rechazada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), nombre, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+                            lblActualizacionAC.Text = "Se rechazaron las fotos seleccionadas.";
+                            EnvioCorreo("bodyRechazoFotoEstudiante.txt", "datosRechazoFotoEstudiante.txt", datos[1], datos[0]);
+                        }
+                        else
+                        {
+                            log("ERROR - Error al eliminar el registro", nombre, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+                            lblActualizacionAC.Text = "Ocurrió un error al eliminar los registros";
+                        }
+                    }
+                    else
+                    {
+                        lblActualizacionAC.Text = "Ocurrió un error al eliminar los registros";
+                    }
+                }
+            }
+        }
+        protected void GridViewFotosAC_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Image image = (Image)e.Row.FindControl("Image1");
+                string nombreImagen = DataBinder.Eval(e.Row.DataItem, "NombreImagen").ToString();
+                string rutaImagen = Path.Combine("~" + txtPathAC.Text, nombreImagen);
+                image.ImageUrl = rutaImagen;
+            }
+        }
+        protected void BtnConfirmarAC_Click(object sender, EventArgs e)
+        {
+            prueba.Text = "0";
+            ValidacionCheckAC();
+            string Ncarnet = "";
+            string Merror = "Ocurrió un problema al confirmar la información de:";
+            string MensajeFinal = "";
+            if (Convert.ToInt16(prueba.Text) > 0 || prueba.Text.IsNullOrWhiteSpace())
+            {
+                lblActualizacionAC.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
+            }
+            else
+            {
+                foreach (GridViewRow row in GridViewFotosAC.Rows)
+                {
+                    string respuesta = null;
+                    string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                    string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                    Ncarnet = carnet;
+                    carne.Value = carnet;
+                    /*QueryInsertBi(carnet);
+                    //SE INGRESA LA INFORMACIÓN EN EL BANCO
+                    respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+
+                    if (respuesta == "0")
+                    {
+                        respuesta = "";*/
+                    QueryUpdateApex("0", fecha, fecha, fecha, "1", carnet);
+                    if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+                    {
+                        respuesta = ConsumoOracle(txtInsertApex.Text);
+                        if (respuesta == "0")
+                        {
+                            Upload(carnet);
+                        }
+                        else
+                        {
+                            log("ERROR - Actualización de Fotografía", carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+                        }
+                    }
+                    /* }
+                     else
+                     {
+                         log("ERROR - Inserta BI del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+                     }*/
+
+                    if (respuesta == "0")
+                    {
+                        lblActualizacionAC.Text = "Se confirmó correctamente la información.";
+                        File.Delete(CurrentDirectory + txtPathAC.Text + "/" + row.Cells[1].Text);
+                        llenadoGridAC();
+                        string[] datos = DatosCorreo();
+                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+                        EnvioCorreo("bodyConfirmacionFotoEstudiante.txt", "datosConfirmacionFotoEstudiante.txt", datos[1], datos[0]);
+                    }
+                    else
+                    {
+                        if (String.IsNullOrEmpty(MensajeFinal))
+                            MensajeFinal = carnet;
+                        else
+                            MensajeFinal = MensajeFinal + ", " + carnet;
+                    }
+                }
+            }
+
+            if (!String.IsNullOrEmpty(MensajeFinal))
+            {
+                MensajeFinal = Merror + " " + MensajeFinal;
+                lblActualizacionAC.Text = MensajeFinal;
+                log("ERROR - " + MensajeFinal, Ncarnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+
+            }
+
+        }
+        protected void ButtonSubmitPC_Click(object sender, EventArgs e)
+        {
+            foreach (GridViewRow row in GridViewFotosPC.Rows)
             {
                 CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
                 if (checkBox.Checked)
@@ -599,57 +856,57 @@ namespace ReportesUnis
                         string respuesta = ConsumoOracle(cadena);
                         if (respuesta == "0")
                         {
-                            File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
+                            File.Delete(CurrentDirectory + txtPathPC.Text + "/" + row.Cells[1].Text);
                             File.Delete(txtPath2.Text + row.Cells[1].Text);
-                            llenadoGrid();
-                            log("La fotografía de fue rechazada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), nombre);
-                            lblActualizacion.Text = "Se rechazaron las fotos seleccionadas.";
+                            llenadoGridPC();
+                            log("La fotografía de fue rechazada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), nombre, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
+                            lblActualizacionPC.Text = "Se rechazaron las fotos seleccionadas.";
                             EnvioCorreo("bodyRechazoFotoEstudiante.txt", "datosRechazoFotoEstudiante.txt", datos[1], datos[0]);
                         }
                         else
                         {
-                            log("ERROR - Error al eliminar el registro", nombre);
-                            lblActualizacion.Text = "Ocurrió un error al eliminar los registros";
+                            log("ERROR - Error al eliminar el registro", nombre, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
+                            lblActualizacionPC.Text = "Ocurrió un error al eliminar los registros";
                         }
                     }
                     else
                     {
-                        lblActualizacion.Text = "Ocurrió un error al eliminar los registros";
+                        lblActualizacionPC.Text = "Ocurrió un error al eliminar los registros";
                     }
                 }
             }
         }
-        protected void GridViewFotos_RowDataBound(object sender, GridViewRowEventArgs e)
+        protected void GridViewFotosPC_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 Image image = (Image)e.Row.FindControl("Image1");
                 string nombreImagen = DataBinder.Eval(e.Row.DataItem, "NombreImagen").ToString();
-                string rutaImagen = Path.Combine("~" + txtPath.Text, nombreImagen);
+                string rutaImagen = Path.Combine("~" + txtPathPC.Text, nombreImagen);
                 image.ImageUrl = rutaImagen;
             }
         }
-        protected void BtnConfirmar_Click(object sender, EventArgs e)
+        protected void BtnConfirmarPC_Click(object sender, EventArgs e)
         {
             prueba.Text = "0";
-            ValidacionCheck();
+            ValidacionCheckPC();
             string Ncarnet = "";
             string Merror = "Ocurrió un problema al confirmar la información de:";
             string MensajeFinal = "";
             if (Convert.ToInt16(prueba.Text) > 0 || prueba.Text.IsNullOrWhiteSpace())
             {
-                lblActualizacion.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
+                lblActualizacionPC.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
             }
             else
             {
-                foreach (GridViewRow row in GridViewFotos.Rows)
+                foreach (GridViewRow row in GridViewFotosPC.Rows)
                 {
                     string respuesta = null;
                     string fecha = DateTime.Now.ToString("yyyy-MM-dd");
                     string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                     Ncarnet = carnet;
                     carne.Value = carnet;
-                    QueryInsertBi(carnet);
+                    QueryInsertBi(carnet, "RC");
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
 
@@ -666,22 +923,22 @@ namespace ReportesUnis
                             }
                             else
                             {
-                                log("ERROR - Actualización de Fotografía", carnet);
+                                log("ERROR - Actualización de Fotografía", carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
                             }
                         }
                     }
                     else
                     {
-                        log("ERROR - Inserta BI del carnet: " + carnet, carnet);
+                        log("ERROR - Inserta BI del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
                     }
 
                     if (respuesta == "0")
                     {
-                        lblActualizacion.Text = "Se confirmó correctamente la información.";
-                        File.Delete(CurrentDirectory + txtPath.Text + row.Cells[1].Text);
-                        llenadoGrid();
+                        lblActualizacionPC.Text = "Se confirmó correctamente la información.";
+                        File.Delete(CurrentDirectory + txtPathPC.Text + "/" + row.Cells[1].Text);
+                        llenadoGridPC();
                         string[] datos = DatosCorreo();
-                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet);
+                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
                         EnvioCorreo("bodyConfirmacionFotoEstudiante.txt", "datosConfirmacionFotoEstudiante.txt", datos[1], datos[0]);
                     }
                     else
@@ -697,14 +954,144 @@ namespace ReportesUnis
             if (!String.IsNullOrEmpty(MensajeFinal))
             {
                 MensajeFinal = Merror + " " + MensajeFinal;
-                lblActualizacion.Text = MensajeFinal;
-                log("ERROR - " +MensajeFinal, Ncarnet);
+                lblActualizacionPC.Text = MensajeFinal;
+                log("ERROR - " + MensajeFinal, Ncarnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+
+            }
+
+        }
+        protected void ButtonSubmitRC_Click(object sender, EventArgs e)
+        {
+            foreach (GridViewRow row in GridViewFotosPC.Rows)
+            {
+                CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
+                if (checkBox.Checked)
+                {
+                    int cargaFt = 0;
+                    try
+                    {
+                        File.Delete(txtPath2.Text + row.Cells[1].Text);
+                        cargaFt = 0;
+                    }
+                    catch (Exception)
+                    {
+                        cargaFt = 1;
+                    }
+                    if (cargaFt == 0)
+                    {
+                        string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                        carne.Value = nombre;
+                        string[] datos = DatosCorreo();
+                        string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
+                        string respuesta = ConsumoOracle(cadena);
+                        if (respuesta == "0")
+                        {
+                            File.Delete(CurrentDirectory + txtPathRC.Text + "/" + row.Cells[1].Text);
+                            File.Delete(txtPath2.Text + row.Cells[1].Text);
+                            llenadoGridRC();
+                            log("La fotografía de fue rechazada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), nombre, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                            lblActualizacionPC.Text = "Se rechazaron las fotos seleccionadas.";
+                            EnvioCorreo("bodyRechazoFotoEstudiante.txt", "datosRechazoFotoEstudiante.txt", datos[1], datos[0]);
+                        }
+                        else
+                        {
+                            log("ERROR - Error al eliminar el registro", nombre, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                            lblActualizacionPC.Text = "Ocurrió un error al eliminar los registros";
+                        }
+                    }
+                    else
+                    {
+                        lblActualizacionRC.Text = "Ocurrió un error al eliminar los registros";
+                    }
+                }
+            }
+        }
+        protected void GridViewFotosRC_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                Image image = (Image)e.Row.FindControl("Image1");
+                string nombreImagen = DataBinder.Eval(e.Row.DataItem, "NombreImagen").ToString();
+                string rutaImagen = Path.Combine("~" + txtPathRC.Text, nombreImagen);
+                image.ImageUrl = rutaImagen;
+            }
+        }
+        protected void BtnConfirmarRC_Click(object sender, EventArgs e)
+        {
+            prueba.Text = "0";
+            ValidacionCheckRC();
+            string Ncarnet = "";
+            string Merror = "Ocurrió un problema al confirmar la información de:";
+            string MensajeFinal = "";
+            if (Convert.ToInt16(prueba.Text) > 0 || prueba.Text.IsNullOrWhiteSpace())
+            {
+                lblActualizacionRC.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
+            }
+            else
+            {
+                foreach (GridViewRow row in GridViewFotosRC.Rows)
+                {
+                    string respuesta = null;
+                    string fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                    string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                    Ncarnet = carnet;
+                    carne.Value = carnet;
+                    QueryInsertBi(carnet, "PC");
+                    //SE INGRESA LA INFORMACIÓN EN EL BANCO
+                    respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+
+                    if (respuesta == "0")
+                    {
+                        respuesta = "";
+                        QueryUpdateApex("0", fecha, fecha, fecha, "1", carnet);
+                        if (!txtInsertApex.Text.IsNullOrWhiteSpace())
+                        {
+                            respuesta = ConsumoOracle(txtInsertApex.Text);
+                            if (respuesta == "0")
+                            {
+                                Upload(carnet);
+                            }
+                            else
+                            {
+                                log("ERROR - Actualización de Fotografía", carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        log("ERROR - Inserta BI del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                    }
+
+                    if (respuesta == "0")
+                    {
+                        lblActualizacionRC.Text = "Se confirmó correctamente la información.";
+                        File.Delete(CurrentDirectory + txtPathRC.Text + "/" + row.Cells[1].Text);
+                        llenadoGridRC();
+                        string[] datos = DatosCorreo();
+                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                        EnvioCorreo("bodyConfirmacionFotoEstudiante.txt", "datosConfirmacionFotoEstudiante.txt", datos[1], datos[0]);
+                    }
+                    else
+                    {
+                        if (String.IsNullOrEmpty(MensajeFinal))
+                            MensajeFinal = carnet;
+                        else
+                            MensajeFinal = MensajeFinal + ", " + carnet;
+                    }
+                }
+            }
+
+            if (!String.IsNullOrEmpty(MensajeFinal))
+            {
+                MensajeFinal = Merror + " " + MensajeFinal;
+                lblActualizacionRC.Text = MensajeFinal;
+                log("ERROR - " + MensajeFinal, Ncarnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
 
             }
 
         }
 
-        private void log(string ErrorLog, string carnet)
+        private void log(string ErrorLog, string carnet, string Pantalla)
         {
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -715,13 +1102,75 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + carnet + "','" + ErrorLog + "','CONFIRMACIÓN FOTOS EMPLEADOS',SYSDATE)";
+                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + carnet + "','" + ErrorLog + "','" + Pantalla + "',SYSDATE)";
                     cmd.ExecuteNonQuery();
                     transaction.Commit();
 
                 }
             }
         }
+        // Función para establecer la pestaña activa y su estilo
+        private void SetActiveTab(int tabIndex)
+        {
+            // Restablecer todos los estilos de las pestañas a "Initial"
+            Tab1.CssClass = "Initial";
+            Tab2.CssClass = "Initial";
+            Tab3.CssClass = "Initial";
+
+            // Establecer la pestaña activa según el índice
+            if (tabIndex == 0)
+            {
+                Tab1.CssClass = "Clicked";
+                MainView.ActiveViewIndex = 0;
+                llenadoGridAC();
+            }
+            else if (tabIndex == 1)
+            {
+                Tab2.CssClass = "Clicked";
+                MainView.ActiveViewIndex = 1;
+                llenadoGridPC();
+            }
+            else if (tabIndex == 2)
+            {
+                Tab3.CssClass = "Clicked";
+                MainView.ActiveViewIndex = 2;
+                llenadoGridRC();
+            }
+        }
+
+        // Evento cuando se hace clic en la Tab 1
+        protected void Tab1_Click(object sender, EventArgs e)
+        {
+            // Actualizar el índice de la pestaña activa en el ViewState
+            ViewState["ActiveTabIndex"] = 0;
+            ControlTabs.Value = "AC";
+            lblActualizacionAC.Text = "";
+            // Establecer la pestaña activa y su estilo correspondiente
+            SetActiveTab(0);
+        }
+
+        // Evento cuando se hace clic en la Tab 2
+        protected void Tab2_Click(object sender, EventArgs e)
+        {
+            // Actualizar el índice de la pestaña activa en el ViewState
+            ViewState["ActiveTabIndex"] = 1;
+            ControlTabs.Value = "PC";
+            lblActualizacionPC.Text = "";
+            // Establecer la pestaña activa y su estilo correspondiente
+            SetActiveTab(1);
+        }
+
+        // Evento cuando se hace clic en la Tab 3
+        protected void Tab3_Click(object sender, EventArgs e)
+        {
+            // Actualizar el índice de la pestaña activa en el ViewState
+            ViewState["ActiveTabIndex"] = 2;
+            ControlTabs.Value = "RC";
+            lblActualizacionRC.Text = "";
+            // Establecer la pestaña activa y su estilo correspondiente
+            SetActiveTab(2);
+        }
+
 
     }
 }
