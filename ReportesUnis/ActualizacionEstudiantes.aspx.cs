@@ -2519,7 +2519,7 @@ namespace ReportesUnis
                     File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\RENOVACION_CARNE-RC\\" + UserEmplid.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\RENOVACION_CARNE-RC\\" + UserEmplid.Text + ".jpg");
                 }
-                if (ControlAct.Value == "RC" || ControlAct.Value == "pC")
+                if (ControlAct.Value == "RC" || ControlAct.Value == "PC")
                 {
                     File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\ACTUALIZACION-AC\\" + UserEmplid.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\ACTUALIZACION-AC\\" + UserEmplid.Text + ".jpg");
@@ -2936,10 +2936,15 @@ namespace ReportesUnis
                     File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\PRIMER_CARNET-PC\\" + UserEmplid.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\PRIMER_CARNET-PC\\" + UserEmplid.Text + ".jpg");
                 }
-                if (control == "RC" && control != "AC" && CONFIRMACION != "0")
+                if (control == "RC" && ControlAct.Value != "AC" && CONFIRMACION != "0")
                 {
                     File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\RENOVACION_CARNE-RC\\" + UserEmplid.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\RENOVACION_CARNE-RC\\" + UserEmplid.Text + ".jpg");
+                }
+                if (ControlAct.Value == "RC" || ControlAct.Value == "PC")
+                {
+                    File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\ACTUALIZACION-AC\\" + UserEmplid.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\ACTUALIZACION-AC\\" + UserEmplid.Text + ".jpg");
                 }
             }
             string informacion = actualizarInformacion();

@@ -5,7 +5,7 @@
         <div style="background-color: #ffffff; max-width: 600px; margin: 0 auto; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
             <h3 style="color: #000;">Su información ha sido rechazada</h3>
             <p style="color: #000;">Lamentablemente, su información ha sido rechazada debido a que no coincide con su documento de identificación.</p>
-            <p style="color: #000;">Por favor, ingrese nuevamente a la <a href='https://www.ejemplo.com/enlace-de-actualizacion'>página</a> y actualice de nuevo su información.</p>
+            <p style="color: #000;">Por favor, ingrese nuevamente a la <a href='https://app.unis.edu.gt/'>página</a> y actualice de nuevo su información.</p>
             <p style="color: #000;">Gracias por tu compromiso.</p>
             <p style="color: #000;">Saludos cordiales.</p>
             <p style="color: #000;">Soporte Técnico.</p>
