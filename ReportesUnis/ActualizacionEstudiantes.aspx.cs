@@ -591,8 +591,7 @@ namespace ReportesUnis
                                     ImgBase.ImageUrl = (File.Exists(Server.MapPath($"~/Usuarios/UltimasCargas/PRIMER_CARNET-PC/{txtCarne.Text}.jpg"))) ? $"~/Usuarios/UltimasCargas/PRIMER_CARNET-PC/{txtCarne.Text}.jpg?c={DateTime.Now.Ticks}" : string.Empty;
                                     imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/PRIMER_CARNET-PC/" + txtCarne.Text + ".jpg");
                                 }
-                                else
-                                                    if (ControlAct.Value == "RC")
+                                else if (ControlAct.Value == "RC")
                                 {
                                     ImgBase.ImageUrl = (File.Exists(Server.MapPath($"~/Usuarios/UltimasCargas/RENOVACION_CARNE-RC/{txtCarne.Text}.jpg"))) ? $"~/Usuarios/UltimasCargas/RENOVACION_CARNE-RC/{txtCarne.Text}.jpg?c={DateTime.Now.Ticks}" : string.Empty;
                                     imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/RENOVACION_CARNE-RC/" + txtCarne.Text + ".jpg");
@@ -3274,13 +3273,13 @@ namespace ReportesUnis
                         
             if (RadioButtonActualiza.Checked)
             {
-                if (controlRenovacion == 0)
+                if (contadorRegistro == 0)
                 {
                     // INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
                     if (controlRenovacionAC == 0)
                     {
                         ControlAct.Value = "AC";
-                    }
+                    } else
                     if (controlRenovacionPC <= 1 && controlRenovacionRC == 0)
                     {
                         ControlAct.Value = "PC";
@@ -3295,7 +3294,7 @@ namespace ReportesUnis
             else if (RadioButtonCarne.Checked)
             {
 
-                if ((contadorRegistro < 1 || CONFIRMACION != "1000") && controlRenovacionAC < 1)
+                if (controlRenovacionPC < 1 && controlRenovacionRC == 0)
                 {
                     ControlAct.Value = "PC";
                 }
