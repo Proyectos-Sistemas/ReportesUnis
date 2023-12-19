@@ -105,15 +105,6 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.TextBox prueba;
 
         /// <summary>
-        /// Control carne.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden carne;
-
-        /// <summary>
         /// Control ControlTabs.
         /// </summary>
         /// <remarks>
@@ -121,6 +112,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden ControlTabs;
+
+        /// <summary>
+        /// Control carne.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden carne;
 
         /// <summary>
         /// Control DPI.
@@ -177,49 +177,49 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.View View1;
 
         /// <summary>
-        /// Control lblActualizacionAC.
+        /// Control lblActualizacion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblActualizacionAC;
+        protected global::System.Web.UI.WebControls.Label lblActualizacion;
 
         /// <summary>
-        /// Control GridViewFotosAC.
+        /// Control GridViewFotos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridViewFotosAC;
+        protected global::System.Web.UI.WebControls.GridView GridViewFotos;
 
         /// <summary>
-        /// Control TbEliminarAC.
+        /// Control TbEliminarD.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Table TbEliminarAC;
+        protected global::System.Web.UI.WebControls.Table TbEliminarD;
 
         /// <summary>
-        /// Control BtnEliminarAC.
+        /// Control BtnEliminar.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnEliminarAC;
+        protected global::System.Web.UI.WebControls.Button BtnEliminar;
 
         /// <summary>
-        /// Control BtnConfirmarAC.
+        /// Control BtnConfirmar.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnConfirmarAC;
+        protected global::System.Web.UI.WebControls.Button BtnConfirmar;
 
         /// <summary>
         /// Control View2.

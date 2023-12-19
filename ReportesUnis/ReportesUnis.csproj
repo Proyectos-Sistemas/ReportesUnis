@@ -862,9 +862,16 @@
     <Folder Include="ReportesCT\" />
     <Folder Include="Usuarios\DPI\" />
     <Folder Include="Usuarios\FotosColaboradores\" />
-    <Folder Include="Usuarios\FotosConfirmacion\" />
-    <Folder Include="Usuarios\Fotos\" />
-    <Folder Include="Usuarios\UltimasCargas\" />
+    <Folder Include="Usuarios\FotosConfirmacion\ACTUALIZACION-AC\" />
+    <Folder Include="Usuarios\FotosConfirmacion\PRIMER_CARNET-PC\" />
+    <Folder Include="Usuarios\FotosConfirmacion\RENOVACION_CARNE-RC\" />
+    <Folder Include="Usuarios\Fotos\ACTUALIZACION-AC\" />
+    <Folder Include="Usuarios\Fotos\PRIMER_CARNET-PC\" />
+    <Folder Include="Usuarios\Fotos\RENOVACION_CARNE-RC\" />
+    <Folder Include="Usuarios\UltimasCargas\ACTUALIZACION-AC\" />
+    <Folder Include="Usuarios\UltimasCargas\CONTROL\" />
+    <Folder Include="Usuarios\UltimasCargas\PRIMER_CARNET-PC\" />
+    <Folder Include="Usuarios\UltimasCargas\RENOVACION_CARNE-RC\" />
     <Folder Include="Zips\" />
   </ItemGroup>
   <ItemGroup>

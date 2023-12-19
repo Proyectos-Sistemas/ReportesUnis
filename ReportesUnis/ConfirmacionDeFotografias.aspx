@@ -7,7 +7,6 @@
         <h2 style="text-align: center;">CONFIRMACIÓN DE FOTOGRAFÍAS</h2>
     </div>
 
-
     <br />
     <div id="CamposAuxiliares" runat="server" visible="false">
         <%-- TXTPath ALMACENA EL PATH DONDE SE ALMACENARA LA IMAGEN --%>
@@ -24,11 +23,9 @@
         <%-- txtInsertApexI ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
         <asp:TextBox ID="txtInsertApex" runat="server" Visible="false"></asp:TextBox>
         <asp:TextBox ID="prueba" runat="server" Visible="false"></asp:TextBox>
-        <%-- TEXTBOX ALMACENA EL CORREO INSTITUCIONAL--%>
-        <input type="hidden" id="carne" runat="server" />
         <%-- TEXTBOX ALMACENA CONTROL DE TABS--%>
         <input type="hidden" id="ControlTabs" runat="server" />
-
+        <input type="hidden" id="carne" runat="server" />
         <input type="hidden" id="DPI" runat="server" />
     </div>
 
@@ -38,14 +35,14 @@
         <asp:Button Text="Primer Carne" ID="Tab2" CssClass="tablinks" runat="server" OnClick="Tab2_Click" />
         <asp:Button Text="Renovación de Carne" ID="Tab3" CssClass="tablinks" runat="server" OnClick="Tab3_Click" />
     </div>
-    <br />
+
     <asp:MultiView ID="MainView" runat="server">
         <asp:View ID="View1" runat="server">
             <table style="width: 100%; border-width: 1px; border-color: #ddd;">
                 <tr>
                     <td>
                         <div class="container" style="text-align: center">
-                            <asp:Label ID="lblActualizacionAC" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
+                            <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
                             </asp:Label>
                         </div>
                         <div class="container-fluid">
@@ -53,7 +50,7 @@
                                 <div class="col-md-12">
                                     <%-- GRIDVIEW DONDE SE MUESTRA LA INFORMACION DEL REPORTE --%>
                                     <div class="containerGV" id="GVContainer">
-                                        <asp:GridView ID="GridViewFotosAC" runat="server" AutoGenerateColumns="false" CssClass="table table-condensed table-bordered centrado-horizontal centrado" OnRowDataBound="GridViewFotosAC_RowDataBound">
+                                        <asp:GridView ID="GridViewFotos" runat="server" AutoGenerateColumns="false" CssClass="table table-condensed table-bordered centrado-horizontal centrado" OnRowDataBound="GridViewFotos_RowDataBound">
                                             <Columns>
                                                 <asp:TemplateField HeaderText="Eliminar" ItemStyle-HorizontalAlign="Center">
                                                     <ItemTemplate>
@@ -72,10 +69,9 @@
                                 </div>
                             </div>
                         </div>
-
                         <br />
                         <div class="container" runat="server">
-                            <asp:Table ID="TbEliminarAC" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
+                            <asp:Table ID="TbEliminarD" runat="server" Style="margin-left: auto; margin-right: auto; text-align: center; align-content: center">
                                 <asp:TableRow>
                                     <%-- ESPACIO 1--%>
                                     <asp:TableCell>
@@ -85,11 +81,11 @@
                                 <asp:TableRow>
                                     <%-- ESPACIO 2.1--%>
                                     <asp:TableCell>
-                                        <asp:Button ID="BtnEliminarAC" runat="server" Text="Rechazar Seleccionados" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlertaEliminarAC()" OnClick="ButtonSubmitAC_Click" />
+                                        <asp:Button ID="BtnEliminar" runat="server" Text="Rechazar Seleccionados" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlertaEliminar()" OnClick="ButtonSubmit_Click" />
                                     </asp:TableCell>
                                     <%-- ESPACIO 2.2--%>
                                     <asp:TableCell>
-                                        <asp:Button ID="BtnConfirmarAC" runat="server" Text="Confirmar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlertaConfirmarAC()" OnClick="BtnConfirmarAC_Click" />
+                                        <asp:Button ID="BtnConfirmar" runat="server" Text="Confirmar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlertaConfirmar()" OnClick="BtnConfirmar_Click" />
                                     </asp:TableCell>
                                 </asp:TableRow>
                                 <asp:TableRow>
@@ -123,7 +119,7 @@
                                                         <Columns>
                                                             <asp:TemplateField HeaderText="Eliminar" ItemStyle-HorizontalAlign="Center">
                                                                 <ItemTemplate>
-                                                                    <asp:CheckBox ID="CheckBoxImage" runat="server" Font-Size="Large" />
+                                                                    <asp:CheckBox ID="CheckBoxImagePC" runat="server" Font-Size="Large" />
                                                                 </ItemTemplate>
                                                             </asp:TemplateField>
                                                             <asp:BoundField DataField="NombreImagen" HeaderText="Nombre de la imagen" />
@@ -195,7 +191,7 @@
                                                                     <Columns>
                                                                         <asp:TemplateField HeaderText="Eliminar" ItemStyle-HorizontalAlign="Center">
                                                                             <ItemTemplate>
-                                                                                <asp:CheckBox ID="CheckBoxImage" runat="server" Font-Size="Large" />
+                                                                                <asp:CheckBox ID="CheckBoxImageRC" runat="server" Font-Size="Large" />
                                                                             </ItemTemplate>
                                                                         </asp:TemplateField>
                                                                         <asp:BoundField DataField="NombreImagen" HeaderText="Nombre de la imagen" />
@@ -248,28 +244,27 @@
             </table>
         </asp:View>
     </asp:MultiView>
-
     <script>
-        function mostrarAlertaEliminarAC() {
+        function mostrarAlertaEliminar() {
             if (confirm("¿Está seguro de desea eliminar las fotografías seleccionadas?")) {
-                __doPostBack('<%= BtnEliminarAC.ClientID %>', '');
+                __doPostBack('<%= BtnEliminar.ClientID %>', '');
                 return true; // Permite continuar con la acción del botón
             } else {
                 return false; // Cancela la acción del botón
             }
         }
-        function mostrarAlertaConfirmarAC() {
+        function mostrarAlertaConfirmar() {
             if (confirm("¿Está seguro de desea confirmar la información?")) {
-                __doPostBack('<%= BtnConfirmarAC.ClientID %>', '');
+                __doPostBack('<%= BtnConfirmar.ClientID %>', '');
                 return true; // Permite continuar con la acción del botón
             } else {
                 return false; // Cancela la acción del botón
             }
         }
 
-        function mostrarAlertaEliminarAC() {
+        function mostrarAlertaEliminarPC() {
             if (confirm("¿Está seguro de desea eliminar las fotografías seleccionadas?")) {
-                __doPostBack('<%= BtnEliminarAC.ClientID %>', '');
+                __doPostBack('<%= BtnEliminarPC.ClientID %>', '');
                 return true; // Permite continuar con la acción del botón
             } else {
                 return false; // Cancela la acción del botón
@@ -283,24 +278,6 @@
                 return false; // Cancela la acción del botón
             }
         }
-
-        function mostrarAlertaEliminarAC() {
-            if (confirm("¿Está seguro de desea eliminar las fotografías seleccionadas?")) {
-                __doPostBack('<%= BtnEliminarRC.ClientID %>', '');
-                return true; // Permite continuar con la acción del botón
-            } else {
-                return false; // Cancela la acción del botón
-            }
-        }
-        function mostrarAlertaConfirmarAC() {
-            if (confirm("¿Está seguro de desea confirmar la información?")) {
-                __doPostBack('<%= BtnConfirmarRC.ClientID %>', '');
-                return true; // Permite continuar con la acción del botón
-            } else {
-                return false; // Cancela la acción del botón
-            }
-        }
-
     </script>
 </asp:Content>
 

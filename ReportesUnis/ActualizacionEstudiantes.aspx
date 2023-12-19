@@ -264,6 +264,7 @@
             <input type="hidden" id="InicialNR2" runat="server" />
             <input type="hidden" id="InicialNR3" runat="server" />
             <input type="hidden" id="ControlCF" runat="server" />
+            <input type="hidden" id="ControlCF2" runat="server" />
 
             <%-- CONTROL PARA ACTUALIZAR O SOLICITAR CARNE--%>
             <input type="hidden" id="ControlAct" runat="server" />
@@ -354,7 +355,7 @@
                                 <div class="form-group col-md-4">
                                     <asp:Label runat="server" Font-Bold="true">Zona:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="2" Width="275px" CssClass="form-control" onkeypress="return evitarEnter(event)"></asp:TextBox>
+                                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="2" Width="275px" CssClass="form-control" onkeypress="return evitarEnteryNumeros(event)"></asp:TextBox>
                                 </div>
 
 
@@ -1043,6 +1044,7 @@
             var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
             var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
             var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
+            var ControlCF2 = $('#<%= ControlCF2.ClientID %>').val().trim();
             var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
             var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
             var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
@@ -1165,7 +1167,7 @@
 
 
 
-                if (paisN.trim() === "") {
+                if (paisN.trim() === "" && ControlCF2.trim() === "2") {
                     if (mensaje.trim() == "") {
                         mensaje = "-El país para el recibo es requerido.";
                     } else {
@@ -1173,7 +1175,7 @@
                     }
                 }
 
-                if (deptoN.trim() === "") {
+                if (deptoN.trim() === "" && ControlCF2.trim() === "2") {
                     if (mensaje.trim() == "") {
                         mensaje = "-El departamento para el recibo es requerido.";
                     } else {
@@ -1181,7 +1183,7 @@
                     }
                 }
 
-                if (muniN.trim() === "") {
+                if (muniN.trim() === "" && ControlCF2.trim() === "2") {
                     if (mensaje.trim() == "") {
                         mensaje = "-El municipio para el recibo es requerido.";
                     } else {
@@ -1234,6 +1236,7 @@
                 $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
                         $('#<%= ControlCF.ClientID %>').val(" ");
+                        $('#<%= ControlCF2.ClientID %>').val("1");
                         $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
                         $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
                         $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
@@ -1299,6 +1302,7 @@
                 $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
                         $('#<%= ControlCF.ClientID %>').val(" ");
+                        $('#<%= ControlCF2.ClientID %>').val("2");
                         $('#<%= TxtNombreR.ClientID %>').val("");
                         $('#<%= TxtApellidoR.ClientID %>').val("");
                         $('#<%= TxtCasadaR.ClientID %>').val("");
@@ -1346,6 +1350,7 @@
                 $('#<%= RadioButtonActualiza.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
                         $('#<%= ControlAct.ClientID %>').val("AC");
+                        
                     }
                 });
             }
@@ -1598,11 +1603,23 @@
         }
 
         //evitar enter y letras, permite ingresar solo numeros
-        function evitarEnter(e) {
+        function evitarEnteryNumeros(e) {
             var charCode = (e.which) ? e.which : event.keyCode;
 
             // Verifica si la tecla presionada es un número y no es Enter
             if ((charCode >= 48 && charCode <= 57) && charCode !== 13) {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        function evitarEnter(e) {
+            var charCode = (e.which) ? e.which : event.keyCode;
+
+            // Verifica si la tecla presionada es un número y no es Enter
+            if (charCode !== 13) {
                 return true;
             }
 

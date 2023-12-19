@@ -243,8 +243,8 @@ namespace ReportesUnis
                         {
                             TxtDpiAC.Text = reader["NO_PASAPORTE"].ToString();
                         }
-                        TxtPrimerNombreAC.Text = reader["NOMBRE1"].ToString();
-                        TxtSegundoNombreAC.Text = reader["NOMBRE2"].ToString();
+                        TxtPrimerNombreAC.Text = reader["NOMBRE1"].ToString().TrimEnd();
+                        TxtSegundoNombreAC.Text = reader["NOMBRE2"].ToString().TrimEnd();
                         TxtPrimerApellidoAC.Text = reader["APELLIDO1"].ToString();
                         TxtSegundoApellidoAC.Text = reader["APELLIDO2"].ToString();
                         TxtApellidoCasadaAC.Text = reader["DECASADA"].ToString();
@@ -302,8 +302,8 @@ namespace ReportesUnis
                         {
                             TxtDpiPC.Text = reader["NO_PASAPORTE"].ToString();
                         }
-                        TxtPrimerNombrePC.Text = reader["NOMBRE1"].ToString();
-                        TxtSegundoNombrePC.Text = reader["NOMBRE2"].ToString();
+                        TxtPrimerNombrePC.Text = reader["NOMBRE1"].ToString().TrimEnd();
+                        TxtSegundoNombrePC.Text = reader["NOMBRE2"].ToString().TrimEnd();
                         TxtPrimerApellidoPC.Text = reader["APELLIDO1"].ToString();
                         TxtSegundoApellidoPC.Text = reader["APELLIDO2"].ToString();
                         TxtApellidoCasadaPC.Text = reader["DECASADA"].ToString();
@@ -361,8 +361,8 @@ namespace ReportesUnis
                         {
                             TxtDpiRC.Text = reader["NO_PASAPORTE"].ToString();
                         }
-                        TxtPrimerNombreRC.Text = reader["NOMBRE1"].ToString();
-                        TxtSegundoNombreRC.Text = reader["NOMBRE2"].ToString();
+                        TxtPrimerNombreRC.Text = reader["NOMBRE1"].ToString().TrimEnd();
+                        TxtSegundoNombreRC.Text = reader["NOMBRE2"].ToString().TrimEnd();
                         TxtPrimerApellidoRC.Text = reader["APELLIDO1"].ToString();
                         TxtSegundoApellidoRC.Text = reader["APELLIDO2"].ToString();
                         TxtApellidoCasadaRC.Text = reader["DECASADA"].ToString();
@@ -630,7 +630,7 @@ namespace ReportesUnis
                                 con.Close();
                                 BuscarRC("1");
                                 File.Delete(txtPath.Text + Carnet + ".jpg");
-                                File.Delete(CurrentDirectory + "/Usuarios/FotosConfirmacion/RENOVACION_CARNET-RC/" + Carnet + ".jpg");
+                                File.Delete(CurrentDirectory + "/Usuarios/FotosConfirmacion/RENOVACION_CARNE-RC/" + Carnet + ".jpg");
                                 for (int i = 1; i <= Convert.ToInt16(txtCantidadRC.Text); i++)
                                 {
                                     File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
@@ -770,7 +770,7 @@ namespace ReportesUnis
                 llenadoPC("CARNET = '" + Carnet + "'");
                 string respuesta = null;
                 string fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                QueryInsertBi();
+                QueryInsertBi(CmbCarnePC.SelectedValue);
                 respuesta = QueryActualizaNombrePC(Carnet);
                 controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + Carnet + "' AND FECH_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
                 controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + Carnet + "'");
@@ -813,7 +813,7 @@ namespace ReportesUnis
 
                                     if (respuesta == "0")
                                     {
-                                        Upload(Carnet);
+                                        respuesta = Upload(Carnet);
                                     }
                                     else if (respuesta != "0")
                                     {
@@ -881,7 +881,7 @@ namespace ReportesUnis
                 llenadoRC("CARNET = '" + Carnet + "'");
                 string respuesta = null;
                 string fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                QueryInsertBi();
+                QueryInsertBi(CmbCarneRC.SelectedValue);
                 respuesta = QueryActualizaNombreRC(Carnet);
                 controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + Carnet + "' AND FECH_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
                 controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + Carnet + "'");
@@ -985,7 +985,7 @@ namespace ReportesUnis
                 lblActualizacionRC.Text = "Debe de seleccionar un número de carnet para poder confirmar la información.";
             }
         }
-        protected void QueryInsertBi()
+        protected void QueryInsertBi(string carne)
         {
             string constr = TxtURL.Text;
             txtInsertBI.Text = null;
@@ -1128,7 +1128,7 @@ namespace ReportesUnis
                                     "||O_CONDMIG||''','''  " + //OTRA CONDICION MIGRANTE
                                     "||VALIDAR_ENVIO||''')'" +//OTRA CONDICION MIGRANTE 
                                     " AS INS " +
-                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET ='" + CmbCarneAC.Text + "')";
+                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET ='" + carne + "')";
                     OracleDataReader reader = cmd.ExecuteReader();
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -1430,7 +1430,7 @@ namespace ReportesUnis
                         {
                             ContadorEffdtNombre = Convert.ToInt16(reader1["CONTADOR"]);
                         }
-
+                        UD_NAMES_NIT_PC.Value = "";
                         if (EffdtNombreUltimo != Hoy && ContadorNombre == 0 && ContadorEffdtNombre == 0)
                         {
                             // INSERT
@@ -1461,7 +1461,7 @@ namespace ReportesUnis
                         }
                         else if (EffdtNombreUltimo == Hoy && ContadorNombre > 0 && ContadorEffdtNombre > 0)
                         {
-                            // PCTUALIZAR
+                            // ACTUALIZAR
                             UD_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
                                                 "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
                                                 "        <COLL_NAMES>" +
@@ -2100,7 +2100,7 @@ namespace ReportesUnis
                                                 "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
                                                 "        <COLL_NAMES>" +
                                                 "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + EffdtDireccionNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
                                                 "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
                                                 "          <PROP_LAST_NAME>" + TxtApellidoRAC + @"</PROP_LAST_NAME>" +
                                                 "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
@@ -2475,6 +2475,9 @@ namespace ReportesUnis
                         else
                             FechaEfectiva = EFFDT_NameR_PC.Value;
 
+                        UD_NAMES_PRI_PC.Value = "";
+                        UD_NAMES_PRF_PC.Value = "";
+
                         if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNombreNit >= 0)
                         {//INSERT
                             UP_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
@@ -2514,7 +2517,7 @@ namespace ReportesUnis
                                                 "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
                                                 "        <COLL_NAMES>" +
                                                 "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + EffdtDireccionNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
                                                 "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
                                                 "          <PROP_LAST_NAME>" + TxtApellidoRPC + @"</PROP_LAST_NAME>" +
                                                 "          <PROP_FIRST_NAME>" + TxtNombreRPC + @"</PROP_FIRST_NAME>" +
@@ -2620,14 +2623,14 @@ namespace ReportesUnis
                             contadorUD = contadorUD + 1;
                         }
 
-                        auxConsulta = 0;
+                        auxConsulta = 2;
                         string consultaUP = "1";
                         string consultaUD = "1";
                         if (contadorUP > 0)
                         {
                             consultaUP = Consultar();
                         }
-                        auxConsulta = 1;
+                        auxConsulta = 3;
                         if (contadorUD > 0 && consultaUP == "1")
                         {
                             consultaUD = Consultar();
@@ -2928,7 +2931,7 @@ namespace ReportesUnis
                                                 "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
                                                 "        <COLL_NAMES>" +
                                                 "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + EffdtDireccionNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
                                                 "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
                                                 "          <PROP_LAST_NAME>" + TxtApellidoRRC + @"</PROP_LAST_NAME>" +
                                                 "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
@@ -3034,14 +3037,14 @@ namespace ReportesUnis
                             contadorUD = contadorUD + 1;
                         }
 
-                        auxConsulta = 0;
+                        auxConsulta = 4;
                         string consultaUP = "1";
                         string consultaUD = "1";
                         if (contadorUP > 0)
                         {
                             consultaUP = Consultar();
                         }
-                        auxConsulta = 1;
+                        auxConsulta = 5;
                         if (contadorUD > 0 && consultaUP == "1")
                         {
                             consultaUD = Consultar();
@@ -3475,7 +3478,7 @@ namespace ReportesUnis
             ViewState["ActiveTabIndex"] = 1;
             ControlTabs.Value = "PC";
             BuscarPC("1");
-            //lblActualizacionPC.Text = "";
+            lblActualizacionPC.Text = "";
             // Establecer la pestaña activa y su estilo correspondiente
             SetActiveTab(1);
         }
@@ -3486,7 +3489,7 @@ namespace ReportesUnis
             // Actualizar el índice de la pestaña activa en el ViewState
             ViewState["ActiveTabIndex"] = 2;
             ControlTabs.Value = "RC";
-            //lblActualizacionRC.Text = "";
+            lblActualizacionRC.Text = "";
             // Establecer la pestaña activa y su estilo correspondiente
             SetActiveTab(2);
         }
@@ -3706,18 +3709,15 @@ namespace ReportesUnis
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UD.V1";
                 CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, CmbCarneAC.SelectedValue, UD_NAMES_PRI_AC.Value, UD_NAMES_PRF_AC.Value, UD_NAMES_NIT_AC.Value, UD_ADDRESSES_NIT_AC.Value);
-            }
-            if (auxConsulta == 2)
+            }else if (auxConsulta == 2)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UP.V1";
                 CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, CmbCarnePC.SelectedValue, UP_NAMES_PRI_PC.Value, UP_NAMES_PRF_PC.Value, UP_NAMES_NIT_PC.Value, UP_ADDRESSES_NIT_PC.Value);
-            }
-            else if (auxConsulta == 3)
+            }else if (auxConsulta == 3)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UD.V1";
                 CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, CmbCarnePC.SelectedValue, UD_NAMES_PRI_PC.Value, UD_NAMES_PRF_PC.Value, UD_NAMES_NIT_PC.Value, UD_ADDRESSES_NIT_PC.Value);
-            }
-            if (auxConsulta == 4)
+            }else if (auxConsulta == 4)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UP.V1";
                 CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, CmbCarneRC.SelectedValue, UP_NAMES_PRI_RC.Value, UP_NAMES_PRF_RC.Value, UP_NAMES_NIT_RC.Value, UP_ADDRESSES_NIT_RC.Value);
