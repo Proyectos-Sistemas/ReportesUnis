@@ -1570,12 +1570,12 @@ namespace ReportesUnis
                                 {
                                     SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosConfirmacion\\ACTUALIZACION-AC\\", txtCarne.Text + ".jpg");
                                 }
-                                if (ControlAct.Value == "PC" || (ControlAct.Value == "AC" && CONFIRMACION == "1"))
+                                if (ControlAct.Value == "PC"  || (ControlAct.Value == "AC" && CONFIRMACION == "1"))
                                 {
-                                    if (controlRenovacionPC == 0)
-                                        SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosConfirmacion\\PRIMER_CARNET-PC\\", txtCarne.Text + ".jpg");
+                                    if(controlRenovacionPC == 0)
+                                    SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosConfirmacion\\PRIMER_CARNET-PC\\", txtCarne.Text + ".jpg");
                                     else
-                                        SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosConfirmacion\\RENOVACION_CARNE-RC\\", txtCarne.Text + ".jpg");
+                                    SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosConfirmacion\\RENOVACION_CARNE-RC\\", txtCarne.Text + ".jpg");
                                 }
                                 if (ControlAct.Value == "RC")
                                 {
@@ -1593,7 +1593,7 @@ namespace ReportesUnis
                                     if (controlRenovacionPC == 0)
                                         SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\Fotos\\PRIMER_CARNET-PC\\", txtCarne.Text + ".jpg");
                                     else
-                                        SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\Fotos\\RENOVACION_CARNE-RC\\", txtCarne.Text + ".jpg");
+                                    SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\Fotos\\RENOVACION_CARNE-RC\\", txtCarne.Text + ".jpg");
                                 }
                                 if (ControlAct.Value == "RC")
                                 {
@@ -2502,8 +2502,8 @@ namespace ReportesUnis
                                 if (ControlAct.Value == "PC" || (ControlAct.Value == "AC" && CONFIRMACION == "1"))
                                 {
                                     if (controlRenovacionPC == 0)
-                                        SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/PRIMER_CARNET-PC/", txtCarne.Text + ".jpg");
-                                    else
+                                    SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/PRIMER_CARNET-PC/", txtCarne.Text + ".jpg");
+                                    if (controlRenovacionPC == 0)
                                         SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/RENOVACION_CARNE-RC/", txtCarne.Text + ".jpg");
                                 }
                                 else
@@ -3270,57 +3270,38 @@ namespace ReportesUnis
             contadorRegistro = ControlRenovacion("WHERE EMPLID  ='" + txtCarne.Text + "'");
             int controlRenovacionAC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'AC'");
             int controlRenovacionPC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'PC'");
-
+            int controlRenovacionRC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'RC'");
+                        
             if (RadioButtonActualiza.Checked)
             {
                 if (controlRenovacion == 0)
                 {
                     // INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
-                    if (ControlAct.Value == "AC" && controlRenovacionAC == 0)
+                    if (controlRenovacionAC == 0)
                     {
                         ControlAct.Value = "AC";
                     }
-                    else
+                    if (controlRenovacionPC <= 1 && controlRenovacionRC == 0)
                     {
                         ControlAct.Value = "PC";
                     }
                 }
-                else if (controlRenovacionPC > 0)
+                else if(controlRenovacion >= 1 && (controlRenovacionPC <= 1 || controlRenovacionAC == 1))
                 {
                     ControlAct.Value = "RC";
                 }
-
+                
             }
             else if (RadioButtonCarne.Checked)
             {
-                controlRenovacionPC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'PC'");
-                int controlRenovacionRC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'RC'");
-                if (controlRenovacion == 0)
-                {                    
-                    if (controlRenovacionPC == 1)
-                    {
-                        if (controlRenovacionPC == 0)
-                            ControlAct.Value = "PC";
-                        else
-                            ControlAct.Value = "RC";
-                    }else if (controlRenovacionRC == 0)
-                    {
-                        ControlAct.Value = "AC";
-                    }
+
+                if ((contadorRegistro < 1 || CONFIRMACION != "1000") && controlRenovacionAC < 1)
+                {
+                    ControlAct.Value = "PC";
                 }
                 else
                 {
-                    if (CONFIRMACION == "1000" || CONFIRMACION == "0")
-                    {
-                        ControlAct.Value = "AC";
-                    }
-                    if (CONFIRMACION == "1")
-                    {
-                        if (controlRenovacionPC == 0)
-                            ControlAct.Value = "PC";
-                        else
-                            ControlAct.Value = "RC";
-                    }
+                    ControlAct.Value = "RC";
                 }
 
             }
