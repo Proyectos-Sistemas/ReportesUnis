@@ -1589,7 +1589,7 @@ namespace ReportesUnis
                                 }
                                 if (ControlAct.Value == "PC" || (ControlAct.Value == "AC" && CONFIRMACION == "1"))
                                 {
-                                    if (controlRenovacionPC == 0)
+                                    if (controlRenovacionPC <= 1 || controlRenovacionAC <= 1)
                                         SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\Fotos\\PRIMER_CARNET-PC\\", txtCarne.Text + ".jpg");
                                     else
                                     SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\Fotos\\RENOVACION_CARNE-RC\\", txtCarne.Text + ".jpg");
@@ -2492,7 +2492,8 @@ namespace ReportesUnis
                                 }
 
                                 int controlRenovacionPC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'PC'");
-
+                                int controlRenovacionAC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'AC'");
+                                
                                 if (ControlAct.Value == "AC" && (CONFIRMACION == "1000" || CONFIRMACION == "0"))
                                 {
                                     SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/ACTUALIZACION-AC/", txtCarne.Text + ".jpg");
@@ -2500,10 +2501,10 @@ namespace ReportesUnis
                                 else
                                 if (ControlAct.Value == "PC" || (ControlAct.Value == "AC" && CONFIRMACION == "1"))
                                 {
-                                    if (controlRenovacionPC == 0)
+                                    if (controlRenovacionPC <= 1 || controlRenovacionAC <= 1)
                                     SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/PRIMER_CARNET-PC/", txtCarne.Text + ".jpg");
-                                    if (controlRenovacionPC == 0)
-                                        SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/RENOVACION_CARNE-RC/", txtCarne.Text + ".jpg");
+                                    else
+                                    SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/RENOVACION_CARNE-RC/", txtCarne.Text + ".jpg");
                                 }
                                 else
                                 if (ControlAct.Value == "RC")
