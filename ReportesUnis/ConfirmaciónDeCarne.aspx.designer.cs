@@ -366,6 +366,24 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden UD_NAMES_PRI_RC;
 
         /// <summary>
+        /// Control VersionUP.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden VersionUP;
+
+        /// <summary>
+        /// Control VersionUD.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden VersionUD;
+
+        /// <summary>
         /// Control txtCantidadAC.
         /// </summary>
         /// <remarks>

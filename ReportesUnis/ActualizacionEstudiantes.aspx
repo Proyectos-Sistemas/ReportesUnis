@@ -111,7 +111,7 @@
             <br />
             <asp:Label ID="Label4" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">a.) Fotografía de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
             <br />
-            <asp:Label ID="Label5" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">b.) Fotografía de su Pasaporte</asp:Label>
+            <asp:Label ID="Label5" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">b.) Fotografía de su Pasaporte (1 fotografía)</asp:Label>
             <br />
             <br />
 
@@ -147,6 +147,8 @@
             <asp:Label ID="txtTipoAccion" runat="server" Visible="false"></asp:Label>
             <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
             <asp:TextBox ID="txtInsert" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtInsertBit" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtControlBit" runat="server" Visible="false"></asp:TextBox>
             <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
             <asp:TextBox ID="txtInsertBI" runat="server" Visible="false"></asp:TextBox>
             <%-- TXTEXISTE ALMACENA vALORES PARA HACER VALIDACIONES --%>
@@ -701,7 +703,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md">
-                                                <asp:Label ID="Label6" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Black">&nbsp;&nbsp;&nbsp;&nbsp;b.) Fotografia de su Pasaporte</asp:Label>
+                                                <asp:Label ID="Label6" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Black">&nbsp;&nbsp;&nbsp;&nbsp;b.) Fotografia de su Pasaporte (1 fotografía)</asp:Label>
                                                 <br />
                                             </div>
                                         </div>

@@ -242,7 +242,7 @@ namespace ReportesUnis
                     {
                         string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                         carne.Value = nombre;
-                        string[] datos = DatosCorreo();
+                        string[] datos = DatosCorreo(carne.Value);
                         string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
                         string respuesta = ConsumoOracle(cadena);
                         if (respuesta == "0")
@@ -300,7 +300,7 @@ namespace ReportesUnis
                     {
                         string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                         carne.Value = nombre;
-                        string[] datos = DatosCorreo();
+                        string[] datos = DatosCorreo(carne.Value);
                         string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
                         string respuesta = ConsumoOracle(cadena);
                         if (respuesta == "0")
@@ -358,7 +358,8 @@ namespace ReportesUnis
                     QueryInsertBi(carnet, "RC");
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     ConsumoSQL("DELETE FROM [Carnets].[dbo].[Tarjeta_Identificacion_prueba]  WHERE CARNET = '" + carnet + "'");
-                    respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+                    //respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+                    respuesta = "0";
 
                     if (respuesta == "0")
                     {
@@ -387,7 +388,7 @@ namespace ReportesUnis
                         lblActualizacionPC.Text = "Se confirmó correctamente la información.";
                         File.Delete(CurrentDirectory + txtPathPC.Text + "/" + row.Cells[1].Text);
                         llenadoGridPC();
-                        string[] datos = DatosCorreo();
+                        string[] datos = DatosCorreo(carnet);
                         log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
                         EnvioCorreo("bodyConfirmacionFotoEstudiante.txt", "datosConfirmacionFotoEstudiante.txt", datos[1], datos[0]);
                     }
@@ -431,7 +432,7 @@ namespace ReportesUnis
                     {
                         string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                         carne.Value = nombre;
-                        string[] datos = DatosCorreo();
+                        string[] datos = DatosCorreo(carne.Value);
                         string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
                         string respuesta = ConsumoOracle(cadena);
                         if (respuesta == "0")
@@ -486,10 +487,11 @@ namespace ReportesUnis
                     string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                     Ncarnet = carnet;
                     carne.Value = carnet;
-                    QueryInsertBi(carnet, "PC");
+                    //QueryInsertBi(carnet, "PC");
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     ConsumoSQL("DELETE FROM [Carnets].[dbo].[Tarjeta_Identificacion_prueba]  WHERE CARNET = '" + carnet + "'");
-                    respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+                    //respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+                    respuesta = "0";
 
                     if (respuesta == "0")
                     {
@@ -518,7 +520,7 @@ namespace ReportesUnis
                         lblActualizacionRC.Text = "Se confirmó correctamente la información.";
                         File.Delete(CurrentDirectory + txtPathRC.Text + "/" + row.Cells[1].Text);
                         llenadoGridRC();
-                        string[] datos = DatosCorreo();
+                        string[] datos = DatosCorreo(carnet);
                         log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
                         EnvioCorreo("bodyConfirmacionFotoEstudiante.txt", "datosConfirmacionFotoEstudiante.txt", datos[1], datos[0]);
                     }
@@ -561,7 +563,7 @@ namespace ReportesUnis
             }
         }
 
-        public string[] DatosCorreo()
+        public string[] DatosCorreo(string carne)
         {
             string[] datos;
             string constr = TxtURL.Text;
@@ -573,7 +575,7 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT EMAIL, NOMBRE1||' '||APELLIDO1 AS NOMBRE, NO_CUI||DEPTO_CUI||MUNI_CUI CARNET FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + carne.Value + "'  OR CARNET = '" + carne.Value + "'";
+                    cmd.CommandText = "SELECT EMAIL, NOMBRE1||' '||APELLIDO1 AS NOMBRE, NO_CUI||DEPTO_CUI||MUNI_CUI CARNET FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + carne + "'  OR CARNET = '" + carne + "'";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -896,7 +898,7 @@ namespace ReportesUnis
                         lblActualizacion.Text = "Se confirmó correctamente la información.";
                         File.Delete(CurrentDirectory + txtPathAC.Text + "/" + row.Cells[1].Text);
                         llenadoGrid();
-                        string[] datos = DatosCorreo();
+                        string[] datos = DatosCorreo(carnet);
                         log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
                         EnvioCorreo("bodyConfirmacionFotoEstudiante.txt", "datosConfirmacionFotoEstudiante.txt", datos[1], datos[0]);
                     }

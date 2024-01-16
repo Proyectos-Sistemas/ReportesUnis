@@ -82,6 +82,7 @@ namespace ReportesUnis
                 LeerInfoTxt();
                 LeerInfoTxtSQL();
                 LeerInfoTxtPath();
+                LeerVersionesSOAPCampus();
                 //PARA TAB ACTUALIZACION
                 LimpiarCamposAC();
                 divCamposAC.Visible = true;
@@ -786,7 +787,8 @@ namespace ReportesUnis
                         if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                         {
                             //SE INGRESA LA INFORMACIÓN EN EL BANCO
-                            respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+                            //respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+                            respuesta = "0";
                             if (respuesta == "0")
                             {
                                 respuesta = ConsumoOracle(txtInsertApex.Text);
@@ -897,7 +899,7 @@ namespace ReportesUnis
                         if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                         {
                             //SE INGRESA LA INFORMACIÓN EN EL BANCO
-                            respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+                            //respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
                             if (respuesta == "0")
                             {
                                 respuesta = ConsumoOracle(txtInsertApex.Text);
@@ -1956,17 +1958,19 @@ namespace ReportesUnis
                             EffdtDireccionNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
                         }
 
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' " +
+                        if (EffdtDireccionNitUltimo != "" && !String.IsNullOrEmpty(EffdtDireccionNitUltimo))
+                        {
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' " +
                                               "AND ADDRESS1 ='" + TxtDiRe1AC + "' AND ADDRESS2 = '" + TxtDiRe2AC + "' AND ADDRESS3 = '" + TxtDiRe3AC + "' " +
                                               "AND COUNTRY='" + PaisNitAC + "' AND STATE ='" + StateNitAC + "' AND EFFDT ='" + Convert.ToDateTime(EffdtDireccionNitUltimo).ToString("dd/MM/yyyy") + "'" +
                                               "ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
 
-                        reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                            }
                         }
-
                         cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
                         reader = cmd.ExecuteReader();
                         while (reader.Read())
@@ -1982,13 +1986,16 @@ namespace ReportesUnis
                             EffdtNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
                         }
 
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' " +
+                        if (EffdtNitUltimo != "" && !String.IsNullOrEmpty(EffdtNitUltimo))
+                        {
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' " +
                             " AND EXTERNAL_SYSTEM_ID = '" + NITAC + "' AND EMPLID = '" + emplid + "'" +
                             " AND EFFDT = '" + Convert.ToDateTime(EffdtNitUltimo).ToString("dd/MM/yyyy") + "'";
-                        reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
+                            }
                         }
 
                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSKEY WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + emplid + "'";
@@ -2013,14 +2020,17 @@ namespace ReportesUnis
                             ContadorEffdtNombreNit = Convert.ToInt16(reader["CONTADOR"]);
                         }
 
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoRAC + "' " +
+                        if (EffdtNombreNitUltimo != "" && !String.IsNullOrEmpty(EffdtNombreNitUltimo))
+                        {
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoRAC + "' " +
                                                "AND FIRST_NAME='" + TxtNombreRAC + "' AND SECOND_LAST_NAME='" + TxtCasadaRAC + "' " +
                                                "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
 
-                        reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                            }
                         }
 
                         cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
@@ -2370,15 +2380,18 @@ namespace ReportesUnis
                             EffdtDireccionNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
                         }
 
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' " +
+                        if (EffdtDireccionNitUltimo != "" && !String.IsNullOrEmpty(EffdtDireccionNitUltimo))
+                        {
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' " +
                                               "AND ADDRESS1 ='" + TxtDiRe1PC + "' AND ADDRESS2 = '" + TxtDiRe2PC + "' AND ADDRESS3 = '" + TxtDiRe3PC + "' " +
                                               "AND COUNTRY='" + PaisNitPC + "' AND STATE ='" + StateNitPC + "' AND EFFDT ='" + Convert.ToDateTime(EffdtDireccionNitUltimo).ToString("dd/MM/yyyy") + "'" +
                                               "ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
 
-                        reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                            }
                         }
 
                         cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
@@ -2396,13 +2409,16 @@ namespace ReportesUnis
                             EffdtNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
                         }
 
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' " +
+                        if (EffdtNitUltimo != "" && !String.IsNullOrEmpty(EffdtNitUltimo))
+                        {
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' " +
                             " AND EXTERNAL_SYSTEM_ID = '" + NITPC + "' AND EMPLID = '" + emplid + "'" +
                             " AND EFFDT = '" + Convert.ToDateTime(EffdtNitUltimo).ToString("dd/MM/yyyy") + "'";
-                        reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
+                            }
                         }
 
                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSKEY WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + emplid + "'";
@@ -2427,14 +2443,17 @@ namespace ReportesUnis
                             ContadorEffdtNombreNit = Convert.ToInt16(reader["CONTADOR"]);
                         }
 
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoRPC + "' " +
-                                               "AND FIRST_NAME='" + TxtNombreRPC + "' AND SECOND_LAST_NAME='" + TxtCasadaRPC + "' " +
-                                               "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-
-                        reader = cmd.ExecuteReader();
-                        while (reader.Read())
+                        if (EffdtNombreNitUltimo != "" && !String.IsNullOrEmpty(EffdtNombreNitUltimo))
                         {
-                            ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoRPC + "' " +
+                                                   "AND FIRST_NAME='" + TxtNombreRPC + "' AND SECOND_LAST_NAME='" + TxtCasadaRPC + "' " +
+                                                   "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                            }
                         }
 
                         cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
@@ -2787,15 +2806,18 @@ namespace ReportesUnis
                             EffdtDireccionNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
                         }
 
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' " +
+                        if (EffdtDireccionNitUltimo != "" && !String.IsNullOrEmpty(EffdtDireccionNitUltimo))
+                        {
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' " +
                                               "AND ADDRESS1 ='" + TxtDiRe1RC + "' AND ADDRESS2 = '" + TxtDiRe2RC + "' AND ADDRESS3 = '" + TxtDiRe3RC + "' " +
                                               "AND COUNTRY='" + PaisNitRC + "' AND STATE ='" + StateNitRC + "' AND EFFDT ='" + Convert.ToDateTime(EffdtDireccionNitUltimo).ToString("dd/MM/yyyy") + "'" +
                                               "ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
 
-                        reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                            }
                         }
 
                         cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
@@ -2813,13 +2835,16 @@ namespace ReportesUnis
                             EffdtNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
                         }
 
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' " +
+                        if (EffdtNitUltimo != "" && !String.IsNullOrEmpty(EffdtNitUltimo))
+                        {
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' " +
                             " AND EXTERNAL_SYSTEM_ID = '" + NITRC + "' AND EMPLID = '" + emplid + "'" +
                             " AND EFFDT = '" + Convert.ToDateTime(EffdtNitUltimo).ToString("dd/MM/yyyy") + "'";
-                        reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
+                            }
                         }
 
                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSKEY WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + emplid + "'";
@@ -2844,14 +2869,17 @@ namespace ReportesUnis
                             ContadorEffdtNombreNit = Convert.ToInt16(reader["CONTADOR"]);
                         }
 
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoRRC + "' " +
+                        if (EffdtNombreNitUltimo != "" && !String.IsNullOrEmpty(EffdtNombreNitUltimo))
+                        {
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoRRC + "' " +
                                                "AND FIRST_NAME='" + TxtNombreRRC + "' AND SECOND_LAST_NAME='" + TxtCasadaRRC + "' " +
                                                "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
 
-                        reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                            }
                         }
 
                         cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
@@ -3537,6 +3565,22 @@ namespace ReportesUnis
             }
         }
 
+        void LeerVersionesSOAPCampus()
+        {
+            string rutaCompleta = CurrentDirectory + "VersionesCampus.txt";
+
+            using (StreamReader file = new StreamReader(rutaCompleta))
+            {
+                string linea1 = file.ReadLine();
+                string linea2 = file.ReadLine();
+                string linea3 = file.ReadLine();
+                string linea4 = file.ReadLine();
+                VersionUP.Value = linea4;
+                VersionUD.Value = linea2;
+                file.Close();
+            }
+        }
+
         /*-------------------------------------------INICIAN FUNCIONES PARA METODO SOAP-------------------------------------------*/
         private static void limpiarVariables()
         {
@@ -3703,29 +3747,32 @@ namespace ReportesUnis
             if (auxConsulta == 0)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UP.V1";
-                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, CmbCarneAC.SelectedValue, UP_NAMES_PRI_AC.Value, UP_NAMES_PRF_AC.Value, UP_NAMES_NIT_AC.Value, UP_ADDRESSES_NIT_AC.Value);
+                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, CmbCarneAC.SelectedValue, UP_NAMES_PRI_AC.Value, UP_NAMES_PRF_AC.Value, UP_NAMES_NIT_AC.Value, UP_ADDRESSES_NIT_AC.Value, VersionUP.Value);
             }
             else if (auxConsulta == 1)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UD.V1";
-                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, CmbCarneAC.SelectedValue, UD_NAMES_PRI_AC.Value, UD_NAMES_PRF_AC.Value, UD_NAMES_NIT_AC.Value, UD_ADDRESSES_NIT_AC.Value);
-            }else if (auxConsulta == 2)
+                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, CmbCarneAC.SelectedValue, UD_NAMES_PRI_AC.Value, UD_NAMES_PRF_AC.Value, UD_NAMES_NIT_AC.Value, UD_ADDRESSES_NIT_AC.Value, VersionUD.Value);
+            }
+            else if (auxConsulta == 2)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UP.V1";
-                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, CmbCarnePC.SelectedValue, UP_NAMES_PRI_PC.Value, UP_NAMES_PRF_PC.Value, UP_NAMES_NIT_PC.Value, UP_ADDRESSES_NIT_PC.Value);
-            }else if (auxConsulta == 3)
+                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, CmbCarnePC.SelectedValue, UP_NAMES_PRI_PC.Value, UP_NAMES_PRF_PC.Value, UP_NAMES_NIT_PC.Value, UP_ADDRESSES_NIT_PC.Value, VersionUP.Value);
+            }
+            else if (auxConsulta == 3)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UD.V1";
-                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, CmbCarnePC.SelectedValue, UD_NAMES_PRI_PC.Value, UD_NAMES_PRF_PC.Value, UD_NAMES_NIT_PC.Value, UD_ADDRESSES_NIT_PC.Value);
-            }else if (auxConsulta == 4)
+                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, CmbCarnePC.SelectedValue, UD_NAMES_PRI_PC.Value, UD_NAMES_PRF_PC.Value, UD_NAMES_NIT_PC.Value, UD_ADDRESSES_NIT_PC.Value, VersionUD.Value);
+            }
+            else if (auxConsulta == 4)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UP.V1";
-                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, CmbCarneRC.SelectedValue, UP_NAMES_PRI_RC.Value, UP_NAMES_PRF_RC.Value, UP_NAMES_NIT_RC.Value, UP_ADDRESSES_NIT_RC.Value);
+                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, CmbCarneRC.SelectedValue, UP_NAMES_PRI_RC.Value, UP_NAMES_PRF_RC.Value, UP_NAMES_NIT_RC.Value, UP_ADDRESSES_NIT_RC.Value, VersionUP.Value);
             }
             else if (auxConsulta == 5)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UD.V1";
-                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, CmbCarneRC.SelectedValue, UD_NAMES_PRI_RC.Value, UD_NAMES_PRF_RC.Value, UD_NAMES_NIT_RC.Value, UD_ADDRESSES_NIT_RC.Value);
+                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, CmbCarneRC.SelectedValue, UD_NAMES_PRI_RC.Value, UD_NAMES_PRF_RC.Value, UD_NAMES_NIT_RC.Value, UD_ADDRESSES_NIT_RC.Value, VersionUD.Value);
             }
 
             //Crea un documento de respuesta Campus
@@ -3757,11 +3804,11 @@ namespace ReportesUnis
                 return "0";
             }
         }
-        private static void CuerpoConsultaUD(string Usuario, string Pass, string EMPLID, string COLL_NAMES_PRI, string COLL_NAMES_PRF, string COLL_NAMES_NIT, string COLL_ADDRESSES_NIT)
+        private static void CuerpoConsultaUD(string Usuario, string Pass, string EMPLID, string COLL_NAMES_PRI, string COLL_NAMES_PRF, string COLL_NAMES_NIT, string COLL_ADDRESSES_NIT, string VersionUD)
         {
             //Crea el cuerpo que se utiliza para hacer PATCH
             Variables.soapBody = @"<?xml version=""1.0""?>
-                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/M644328134.V1"">
+                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/" + VersionUD + @""">
                                     <soapenv:Header xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
                                     <wsse:Security soap:mustUnderstand=""1"" xmlns:soap=""http://schemas.xmlsoap.org/wsdl/soap/"" xmlns:wsse=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"">
                                       <wsse:UsernameToken wsu:Id=""UsernameToken-1"" xmlns:wsu=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"">
@@ -3781,11 +3828,11 @@ namespace ReportesUnis
                                    </soapenv:Body>
                                 </soapenv:Envelope>";
         }
-        private static void CuerpoConsultaUP(string Usuario, string Pass, string EMPLID, string COLL_NAMES_PRI, string COLL_NAMES_PRF, string COLL_NAMES_NIT, string COLL_ADDRESSES_NIT)
+        private static void CuerpoConsultaUP(string Usuario, string Pass, string EMPLID, string COLL_NAMES_PRI, string COLL_NAMES_PRF, string COLL_NAMES_NIT, string COLL_ADDRESSES_NIT, string VersionUP)
         {
             //Crea el cuerpo que se utiliza para hacer POST
             Variables.soapBody = @"<?xml version=""1.0""?>
-                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/M780623797.V1"">
+                                 <soapenv:Envelope xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:m64=""http://xmlns.oracle.com/Enterprise/Tools/schemas/" + VersionUP + @""">
                                     <soapenv:Header xmlns:soapenv=""http://schemas.xmlsoap.org/soap/envelope/"">
                                     <wsse:Security soap:mustUnderstand=""1"" xmlns:soap=""http://schemas.xmlsoap.org/wsdl/soap/"" xmlns:wsse=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"">
                                       <wsse:UsernameToken wsu:Id=""UsernameToken-1"" xmlns:wsu=""http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"">

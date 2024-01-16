@@ -86,7 +86,8 @@
         <input type="hidden" id="UD_NAMES_PRF_RC" runat="server" />
         <%-- TEXTBOX ALMACENA UD NOMBRE--%>
         <input type="hidden" id="UD_NAMES_PRI_RC" runat="server" />
-
+        <input type="hidden" id="VersionUP" runat="server" />
+        <input type="hidden" id="VersionUD" runat="server" />
         <%-- TxtCantidad, almacena la cantidad de imagenes almacenadas --%>
         <asp:Label ID="txtCantidadAC" runat="server" Visible="false">0</asp:Label>
         <asp:Label ID="txtCantidadPC" runat="server" Visible="false">0</asp:Label>

@@ -68,6 +68,7 @@ namespace ReportesUnis
                     llenadoPais();
                     llenadoDepartamento();
                     llenadoState();
+                    txtControlBit.Text = "0";
                     emplid = mostrarInformación();
                     if (txtNit.Text == "CF")
                     {
@@ -115,7 +116,7 @@ namespace ReportesUnis
                     if (String.IsNullOrEmpty(txtCarne.Text))
                     {
                         BtnActualizar.Visible = false;
-                        lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como estudiante";
+                        lblActualizacion.Text = "El usuario utilizado no se encuentra matriculado o no se encuentra matriculado en un ciclo lectivo vigente";
                         CmbPais.SelectedValue = "Guatemala";
                         tabla.Visible = false;
                         CargaFotografia.Visible = false;
@@ -276,25 +277,21 @@ namespace ReportesUnis
                                         "        AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE " +
                                         ") " +
                                         "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                                        "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                        "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
-                                        "AND SE.STDNT_ENRL_STATUS = 'E' " +
-                                        "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                                        "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID " +
-                                        "AND CT.STRM = SE.STRM " +
-                                        "AND CT.ACAD_CAREER = SE.ACAD_CAREER " +
-                                        "AND SE.INSTITUTION = CT.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +                                        
+                                        "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON PD.EMPLID = CT.EMPLID " +  
                                         "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
                                         "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
                                         "AND CT.INSTITUTION = APD.INSTITUTION " +
                                         "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
                                         "AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                        "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
+                                        "JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
                                         "AND CT.INSTITUTION = TT.INSTITUTION " +
+                                        "AND (SYSDATE BETWEEN TT.TERM_BEGIN_DT AND TT.TERM_END_DT)" +
                                         "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                                         "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
+                                        "ORDER BY CT.FULLY_ENRL_DT DESC" +
                                        ") WHERE CNT = 1";
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -1073,6 +1070,7 @@ namespace ReportesUnis
                             catch (Exception x)
                             {
                                 log("ERROR - Error en la funcion actualizarInformacion: " + x.Message);
+                                File.Delete(txtPath.Text + UserEmplid.Text + ".jpg");
                             }
                         }
                     }
@@ -1157,7 +1155,88 @@ namespace ReportesUnis
                         TxtDiRe3.Text = txtDireccion3.Text;
                         txtNit.Text = "CF";
                         IngresoDatos();
-                    }
+
+                        using (OracleConnection con = new OracleConnection(constr))
+                        {
+                            con.Open();
+                            OracleTransaction transaction;
+                            transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                            using (OracleCommand cmd = new OracleCommand())
+                            {
+                                cmd.Transaction = transaction;
+                                //Obtener codigo país
+                                cmd.Connection = con;
+                                controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "' AND FECH_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
+                                controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "'");
+                                int controlRenovacionAC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'AC'");
+                                try
+                                {
+                                    if (controlRenovacion == 0)
+                                    {
+                                        //INSERTA INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
+                                        if (ControlAct.Value == "AC" && controlRenovacionAC == 0)
+                                        {
+                                            cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO, ACCION) " +
+                                        "VALUES ('" + UserEmplid.Text + "','0','" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'AC')";
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                        else if (ControlAct.Value != "AC" && controlRenovacionAC == 0)
+                                        {
+                                            cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO, ACCION) " +
+                                        "VALUES ('" + UserEmplid.Text + "','1','" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'PC')";
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                        else if (ControlAct.Value == "PC")
+                                        {
+                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '1', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='PC'" +
+                                                                " WHERE EMPLID='" + UserEmplid.Text + "'";
+                                            cmd.ExecuteNonQuery();
+
+                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='PC'" +
+                                                                " WHERE CARNET='" + UserEmplid.Text + "'";
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                        else if (ControlAct.Value == "RC")
+                                        {
+                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='RC'" +
+                                                                " WHERE EMPLID='" + UserEmplid.Text + "'";
+                                            cmd.ExecuteNonQuery();
+                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='RC', CONFIRMACION = '2'" +
+                                                                " WHERE CARNET='" + UserEmplid.Text + "'";
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (ControlAct.Value == "PC")
+                                        {
+                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '1', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='PC'" +
+                                                                " WHERE EMPLID='" + UserEmplid.Text + "'";
+                                            cmd.ExecuteNonQuery();
+
+                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='PC'" +
+                                                                " WHERE CARNET='" + UserEmplid.Text + "'";
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                        else if (ControlAct.Value == "RC")
+                                        {
+                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='RC'" +
+                                                                " WHERE EMPLID='" + UserEmplid.Text + "'";
+                                            cmd.ExecuteNonQuery();
+                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='RC', CONFIRMACION = '2'" +
+                                                                " WHERE CARNET='" + UserEmplid.Text + "'";
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                    }
+                                    transaction.Commit();
+                                }
+                                catch (Exception)
+                                {
+                                    transaction.Rollback();
+                                }
+                            }
+                        }
+                    }                
                     else if (RadioButtonNombreSi.Checked)
                     {
                         IngresoDatos();
@@ -1634,8 +1713,11 @@ namespace ReportesUnis
                                 txtNit.Text = "CF";
                             }
 
+
+                            if (String.IsNullOrEmpty(codPaisNIT))
+                                codPaisNIT = codPais;
                             cmd.Connection = con;
-                            cmd.CommandText = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte, Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
+                            cmd.CommandText = "SELECT 'INSERT INTO UNIS_INTERFACES.TBL_HISTORIAL_CARNE (Apellido1,Apellido2, Carnet, Cedula, Decasada, Depto_Residencia, Direccion, Email, Estado_Civil, Facultad, FechaNac, Flag_cedula, Flag_dpi, Flag_pasaporte , OTRA_NA , Muni_Residencia, Nit, No_Cui, No_Pasaporte, Nombre1, Nombre2, Nombreimp, Pais_nacionalidad, Profesion, Sexo, Telefono, Zona, Accion, Celular, Codigo_Barras, Condmig, IDUNIV, Pais_pasaporte, Tipo_Accion, Tipo_Persona, Pais_Nit, Depto_Cui, Muni_Cui, Validar_Envio, Path_file, Codigo, Depto, Fecha_Hora, Fecha_Entrega, Fecha_Solicitado, Tipo_Documento, Cargo, " +
                                             " Fec_Emision, NO_CTA_BI, ID_AGENCIA, CONFIRMACION,TOTALFOTOS, NOMBRE_NIT, APELLIDOS_NIT, CASADA_NIT, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, STATE_NIT, PAIS_R, ADDRESS1, ADDRESS2, ADDRESS3, EMAIL_PERSONAL, CONTROL_ACCION) VALUES ('''" +
                                             "||'" + txtPrimerApellido.Text + "'''||'," + //APELLIDO1
                                             "''" + txtApellidoAPEX.Text + //APELLIDO2
@@ -1651,6 +1733,7 @@ namespace ReportesUnis
                                             "||''''||FLAG_CED||''''||','" +
                                             "||''''||FLAG_DPI||''''||','" +
                                             "||''''||FLAG_PAS||''''||','" +
+                                            "||''''||OTRA_NA||''''||','" +
                                             "||''''||UPPER(MUNICIPIO)||''''||'," + //MUNICIPIO DE RESIDENCIA
                                             "''" + txtNit.Text + "'''||','" +//NIT
                                             "||''''||DPI||''''||','" + // NO_CUI
@@ -1726,6 +1809,7 @@ namespace ReportesUnis
                                             "CASE WHEN PN.NATIONAL_ID_TYPE = 'CED' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_CED, " +
                                             "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' THEN PN.NATIONAL_ID WHEN PN.NATIONAL_ID_TYPE = 'EXT' THEN PN.NATIONAL_ID ELSE NULL END PASAPORTE, " +
                                             "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN '1' ELSE '0' END FLAG_PAS, " +
+                                            "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN 'HONDURAS' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN 'HONDURAS' ELSE '' END OTRA_NA, " +
                                             "CASE WHEN PN.NATIONAL_ID_TYPE = 'PAS' AND PN.NATIONAL_ID != ' ' THEN '1' WHEN PN.NATIONAL_ID_TYPE = 'EXT' AND PN.NATIONAL_ID != ' ' THEN 'RESIDENTE PERM' ELSE NULL END CONDMIG, " +
                                             "PPD.PHONE, " +
                                             "TO_CHAR(PD.BIRTHDATE, 'DD-MM-YYYY') BIRTHDATE, " +
@@ -1747,8 +1831,7 @@ namespace ReportesUnis
                                             "AND A.EFFDT =(SELECT MAX(EFFDT) FROM SYSADM.PS_ADDRESSES A2 WHERE A.EMPLID = A2.EMPLID AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE) " +
                                             "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
                                             "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                            "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID AND SE.STDNT_ENRL_STATUS = 'E' AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                                            "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID AND CT.STRM = SE.STRM AND CT.ACAD_CAREER = SE.ACAD_CAREER AND SE.INSTITUTION = CT.INSTITUTION " +
+                                            "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON PD.EMPLID = CT.EMPLID  " +
                                             "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
                                             "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
                                             "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION " +
@@ -1760,6 +1843,7 @@ namespace ReportesUnis
                             while (reader.Read())
                             {
                                 txtInsert.Text = reader["INS"].ToString();
+                                txtInsertBit.Text = txtInsert.Text.Replace("TBL_HISTORIAL_CARNE", "TBL_BI_HISTORIAL_CARNE");
                             }
                             cmd.Transaction = transaction;
                             cmd.Connection = con;
@@ -2166,8 +2250,6 @@ namespace ReportesUnis
                                             cmd.ExecuteNonQuery();
                                         }
 
-                                        if (String.IsNullOrEmpty(codPaisNIT))
-                                            codPaisNIT = codPais;
 
                                         if (EffdtDireccionNitUltimo != Hoy && ContadorDirecionNit == 0 && ContadorEffdtDirecionNit == 0)
                                         {//INSERTA
@@ -2361,6 +2443,7 @@ namespace ReportesUnis
                                     transaction.Rollback();
                                     EliminarAlmacenada();
                                     log("ERROR - Error en almacenamiento Campus: UD = " + consultaUD + "; UP = " + consultaUP + " SOAP: " + Variables.soapBody);
+                                    File.Delete(txtPath.Text + UserEmplid.Text + ".jpg");
                                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                 }
                             }
@@ -2369,6 +2452,7 @@ namespace ReportesUnis
                                 transaction.Rollback();
                                 EliminarAlmacenada();
                                 log("ERROR - Error en almacenamiento Campus: UD = " + consultaUD + "; UP = " + consultaUP + " SOAP: " + Variables.soapBody);
+                                File.Delete(txtPath.Text + UserEmplid.Text + ".jpg");
                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                             }
                         }
@@ -2376,6 +2460,7 @@ namespace ReportesUnis
                         {
                             EliminarAlmacenada();
                             log("ERROR - No se almaceno la fotografía de manera correcta");
+                            File.Delete(txtPath.Text + UserEmplid.Text + ".jpg");
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                         }
                     }
@@ -2385,6 +2470,7 @@ namespace ReportesUnis
             {
                 EliminarAlmacenada();
                 log("ERROR - Error en la funcion IngresoDatos: " + X.Message);
+                File.Delete(txtPath.Text + UserEmplid.Text + ".jpg");
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
             }
 
@@ -2659,6 +2745,7 @@ namespace ReportesUnis
                         catch (Exception x)
                         {
                             log("ERROR - Error en la funcion actualizarInformacion: " + x.Message);
+                            File.Delete(txtPath.Text + UserEmplid.Text + ".jpg");
                         }
                     }
                 }
@@ -2842,6 +2929,10 @@ namespace ReportesUnis
             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
             respuesta = consultaNit(txtNit.Text);
             string constr = TxtURL.Text;
+            if (ControlAct.Value == "AC")
+                RadioButtonActualiza.Checked = true;
+            else
+                RadioButtonCarne.Checked = true;
 
             if (respuesta.Equals("BadRequest") || respuesta.Equals("1"))
             {
@@ -3093,6 +3184,7 @@ namespace ReportesUnis
                         catch (Exception x)
                         {
                             log("ERROR - Error en la funcion actualizarInformacion: " + x.Message);
+                            File.Delete(txtPath.Text + UserEmplid.Text + ".jpg");
                         }
                     }
                 }
@@ -3180,6 +3272,7 @@ namespace ReportesUnis
             {
                 EliminarAlmacenada();
                 log("ERROR - Error en la funcion actualizarInformacion en AceptarCarga ");
+                File.Delete(txtPath.Text + UserEmplid.Text + ".jpg");
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
             }
         }
@@ -3258,6 +3351,12 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + txtCarne.Text + "','" + ErrorLog + "','ACTUALIZACION ESTUDIANTES',SYSDATE)";
                     cmd.ExecuteNonQuery();
+                    if (txtControlBit.Text == "0")
+                    {
+                        cmd.CommandText = txtInsertBit.Text;
+                        cmd.ExecuteNonQuery();
+                        txtControlBit.Text = "1";
+                    }
                     transaction.Commit();
 
                 }

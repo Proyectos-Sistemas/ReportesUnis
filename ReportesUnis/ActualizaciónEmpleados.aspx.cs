@@ -170,6 +170,7 @@ namespace ReportesUnis
                             txtNit.Enabled = false;
                             RadioButtonNombreSi.Checked = true;
                             ControlCF.Value = "CF";
+                            ControlCF2.Value = "1";
                             ValidarNIT.Enabled = false;
                             if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value) && ChangeNIT.Value == "1")
                             {
@@ -193,6 +194,7 @@ namespace ReportesUnis
                         else
                         {
                             RadioButtonNombreNo.Checked = true;
+                            ControlCF2.Value = "2";
                             TxtDiRe1.Enabled = true;
                             TxtDiRe2.Enabled = true;
                             TxtDiRe3.Enabled = true;
@@ -1437,6 +1439,36 @@ namespace ReportesUnis
             }
             return Convert.ToInt32(control);
         }
+        protected int ControlAC(string cadena)
+        {
+            txtExiste4.Text = "SELECT COUNT(*) CONTADOR " +
+                        "FROM UNIS_INTERFACES.TBL_CONTROL_CARNET " + cadena;
+            string constr = TxtURL.Text;
+            string control = "0";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        cmd.Connection = con;
+                        cmd.CommandText = txtExiste4.Text;
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            control = reader["CONTADOR"].ToString();
+                        }
+                        con.Close();
+                    }
+                    catch (Exception x)
+                    {
+                        control = x.ToString();
+                    }
+                }
+            }
+            return Convert.ToInt32(control);
+        }
         protected string homologaPais(string Combo)
         {
             string txtExiste4 = "SELECT NVL(VCHRVALORCAMPUS,NULL) AS CODIGO " +
@@ -1572,7 +1604,7 @@ namespace ReportesUnis
                 }
                 catch (Exception ex)
                 {
-                    log("ERROR - Envio de correo para " +TxtCorreoInstitucional.Text);
+                    log("ERROR - Envio de correo para " + TxtCorreoInstitucional.Text);
                     lblActualizacion.Text = ex.ToString();
                 }
             }
@@ -2601,7 +2633,7 @@ namespace ReportesUnis
                                         transaction.Rollback();
                                         EliminarAlmacenada();
                                         mensaje = "Error";
-                                        log("ERROR - Error en almacenamiento Campus: UD = " + consultaUD + "; UP = " + consultaUP );
+                                        log("ERROR - Error en almacenamiento Campus: UD = " + consultaUD + "; UP = " + consultaUP);
                                         ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                     }
                                 }
@@ -2610,7 +2642,7 @@ namespace ReportesUnis
                                     transaction.Rollback();
                                     EliminarAlmacenada();
                                     mensaje = "Error";
-                                    log("ERROR - Error en el ingreso de datos Estudiante "+ X.Message);
+                                    log("ERROR - Error en el ingreso de datos Estudiante " + X.Message);
                                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                 }
                             }
@@ -2628,7 +2660,7 @@ namespace ReportesUnis
                 {
                     EliminarAlmacenada();
                     mensaje = "Error";
-                    log("ERROR - Error en la funcion IngresoDatos: " + X.Message+" de: " + txtdPI.Text + ", con el carne : "+ txtCarne.Text);
+                    log("ERROR - Error en la funcion IngresoDatos: " + X.Message + " de: " + txtdPI.Text + ", con el carne : " + txtCarne.Text);
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
 
@@ -2705,7 +2737,7 @@ namespace ReportesUnis
 
                     if (RadioButtonNombreSi.Checked)
                     {
-                        if (TrueNit.Value !=  txtNit.Text || ControlCF.Value != "CF")
+                        if (TrueNit.Value != txtNit.Text || ControlCF.Value != "CF")
                         {
                             TxtNombreR.Text = txtNombre1.Text + " " + txtNombre2.Text;
                             TxtApellidoR.Text = txtApellido1.Text + " " + txtApellido2.Text;
@@ -2784,7 +2816,7 @@ namespace ReportesUnis
                                 }
                                 catch (Exception x)
                                 {
-                                    log("ERROR - Error en la eliminacion de historial tabla intermedia: " + x.Message );
+                                    log("ERROR - Error en la eliminacion de historial tabla intermedia: " + x.Message);
                                 }
                             }
                         }
@@ -3104,6 +3136,51 @@ namespace ReportesUnis
             return "";
         }
 
+        public void validarAccion()
+        {
+            int contadorRegistro = 0;
+            contadorRegistro = ControlRenovacion("WHERE EMPLID  ='" + txtCarne.Text + "'");
+            int controlRenovacionAC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'AC'");
+            int controlRenovacionPC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'PC'");
+            int controlRenovacionRC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'RC'");
+
+            if (RadioButtonActualiza.Checked)
+            {
+                if (contadorRegistro == 0)
+                {
+                    // INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
+                    if (controlRenovacionAC == 0)
+                    {
+                        ControlAct.Value = "AC";
+                    }
+                    else
+                    if (controlRenovacionPC <= 1 && controlRenovacionRC == 0)
+                    {
+                        ControlAct.Value = "PC";
+                    }
+                }
+                else if (controlRenovacion >= 1 && (controlRenovacionPC <= 1 || controlRenovacionAC == 1))
+                {
+                    ControlAct.Value = "RC";
+                }
+
+            }
+            else if (RadioButtonCarne.Checked)
+            {
+
+                if (controlRenovacionPC < 1 && controlRenovacionRC == 0)
+                {
+                    ControlAct.Value = "PC";
+                }
+                else
+                {
+                    ControlAct.Value = "RC";
+                }
+
+            }
+        }
+
+
         //EVENTOS    
         protected void cMBpAIS_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -3355,6 +3432,10 @@ namespace ReportesUnis
             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
             respuesta = consultaNit(txtNit.Text);
             string constr = TxtURL.Text;
+            if (ControlAct.Value == "AC")
+                RadioButtonActualiza.Checked = true;
+            else
+                RadioButtonCarne.Checked = true;
 
             if (respuesta.Equals("BadRequest") || respuesta.Equals("1"))
             {
