@@ -358,8 +358,8 @@ namespace ReportesUnis
                     QueryInsertBi(carnet, "RC");
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     ConsumoSQL("DELETE FROM [Carnets].[dbo].[Tarjeta_Identificacion_prueba]  WHERE CARNET = '" + carnet + "'");
-                    //respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
-                    respuesta = "0";
+                    respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+                    //respuesta = "0";
 
                     if (respuesta == "0")
                     {
@@ -487,11 +487,11 @@ namespace ReportesUnis
                     string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                     Ncarnet = carnet;
                     carne.Value = carnet;
-                    //QueryInsertBi(carnet, "PC");
+                    QueryInsertBi(carnet, "PC");
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     ConsumoSQL("DELETE FROM [Carnets].[dbo].[Tarjeta_Identificacion_prueba]  WHERE CARNET = '" + carnet + "'");
-                    //respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
-                    respuesta = "0";
+                    respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+                    //respuesta = "0";
 
                     if (respuesta == "0")
                     {

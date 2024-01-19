@@ -151,6 +151,11 @@
             <asp:TextBox ID="txtControlBit" runat="server" Visible="false"></asp:TextBox>
             <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
             <asp:TextBox ID="txtInsertBI" runat="server" Visible="false"></asp:TextBox>
+            <%-- TXTINSERT ALMACENA EL QUERY PARA HACER CONTROL NOMBRES RECIBO --%>
+            <asp:TextBox ID="txtUpdateAR" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtUpdateNR" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtControlNR" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtControlAR" runat="server" Visible="false"></asp:TextBox>
             <%-- TXTEXISTE ALMACENA vALORES PARA HACER VALIDACIONES --%>
             <asp:Label ID="txtExiste" runat="server" Visible="false"></asp:Label>
             <%-- TXTEXISTE2 ALMACENA vALORES PARA HACER VALIDACIONES --%>

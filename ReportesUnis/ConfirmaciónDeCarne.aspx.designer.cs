@@ -411,6 +411,42 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label txtCantidadRC;
 
         /// <summary>
+        /// Control txtUpdateAR.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtUpdateAR;
+
+        /// <summary>
+        /// Control txtUpdateNR.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtUpdateNR;
+
+        /// <summary>
+        /// Control txtControlNR.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtControlNR;
+
+        /// <summary>
+        /// Control txtControlAR.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtControlAR;
+
+        /// <summary>
         /// Control ControlTabs.
         /// </summary>
         /// <remarks>

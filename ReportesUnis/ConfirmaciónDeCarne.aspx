@@ -92,6 +92,12 @@
         <asp:Label ID="txtCantidadAC" runat="server" Visible="false">0</asp:Label>
         <asp:Label ID="txtCantidadPC" runat="server" Visible="false">0</asp:Label>
         <asp:Label ID="txtCantidadRC" runat="server" Visible="false">0</asp:Label>
+
+        <%-- TXTINSERT ALMACENA EL QUERY PARA HACER CONTROL NOMBRES RECIBO --%>
+        <asp:TextBox ID="txtUpdateAR" runat="server" Visible="false"></asp:TextBox>
+        <asp:TextBox ID="txtUpdateNR" runat="server" Visible="false"></asp:TextBox>
+        <asp:TextBox ID="txtControlNR" runat="server" Visible="false"></asp:TextBox>
+        <asp:TextBox ID="txtControlAR" runat="server" Visible="false"></asp:TextBox>
         
         <%-- TEXTBOX ALMACENA CONTROL DE TABS--%>
         <input type="hidden" id="ControlTabs" runat="server" />

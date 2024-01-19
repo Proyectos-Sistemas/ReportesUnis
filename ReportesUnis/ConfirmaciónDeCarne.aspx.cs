@@ -91,6 +91,8 @@ namespace ReportesUnis
                 divBtnConfirmarAC.Visible = true;
                 BuscarAC("1");
                 lblActualizacionAC.Text = null;
+                txtControlNR.Text = "0";
+                txtControlAR.Text = "0";
 
                 //PARA TAB PRIMER CARNE
                 LimpiarCamposPC();
@@ -787,8 +789,7 @@ namespace ReportesUnis
                         if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                         {
                             //SE INGRESA LA INFORMACIÓN EN EL BANCO
-                            //respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
-                            respuesta = "0";
+                            respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
                             if (respuesta == "0")
                             {
                                 respuesta = ConsumoOracle(txtInsertApex.Text);
@@ -899,7 +900,7 @@ namespace ReportesUnis
                         if (!txtInsertApex.Text.IsNullOrWhiteSpace())
                         {
                             //SE INGRESA LA INFORMACIÓN EN EL BANCO
-                            //respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
+                            respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
                             if (respuesta == "0")
                             {
                                 respuesta = ConsumoOracle(txtInsertApex.Text);
@@ -1147,6 +1148,11 @@ namespace ReportesUnis
             string TxtNombre = (TxtPrimerNombreAC.Text + " " + TxtSegundoNombreAC.Text).TrimEnd();
             string TxtApellidos = (TxtPrimerApellidoAC.Text + " " + TxtSegundoApellidoAC.Text).TrimEnd();
             string TxtCasada = TxtApellidoCasadaAC.Text;
+
+            TxtNombre = System.Text.RegularExpressions.Regex.Replace(TxtNombre, @"\s+", " "); ;
+            TxtApellidos = System.Text.RegularExpressions.Regex.Replace(TxtApellidos, @"\s+", " "); ;
+            TxtCasada = System.Text.RegularExpressions.Regex.Replace(TxtCasada, @"\s+", " ");
+
             string EFFDT_Name = "";
 
             if (Direccion2AC == "")
@@ -1230,85 +1236,241 @@ namespace ReportesUnis
                         if (EffdtNombreUltimo != Hoy && ContadorNombre == 0 && ContadorEffdtNombre == 0)
                         {
                             // INSERT
-                            UP_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                            if (!TxtApellidos.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasada.IsNullOrWhiteSpace())
+                                {
+                                    UP_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UP_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    UP_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UP_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                    UP_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                            }
+                            else
+                            {
+                                UP_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                UP_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                            }
                             contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreUltimo == Hoy && ContadorNombre > 0 && ContadorEffdtNombre > 0)
                         {
-                            // ACTUALIZAR
-                            UD_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                            if (!TxtApellidos.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasada.IsNullOrWhiteSpace())
+                                {
+                                    // ACTUALIZAR
+                                    UD_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UD_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    UD_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                    UD_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                UD_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                            }
                             contadorUD = contadorUD + 1;
                         }
                         else
                         {
                             // ACTUALIZAR
-                            UD_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                            if (!TxtApellidos.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasada.IsNullOrWhiteSpace())
+                                {
+                                    UD_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UD_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    UD_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                    UD_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_PRF_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                UD_NAMES_PRI_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                            }
                             contadorUD = contadorUD + 1;
                         }
                         auxConsulta = 0;
@@ -1353,7 +1515,11 @@ namespace ReportesUnis
             string TxtNombre = (TxtPrimerNombrePC.Text + " " + TxtSegundoNombrePC.Text).TrimEnd();
             string TxtApellidos = (TxtPrimerApellidoPC.Text + " " + TxtSegundoApellidoPC.Text).TrimEnd();
             string TxtCasada = TxtApellidoCasadaPC.Text;
+            TxtNombre = System.Text.RegularExpressions.Regex.Replace(TxtNombre, @"\s+", " "); ;
+            TxtApellidos = System.Text.RegularExpressions.Regex.Replace(TxtApellidos, @"\s+", " "); ;
+            TxtCasada = System.Text.RegularExpressions.Regex.Replace(TxtCasada, @"\s+", " ");
             string EFFDT_Name = "";
+
 
             if (Direccion2PC == "")
             {
@@ -1436,85 +1602,242 @@ namespace ReportesUnis
                         if (EffdtNombreUltimo != Hoy && ContadorNombre == 0 && ContadorEffdtNombre == 0)
                         {
                             // INSERT
-                            UP_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                            if (!TxtApellidos.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasada.IsNullOrWhiteSpace())
+                                {
+                                    UP_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UP_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    UP_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UP_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                    UP_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                            }
+                            else
+                            {
+                                UP_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                UP_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                            }
                             contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreUltimo == Hoy && ContadorNombre > 0 && ContadorEffdtNombre > 0)
                         {
                             // ACTUALIZAR
-                            UD_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                            if (!TxtApellidos.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasada.IsNullOrWhiteSpace())
+                                {
+                                    UD_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UD_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    UD_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                    UD_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                UD_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                            }
+
                             contadorUD = contadorUD + 1;
                         }
                         else
                         {
-                            // PCTUALIZAR
-                            UD_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                            // ACTUALIZAR
+                            if (!TxtApellidos.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasada.IsNullOrWhiteSpace())
+                                {
+                                    UD_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UD_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    UD_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                    UD_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_PRF_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                UD_NAMES_PRI_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                            }
                             contadorUD = contadorUD + 1;
                         }
                         auxConsulta = 2;
@@ -1560,6 +1883,9 @@ namespace ReportesUnis
             string TxtApellidos = (TxtPrimerApellidoRC.Text + " " + TxtSegundoApellidoRC.Text).TrimEnd();
             string TxtCasada = TxtApellidoCasadaRC.Text;
             string EFFDT_Name = "";
+            TxtNombre = System.Text.RegularExpressions.Regex.Replace(TxtNombre, @"\s+", " "); ;
+            TxtApellidos = System.Text.RegularExpressions.Regex.Replace(TxtApellidos, @"\s+", " "); ;
+            TxtCasada = System.Text.RegularExpressions.Regex.Replace(TxtCasada, @"\s+", " ");
 
             if (Direccion2RC == "")
             {
@@ -1642,85 +1968,241 @@ namespace ReportesUnis
                         if (EffdtNombreUltimo != Hoy && ContadorNombre == 0 && ContadorEffdtNombre == 0)
                         {
                             // INSERT
-                            UP_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                            if (!TxtApellidos.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasada.IsNullOrWhiteSpace())
+                                {
+                                    UP_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UP_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    UP_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UP_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                    UP_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                            }
+                            else
+                            {
+                                UP_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                UP_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                            }
                             contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreUltimo == Hoy && ContadorNombre > 0 && ContadorEffdtNombre > 0)
                         {
-                            // RCTUALIZAR
-                            UD_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                            // ACTUALIZAR
+                            if (!TxtApellidos.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasada.IsNullOrWhiteSpace())
+                                {
+                                    UD_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UD_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    UD_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                   "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                   "        <COLL_NAMES>" +
+                                                   "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                   "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                   "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                   "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                   "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                   "        </COLL_NAMES>" +
+                                                   "      </COLL_NAME_TYPE_VW>";
+
+                                    UD_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                  "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                  "        <COLL_NAMES>" +
+                                                  "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                  "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                  "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                  "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                  "        </COLL_NAMES>" +
+                                                  "      </COLL_NAME_TYPE_VW>";
+
+                                UD_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                            }
                             contadorUD = contadorUD + 1;
                         }
                         else
                         {
                             // RCTUALIZAR
-                            UD_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                            if (!TxtApellidos.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasada.IsNullOrWhiteSpace())
+                                {
+                                    UD_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UD_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    UD_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                   "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                   "        <COLL_NAMES>" +
+                                                   "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                   "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                   "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                   "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                   "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                   "        </COLL_NAMES>" +
+                                                   "      </COLL_NAME_TYPE_VW>";
+
+                                    UD_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + TxtApellidos + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_PRF_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                   "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                   "        <COLL_NAMES>" +
+                                                   "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                   "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                   "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                   "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                   "        </COLL_NAMES>" +
+                                                   "      </COLL_NAME_TYPE_VW>";
+
+                                UD_NAMES_PRI_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombre + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                            }
                             contadorUD = contadorUD + 1;
                         }
                         auxConsulta = 4;
@@ -1934,6 +2416,8 @@ namespace ReportesUnis
                         int ContadorNit2 = 0;
                         string EFFDT_SYSTEM = "";
                         string EFFDT_AddressNit = "";
+                        string ApellidoAnterior = "";
+                        string ApellidoCAnterior = "";
 
                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND  EMPLID = '" + emplid + "' AND EFFDT ='" + HoyEffdt + "'";
                         reader = cmd.ExecuteReader();
@@ -1969,6 +2453,16 @@ namespace ReportesUnis
                             while (reader.Read())
                             {
                                 ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                            }
+
+                            cmd.CommandText = "SELECT LAST_NAME , SECOND_LAST_NAME FROM SYSADM.PS_NAMES PN WHERE NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ApellidoAnterior = reader["LAST_NAME"].ToString();
+                                ApellidoCAnterior = reader["SECOND_LAST_NAME"].ToString();
                             }
                         }
                         cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
@@ -2065,6 +2559,10 @@ namespace ReportesUnis
                             }
                         }
 
+                        TxtApellidoRAC = System.Text.RegularExpressions.Regex.Replace(TxtApellidoRAC, @"\s+", " "); ;
+                        TxtNombreRAC = System.Text.RegularExpressions.Regex.Replace(TxtNombreRAC, @"\s+", " "); ;
+                        TxtCasadaRAC = System.Text.RegularExpressions.Regex.Replace(TxtCasadaRAC, @"\s+", " ");
+
                         string FechaEfectiva = "";
                         if (EFFDT_NameR_AC.Value.IsNullOrWhiteSpace())
                             FechaEfectiva = "1900-01-01";
@@ -2073,50 +2571,194 @@ namespace ReportesUnis
 
                         if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNombreNit >= 0)
                         {//INSERT
-                            UP_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidoRAC + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRAC + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+
+                            if (!TxtApellidoRAC.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasadaRAC.IsNullOrWhiteSpace())
+                                {
+                                    UP_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRAC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRAC + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UP_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRAC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                }
+                            }
+                            else
+                            {
+                                UP_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                            }
                             contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit >= 0 && ContadorEffdtNombreNit > 0)
                         {//UPDATE
+                            if (!TxtApellidoRAC.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasadaRAC.IsNullOrWhiteSpace())
+                                {
+                                    UD_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRAC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRAC + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRAC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UD_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidoRAC + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRAC + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                    {
+                                        //ACTUALIZA NIT
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtApellidoRAC+","+TxtNombreRAC+"' " +
+                                            "PN.NAME_FORMAL ='" + TxtApellidoRAC + "," + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtApellidoRAC + "," + TxtNombreRAC + "' " +
+                                            "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                        "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                if (!ApellidoAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ' , PN.NAME ='" +TxtNombreRAC+"'  " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtNombreRAC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+
+                                if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ' , PN.NAME ='" +TxtNombreRAC+"'  " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtNombreRAC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+                            }
                             contadorUD = contadorUD + 1;
 
                         }
                         else
                         {//UPDATE
+                            if (!TxtApellidoRAC.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasadaRAC.IsNullOrWhiteSpace())
+                                {
+                                    UD_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRAC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRAC + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRAC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                    if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                    {
+                                        //ACTUALIZA NIT
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ' , PN.NAME ='"+TxtApellidoRAC+","+TxtNombreRAC+"'  " +
+                                            "PN.NAME_FORMAL ='" + TxtApellidoRAC + "," + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtApellidoRAC + "," + TxtNombreRAC + "' " +
+                                            "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                        "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UD_NAMES_NIT_AC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidoRAC + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombreRAC + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRAC + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                if (!ApellidoAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreRAC+"'  " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtNombreRAC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+
+                                if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ' , PN.NAME ='" +TxtNombreRAC+"'  " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtNombreRAC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+                            }
                             contadorUD = contadorUD + 1;
                         }
 
@@ -2356,6 +2998,8 @@ namespace ReportesUnis
                         int ContadorNit2 = 0;
                         string EFFDT_SYSTEM = "";
                         string EFFDT_AddressNit = "";
+                        string ApellidoAnterior = "";
+                        string ApellidoCAnterior = "";
 
                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND  EMPLID = '" + emplid + "' AND EFFDT ='" + HoyEffdt + "'";
                         reader = cmd.ExecuteReader();
@@ -2454,6 +3098,16 @@ namespace ReportesUnis
                             {
                                 ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
                             }
+
+                            cmd.CommandText = "SELECT LAST_NAME , SECOND_LAST_NAME FROM SYSADM.PS_NAMES PN WHERE NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ApellidoAnterior = reader["LAST_NAME"].ToString();
+                                ApellidoCAnterior = reader["SECOND_LAST_NAME"].ToString();
+                            }
                         }
 
                         cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
@@ -2488,6 +3142,9 @@ namespace ReportesUnis
                             }
                         }
 
+                        TxtApellidoRPC = System.Text.RegularExpressions.Regex.Replace(TxtApellidoRPC, @"\s+", " "); ;
+                        TxtNombreRPC = System.Text.RegularExpressions.Regex.Replace(TxtNombreRPC, @"\s+", " "); ;
+                        TxtCasadaRPC = System.Text.RegularExpressions.Regex.Replace(TxtCasadaRPC, @"\s+", " ");
                         string FechaEfectiva = "";
                         if (EFFDT_NameR_PC.Value.IsNullOrWhiteSpace())
                             FechaEfectiva = "1900-01-01";
@@ -2499,40 +3156,132 @@ namespace ReportesUnis
 
                         if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNombreNit >= 0)
                         {//INSERT
-                            UP_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidoRPC + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombreRPC + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRPC + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                            if (!TxtApellidoRPC.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasadaRPC.IsNullOrWhiteSpace())
+                                {
+                                    UP_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRPC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRPC + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRPC + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UP_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRPC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRPC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                }
+                            }
+                            else
+                            {
+                                UP_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRPC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                            }
+
                             contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit >= 0 && ContadorEffdtNombreNit > 0)
                         {//UPDATE
+                            if (!TxtApellidoRPC.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasadaRPC.IsNullOrWhiteSpace())
+                                {
+                                    UD_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRPC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRPC + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRPC + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRPC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRPC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UD_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidoRPC + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombreRPC + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRPC + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                    {
+                                        //ACTUALIZA NIT
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='"+TxtApellidoRPC+","+TxtNombreRPC+"' " +
+                                            "PN.NAME_FORMAL ='" + TxtApellidoRPC + "," + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtApellidoRPC + "," + TxtNombreRPC + "' " +
+                                            "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                        "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRPC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                if (!ApellidoAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" +TxtNombreRPC+"' " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtNombreRPC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+
+                                if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtNombreRPC+"' " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtNombreRPC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+                            }
                             contadorUD = contadorUD + 1;
 
                         }
                         else
                         {//UPDATE
-
-                            UD_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                            if (!TxtApellidoRPC.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasadaRPC.IsNullOrWhiteSpace())
+                                {
+                                    UD_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
                                                 "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
                                                 "        <COLL_NAMES>" +
                                                 "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
@@ -2543,6 +3292,60 @@ namespace ReportesUnis
                                                 "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRPC + @"</PROP_SECOND_LAST_NAME>" +
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                "        <COLL_NAMES>" +
+                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                "          <PROP_LAST_NAME>" + TxtApellidoRPC + @"</PROP_LAST_NAME>" +
+                                                "          <PROP_FIRST_NAME>" + TxtNombreRPC + @"</PROP_FIRST_NAME>" +
+                                                "        </COLL_NAMES>" +
+                                                "      </COLL_NAME_TYPE_VW>";
+
+                                    if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                    {
+                                        //ACTUALIZA NIT
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtApellidoRPC+","+TxtNombreRPC+"' " +
+                                            "PN.NAME_FORMAL ='" + TxtApellidoRPC + "," + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtApellidoRPC + "," + TxtNombreRPC + "' " +
+                                            "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                        "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_NIT_PC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                "        <COLL_NAMES>" +
+                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                "          <PROP_FIRST_NAME>" + TxtNombreRPC + @"</PROP_FIRST_NAME>" +
+                                                "        </COLL_NAMES>" +
+                                                "      </COLL_NAME_TYPE_VW>";
+
+                                if (!ApellidoAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" +TxtNombreRPC+"' " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtNombreRPC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+
+                                if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='"+TxtNombreRPC+"' " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtNombreRPC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+                            }
                             contadorUD = contadorUD + 1;
                         }
 
@@ -2782,6 +3585,8 @@ namespace ReportesUnis
                         int ContadorNit2 = 0;
                         string EFFDT_SYSTEM = "";
                         string EFFDT_AddressNit = "";
+                        string ApellidoAnterior = "";
+                        string ApellidoCAnterior = "";
 
                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND  EMPLID = '" + emplid + "' AND EFFDT ='" + HoyEffdt + "'";
                         reader = cmd.ExecuteReader();
@@ -2880,6 +3685,16 @@ namespace ReportesUnis
                             {
                                 ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
                             }
+
+                            cmd.CommandText = "SELECT LAST_NAME , SECOND_LAST_NAME FROM SYSADM.PS_NAMES PN WHERE NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+
+                            reader = cmd.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                ApellidoAnterior = reader["LAST_NAME"].ToString();
+                                ApellidoCAnterior =reader["SECOND_LAST_NAME"].ToString();
+                            }
                         }
 
                         cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
@@ -2914,6 +3729,10 @@ namespace ReportesUnis
                             }
                         }
 
+                        TxtApellidoRRC = System.Text.RegularExpressions.Regex.Replace(TxtApellidoRRC, @"\s+", " "); ;
+                        TxtNombreRRC = System.Text.RegularExpressions.Regex.Replace(TxtNombreRRC, @"\s+", " "); ;
+                        TxtCasadaRRC = System.Text.RegularExpressions.Regex.Replace(TxtCasadaRRC, @"\s+", " ");
+
                         string FechaEfectiva = "";
                         if (EFFDT_NameR_RC.Value.IsNullOrWhiteSpace())
                             FechaEfectiva = "1900-01-01";
@@ -2922,50 +3741,223 @@ namespace ReportesUnis
 
                         if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNombreNit >= 0)
                         {//INSERT
-                            UP_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidoRRC + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRRC + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                            if (!TxtApellidoRRC.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasadaRRC.IsNullOrWhiteSpace())
+                                {
+                                    UP_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRRC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRRC + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UP_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRRC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                    if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                    {
+                                        //ACTUALIZA NIT
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='"+TxtApellidoRRC+","+TxtNombreRRC+"' " +
+                                            "PN.NAME_FORMAL ='" + TxtApellidoRRC + "," + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtApellidoRRC + "," + TxtNombreRRC + "' " +
+                                            "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                        "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                UP_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                if (!ApellidoAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" +TxtNombreRRC+"' " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+
+                                if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN PN.SECOND_LAST_NAME = ' ' , PN.NAME ='" +TxtNombreRRC+"' " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+                            }
                             contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit >= 0 && ContadorEffdtNombreNit > 0)
                         {//UPDATE
+                            if (!TxtApellidoRRC.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasadaRRC.IsNullOrWhiteSpace())
+                                {
+                                    UD_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRRC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRRC + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRRC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UD_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidoRRC + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRRC + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                    {
+                                        //ACTUALIZA NIT
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='"+TxtApellidoRRC+","+TxtNombreRRC+"' " +
+                                            "PN.NAME_FORMAL ='" + TxtApellidoRRC + "," + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtApellidoRRC + "," + TxtNombreRRC + "' " +
+                                            "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                        "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                        //cmd.ExecuteNonQuery();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                if (!ApellidoAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='"+TxtNombreRRC+"' " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+
+                                if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtNombreRRC+"' " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+                            }
                             contadorUD = contadorUD + 1;
 
                         }
                         else
                         {//UPDATE
+                            if (!TxtApellidoRRC.IsNullOrWhiteSpace())
+                            {
+                                if (!TxtCasadaRRC.IsNullOrWhiteSpace())
+                                {
+                                    UD_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRRC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
+                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRRC + @"</PROP_SECOND_LAST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+                                }
+                                else
+                                {
+                                    UD_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_LAST_NAME>" + TxtApellidoRRC + @"</PROP_LAST_NAME>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
 
-                            UD_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
-                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "        <COLL_NAMES>" +
-                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
-                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                "          <PROP_LAST_NAME>" + TxtApellidoRRC + @"</PROP_LAST_NAME>" +
-                                                "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
-                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasadaRRC + @"</PROP_SECOND_LAST_NAME>" +
-                                                "        </COLL_NAMES>" +
-                                                "      </COLL_NAME_TYPE_VW>";
+                                    if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                    {
+                                        //ACTUALIZA NIT
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtApellidoRRC+","+TxtNombreRRC+"' " +
+                                            "PN.NAME_FORMAL ='" + TxtApellidoRRC + "," + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtApellidoRRC + "," + TxtNombreRRC + "' " +
+                                            "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                        "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                UD_NAMES_NIT_RC.Value = "<COLL_NAME_TYPE_VW> " +
+                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "        <COLL_NAMES>" +
+                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                    "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                    "          <PROP_FIRST_NAME>" + TxtNombreRRC + @"</PROP_FIRST_NAME>" +
+                                                    "        </COLL_NAMES>" +
+                                                    "      </COLL_NAME_TYPE_VW>";
+
+                                if (!ApellidoAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" +TxtNombreRRC+"' " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+
+                                if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                {
+                                    //ACTUALIZA NIT
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtNombreRRC+"' " +
+                                        "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
+                                        "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
+                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                }
+                            }
                             contadorUD = contadorUD + 1;
                         }
 
@@ -3559,6 +4551,20 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + carnet + "','" + ErrorLog + "','CONFIRMACIÓN DATOS SENSIBLES ESTUDIANTES',SYSDATE)";
                     cmd.ExecuteNonQuery();
+
+                    if (txtControlAR.Text == "0" && !txtUpdateAR.Text.IsNullOrWhiteSpace())
+                    {
+                        cmd.CommandText = txtUpdateAR.Text;
+                        cmd.ExecuteNonQuery();
+                        txtControlAR.Text = "1";
+                    }
+                    if (txtControlNR.Text == "0" && !txtUpdateNR.Text.IsNullOrWhiteSpace())
+                    {
+                        cmd.CommandText = txtUpdateNR.Text;
+                        cmd.ExecuteNonQuery();
+                        txtControlNR.Text = "1";
+                    }
+
                     transaction.Commit();
 
                 }
