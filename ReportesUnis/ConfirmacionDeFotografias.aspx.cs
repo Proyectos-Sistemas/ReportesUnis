@@ -56,7 +56,7 @@ namespace ReportesUnis
             }
             if (GridViewFotos.Rows.Count == 0)
             {
-                lblActualizacion.Text = "No hay información para confirmar.";
+                lblActualizacion.Text = "No hay fotografías para confirmar en este apartado.";
             }
 
         }
@@ -74,6 +74,15 @@ namespace ReportesUnis
 
             GridViewFotos.DataSource = imagenes;
             GridViewFotos.DataBind();
+            if (GridViewFotos.Rows.Count == 0)
+            {
+                lblActualizacion.Text = "No hay fotografías para confirmar en este apartado.";
+                TbEliminarD.Visible = false;
+            }
+            else
+            {
+                TbEliminarD.Visible = true;
+            }
         }
 
         void llenadoGridPC()
@@ -89,6 +98,15 @@ namespace ReportesUnis
 
             GridViewFotosPC.DataSource = imagenes;
             GridViewFotosPC.DataBind();
+            if (GridViewFotosPC.Rows.Count == 0)
+            {
+                lblActualizacionPC.Text = "No hay fotografías para confirmar en este apartado.";
+                TbEliminarPC.Visible = false;
+            }
+            else
+            {
+                TbEliminarPC.Visible = true;
+            }
         }
 
         void llenadoGridRC()
@@ -107,6 +125,10 @@ namespace ReportesUnis
             {
                 lblActualizacionRC.Text = "No hay fotografías para confirmar en este apartado.";
                 TbEliminarRC.Visible = false;
+            }
+            else
+            {
+                TbEliminarRC.Visible = true;
             }
         }
 
@@ -302,8 +324,10 @@ namespace ReportesUnis
                         carne.Value = nombre;
                         string[] datos = DatosCorreo(carne.Value);
                         string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
+                        //string cadena2 = "DELETE FROM UNIS_INTERFACES.TBL_CONTROL_CARNET WHERE EMPLID = '" + nombre + "'";
                         string respuesta = ConsumoOracle(cadena);
-                        if (respuesta == "0")
+                        string respuesta2 = "0";// ConsumoOracle(cadena2);
+                        if (respuesta == "0" && respuesta2 == "0")
                         {
                             File.Delete(CurrentDirectory + txtPathPC.Text + "/" + row.Cells[1].Text);
                             File.Delete(txtPath2.Text + row.Cells[1].Text);

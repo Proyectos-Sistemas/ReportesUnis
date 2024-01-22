@@ -93,7 +93,7 @@
                 </div>
 
                 <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
-                    <button id="captureBtn" name="captureBtn" class="btn-danger-unis" title="Asi se verian &#10;Las indicaciones">Capturar imagen</button>
+                    <button id="captureBtn" name="captureBtn" class="btn-danger-unis">Capturar imagen</button>
                 </div>
 
                 <div class="col-md-4">

@@ -14,6 +14,7 @@ using MailKit.Security;
 using MimeKit;
 using MailKit.Net.Smtp;
 using System.Web.Security;
+using NPOI.Util;
 
 
 namespace ReportesUnis
@@ -563,6 +564,8 @@ namespace ReportesUnis
                             {
                                 cmd.Connection = con;
                                 cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + Carnet + "'";
+                                cmd.ExecuteNonQuery();
+                                cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_CONTROL_CARNET WHERE EMPLID = '" + Carnet + "'";
                                 cmd.ExecuteNonQuery();
                                 transaction.Commit();
                                 con.Close();
@@ -2650,7 +2653,7 @@ namespace ReportesUnis
                                     if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                     {
                                         //ACTUALIZA NIT
-                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtApellidoRAC+","+TxtNombreRAC+"' " +
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoRAC + "," + TxtNombreRAC + "' " +
                                             "PN.NAME_FORMAL ='" + TxtApellidoRAC + "," + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtApellidoRAC + "," + TxtNombreRAC + "' " +
                                             "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                         "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -2671,7 +2674,7 @@ namespace ReportesUnis
                                 if (!ApellidoAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ' , PN.NAME ='" +TxtNombreRAC+"'  " +
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ' , PN.NAME ='" + TxtNombreRAC + "'  " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtNombreRAC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -2680,7 +2683,7 @@ namespace ReportesUnis
                                 if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ' , PN.NAME ='" +TxtNombreRAC+"'  " +
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ' , PN.NAME ='" + TxtNombreRAC + "'  " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtNombreRAC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -2722,7 +2725,7 @@ namespace ReportesUnis
                                     if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                     {
                                         //ACTUALIZA NIT
-                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ' , PN.NAME ='"+TxtApellidoRAC+","+TxtNombreRAC+"'  " +
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ' , PN.NAME ='" + TxtApellidoRAC + "," + TxtNombreRAC + "'  " +
                                             "PN.NAME_FORMAL ='" + TxtApellidoRAC + "," + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtApellidoRAC + "," + TxtNombreRAC + "' " +
                                             "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                         "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -2744,7 +2747,7 @@ namespace ReportesUnis
                                 if (!ApellidoAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreRAC+"'  " +
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreRAC + "'  " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtNombreRAC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -2753,7 +2756,7 @@ namespace ReportesUnis
                                 if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ' , PN.NAME ='" +TxtNombreRAC+"'  " +
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ' , PN.NAME ='" + TxtNombreRAC + "'  " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRAC + "', PN.NAME_DISPLAY ='" + TxtNombreRAC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3235,7 +3238,7 @@ namespace ReportesUnis
                                     if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                     {
                                         //ACTUALIZA NIT
-                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='"+TxtApellidoRPC+","+TxtNombreRPC+"' " +
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoRPC + "," + TxtNombreRPC + "' " +
                                             "PN.NAME_FORMAL ='" + TxtApellidoRPC + "," + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtApellidoRPC + "," + TxtNombreRPC + "' " +
                                             "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                         "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3257,7 +3260,7 @@ namespace ReportesUnis
                                 if (!ApellidoAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" +TxtNombreRPC+"' " +
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreRPC + "' " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtNombreRPC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3266,7 +3269,7 @@ namespace ReportesUnis
                                 if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtNombreRPC+"' " +
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreRPC + "' " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtNombreRPC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3309,7 +3312,7 @@ namespace ReportesUnis
                                     if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                     {
                                         //ACTUALIZA NIT
-                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtApellidoRPC+","+TxtNombreRPC+"' " +
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoRPC + "," + TxtNombreRPC + "' " +
                                             "PN.NAME_FORMAL ='" + TxtApellidoRPC + "," + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtApellidoRPC + "," + TxtNombreRPC + "' " +
                                             "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                         "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3331,7 +3334,7 @@ namespace ReportesUnis
                                 if (!ApellidoAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" +TxtNombreRPC+"' " +
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreRPC + "' " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtNombreRPC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3340,7 +3343,7 @@ namespace ReportesUnis
                                 if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='"+TxtNombreRPC+"' " +
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreRPC + "' " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRPC + "', PN.NAME_DISPLAY ='" + TxtNombreRPC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3693,7 +3696,7 @@ namespace ReportesUnis
                             while (reader.Read())
                             {
                                 ApellidoAnterior = reader["LAST_NAME"].ToString();
-                                ApellidoCAnterior =reader["SECOND_LAST_NAME"].ToString();
+                                ApellidoCAnterior = reader["SECOND_LAST_NAME"].ToString();
                             }
                         }
 
@@ -3773,7 +3776,7 @@ namespace ReportesUnis
                                     if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                     {
                                         //ACTUALIZA NIT
-                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='"+TxtApellidoRRC+","+TxtNombreRRC+"' " +
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoRRC + "," + TxtNombreRRC + "' " +
                                             "PN.NAME_FORMAL ='" + TxtApellidoRRC + "," + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtApellidoRRC + "," + TxtNombreRRC + "' " +
                                             "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                         "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3795,7 +3798,7 @@ namespace ReportesUnis
                                 if (!ApellidoAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" +TxtNombreRRC+"' " +
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreRRC + "' " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3804,7 +3807,7 @@ namespace ReportesUnis
                                 if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN PN.SECOND_LAST_NAME = ' ' , PN.NAME ='" +TxtNombreRRC+"' " +
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN PN.SECOND_LAST_NAME = ' ' , PN.NAME ='" + TxtNombreRRC + "' " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3846,7 +3849,7 @@ namespace ReportesUnis
                                     if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                     {
                                         //ACTUALIZA NIT
-                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='"+TxtApellidoRRC+","+TxtNombreRRC+"' " +
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoRRC + "," + TxtNombreRRC + "' " +
                                             "PN.NAME_FORMAL ='" + TxtApellidoRRC + "," + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtApellidoRRC + "," + TxtNombreRRC + "' " +
                                             "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                         "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3869,7 +3872,7 @@ namespace ReportesUnis
                                 if (!ApellidoAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='"+TxtNombreRRC+"' " +
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreRRC + "' " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3878,7 +3881,7 @@ namespace ReportesUnis
                                 if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtNombreRRC+"' " +
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreRRC + "' " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3921,7 +3924,7 @@ namespace ReportesUnis
                                     if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                     {
                                         //ACTUALIZA NIT
-                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtApellidoRRC+","+TxtNombreRRC+"' " +
+                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoRRC + "," + TxtNombreRRC + "' " +
                                             "PN.NAME_FORMAL ='" + TxtApellidoRRC + "," + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtApellidoRRC + "," + TxtNombreRRC + "' " +
                                             "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                         "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3943,7 +3946,7 @@ namespace ReportesUnis
                                 if (!ApellidoAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" +TxtNombreRRC+"' " +
+                                    txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreRRC + "' " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
@@ -3952,7 +3955,7 @@ namespace ReportesUnis
                                 if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                 {
                                     //ACTUALIZA NIT
-                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" +TxtNombreRRC+"' " +
+                                    txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreRRC + "' " +
                                         "PN.NAME_FORMAL ='" + TxtNombreRRC + "', PN.NAME_DISPLAY ='" + TxtNombreRRC + "' " +
                                         "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + emplid + "' " +
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
