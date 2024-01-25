@@ -1,6 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ActualizaciónEmpleados.aspx.cs" Inherits="ReportesUnis.ActualizaciónEmpleados" %>
 
-
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <br />
     <div class="container">
@@ -9,24 +8,23 @@
                 <h2 style="text-align: center;">ACTUALIZACIÓN DE INFORMACIÓN</h2>
             </div>
         </div>
-    </div>
-
-    <div id="divActividad" runat="server" style="display: block">
-        <div class="row">
-            <div class="form-group col">
-                <h6 style="text-align: center;">¿Qué desea realizar el día de hoy?*</h6>
+        <div id="divActividad" runat="server" style="display: block">
+            <div class="row">
+                <div class="form-group col">
+                    <h6 style="text-align: center;">¿Qué desea realizar el día de hoy?*</h6>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2 mx-auto text-center">
-            </div>
-            <div class="col-md-4 mx-auto text-center">
-                <asp:RadioButton ID="RadioButtonCarne" runat="server" GroupName="Accion" Text="Solicitar carné y actualizar información" />
-            </div>
-            <div class="col-md-4 mx-auto text-center">
-                <asp:RadioButton ID="RadioButtonActualiza" runat="server" GroupName="Accion" Text="Solo actualizar información" />
-            </div>
-            <div class="col-md-2 mx-auto text-center">
+            <div class="row">
+                <div class="col-md-2 mx-auto text-center">
+                </div>
+                <div class="col-md-4 mx-auto text-center">
+                    <asp:RadioButton ID="RadioButtonCarne" runat="server" GroupName="Accion" Text="Solicitar carné y actualizar información" />
+                </div>
+                <div class="col-md-4 mx-auto text-center">
+                    <asp:RadioButton ID="RadioButtonActualiza" runat="server" GroupName="Accion" Text="Solo actualizar información" />
+                </div>
+                <div class="col-md-2 mx-auto text-center">
+                </div>
             </div>
         </div>
     </div>
@@ -191,10 +189,18 @@
             <asp:TextBox ID="txtNombreAPEX" runat="server" Visible="false"></asp:TextBox>
             <%-- CONFIRMACION OPERADOR --%>
             <asp:Label ID="txtConfirmacion" runat="server" Visible="false"></asp:Label>
-            <%-- ¡tiene pasaporte? --%>
+            <%-- ¿TIENE PASAPORTE? --%>
             <asp:Label ID="txtPaisPasaporte" runat="server" Visible="false"></asp:Label>
-            <%-- ¡tiene pasaporte? --%>
-            <asp:Label ID="txtCantidadImagenesDpi" runat="server" Visible="false">0</asp:Label>
+            <%-- CANTIDAD IMAGENES DPI --%>
+            <asp:Label ID="txtCantidadImagenesDpi" runat="server" Visible="false">0</asp:Label>            
+            <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
+            <asp:TextBox ID="txtInsertBit" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtControlBit" runat="server" Visible="false"></asp:TextBox>
+            <%-- TXTINSERT ALMACENA EL QUERY PARA HACER CONTROL NOMBRES RECIBO --%>
+            <asp:TextBox ID="txtUpdateAR" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtUpdateNR" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtControlNR" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtControlAR" runat="server" Visible="false"></asp:TextBox>
         </div>
         <div id="InfePersonal" runat="server" style="display: none">
 
@@ -347,6 +353,7 @@
 
             <%-- CONTROL PARA ACTUALIZAR O SOLICITAR CARNE--%>
             <input type="hidden" id="ControlAct" runat="server" />
+            <input type="hidden" id="ControlClicAct" runat="server" />
 
 
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
@@ -1441,7 +1448,9 @@
                 $('#<%= RadioButtonActualiza.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
                         $('#<%= ControlAct.ClientID %>').val("AC");
-
+                        console.log("Actualización");
+                        $('#<%= ControlClicAct.ClientID %>').val("A");
+                        console.log("Actualización");
                     }
                 });
             }
@@ -1456,6 +1465,8 @@
                 $('#<%= RadioButtonCarne.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
                         $('#<%= ControlAct.ClientID %>').val("");
+                        console.log("Renovacion");
+                        $('#<%= ControlClicAct.ClientID %>').val("C");
                     }
                 });
             }

@@ -265,7 +265,7 @@ namespace ReportesUnis
                         string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                         carne.Value = nombre;
                         string[] datos = DatosCorreo(carne.Value);
-                        string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
+                        string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "' OR CODIGO = '" + nombre + "'";
                         string respuesta = ConsumoOracle(cadena);
                         if (respuesta == "0")
                         {
@@ -323,7 +323,7 @@ namespace ReportesUnis
                         string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                         carne.Value = nombre;
                         string[] datos = DatosCorreo(carne.Value);
-                        string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
+                        string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "' OR CODIGO = '"+nombre+"'";
                         //string cadena2 = "DELETE FROM UNIS_INTERFACES.TBL_CONTROL_CARNET WHERE EMPLID = '" + nombre + "'";
                         string respuesta = ConsumoOracle(cadena);
                         string respuesta2 = "0";// ConsumoOracle(cadena2);
@@ -457,7 +457,7 @@ namespace ReportesUnis
                         string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                         carne.Value = nombre;
                         string[] datos = DatosCorreo(carne.Value);
-                        string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "'";
+                        string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "' OR CODIGO = '" + nombre + "'";
                         string respuesta = ConsumoOracle(cadena);
                         if (respuesta == "0")
                         {
@@ -867,7 +867,7 @@ namespace ReportesUnis
                                     "||O_CONDMIG||''','''  " + //OTRA CONDICION MIGRANTE
                                     "||VALIDAR_ENVIO||''')'" +//OTRA CONDICION MIGRANTE 
                                     " AS INS " +
-                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET ='" + Carnet + "' AND CONFIRMACION != 1 AND CONTROL_ACCION != '" + CONTROL + "')";
+                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET ='" + Carnet + "' OR CODIGO = '" + Carnet + "' AND CONFIRMACION != 1 AND CONTROL_ACCION != '" + CONTROL + "')";
                     OracleDataReader reader = cmd.ExecuteReader();
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -1108,7 +1108,7 @@ namespace ReportesUnis
                 }
                 mensaje = "0";
             }
-            catch (Exception X)
+            catch (Exception )
             {
                 mensaje = ". Ocurrió un error al cargar la imagen";
                 mensaje = "1";

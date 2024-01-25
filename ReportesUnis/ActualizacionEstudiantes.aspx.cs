@@ -301,10 +301,10 @@ namespace ReportesUnis
                         txtCarne.Text = reader["EMPLID"].ToString();
                         txtNombre.Text = reader["FIRST_NAME"].ToString().TrimEnd();
                         txtNInicial.Value = reader["FIRST_NAME"].ToString().Trim();
-                        txtApellido.Text = reader["LAST_NAME"].ToString();
-                        txtCasada.Text = reader["SECOND_LAST_NAME"].ToString();
+                        txtApellido.Text = reader["LAST_NAME"].ToString().TrimEnd();
+                        txtCasada.Text = reader["SECOND_LAST_NAME"].ToString().TrimEnd();
                         txtCInicial.Value = reader["SECOND_LAST_NAME"].ToString();
-                        txtAInicial.Value = reader["LAST_NAME"].ToString();
+                        txtAInicial.Value = reader["LAST_NAME"].ToString().TrimEnd();
                         TxtApellidoR.Text = reader["APELLIDO_NIT"].ToString();
                         InicialNR2.Value = reader["APELLIDO_NIT"].ToString();
                         TxtNombreR.Text = reader["NOMBRE_NIT"].ToString();
@@ -323,18 +323,23 @@ namespace ReportesUnis
 
                         if (txtApellido.Text.Length > 4)
                         {
-                            if ((txtApellido.Text.Substring(0, 5)).ToUpper().Equals("DE LA"))
+                            if ((txtApellido.Text.Substring(0, 6)).ToUpper().Equals("DE LA "))
                             {
                                 posicion = txtApellido.Text.Substring(6, largoApellido - 6).IndexOf(" ");
                                 txtContaador.Text = txtAInicial.Value.Length.ToString() + " " + posicion.ToString();
                                 txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 6);
                             }
-                            else if ((txtApellido.Text.Substring(0, 6)).ToUpper().Equals("DE LAS"))
+                            else if (txtApellido.Text.Length > 5)
                             {
-                                posicion = txtApellido.Text.Substring(7, largoApellido - 7).IndexOf(" ");
-                                txtContaador.Text = txtAInicial.Value.Length.ToString() + " " + posicion.ToString();
-                                txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 7);
+                                if ((txtApellido.Text.Substring(0, 7)).ToUpper().Equals("DE LAS "))
+                                {
+                                    posicion = txtApellido.Text.Substring(7, largoApellido - 7).IndexOf(" ");
+                                    txtContaador.Text = txtAInicial.Value.Length.ToString() + " " + posicion.ToString();
+                                    txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 7);
+                                }
+
                             }
+
                         }
                         else
                         {
@@ -1559,7 +1564,7 @@ namespace ReportesUnis
                         }
                         if (txtPrimerApellido.Text.IsNullOrWhiteSpace())
                         {
-                            txtPrimerApellido.Text = getBetween(txtApellido.Text, "", " ");
+                            txtPrimerApellido.Text = txtApellido.Text.TrimEnd();
                         }
                     }
                 }

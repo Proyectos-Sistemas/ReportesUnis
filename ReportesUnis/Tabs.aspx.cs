@@ -432,7 +432,7 @@ namespace ReportesUnis
                     }
                     mensaje = "0";
                 }
-                catch (Exception X)
+                catch (Exception )
                 {
                     mensaje = ". Ocurrió un error al cargar la imagen";
                     mensaje = "1";
