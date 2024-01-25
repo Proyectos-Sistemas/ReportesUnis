@@ -94,7 +94,6 @@ namespace ReportesUnis
                 TbEliminarAC.Visible = false;
             }
         }
-
         void llenadoGridPC()
         {
             string[] archivos = Directory.GetFiles(rutaFisicaPC);
@@ -113,7 +112,6 @@ namespace ReportesUnis
                 TbEliminarPC.Visible = false;
             }
         }
-
         void llenadoGridRC()
         {
             string[] archivos = Directory.GetFiles(rutaFisicaRC);
@@ -1257,7 +1255,6 @@ namespace ReportesUnis
                 }
             }
         }
-
         protected void ButtonSubmitRC_Click(object sender, EventArgs e)
         {
             foreach (GridViewRow row in GridViewFotosRC.Rows)
