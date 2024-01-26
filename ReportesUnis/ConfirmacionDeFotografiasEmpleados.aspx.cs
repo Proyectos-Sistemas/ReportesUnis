@@ -13,6 +13,7 @@ using System.Text;
 using MailKit.Security;
 using MimeKit;
 using MailKit.Net.Smtp;
+using NPOI.Util;
 
 namespace ReportesUnis
 {
@@ -1102,6 +1103,7 @@ namespace ReportesUnis
                     string respuesta = null;
                     string fecha = DateTime.Now.ToString("yyyy-MM-dd");
                     string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                    tipoPersona(carnet);
                     carne.Value = carnet;
 
                     QueryUpdateApex("0", fecha, fecha, fecha, "1", carnet);
@@ -1211,7 +1213,9 @@ namespace ReportesUnis
                     string respuesta = null;
                     string fecha = DateTime.Now.ToString("yyyy-MM-dd");
                     string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                    tipoPersona(carnet);
                     QueryInsertBi(carnet);
+                    ConsumoSQL("DELETE FROM [Carnets].[dbo].[Tarjeta_Identificacion_admins]  WHERE CARNET = '" + carnet + "'");
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
                     if (respuesta == "0")
@@ -1329,6 +1333,9 @@ namespace ReportesUnis
                     string respuesta = null;
                     string fecha = DateTime.Now.ToString("yyyy-MM-dd");
                     string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                    carne.Value = carnet;
+                    tipoPersona(carnet);
+                    ConsumoSQL("DELETE FROM [Carnets].[dbo].[Tarjeta_Identificacion_admins]  WHERE CARNET = '" + carnet + "'");
                     QueryInsertBi(carnet);
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());

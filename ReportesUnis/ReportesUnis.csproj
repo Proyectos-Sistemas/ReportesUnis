@@ -422,7 +422,6 @@
     <Content Include="Cargarfotografia.aspx" />
     <Content Include="CargarFotografiaEmpleados.aspx" />
     <Content Include="conexion.txt" />
-    <Content Include="ConfirmacionFotografiaColaboradores.aspx" />
     <Content Include="Tabs.aspx" />
     <Content Include="VersionesCampus.txt" />
     <Content Include="conexionSQL.txt" />
@@ -667,13 +666,6 @@
     </Compile>
     <Compile Include="ConfirmacionDeFotografiasEmpleados.aspx.designer.cs">
       <DependentUpon>ConfirmacionDeFotografiasEmpleados.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ConfirmacionFotografiaColaboradores.aspx.cs">
-      <DependentUpon>ConfirmacionFotografiaColaboradores.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ConfirmacionFotografiaColaboradores.aspx.designer.cs">
-      <DependentUpon>ConfirmacionFotografiaColaboradores.aspx</DependentUpon>
     </Compile>
     <Compile Include="ConfirmaciónCarneEmpleados.aspx.cs">
       <DependentUpon>ConfirmaciónCarneEmpleados.aspx</DependentUpon>
