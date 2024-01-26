@@ -2085,272 +2085,304 @@ namespace ReportesUnis
                                         }
                                     }
 
-                                    if (!String.IsNullOrEmpty(TxtNombreR.Text))
+                                    if (Convert.ToInt16(Estudiante.Value) > 0)
                                     {
-                                        if (txtAInicial1.Value == txtApellido1.Text && txtNInicial1.Value == txtNombre1.Text && txtCInicial.Value == txtApellidoCasada.Text
-                                            && txtAInicial2.Value == txtApellido2.Text && txtNInicial2.Value == txtNombre2.Text)
+                                        if (!String.IsNullOrEmpty(TxtNombreR.Text))
                                         {
-                                            int ContadorNombreNit = 0;
-                                            int ContadorEffdtNombreNit = 0;
-                                            int ContadorEffdtNit = 0;
-                                            int ContadorEffdtDirecionNit = 0;
-                                            string EffdtDireccionNitUltimo = "";
-                                            string EffdtNombreNitUltimo = "";
-                                            string EffdtNitUltimo = "";
-                                            int ContadorDirecionNit = 0;
-                                            int ContadorNit = 0;
-                                            int ContadorNit2 = 0;
-                                            string EFFDT_SYSTEM = "";
-
-                                            string ApellidoAnterior = "";
-                                            string ApellidoCAnterior = "";
-
-
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND  EMPLID = '" + txtCarne.Text + "' AND EFFDT ='" + HoyEffdt + "'";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
+                                            if (txtAInicial1.Value == txtApellido1.Text && txtNInicial1.Value == txtNombre1.Text && txtCInicial.Value == txtApellidoCasada.Text
+                                                && txtAInicial2.Value == txtApellido2.Text && txtNInicial2.Value == txtNombre2.Text)
                                             {
-                                                ContadorEffdtDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
-                                            }
+                                                int ContadorNombreNit = 0;
+                                                int ContadorEffdtNombreNit = 0;
+                                                int ContadorEffdtNit = 0;
+                                                int ContadorEffdtDirecionNit = 0;
+                                                string EffdtDireccionNitUltimo = "";
+                                                string EffdtNombreNitUltimo = "";
+                                                string EffdtNitUltimo = "";
+                                                int ContadorDirecionNit = 0;
+                                                int ContadorNit = 0;
+                                                int ContadorNit2 = 0;
+                                                string EFFDT_SYSTEM = "";
 
-                                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + txtCarne.Text + "' " +
-                                                " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                EffdtDireccionNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
-                                            }
+                                                string ApellidoAnterior = "";
+                                                string ApellidoCAnterior = "";
 
-                                            if (!String.IsNullOrEmpty(EffdtDireccionNitUltimo))
-                                            {
-                                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + txtCarne.Text + "' " +
-                                                    "AND ADDRESS1 ='" + TxtDiRe1.Text + "' AND ADDRESS2 = '" + TxtDiRe2.Text + "' AND ADDRESS3 = '" + TxtDiRe3.Text + "' " +
-                                                    "AND COUNTRY='" + codPaisNIT + "' AND STATE ='" + StateNIT.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtDireccionNitUltimo).ToString("dd/MM/yyyy") + "'" +
+
+                                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND  EMPLID = '" + txtCarne.Text + "' AND EFFDT ='" + HoyEffdt + "'";
+                                                reader = cmd.ExecuteReader();
+                                                while (reader.Read())
+                                                {
+                                                    ContadorEffdtDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                }
+
+                                                cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + txtCarne.Text + "' " +
                                                     " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
                                                 reader = cmd.ExecuteReader();
                                                 while (reader.Read())
                                                 {
-                                                    ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                ContadorDirecionNit = 0;
-                                            }
-
-                                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_NAMES WHERE NAME_TYPE = 'REC' AND EMPLID = '" + txtCarne.Text + "' " +
-                                                " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                EffdtNombreNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
-                                            }
-
-                                            cmd.CommandText = "SELECT EFFDT AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + txtCarne.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                EFFDT_SYSTEM = reader["CONTADOR"].ToString();
-                                            }
-
-                                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + txtCarne.Text + "'" +
-                                                " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                EffdtNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("dd-MM-yyyy")).ToString();
-                                            }
-
-                                            if (!String.IsNullOrEmpty(EffdtNitUltimo))
-                                            {
-                                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND  EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + txtCarne.Text + "' AND EFFDT='" + EffdtNitUltimo + "'";
-                                                reader = cmd.ExecuteReader();
-                                                while (reader.Read())
-                                                {
-                                                    ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                ContadorNit = 0;
-                                                EffdtNitUltimo = Hoy;
-                                            }
-
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSKEY WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + txtCarne.Text + "'";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                ContadorNit2 = Convert.ToInt16(reader["CONTADOR"]);
-                                            }
-
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
-                                                "AND EFFDT ='" + HoyEffdt + "'";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                ContadorEffdtNombreNit = Convert.ToInt16(reader["CONTADOR"]);
-                                            }
-                                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + txtCarne.Text + "' " +
-                                                "AND EFFDT ='" + HoyEffdt + "'";
-                                            reader = cmd.ExecuteReader();
-                                            while (reader.Read())
-                                            {
-                                                ContadorEffdtNit = Convert.ToInt16(reader["CONTADOR"]);
-                                            }
-
-                                            if (!String.IsNullOrEmpty(EffdtNombreNitUltimo))
-                                            {
-                                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoR.Text + "' " +
-                                                    "AND FIRST_NAME='" + TxtNombreR.Text + "' AND SECOND_LAST_NAME='" + TxtCasadaR.Text + "' " +
-                                                    "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-                                                reader = cmd.ExecuteReader();
-                                                while (reader.Read())
-                                                {
-                                                    ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                    EffdtDireccionNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
                                                 }
 
-                                                cmd.CommandText = "SELECT LAST_NAME , SECOND_LAST_NAME FROM SYSADM.PS_NAMES PN WHERE NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
-                                                "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-
-                                                reader = cmd.ExecuteReader();
-                                                while (reader.Read())
+                                                if (!String.IsNullOrEmpty(EffdtDireccionNitUltimo))
                                                 {
-                                                    ApellidoAnterior = reader["LAST_NAME"].ToString();
-                                                    ApellidoCAnterior = reader["SECOND_LAST_NAME"].ToString();
-                                                }
-                                            }
-                                            else
-                                            {
-                                                ContadorNombreNit = 0;
-                                            }
-
-                                            string FechaEfectiva = "";
-                                            if (EFFDT_NameR.Value.IsNullOrWhiteSpace())
-                                                FechaEfectiva = "1900-01-01";
-                                            else
-                                                FechaEfectiva = EFFDT_NameR.Value;
-
-
-                                            TxtApellidoR.Text.Replace(Environment.NewLine, string.Empty);
-                                            TxtNombreR.Text.Replace(Environment.NewLine, string.Empty);
-                                            TxtCasadaR.Text.Replace(Environment.NewLine, string.Empty);
-                                            TxtApellidoR.Text = System.Text.RegularExpressions.Regex.Replace(TxtApellidoR.Text, @"\s+", " "); ;
-                                            TxtNombreR.Text = System.Text.RegularExpressions.Regex.Replace(TxtNombreR.Text, @"\s+", " "); ;
-                                            TxtCasadaR.Text = System.Text.RegularExpressions.Regex.Replace(TxtCasadaR.Text, @"\s+", " ");
-
-                                            TxtApellidoR.Text = TxtApellidoR.Text.TrimEnd();
-                                            TxtNombreR.Text = TxtNombreR.Text.TrimEnd();
-                                            TxtCasadaR.Text = TxtCasadaR.Text.TrimEnd();
-
-                                            if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNombreNit == 0)
-                                            {//INSERT
-                                                if (!TxtApellidoR.Text.IsNullOrWhiteSpace())
-                                                {
-                                                    if (!TxtCasadaR.Text.IsNullOrWhiteSpace())
+                                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE ADDRESS_TYPE ='REC' AND EMPLID = '" + txtCarne.Text + "' " +
+                                                        "AND ADDRESS1 ='" + TxtDiRe1.Text + "' AND ADDRESS2 = '" + TxtDiRe2.Text + "' AND ADDRESS3 = '" + TxtDiRe3.Text + "' " +
+                                                        "AND COUNTRY='" + codPaisNIT + "' AND STATE ='" + StateNIT.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtDireccionNitUltimo).ToString("dd/MM/yyyy") + "'" +
+                                                        " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                                    reader = cmd.ExecuteReader();
+                                                    while (reader.Read())
                                                     {
-                                                        UP_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
-                                                                        "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "        <COLL_NAMES>" +
-                                                                        "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                                        "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
-                                                                        "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
-                                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
-                                                                        "        </COLL_NAMES>" +
-                                                                        "      </COLL_NAME_TYPE_VW>";
+                                                        ContadorDirecionNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ContadorDirecionNit = 0;
+                                                }
+
+                                                cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_NAMES WHERE NAME_TYPE = 'REC' AND EMPLID = '" + txtCarne.Text + "' " +
+                                                    " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                                reader = cmd.ExecuteReader();
+                                                while (reader.Read())
+                                                {
+                                                    EffdtNombreNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
+                                                }
+
+                                                cmd.CommandText = "SELECT EFFDT AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + txtCarne.Text + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                                reader = cmd.ExecuteReader();
+                                                while (reader.Read())
+                                                {
+                                                    EFFDT_SYSTEM = reader["CONTADOR"].ToString();
+                                                }
+
+                                                cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + txtCarne.Text + "'" +
+                                                    " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                                                reader = cmd.ExecuteReader();
+                                                while (reader.Read())
+                                                {
+                                                    EffdtNitUltimo = (Convert.ToDateTime(reader["EFFDT"]).ToString("dd-MM-yyyy")).ToString();
+                                                }
+
+                                                if (!String.IsNullOrEmpty(EffdtNitUltimo))
+                                                {
+                                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND  EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' AND EMPLID = '" + txtCarne.Text + "' AND EFFDT='" + EffdtNitUltimo + "'";
+                                                    reader = cmd.ExecuteReader();
+                                                    while (reader.Read())
+                                                    {
+                                                        ContadorNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ContadorNit = 0;
+                                                    EffdtNitUltimo = Hoy;
+                                                }
+
+                                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSKEY WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + txtCarne.Text + "'";
+                                                reader = cmd.ExecuteReader();
+                                                while (reader.Read())
+                                                {
+                                                    ContadorNit2 = Convert.ToInt16(reader["CONTADOR"]);
+                                                }
+
+                                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
+                                                    "AND EFFDT ='" + HoyEffdt + "'";
+                                                reader = cmd.ExecuteReader();
+                                                while (reader.Read())
+                                                {
+                                                    ContadorEffdtNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                }
+                                                cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + txtCarne.Text + "' " +
+                                                    "AND EFFDT ='" + HoyEffdt + "'";
+                                                reader = cmd.ExecuteReader();
+                                                while (reader.Read())
+                                                {
+                                                    ContadorEffdtNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                }
+
+                                                if (!String.IsNullOrEmpty(EffdtNombreNitUltimo))
+                                                {
+                                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE LAST_NAME ='" + TxtApellidoR.Text + "' " +
+                                                        "AND FIRST_NAME='" + TxtNombreR.Text + "' AND SECOND_LAST_NAME='" + TxtCasadaR.Text + "' " +
+                                                        "AND NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                                    reader = cmd.ExecuteReader();
+                                                    while (reader.Read())
+                                                    {
+                                                        ContadorNombreNit = Convert.ToInt16(reader["CONTADOR"]);
+                                                    }
+
+                                                    cmd.CommandText = "SELECT LAST_NAME , SECOND_LAST_NAME FROM SYSADM.PS_NAMES PN WHERE NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
+                                                    "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+
+                                                    reader = cmd.ExecuteReader();
+                                                    while (reader.Read())
+                                                    {
+                                                        ApellidoAnterior = reader["LAST_NAME"].ToString();
+                                                        ApellidoCAnterior = reader["SECOND_LAST_NAME"].ToString();
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ContadorNombreNit = 0;
+                                                }
+
+                                                string FechaEfectiva = "";
+                                                if (EFFDT_NameR.Value.IsNullOrWhiteSpace())
+                                                    FechaEfectiva = "1900-01-01";
+                                                else
+                                                    FechaEfectiva = EFFDT_NameR.Value;
+
+
+                                                TxtApellidoR.Text.Replace(Environment.NewLine, string.Empty);
+                                                TxtNombreR.Text.Replace(Environment.NewLine, string.Empty);
+                                                TxtCasadaR.Text.Replace(Environment.NewLine, string.Empty);
+                                                TxtApellidoR.Text = System.Text.RegularExpressions.Regex.Replace(TxtApellidoR.Text, @"\s+", " "); ;
+                                                TxtNombreR.Text = System.Text.RegularExpressions.Regex.Replace(TxtNombreR.Text, @"\s+", " "); ;
+                                                TxtCasadaR.Text = System.Text.RegularExpressions.Regex.Replace(TxtCasadaR.Text, @"\s+", " ");
+
+                                                TxtApellidoR.Text = TxtApellidoR.Text.TrimEnd();
+                                                TxtNombreR.Text = TxtNombreR.Text.TrimEnd();
+                                                TxtCasadaR.Text = TxtCasadaR.Text.TrimEnd();
+
+                                                if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNombreNit == 0)
+                                                {//INSERT
+                                                    if (!TxtApellidoR.Text.IsNullOrWhiteSpace())
+                                                    {
+                                                        if (!TxtCasadaR.Text.IsNullOrWhiteSpace())
+                                                        {
+                                                            UP_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
+                                                                            "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                            "        <COLL_NAMES>" +
+                                                                            "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                            "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                                            "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                            "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
+                                                                            "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                            "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                                            "        </COLL_NAMES>" +
+                                                                            "      </COLL_NAME_TYPE_VW>";
+                                                        }
+                                                        else
+                                                        {
+                                                            UP_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
+                                                                            "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                            "        <COLL_NAMES>" +
+                                                                            "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                            "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                                            "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                            "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
+                                                                            "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                            "        </COLL_NAMES>" +
+                                                                            "      </COLL_NAME_TYPE_VW>";
+
+                                                            if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                                            {
+                                                                //ACTUALIZA NIT
+                                                                txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', " +
+                                                                    "PN.NAME_FORMAL ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "' " +
+                                                                    " WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                                            }
+                                                        }
                                                     }
                                                     else
                                                     {
                                                         UP_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
-                                                                        "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "        <COLL_NAMES>" +
-                                                                        "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                                        "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
-                                                                        "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
-                                                                        "        </COLL_NAMES>" +
-                                                                        "      </COLL_NAME_TYPE_VW>";
+                                                                       "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                       "        <COLL_NAMES>" +
+                                                                       "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                       "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                                       "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                       "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                       "        </COLL_NAMES>" +
+                                                                       "      </COLL_NAME_TYPE_VW>";
+                                                        if (!ApellidoAnterior.IsNullOrWhiteSpace())
+                                                        {
+                                                            //ACTUALIZA NIT
+                                                            txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
+                                                                    "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                                        }
 
                                                         if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                                         {
                                                             //ACTUALIZA NIT
-                                                            txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', " +
-                                                                "PN.NAME_FORMAL ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "' " +
-                                                                " WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
-                                                                "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                                            txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
+                                                                    "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                         }
                                                     }
+                                                    contadorUP = contadorUP + 1;
                                                 }
-                                                else
-                                                {
-                                                    UP_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
-                                                                   "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                   "        <COLL_NAMES>" +
-                                                                   "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                   "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                                   "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                                   "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
-                                                                   "        </COLL_NAMES>" +
-                                                                   "      </COLL_NAME_TYPE_VW>";
-                                                    if (!ApellidoAnterior.IsNullOrWhiteSpace())
-                                                    {
-                                                        //ACTUALIZA NIT
-                                                        txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
-                                                                "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                                "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
-                                                                "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-                                                    }
+                                                else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit > 0 && ContadorEffdtNombreNit > 0)
+                                                {//UPDATE
 
-                                                    if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                                    if (!TxtApellidoR.Text.IsNullOrWhiteSpace())
                                                     {
-                                                        //ACTUALIZA NIT
-                                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
-                                                                "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                                "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
-                                                                "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-                                                    }
-                                                }
-                                                contadorUP = contadorUP + 1;
-                                            }
-                                            else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit > 0 && ContadorEffdtNombreNit > 0)
-                                            {//UPDATE
+                                                        if (!TxtCasadaR.Text.IsNullOrWhiteSpace())
+                                                        {
+                                                            UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
+                                                                            "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                            "        <COLL_NAMES>" +
+                                                                            "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                            "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                                            "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                            "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
+                                                                            "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                            "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                                            "        </COLL_NAMES>" +
+                                                                            "      </COLL_NAME_TYPE_VW>";
+                                                        }
+                                                        else
+                                                        {
+                                                            UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
+                                                                            "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                            "        <COLL_NAMES>" +
+                                                                            "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                            "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                                            "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                            "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
+                                                                            "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                            "        </COLL_NAMES>" +
+                                                                            "      </COLL_NAME_TYPE_VW>";
 
-                                                if (!TxtApellidoR.Text.IsNullOrWhiteSpace())
-                                                {
-                                                    if (!TxtCasadaR.Text.IsNullOrWhiteSpace())
-                                                    {
-                                                        UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
-                                                                        "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "        <COLL_NAMES>" +
-                                                                        "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                                        "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
-                                                                        "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
-                                                                        "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
-                                                                        "        </COLL_NAMES>" +
-                                                                        "      </COLL_NAME_TYPE_VW>";
+                                                            if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                                            {
+                                                                //ACTUALIZA NIT
+                                                                txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', " +
+                                                                    "PN.NAME_FORMAL ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                                            }
+                                                        }
                                                     }
                                                     else
                                                     {
                                                         UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
-                                                                        "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "        <COLL_NAMES>" +
-                                                                        "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                                        "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
-                                                                        "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
-                                                                        "        </COLL_NAMES>" +
-                                                                        "      </COLL_NAME_TYPE_VW>";
+                                                                            "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                            "        <COLL_NAMES>" +
+                                                                            "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                            "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                                            "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                            "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                            "        </COLL_NAMES>" +
+                                                                            "      </COLL_NAME_TYPE_VW>";
+                                                        if (!ApellidoAnterior.IsNullOrWhiteSpace())
+                                                        {
+                                                            //ACTUALIZA NIT
+                                                            txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
+                                                                    "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                                        }
 
                                                         if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                                         {
                                                             //ACTUALIZA NIT
-                                                            txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', " +
-                                                                "PN.NAME_FORMAL ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "' " +
+                                                            txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
+                                                                "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
                                                                 "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
                                                                 "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                         }
@@ -2358,194 +2390,120 @@ namespace ReportesUnis
                                                 }
                                                 else
                                                 {
-                                                    UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
-                                                                        "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "        <COLL_NAMES>" +
-                                                                        "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
-                                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                                        "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
-                                                                        "        </COLL_NAMES>" +
-                                                                        "      </COLL_NAME_TYPE_VW>";
-                                                    if (!ApellidoAnterior.IsNullOrWhiteSpace())
+                                                    if (!TxtApellidoR.Text.IsNullOrWhiteSpace())
                                                     {
-                                                        //ACTUALIZA NIT
-                                                        txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
-                                                                "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                                "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
-                                                            "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-                                                    }
+                                                        if (!TxtCasadaR.Text.IsNullOrWhiteSpace())
+                                                        {
 
-                                                    if (!ApellidoCAnterior.IsNullOrWhiteSpace())
-                                                    {
-                                                        //ACTUALIZA NIT
-                                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
-                                                            "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                            "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
-                                                            "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-                                                    }
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (!TxtApellidoR.Text.IsNullOrWhiteSpace())
-                                                {
-                                                    if (!TxtCasadaR.Text.IsNullOrWhiteSpace())
-                                                    {
+                                                            UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
+                                                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                                    "        <COLL_NAMES>" +
+                                                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                                    "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                                    "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
+                                                                                    "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                                    "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                                                    "        </COLL_NAMES>" +
+                                                                                    "      </COLL_NAME_TYPE_VW>";
+                                                        }
+                                                        else
+                                                        {
 
-                                                        UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
-                                                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                                "        <COLL_NAMES>" +
-                                                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                                "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
-                                                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                                                "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
-                                                                                "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
-                                                                                "          <PROP_SECOND_LAST_NAME>" + TxtCasadaR.Text + @"</PROP_SECOND_LAST_NAME>" +
-                                                                                "        </COLL_NAMES>" +
-                                                                                "      </COLL_NAME_TYPE_VW>";
+                                                            UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
+                                                                                    "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                                    "        <COLL_NAMES>" +
+                                                                                    "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                                    "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                                                    "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                                    "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
+                                                                                    "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                                    "          </COLL_NAMES>" +
+                                                                                    "      </COLL_NAME_TYPE_VW>";
+                                                            if (!ApellidoCAnterior.IsNullOrWhiteSpace())
+                                                            {
+                                                                //ACTUALIZA NIT
+                                                                txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', " +
+                                                                    "PN.NAME_FORMAL ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                                            }
+                                                        }
                                                     }
                                                     else
                                                     {
-
                                                         UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
-                                                                                "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                                "        <COLL_NAMES>" +
-                                                                                "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                                "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
-                                                                                "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                                                "          <PROP_LAST_NAME>" + TxtApellidoR.Text + @"</PROP_LAST_NAME>" +
-                                                                                "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
-                                                                                "          </COLL_NAMES>" +
-                                                                                "      </COLL_NAME_TYPE_VW>";
+                                                                                   "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                                   "        <COLL_NAMES>" +
+                                                                                   "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
+                                                                                   "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
+                                                                                   "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                                                   "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
+                                                                                   "          </COLL_NAMES>" +
+                                                                                   "      </COLL_NAME_TYPE_VW>";
+                                                        if (!ApellidoAnterior.IsNullOrWhiteSpace())
+                                                        {
+                                                            //ACTUALIZA NIT
+                                                            txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
+                                                                    "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
+                                                                    " WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                                        }
+
                                                         if (!ApellidoCAnterior.IsNullOrWhiteSpace())
                                                         {
                                                             //ACTUALIZA NIT
-                                                            txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', " +
-                                                                "PN.NAME_FORMAL ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "' " +
-                                                                "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
-                                                                "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
+                                                            txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
+                                                                    "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                         }
                                                     }
+                                                    contadorUD = contadorUD + 1;
+                                                }
+
+                                                if (EffdtNitUltimo == Hoy && ContadorNit == 0)
+                                                {
+                                                    //INSERTA EL NIT
+                                                    cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSTEM (EMPLID, EXTERNAL_SYSTEM, EFFDT, EXTERNAL_SYSTEM_ID) " +
+                                                    "VALUES ('" + txtCarne.Text + "','NRE','" + DateTime.Now.ToString("dd/MM/yyyy") + "','" + txtNit.Text + "')";
+                                                    cmd.ExecuteNonQuery();
+
+
+                                                    if (ContadorNit2 == 0)
+                                                    {
+                                                        cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSKEY (EMPLID, EXTERNAL_SYSTEM) " +
+                                                        "VALUES ('" + txtCarne.Text + "','NRE')";
+                                                        cmd.ExecuteNonQuery();
+                                                    }
+                                                }
+                                                else if (EffdtNitUltimo != Hoy && ContadorNit > 0)
+                                                {
+                                                    //ACTUALIZA NIT
+                                                    cmd.CommandText = "UPDATE SYSADM.PS_EXTERNAL_SYSTEM SET EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' " +
+                                                                        " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + txtCarne.Text + "' AND EFFDT ='" + HoyEffdt + "'";
+                                                    cmd.ExecuteNonQuery();
+
                                                 }
                                                 else
                                                 {
-                                                    UD_NAMES_NIT.Value = "<COLL_NAME_TYPE_VW> " +
-                                                                               "        <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                               "        <COLL_NAMES>" +
-                                                                               "          <KEYPROP_NAME_TYPE>REC</KEYPROP_NAME_TYPE>" +
-                                                                               "          <KEYPROP_EFFDT>" + EffdtNombreNitUltimo + @"</KEYPROP_EFFDT>" +
-                                                                               "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
-                                                                               "          <PROP_FIRST_NAME>" + TxtNombreR.Text + @"</PROP_FIRST_NAME>" +
-                                                                               "          </COLL_NAMES>" +
-                                                                               "      </COLL_NAME_TYPE_VW>";
-                                                    if (!ApellidoAnterior.IsNullOrWhiteSpace())
-                                                    {
-                                                        //ACTUALIZA NIT
-                                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
-                                                                "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                                " WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
-                                                                "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-                                                    }
-
-                                                    if (!ApellidoCAnterior.IsNullOrWhiteSpace())
-                                                    {
-                                                        //ACTUALIZA NIT
-                                                        txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
-                                                                "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                                "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
-                                                                "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
-                                                    }
-                                                }
-                                                contadorUD = contadorUD + 1;
-                                            }
-
-                                            if (EffdtNitUltimo == Hoy && ContadorNit == 0)
-                                            {
-                                                //INSERTA EL NIT
-                                                cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSTEM (EMPLID, EXTERNAL_SYSTEM, EFFDT, EXTERNAL_SYSTEM_ID) " +
-                                                "VALUES ('" + txtCarne.Text + "','NRE','" + DateTime.Now.ToString("dd/MM/yyyy") + "','" + txtNit.Text + "')";
-                                                cmd.ExecuteNonQuery();
-
-
-                                                if (ContadorNit2 == 0)
-                                                {
-                                                    cmd.CommandText = "INSERT INTO SYSADM.PS_EXTERNAL_SYSKEY (EMPLID, EXTERNAL_SYSTEM) " +
-                                                    "VALUES ('" + txtCarne.Text + "','NRE')";
+                                                    //ACTUALIZA NIT
+                                                    cmd.CommandText = "UPDATE SYSADM.PS_EXTERNAL_SYSTEM SET EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' " +
+                                                                        " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + txtCarne.Text + "' AND EFFDT ='" + EffdtNitUltimo + "'";
                                                     cmd.ExecuteNonQuery();
                                                 }
-                                            }
-                                            else if (EffdtNitUltimo != Hoy && ContadorNit > 0)
-                                            {
-                                                //ACTUALIZA NIT
-                                                cmd.CommandText = "UPDATE SYSADM.PS_EXTERNAL_SYSTEM SET EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' " +
-                                                                    " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + txtCarne.Text + "' AND EFFDT ='" + HoyEffdt + "'";
-                                                cmd.ExecuteNonQuery();
 
-                                            }
-                                            else
-                                            {
-                                                //ACTUALIZA NIT
-                                                cmd.CommandText = "UPDATE SYSADM.PS_EXTERNAL_SYSTEM SET EXTERNAL_SYSTEM_ID = '" + txtNit.Text + "' " +
-                                                                    " WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID='" + txtCarne.Text + "' AND EFFDT ='" + EffdtNitUltimo + "'";
-                                                cmd.ExecuteNonQuery();
-                                            }
-
-                                            if (String.IsNullOrEmpty(codPaisNIT))
-                                                codPaisNIT = "GTM";
+                                                if (String.IsNullOrEmpty(codPaisNIT))
+                                                    codPaisNIT = "GTM";
 
 
-                                            if (EffdtDireccionNitUltimo != Hoy && ContadorDirecionNit == 0 && ContadorEffdtDirecionNit == 0)
-                                            {//INSERTA
-                                                UP_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
-                                                                "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                "                                            <COLL_ADDRESSES> \n" +
-                                                                  "                                                <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                  "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
-                                                                  "\n" +
-                                                                  "                                                <PROP_COUNTRY>" + codPaisNIT + @"</PROP_COUNTRY> " +
-                                                                  "\n" +
-                                                                  "                                                <PROP_ADDRESS1>" + TxtDiRe1.Text + @"</PROP_ADDRESS1> " +
-                                                                  "\n" +
-                                                                  "                                                <PROP_ADDRESS2>" + TxtDiRe2.Text + @"</PROP_ADDRESS2> " +
-                                                                  "\n" +
-                                                                  "                                                <PROP_ADDRESS3>" + TxtDiRe3.Text + @"</PROP_ADDRESS3> " +
-                                                                  "\n" +
-                                                                  "                                                <PROP_STATE>" + StateNIT.Text + @"</PROP_STATE>  " +
-                                                                  "\n" +
-                                                                "                                            </COLL_ADDRESSES> \n" +
-                                                             "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                                                contadorUP = contadorUP + 1;
-                                            }
-                                            else if (EffdtDireccionNitUltimo == Hoy && ContadorDirecionNit > 0 && ContadorEffdtDirecionNit > 0)
-                                            {//ACTUALIZA
-                                                UD_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
-                                                                "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                "                                            <COLL_ADDRESSES> \n" +
-                                                                  "                                                <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                  "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
-                                                                  "\n" +
-                                                                  "                                                <PROP_COUNTRY>" + codPaisNIT + @"</PROP_COUNTRY> " +
-                                                                  "\n" +
-                                                                  "                                                <PROP_ADDRESS1>" + TxtDiRe1.Text + @"</PROP_ADDRESS1> " +
-                                                                  "\n" +
-                                                                  "                                                <PROP_ADDRESS2>" + TxtDiRe2.Text + @"</PROP_ADDRESS2> " +
-                                                                  "\n" +
-                                                                  "                                                <PROP_ADDRESS3>" + TxtDiRe3.Text + @"</PROP_ADDRESS3> " +
-                                                                  "\n" +
-                                                                  "                                                <PROP_STATE>" + StateNIT.Text + @"</PROP_STATE>  " +
-                                                                  "\n" +
-                                                                "                                            </COLL_ADDRESSES> \n" +
-                                                             "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                                                contadorUD = contadorUD + 1;
-                                            }
-                                            else
-                                            {//UPDATE
-                                                UD_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
+                                                if (EffdtDireccionNitUltimo != Hoy && ContadorDirecionNit == 0 && ContadorEffdtDirecionNit == 0)
+                                                {//INSERTA
+                                                    UP_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
                                                                     "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
                                                                     "                                            <COLL_ADDRESSES> \n" +
                                                                       "                                                <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
-                                                                      "                                                <KEYPROP_EFFDT>" + EffdtDireccionNitUltimo + @"</KEYPROP_EFFDT> " +
+                                                                      "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
                                                                       "\n" +
                                                                       "                                                <PROP_COUNTRY>" + codPaisNIT + @"</PROP_COUNTRY> " +
                                                                       "\n" +
@@ -2559,12 +2517,57 @@ namespace ReportesUnis
                                                                       "\n" +
                                                                     "                                            </COLL_ADDRESSES> \n" +
                                                                  "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                                                contadorUD = contadorUD + 1;
-                                            }                                           
-                                        }
-                                        else
-                                        {
-                                            llenadoPaisnit();
+                                                    contadorUP = contadorUP + 1;
+                                                }
+                                                else if (EffdtDireccionNitUltimo == Hoy && ContadorDirecionNit > 0 && ContadorEffdtDirecionNit > 0)
+                                                {//ACTUALIZA
+                                                    UD_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
+                                                                    "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                    "                                            <COLL_ADDRESSES> \n" +
+                                                                      "                                                <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                      "                                                <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT> " +
+                                                                      "\n" +
+                                                                      "                                                <PROP_COUNTRY>" + codPaisNIT + @"</PROP_COUNTRY> " +
+                                                                      "\n" +
+                                                                      "                                                <PROP_ADDRESS1>" + TxtDiRe1.Text + @"</PROP_ADDRESS1> " +
+                                                                      "\n" +
+                                                                      "                                                <PROP_ADDRESS2>" + TxtDiRe2.Text + @"</PROP_ADDRESS2> " +
+                                                                      "\n" +
+                                                                      "                                                <PROP_ADDRESS3>" + TxtDiRe3.Text + @"</PROP_ADDRESS3> " +
+                                                                      "\n" +
+                                                                      "                                                <PROP_STATE>" + StateNIT.Text + @"</PROP_STATE>  " +
+                                                                      "\n" +
+                                                                    "                                            </COLL_ADDRESSES> \n" +
+                                                                 "                                        </COLL_ADDRESS_TYPE_VW> \n";
+                                                    contadorUD = contadorUD + 1;
+                                                }
+                                                else
+                                                {//UPDATE
+                                                    UD_ADDRESSES_NIT.Value = "<COLL_ADDRESS_TYPE_VW>\n" +
+                                                                        "                                            <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                        "                                            <COLL_ADDRESSES> \n" +
+                                                                          "                                                <KEYPROP_ADDRESS_TYPE>REC</KEYPROP_ADDRESS_TYPE> \n" +
+                                                                          "                                                <KEYPROP_EFFDT>" + EffdtDireccionNitUltimo + @"</KEYPROP_EFFDT> " +
+                                                                          "\n" +
+                                                                          "                                                <PROP_COUNTRY>" + codPaisNIT + @"</PROP_COUNTRY> " +
+                                                                          "\n" +
+                                                                          "                                                <PROP_ADDRESS1>" + TxtDiRe1.Text + @"</PROP_ADDRESS1> " +
+                                                                          "\n" +
+                                                                          "                                                <PROP_ADDRESS2>" + TxtDiRe2.Text + @"</PROP_ADDRESS2> " +
+                                                                          "\n" +
+                                                                          "                                                <PROP_ADDRESS3>" + TxtDiRe3.Text + @"</PROP_ADDRESS3> " +
+                                                                          "\n" +
+                                                                          "                                                <PROP_STATE>" + StateNIT.Text + @"</PROP_STATE>  " +
+                                                                          "\n" +
+                                                                        "                                            </COLL_ADDRESSES> \n" +
+                                                                     "                                        </COLL_ADDRESS_TYPE_VW> \n";
+                                                    contadorUD = contadorUD + 1;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                llenadoPaisnit();
+                                            }
                                         }
                                     }
 

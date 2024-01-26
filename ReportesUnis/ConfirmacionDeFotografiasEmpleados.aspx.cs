@@ -992,7 +992,7 @@ namespace ReportesUnis
                 }
                 catch
                 {
-                    log("ERROR - Al enviar el correo para : " + EmailInstitucional, "", "CONFIRMACION FOTOGRAFIA ESTUDIANTE");
+                    log("ERROR - Al enviar el correo para : " + EmailInstitucional, "", "CONFIRMACION FOTOGRAFIA EMPLEADO");
                 }
             }
 
@@ -1119,17 +1119,17 @@ namespace ReportesUnis
                             }
                             else if (respuesta != "0")
                             {
-                                log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+                                log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO AC");
                             }
                         }
                         else
                         {
-                            log("ERROR - Inserta APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+                            log("ERROR - Inserta APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO AC");
                         }
                     }
                     else
                     {
-                        log("ERROR - al armar consulta Update APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+                        log("ERROR - al armar consulta Update APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO AC");
                     }
 
                     if (respuesta == "0")
@@ -1138,18 +1138,18 @@ namespace ReportesUnis
                         File.Delete(CurrentDirectory + txtPathAC.Text + row.Cells[1].Text);
                         llenadoGridAC();
                         string[] datos = DatosCorreo();
-                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO AC");
                         EnvioCorreo("bodyConfirmacionFotoEmpleados.txt", "datosConfirmacionFotoEmpleados.txt", datos[1], datos[0]);
                     }
                     else
                     {
                         if (TipoPersona.Value.Contains("Estudiante"))
                         {
-                            log("ERROR - Actualizacion foto Campus: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+                            log("ERROR - Actualizacion foto Campus: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO AC");
                         }
                         else
                         {
-                            log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
+                            log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO AC");
                         }
                         lblActualizacionAC.Text = "Ocurrió un problema al confirmar la información";
                     }
@@ -1234,22 +1234,22 @@ namespace ReportesUnis
                                 }
                                 else if (respuesta != "0")
                                 {
-                                    log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
+                                    log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO PC");
                                 }
                             }
                             else
                             {
-                                log("ERROR - Inserta APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
+                                log("ERROR - Inserta APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO PC");
                             }
                         }
                         else
                         {
-                            log("ERROR - al armar consulta Update APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
+                            log("ERROR - al armar consulta Update APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO PC");
                         }
                     }
                     else
                     {
-                        log("ERROR - Inserta BI del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
+                        log("ERROR - Inserta BI del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO PC");
                     }
 
                     if (respuesta == "0")
@@ -1258,18 +1258,18 @@ namespace ReportesUnis
                         File.Delete(CurrentDirectory + txtPathPC.Text + row.Cells[1].Text);
                         string[] datos = DatosCorreo();
                         llenadoGridPC();
-                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
+                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO PC");
                         EnvioCorreo("bodyConfirmacionFotoEmpleados.txt", "datosConfirmacionFotoEmpleados.txt", datos[1], datos[0]);
                     }
                     else
                     {
                         if (TipoPersona.Value.Contains("Estudiante"))
                         {
-                            log("ERROR - Actualizacion foto Campus: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
+                            log("ERROR - Actualizacion foto Campus: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO PC");
                         }
                         else
                         {
-                            log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE PC");
+                            log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO PC");
                         }
                         lblActualizacionPC.Text = "Ocurrió un problema al confirmar la información";
                     }
@@ -1355,22 +1355,22 @@ namespace ReportesUnis
                                 }
                                 else if (respuesta != "0")
                                 {
-                                    log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                                    log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO RC");
                                 }
                             }
                             else
                             {
-                                log("ERROR - Inserta APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                                log("ERROR - Inserta APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO RC");
                             }
                         }
                         else
                         {
-                            log("ERROR - al armar consulta Update APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                            log("ERROR - al armar consulta Update APEX del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO RC");
                         }
                     }
                     else
                     {
-                        log("ERROR - Inserta BI del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                        log("ERROR - Inserta BI del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO RC");
                     }
 
                     if (respuesta == "0")
@@ -1379,18 +1379,18 @@ namespace ReportesUnis
                         File.Delete(CurrentDirectory + txtPathRC.Text + row.Cells[1].Text);
                         string[] datos = DatosCorreo();
                         llenadoGridRC();
-                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                        log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO RC");
                         EnvioCorreo("bodyConfirmacionFotoEmpleados.txt", "datosConfirmacionFotoEmpleados.txt", datos[1], datos[0]);
                     }
                     else
                     {
                         if (TipoPersona.Value.Contains("Estudiante"))
                         {
-                            log("ERROR - Actualizacion foto Campus: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                            log("ERROR - Actualizacion foto Campus: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO RC");
                         }
                         else
                         {
-                            log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE RC");
+                            log("ERROR - Actualizacion HCM del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO RC");
                         }
                         lblActualizacionRC.Text = "Ocurrió un problema al confirmar la información";
                     }
