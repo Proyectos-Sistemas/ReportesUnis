@@ -6,10 +6,6 @@
         <br />
         <h2 style="text-align: center;">CONFIRMACIÓN DE FOTOGRAFÍAS COLABORADORES</h2>
     </div>
-    <div class="container" style="text-align: center">
-        <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
-        </asp:Label>
-    </div>
 
     <br />
     <div id="CamposAuxiliares" runat="server" visible="false">
@@ -46,7 +42,7 @@
         <asp:Button Text="Renovación de Carne" ID="Tab3" CssClass="tablinks" runat="server" OnClick="Tab3_Click" />
     </div>
     <br />
-    <asp:MultiView ID="MainView" runat="server">
+   <asp:MultiView ID="MainView" runat="server">
         <asp:View ID="View1" runat="server">
             <table style="width: 100%; border-width: 1px; border-color: #ddd;">
                 <tr>
@@ -64,7 +60,7 @@
                                             <Columns>
                                                 <asp:TemplateField HeaderText="Eliminar" ItemStyle-HorizontalAlign="Center">
                                                     <ItemTemplate>
-                                                        <asp:CheckBox ID="CheckBoxImageAC" runat="server" Font-Size="Large" />
+                                                        <asp:CheckBox ID="CheckBoxImage" runat="server" Font-Size="Large" />
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:BoundField DataField="NombreImagen" HeaderText="Nombre de la imagen" />
@@ -191,7 +187,7 @@
                                                 <div class="container" style="text-align: center">
                                                     <asp:Label ID="lblActualizacionRC" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"> 
                                                     </asp:Label>
-                                                </div>
+                                                </div>      
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-md-12">
@@ -243,7 +239,6 @@
                                                         </asp:TableRow>
                                                     </asp:Table>
                                                 </div>
-
                                             </td>
                                         </tr>
                                     </table>
@@ -273,7 +268,6 @@
                 return false; // Cancela la acción del botón
             }
         }
-
         function mostrarAlertaEliminaPC() {
             if (confirm("¿Está seguro de desea eliminar las fotografías seleccionadas?")) {
                 __doPostBack('<%= BtnEliminarPC.ClientID %>', '');

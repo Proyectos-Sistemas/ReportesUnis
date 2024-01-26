@@ -42,36 +42,15 @@ namespace ReportesUnis
             }
             if (!IsPostBack)
             {
-                // Establecer el índice de la pestaña activa por defecto en la primera carga
+                llenadoGridAC();
                 ViewState["ActiveTabIndex"] = 0;
                 ControlTabs.Value = "AC";
                 // Establecer la pestaña activa y su estilo correspondiente
                 SetActiveTab(0);
-                llenadoGridAC();
-                llenadoGridPC();
-                llenadoGridRC();
-            }
-            else
-            {
-                // Restaurar el índice de la pestaña activa desde el ViewState en las cargas posteriores
-                int activeTabIndex = Convert.ToInt32(ViewState["ActiveTabIndex"]);
-                // Establecer la pestaña activa y su estilo correspondiente
-                SetActiveTab(activeTabIndex);
             }
             if (GridViewFotosAC.Rows.Count == 0)
             {
                 lblActualizacionAC.Text = "No hay fotografías para confirmar en este apartado.";
-                TbEliminarAC.Visible = false;
-            }
-            if (GridViewFotosPC.Rows.Count == 0)
-            {
-                lblActualizacionPC.Text = "No hay fotografías para confirmar en este apartado.";
-                TbEliminarPC.Visible = false;
-            }
-            if (GridViewFotosRC.Rows.Count == 0)
-            {
-                lblActualizacionRC.Text = "No hay fotografías para confirmar en este apartado.";
-                TbEliminarRC.Visible = false;
             }
         }
 
@@ -96,7 +75,7 @@ namespace ReportesUnis
         }
         void llenadoGridPC()
         {
-            string[] archivos = Directory.GetFiles(rutaFisicaPC);
+           string[] archivos = Directory.GetFiles(rutaFisicaPC);
             List<object> imagenes = new List<object>();
 
             foreach (string archivo in archivos)
@@ -538,6 +517,44 @@ namespace ReportesUnis
                 " WHERE CODIGO = '" + Carne + "'";
         }
         private void ValidacionCheck()
+        {
+            foreach (GridViewRow row in GridViewFotosAC.Rows)
+            {
+                CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
+                if (checkBox.Checked)
+                {
+                    if (prueba.Text.IsNullOrWhiteSpace())
+                    {
+                        prueba.Text = "1";
+                    }
+                    else
+                    {
+                        prueba.Text = (Convert.ToInt16(prueba.Text) + 1).ToString();
+                    }
+                }
+            }
+        }
+
+        private void ValidacionCheckPC()
+        {
+            foreach (GridViewRow row in GridViewFotosAC.Rows)
+            {
+                CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImageP");
+                if (checkBox.Checked)
+                {
+                    if (prueba.Text.IsNullOrWhiteSpace())
+                    {
+                        prueba.Text = "1";
+                    }
+                    else
+                    {
+                        prueba.Text = (Convert.ToInt16(prueba.Text) + 1).ToString();
+                    }
+                }
+            }
+        }
+
+        private void ValidacionCheckRC()
         {
             foreach (GridViewRow row in GridViewFotosAC.Rows)
             {
@@ -1032,7 +1049,7 @@ namespace ReportesUnis
             CheckBox checkBox;
             foreach (GridViewRow row in GridViewFotosAC.Rows)
             {
-                checkBox = (CheckBox)row.FindControl("CheckBoxImageAC");
+                checkBox = (CheckBox)row.FindControl("CheckBoxImage");
 
                 if (checkBox.Checked)
                 {
@@ -1040,7 +1057,7 @@ namespace ReportesUnis
                     carne.Value = nombre;
                     tipoPersona(nombre);
                     string[] datos = DatosCorreo();
-                    string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + nombre + "'";
+                    string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + nombre + "' OR CARNET = '"+nombre+"'";
                     string respuesta = ConsumoOracle(cadena);
                     if (respuesta == "0")
                     {
@@ -1182,10 +1199,10 @@ namespace ReportesUnis
         protected void BtnConfirmarPC_Click(object sender, EventArgs e)
         {
             prueba.Text = "0";
-            ValidacionCheck();
+            ValidacionCheckPC();
             if (Convert.ToInt16(prueba.Text) > 0 || prueba.Text.IsNullOrWhiteSpace())
             {
-                lblActualizacion.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
+                lblActualizacionPC.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
             }
             else
             {
@@ -1233,7 +1250,7 @@ namespace ReportesUnis
 
                     if (respuesta == "0")
                     {
-                        lblActualizacion.Text = "Se confirmó correctamente la información";
+                        lblActualizacionPC.Text = "Se confirmó correctamente la información";
                         File.Delete(CurrentDirectory + txtPathPC.Text + row.Cells[1].Text);
                         string[] datos = DatosCorreo();
                         llenadoGridPC();
@@ -1300,10 +1317,10 @@ namespace ReportesUnis
         protected void BtnConfirmarRC_Click(object sender, EventArgs e)
         {
             prueba.Text = "0";
-            ValidacionCheck();
+            ValidacionCheckRC();
             if (Convert.ToInt16(prueba.Text) > 0 || prueba.Text.IsNullOrWhiteSpace())
             {
-                lblActualizacion.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
+                lblActualizacionRC.Text = "Antes de confirmar recuerda eliminar las imágenes seleccionadas.";
             }
             else
             {
@@ -1351,7 +1368,7 @@ namespace ReportesUnis
 
                     if (respuesta == "0")
                     {
-                        lblActualizacion.Text = "Se confirmó correctamente la información";
+                        lblActualizacionRC.Text = "Se confirmó correctamente la información";
                         File.Delete(CurrentDirectory + txtPathRC.Text + row.Cells[1].Text);
                         string[] datos = DatosCorreo();
                         llenadoGridRC();

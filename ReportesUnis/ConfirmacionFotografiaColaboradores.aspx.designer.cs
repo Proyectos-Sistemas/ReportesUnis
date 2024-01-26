@@ -11,7 +11,7 @@ namespace ReportesUnis
 {
 
 
-    public partial class Tabs
+    public partial class ConfirmacionFotografiaColaboradores
     {
 
         /// <summary>
