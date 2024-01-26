@@ -1113,7 +1113,7 @@ namespace ReportesUnis
                         if (respuesta == "0")
                         {
                             respuesta = serviciosHCM();
-                            if (respuesta == "0" && TipoPersona.Value.Contains("Estudiante"))
+                            if ((respuesta == "0" && TipoPersona.Value.Contains("Estudiante")) || (respuesta == "0" && TipoPersona.Value.Contains("Profesor")))
                             {
                                 Upload(carnet);
                             }
