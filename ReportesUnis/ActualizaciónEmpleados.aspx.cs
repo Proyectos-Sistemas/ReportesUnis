@@ -3779,7 +3779,9 @@ namespace ReportesUnis
                 ValidarNIT.Enabled = false;
                 txtNit.Enabled = false;
             }
+            
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
+            changeCombobox();
         }
         protected void CmbDepartamento_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -3813,6 +3815,7 @@ namespace ReportesUnis
                 txtNit.Enabled = false;
             }
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
+            changeCombobox();
         }
         protected void CmbMunicipio_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -3844,6 +3847,7 @@ namespace ReportesUnis
                 txtNit.Enabled = false;
             }
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
+            changeCombobox();
         }
         protected void CmbPaisNit_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -3879,6 +3883,7 @@ namespace ReportesUnis
             DepartamentoNit.Text = CmbDepartamento.SelectedValue;
             MunicipioNit.Text = CmbMunicipio.SelectedValue;
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
+            changeCombobox();
         }
         protected void CmbDepartamentoNit_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -3894,6 +3899,7 @@ namespace ReportesUnis
             DepartamentoNit.Text = CmbDepartamento.SelectedValue;
             MunicipioNit.Text = CmbMunicipio.SelectedValue;
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
+            changeCombobox();
         }
         protected void CmbMunicipioNit_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -3908,6 +3914,7 @@ namespace ReportesUnis
             fotoAlmacenada();
             MunicipioNit.Text = CmbMunicipio.SelectedValue;
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
+            changeCombobox();
         }
         protected void BtnActualizar_Click(object sender, EventArgs e)
         {
@@ -4060,6 +4067,14 @@ namespace ReportesUnis
                 lblDependencia.Text = "Facultad:";
             }
             fotoAlmacenada();
+        }
+        public void changeCombobox()
+        {
+            validarAccion();
+            if (ControlAct.Value == "AC")
+                RadioButtonActualiza.Checked = true;
+            else if (ControlAct.Value == "PC" || ControlAct.Value == "RC")
+                RadioButtonCarne.Checked = true;
         }
         protected void txtNit_TextChanged(object sender, EventArgs e)
         {
@@ -4253,6 +4268,7 @@ namespace ReportesUnis
             }
             fotoAlmacenada();
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
+            changeCombobox();
         }
         protected void CmbDepartamentoNIT_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -4262,6 +4278,7 @@ namespace ReportesUnis
             }
             fotoAlmacenada();
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
+            changeCombobox();
         }
         protected void CmbMunicipioNIT_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -4271,6 +4288,7 @@ namespace ReportesUnis
             }
             fotoAlmacenada();
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
+            changeCombobox();
         }
         protected void BtnAceptarCarga_Click(object sender, EventArgs e)
         {
