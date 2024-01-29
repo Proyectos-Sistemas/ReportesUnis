@@ -43,7 +43,7 @@ namespace ReportesUnis
             }
             if (!IsPostBack)
             {
-                llenadoGridAC();
+                //llenadoGridAC();
                 ViewState["ActiveTabIndex"] = 0;
                 ControlTabs.Value = "AC";
                 // Establecer la pestaña activa y su estilo correspondiente
@@ -1171,10 +1171,12 @@ namespace ReportesUnis
                     string[] datos = DatosCorreo();
                     string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + nombre + "' OR CODIGO = '" + nombre + "'";
                     string respuesta = ConsumoOracle(cadena);
-                    if (respuesta == "0")
+                    string cadena2 = "DELETE FROM UNIS_INTERFACES.TBL_CONTROL_CARNET WHERE EMPLID = '" + nombre + "'";
+                    string respuesta2 = "0"; ConsumoOracle(cadena2);
+                    if (respuesta == "0" && respuesta2 == "0")
                     {
                         File.Delete(CurrentDirectory + txtPathPC.Text + row.Cells[1].Text);
-                        //File.Delete(txtPath2.Text + row.Cells[1].Text);
+                        File.Delete(txtPath2.Text + row.Cells[1].Text);
                         llenadoGridPC();
                         log("La fotografía de fue rechazada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), nombre, "CONFIRMACION FOTOGRAFIA EMPLEADOS PC");
                         lblActualizacionPC.Text = "Se rechazaron las fotos seleccionadas.";
@@ -1228,7 +1230,7 @@ namespace ReportesUnis
                             if (respuesta == "0")
                             {
                                 respuesta = serviciosHCM();
-                                if (respuesta == "0" && TipoPersona.Value.Contains("Estudiante"))
+                                if ((respuesta == "0" && TipoPersona.Value.Contains("Estudiante")) || (respuesta == "0" && TipoPersona.Value.Contains("Profesor")))
                                 {
                                     Upload(carnet);
                                 }
@@ -1349,7 +1351,7 @@ namespace ReportesUnis
                             if (respuesta == "0")
                             {
                                 respuesta = serviciosHCM();
-                                if (respuesta == "0" && TipoPersona.Value.Contains("Estudiante"))
+                                if ((respuesta == "0" && TipoPersona.Value.Contains("Estudiante")) || (respuesta == "0" && TipoPersona.Value.Contains("Profesor")))
                                 {
                                     Upload(carnet);
                                 }

@@ -323,11 +323,13 @@ namespace ReportesUnis
 
                         if (txtApellido.Text.Length > 4)
                         {
-                            if ((txtApellido.Text.Substring(0, 6)).ToUpper().Equals("DE LA "))
+                            if (txtApellido.Text.Length > 6)
                             {
+                                if ((txtApellido.Text.Substring(0, 6)).ToUpper().Equals("DE LA ")){
                                 posicion = txtApellido.Text.Substring(6, largoApellido - 6).IndexOf(" ");
                                 txtContaador.Text = txtAInicial.Value.Length.ToString() + " " + posicion.ToString();
                                 txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 6);
+                                }
                             }
                             else if (txtApellido.Text.Length > 5)
                             {

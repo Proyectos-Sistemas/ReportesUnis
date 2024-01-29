@@ -1240,6 +1240,8 @@ namespace ReportesUnis
                     con.Close();
                 }
             }
+
+            changeCombobox();
         }
         public void llenadoPaisnit()
         {

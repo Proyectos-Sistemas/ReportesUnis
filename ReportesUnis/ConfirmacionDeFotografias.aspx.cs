@@ -324,9 +324,9 @@ namespace ReportesUnis
                         carne.Value = nombre;
                         string[] datos = DatosCorreo(carne.Value);
                         string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + nombre + "' OR CODIGO = '"+nombre+"'";
-                        //string cadena2 = "DELETE FROM UNIS_INTERFACES.TBL_CONTROL_CARNET WHERE EMPLID = '" + nombre + "'";
                         string respuesta = ConsumoOracle(cadena);
-                        string respuesta2 = "0";// ConsumoOracle(cadena2);
+                        string cadena2 = "DELETE FROM UNIS_INTERFACES.TBL_CONTROL_CARNET WHERE EMPLID = '" + nombre + "'";
+                        string respuesta2 = "0"; ConsumoOracle(cadena2);
                         if (respuesta == "0" && respuesta2 == "0")
                         {
                             File.Delete(CurrentDirectory + txtPathPC.Text + "/" + row.Cells[1].Text);
