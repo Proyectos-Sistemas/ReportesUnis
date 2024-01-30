@@ -331,7 +331,7 @@ namespace ReportesUnis
                                 txtPrimerApellido.Text = txtApellido.Text.Substring(0, posicion + 6);
                                 }
                             }
-                            else if (txtApellido.Text.Length > 5)
+                            else if (txtApellido.Text.Length > 7)
                             {
                                 if ((txtApellido.Text.Substring(0, 7)).ToUpper().Equals("DE LAS "))
                                 {

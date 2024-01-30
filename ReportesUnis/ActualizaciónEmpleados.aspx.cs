@@ -994,35 +994,50 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT " +
-                    "COUNT (*) AS CONTADOR " +
-                    "FROM " +
-                    "( " +
-                    "SELECT A.*, " +
-                    "PN.NATIONAL_ID_TYPE, PN.NATIONAL_ID, " +
-                    "ROW_NUMBER() OVER (PARTITION BY A.EMPLID ORDER BY CASE WHEN PN.NATIONAL_ID_TYPE='DPI' THEN 1 ELSE 2 END) FILA  " +
-                    "FROM " +
-                    "( " +
-                    "SELECT DISTINCT PD.FIRST_NAME, PD.LAST_NAME, PD.EMPLID " +
-                    "FROM SYSADM.PS_STDNT_ENRL SE " +
-                    "JOIN SYSADM.PS_PERSONAL_DATA PD ON SE.EMPLID=PD.EMPLID " +
-                    "JOIN SYSADM.PS_TERM_TBL T ON SE.STRM=T.STRM " +
-                    "WHERE SE.STDNT_ENRL_STATUS = 'E' " +
-                    "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                    "AND ( SYSDATE BETWEEN TERM_BEGIN_DT AND TERM_END_DT OR " +
-                    "      TERM_BEGIN_DT > SYSDATE)   " +
-                    "AND NOT EXISTS (SELECT * " +
-                    "                FROM SYSADM.PS_CLASS_INSTR CI " +
-                    "                JOIN SYSADM.PS_TERM_TBL T ON CI.STRM=T.STRM " +
-                    "                WHERE ( SYSDATE BETWEEN TERM_BEGIN_DT AND TERM_END_DT OR  " +
-                    "                       TERM_BEGIN_DT > SYSDATE)  " +
-                    "                AND CI.EMPLID=SE.EMPLID) " +
-                    ") A " +
-                    "LEFT JOIN SYSADM.PS_PERS_NID PN ON A.EMPLID = PN.EMPLID AND NATIONAL_ID_TYPE IN ('DPI','PAS') " +
-                    ") B " +
-                    "WHERE FILA='1' AND NATIONAL_ID <> ' ' " +
-                    "AND NATIONAL_ID ='" + TextUser.Text + "' " +
-                    "ORDER BY 1";
+                    cmd.CommandText = "SELECT  COUNT (*) AS CONTADOR " +
+                                        "FROM " +
+                                        "( " +
+                                        "	SELECT  A.* " +
+                                        "	       ,PN.NATIONAL_ID_TYPE " +
+                                        "	       ,PN.NATIONAL_ID " +
+                                        "	       ,ROW_NUMBER() OVER (PARTITION BY A.EMPLID ORDER BY  CASE WHEN PN.NATIONAL_ID_TYPE = 'DPI' THEN 1 ELSE 2 END) FILA " +
+                                        "	FROM " +
+                                        "	( " +
+                                        "		SELECT  DISTINCT PD.FIRST_NAME " +
+                                        "		       ,PD.LAST_NAME " +
+                                        "		       ,PD.EMPLID " +
+                                        "		FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
+                                        "		LEFT JOIN SYSADM.PS_PERS_NID PN " +
+                                        "		ON PD.EMPLID = PN.EMPLID " +
+                                        "		LEFT JOIN SYSADM.PS_ADDRESSES A " +
+                                        "		ON PD.EMPLID = A.EMPLID AND ADDRESS_TYPE = 'HOME'AND A.EFFDT = ( " +
+                                        "		SELECT  MAX(EFFDT) " +
+                                        "		FROM SYSADM.PS_ADDRESSES A2 " +
+                                        "		WHERE A.EMPLID = A2.EMPLID " +
+                                        "		AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE ) " +
+                                        "		LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD " +
+                                        "		ON PD.EMPLID = PPD.EMPLID " +
+                                        "		LEFT JOIN SYSADM.PS_STATE_TBL ST " +
+                                        "		ON PPD.STATE = ST.STATE " +
+                                        "		LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT " +
+                                        "		ON PD.EMPLID = CT.EMPLID " +
+                                        "		LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD " +
+                                        "		ON CT.acad_prog_primary = APD.ACAD_PROG AND CT.ACAD_CAREER = APD.ACAD_CAREER AND CT.INSTITUTION = APD.INSTITUTION " +
+                                        "		LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT " +
+                                        "		ON APD.ACAD_GROUP = AGT.ACAD_GROUP AND APD.INSTITUTION = AGT.INSTITUTION " +
+                                        "		JOIN SYSADM.PS_TERM_TBL TT " +
+                                        "		ON CT.STRM = TT.STRM AND CT.INSTITUTION = TT.INSTITUTION AND (SYSDATE BETWEEN TT.TERM_BEGIN_DT AND TT.TERM_END_DT)LEFT " +
+                                        "		JOIN SYSADM.PS_PERSONAL_PHONE PP " +
+                                        "		ON PD.EMPLID = PP.EMPLID AND PP.PHONE_TYPE = 'HOME' " +
+                                        "		LEFT JOIN SYSADM.PS_COUNTRY_TBL C " +
+                                        "		ON A.COUNTRY = C.COUNTRY " +
+                                        "		WHERE PN.NATIONAL_ID = '" + TextUser.Text + "'   " +
+                                        "    ) A " +
+                                        "    LEFT JOIN SYSADM.PS_PERS_NID PN ON A.EMPLID = PN.EMPLID AND NATIONAL_ID_TYPE IN ('DPI','PAS')  " +
+                                        ") B  " +
+                                        "WHERE FILA='1' AND NATIONAL_ID <> ' '  " +
+                                        "AND NATIONAL_ID ='" + TextUser.Text + "'  " +
+                                        "ORDER BY 1";
 
                     OracleDataReader reader = cmd.ExecuteReader();
                     reader = cmd.ExecuteReader();
@@ -1075,25 +1090,21 @@ namespace ReportesUnis
                                         ") " +
                                         "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
                                         "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                        "JOIN SYSADM.PS_STDNT_ENRL SE ON PD.EMPLID = SE.EMPLID " +
-                                        "AND SE.STDNT_ENRL_STATUS = 'E' " +
-                                        "AND SE.ENRL_STATUS_REASON = 'ENRL' " +
-                                        "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON SE.EMPLID = CT.EMPLID " +
-                                        "AND CT.STRM = SE.STRM " +
-                                        "AND CT.ACAD_CAREER = SE.ACAD_CAREER " +
-                                        "AND SE.INSTITUTION = CT.INSTITUTION " +
+                                        "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON PD.EMPLID = CT.EMPLID " +
                                         "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
                                         "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
                                         "AND CT.INSTITUTION = APD.INSTITUTION " +
                                         "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
                                         "AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                        "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
+                                        "JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
                                         "AND CT.INSTITUTION = TT.INSTITUTION " +
+                                        "AND (SYSDATE BETWEEN TT.TERM_BEGIN_DT AND TT.TERM_END_DT)" +
                                         "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                                         "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                       ") WHERE CNT = 1";
+                                        "ORDER BY CT.FULLY_ENRL_DT DESC" +
+                                        ") WHERE CNT = 1";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -2282,7 +2293,7 @@ namespace ReportesUnis
                                                                 //ACTUALIZA NIT
                                                                 txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', " +
                                                                     "PN.NAME_FORMAL ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "' " +
-                                                                    " WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    " WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
                                                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                             }
                                                         }
@@ -2303,7 +2314,7 @@ namespace ReportesUnis
                                                             //ACTUALIZA NIT
                                                             txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
                                                                     "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
                                                                     "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                         }
 
@@ -2312,7 +2323,7 @@ namespace ReportesUnis
                                                             //ACTUALIZA NIT
                                                             txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
                                                                     "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
                                                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                         }
                                                     }
@@ -2355,7 +2366,7 @@ namespace ReportesUnis
                                                                 //ACTUALIZA NIT
                                                                 txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', " +
                                                                     "PN.NAME_FORMAL ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "' " +
-                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
                                                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                             }
                                                         }
@@ -2376,7 +2387,7 @@ namespace ReportesUnis
                                                             //ACTUALIZA NIT
                                                             txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
                                                                     "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
                                                                 "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                         }
 
@@ -2385,7 +2396,7 @@ namespace ReportesUnis
                                                             //ACTUALIZA NIT
                                                             txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
                                                                 "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                                "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
                                                                 "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                         }
                                                     }
@@ -2427,7 +2438,7 @@ namespace ReportesUnis
                                                                 //ACTUALIZA NIT
                                                                 txtUpdateAR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', " +
                                                                     "PN.NAME_FORMAL ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtApellidoR.Text + "," + TxtNombreR.Text + "' " +
-                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
                                                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                             }
                                                         }
@@ -2448,7 +2459,7 @@ namespace ReportesUnis
                                                             //ACTUALIZA NIT
                                                             txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
                                                                     "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                                    " WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    " WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
                                                                     "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                         }
 
@@ -2457,7 +2468,7 @@ namespace ReportesUnis
                                                             //ACTUALIZA NIT
                                                             txtUpdateNR.Text = "UPDATE SYSADM.PS_NAMES PN SET PN.SECOND_LAST_NAME = ' ', PN.NAME ='" + TxtNombreR.Text + "', " +
                                                                     "PN.NAME_FORMAL ='" + TxtNombreR.Text + "', PN.NAME_DISPLAY ='" + TxtNombreR.Text + "' " +
-                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + UserEmplid.Text + "' " +
+                                                                    "WHERE PN.NAME_TYPE = 'REC' AND PN.EMPLID = '" + txtCarne.Text + "' " +
                                                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                                         }
                                                     }
@@ -2498,6 +2509,7 @@ namespace ReportesUnis
                                                 if (String.IsNullOrEmpty(codPaisNIT))
                                                     codPaisNIT = "GTM";
 
+                                                llenadoStateNIT();
 
                                                 if (EffdtDireccionNitUltimo != Hoy && ContadorDirecionNit == 0 && ContadorEffdtDirecionNit == 0)
                                                 {//INSERTA
@@ -3763,7 +3775,7 @@ namespace ReportesUnis
             listadoZonas();
             llenadoState();
 
-            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text) || ControlCF.Value != "CF")
+            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text && RadioButtonNombreSi.Checked))// || ControlCF.Value != "CF")
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -3798,7 +3810,7 @@ namespace ReportesUnis
             aux = 3;
             listadoZonas();
             llenadoState();
-            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text) || ControlCF.Value != "CF")
+            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text && RadioButtonNombreSi.Checked))// || ControlCF.Value != "CF")
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -3830,7 +3842,7 @@ namespace ReportesUnis
             aux = 3;
             listadoZonas();
             llenadoState();
-            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text) || ControlCF.Value != "CF")
+            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text && RadioButtonNombreSi.Checked))// || ControlCF.Value != "CF")
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -4522,6 +4534,7 @@ namespace ReportesUnis
             try
             {
                 // Carga el XML de respuesta de Campus
+                
                 xmlDocumentoRespuestaCampus.LoadXml(LlamarWebService(Variables.wsUrl, Variables.wsAction, Variables.soapBody));
             }
             catch (WebException)
