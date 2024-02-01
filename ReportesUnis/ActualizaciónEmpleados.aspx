@@ -192,7 +192,7 @@
             <%-- ¿TIENE PASAPORTE? --%>
             <asp:Label ID="txtPaisPasaporte" runat="server" Visible="false"></asp:Label>
             <%-- CANTIDAD IMAGENES DPI --%>
-            <asp:Label ID="txtCantidadImagenesDpi" runat="server" Visible="false">0</asp:Label>            
+            <asp:Label ID="txtCantidadImagenesDpi" runat="server" Visible="false">0</asp:Label>
             <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
             <asp:TextBox ID="txtInsertBit" runat="server" Visible="false"></asp:TextBox>
             <asp:TextBox ID="txtControlBit" runat="server" Visible="false"></asp:TextBox>
@@ -335,7 +335,7 @@
             <input type="hidden" id="Carrera" runat="server" />
             <input type="hidden" id="Facultad" runat="server" />
             <%-- TEXTBOX ALMACENA LA VARIABLE DE SESION--%>
-            <input type="text" id="ISESSION" style="display: none" value="0" runat="server" />
+            <input type="hidden" id="ISESSION" style="display: none" value="0" runat="server" />
             <input type="hidden" id="banderaSESSION" runat="server" />
 
             <%-- CREDENCIALES NIT--%>
@@ -856,7 +856,6 @@
                 $('#<%= BtnDownload.ClientID %>').css("display", "none");
                 var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
                 lblActualizacion.html("");
-                //$('#<%= BtnReload.ClientID %>').click;
             }, function (error) {
                 let mensajeError = error.message;
                 if (mensajeError == "Permission denied") {
@@ -1343,7 +1342,9 @@
                         $('#<%= CmbPaisNIT.ClientID %>').val($('#<%= cMBpAIS.ClientID %>').val());
                         $('#<%= PaisNit.ClientID %>').val($('#<%= cMBpAIS.ClientID %>').val());
                         $('#<%= CmbMunicipioNIT.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
+                        $('#<%= MunicipioNit.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
                         $('#<%= CmbDepartamentoNIT.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
+                        $('#<%= DepartamentoNit.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
                         $('#<%= StateNIT.ClientID %>').val($('#<%= State.ClientID %>').val());
                         $('#<%= txtNit.ClientID %>').val('CF');
                         $('#<%= txtNit.ClientID %>').prop('disabled', true);
@@ -1731,7 +1732,7 @@
                 return false;
             }
             return true;
-        }
+        }             
 
     </script>
 

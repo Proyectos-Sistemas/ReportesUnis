@@ -961,6 +961,8 @@ namespace ReportesUnis
                 txtZona.DataTextField = "";
                 txtZona.DataValueField = "";
             }
+            changeCombobox();
+            validaNitNo();
             banderaSESSION.Value = "0";
             ISESSION.Value = "0";
         }
@@ -1253,6 +1255,7 @@ namespace ReportesUnis
             }
 
             changeCombobox();
+            validaNitNo();
         }
         public void llenadoPaisnit()
         {
@@ -1876,7 +1879,7 @@ namespace ReportesUnis
                                                 "NULL," +
                                                 "'" + TxtCorreoPersonal.Text + "'," +
                                                 "'" + UserEmplid.Text + "'," +
-                                                "'" + ControlAct.Value+ "'," +
+                                                "'" + ControlAct.Value + "'," +
                                                 "'" + ControlRoles.Value + "')"; //ROLES
 
                                 txtInsertBit.Text = txtInsert.Text.Replace("TBL_HISTORIAL_CARNE", "TBL_BI_HISTORIAL_CARNE");
@@ -3102,7 +3105,7 @@ namespace ReportesUnis
                             cmd.Transaction = transaction;
                             //Obtener codigo país
                             cmd.Connection = con;
-                            cmd.CommandText = "SELECT TOTALFOTOS FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + txtCarne.Text + "' OR CARNET = '"+ txtCarne.Text+ "'";
+                            cmd.CommandText = "SELECT TOTALFOTOS FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + txtCarne.Text + "' OR CARNET = '" + txtCarne.Text + "'";
                             OracleDataReader reader = cmd.ExecuteReader();
                             while (reader.Read())
                             {
@@ -3757,6 +3760,12 @@ namespace ReportesUnis
             }
             return Convert.ToInt32(control);
         }
+        static string[] DividirEnArray(string cadena)
+        {
+            // Dividir la cadena en un array de strings usando los espacios como delimitadores
+            string[] arrayDePalabras = cadena.Split(' ');
+            return arrayDePalabras;
+        }
 
         //EVENTOS    
         protected void cMBpAIS_SelectedIndexChanged(object sender, EventArgs e)
@@ -3775,7 +3784,7 @@ namespace ReportesUnis
             listadoZonas();
             llenadoState();
 
-            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text && RadioButtonNombreSi.Checked))// || ControlCF.Value != "CF")
+            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text && RadioButtonNombreSi.Checked) || (ControlCF.Value != "CF" && ControlCF.Value != "" && TrueNit.Value != txtNit.Text))
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -3793,7 +3802,16 @@ namespace ReportesUnis
                 ValidarNIT.Enabled = false;
                 txtNit.Enabled = false;
             }
-            
+
+            if (ControlCF.Value.IsNullOrWhiteSpace() && txtNit.Text.IsNullOrWhiteSpace() && RadioButtonNombreNo.Checked)
+            {
+                CmbPaisNIT.SelectedValue = " ";
+                TxtNombreR.Text = "";
+                TxtApellidoR.Text = "";
+                llenadoDepartamentoNit();
+                llenadoMunicipioNIT();
+            }
+
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
             changeCombobox();
         }
@@ -3810,7 +3828,7 @@ namespace ReportesUnis
             aux = 3;
             listadoZonas();
             llenadoState();
-            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text && RadioButtonNombreSi.Checked))// || ControlCF.Value != "CF")
+            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text && RadioButtonNombreSi.Checked) || (ControlCF.Value != "CF" && ControlCF.Value != "" && TrueNit.Value != txtNit.Text))
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -3827,6 +3845,15 @@ namespace ReportesUnis
                 TxtDiRe3.Enabled = false;
                 ValidarNIT.Enabled = false;
                 txtNit.Enabled = false;
+            }
+
+            if (ControlCF.Value.IsNullOrWhiteSpace() && txtNit.Text.IsNullOrWhiteSpace() && RadioButtonNombreNo.Checked)
+            {
+                CmbPaisNIT.SelectedValue = " ";
+                TxtNombreR.Text = "";
+                TxtApellidoR.Text = "";
+                llenadoDepartamentoNit();
+                llenadoMunicipioNIT();
             }
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
             changeCombobox();
@@ -3842,7 +3869,7 @@ namespace ReportesUnis
             aux = 3;
             listadoZonas();
             llenadoState();
-            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text && RadioButtonNombreSi.Checked))// || ControlCF.Value != "CF")
+            if ((ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text && RadioButtonNombreSi.Checked) || (ControlCF.Value != "CF" && ControlCF.Value != "" && TrueNit.Value != txtNit.Text))
             {
                 PaisNit.Text = cMBpAIS.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -3860,6 +3887,16 @@ namespace ReportesUnis
                 ValidarNIT.Enabled = false;
                 txtNit.Enabled = false;
             }
+
+            if (ControlCF.Value.IsNullOrWhiteSpace() && txtNit.Text.IsNullOrWhiteSpace() && RadioButtonNombreNo.Checked)
+            {
+                CmbPaisNIT.SelectedValue = " ";
+                TxtNombreR.Text = "";
+                TxtApellidoR.Text = "";
+                llenadoDepartamentoNit();
+                llenadoMunicipioNIT();
+            }
+
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
             changeCombobox();
         }
@@ -4089,9 +4126,17 @@ namespace ReportesUnis
                 RadioButtonActualiza.Checked = true;
             else if (ControlAct.Value == "PC" || ControlAct.Value == "RC")
                 RadioButtonCarne.Checked = true;
+            validaNitNo();
         }
         protected void txtNit_TextChanged(object sender, EventArgs e)
         {
+            TxtNombreR.Text = "";
+            TxtApellidoR.Text = "";
+            TxtCasadaR.Text = "";
+            TxtDiRe1.Text = "";
+            TxtDiRe2.Text = "";
+            TxtDiRe3.Text = "";
+            validarAccion();
             string respuesta;
             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
             respuesta = consultaNit(txtNit.Text);
@@ -4208,17 +4253,43 @@ namespace ReportesUnis
                     {
                         nombreRespuesta = nombreRespuesta.TrimEnd(',');
                         largo = nombreRespuesta.Length;
+                        string[] arrayDePalabras = DividirEnArray(nombreRespuesta);
+                        int mitad = arrayDePalabras.Count() - (arrayDePalabras.Count() / 2);
+                        int triparte1 = arrayDePalabras.Count() / 3;
+                        int triparte2 = (arrayDePalabras.Count() - (arrayDePalabras.Count() / 3)) / 2;
+                        int triparte3 = arrayDePalabras.Count() - (triparte1 + triparte2);
+                        int contadorEmpresa = 0;
 
-                        if (largo < 31)
+                        if (largo < 61)
                         {
-                            TxtNombreR.Text = nombreRespuesta;
+                            for (int i = 0; i < mitad; i++)
+                            {
+                                if (TxtNombreR.Text.IsNullOrWhiteSpace())
+                                {
+                                    TxtNombreR.Text = arrayDePalabras[i];
+                                    contadorEmpresa++;
+                                }
+                                else
+                                {
+                                    TxtNombreR.Text = TxtNombreR.Text + " " + arrayDePalabras[i];
+                                    contadorEmpresa++;
+                                }
+                            }
+                            for (int i = contadorEmpresa; i < arrayDePalabras.Count(); i++)
+                            {
+                                if (TxtApellidoR.Text.IsNullOrWhiteSpace())
+                                {
+                                    TxtApellidoR.Text = arrayDePalabras[i];
+                                    contadorEmpresa++;
+                                }
+                                else
+                                {
+                                    TxtApellidoR.Text = TxtApellidoR.Text + " " + arrayDePalabras[i];
+                                    contadorEmpresa++;
+                                }
+                            }
                         }
-                        else if (largo > 30 && largo < 61)
-                        {
-                            TxtNombreR.Text = nombreRespuesta.Substring(0, 30);
-                            TxtApellidoR.Text = nombreRespuesta.Substring(30, largo - 30);
-                        }
-                        else if (largo > 30 && largo < 91)
+                        else if (largo > 60 && largo < 91)
                         {
                             TxtNombreR.Text = nombreRespuesta.Substring(0, 30);
                             TxtApellidoR.Text = nombreRespuesta.Substring(30, 30);
@@ -4238,9 +4309,13 @@ namespace ReportesUnis
                         AlmacenarFotografia();
                     }
 
-
                     fotoAlmacenada();
                     ValidacionNit.Value = "0";
+                    ValidarNIT.Enabled = true;
+                    TxtDiRe1.Enabled = true;
+                    TxtDiRe2.Enabled = true;
+                    TxtDiRe3.Enabled = true;
+                    txtNit.Enabled = true;
                     ValidarNIT.Enabled = true;
                 }
                 else
@@ -4333,7 +4408,7 @@ namespace ReportesUnis
                         try
                         {
                             cmd.Connection = con;
-                            cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + txtCarne.Text + "' OR CODIGO = '"+ txtCarne.Text+ "'";
+                            cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + txtCarne.Text + "' OR CODIGO = '" + txtCarne.Text + "'";
                             cmd.ExecuteNonQuery();
                             transaction.Commit();
                             con.Close();
@@ -4464,7 +4539,7 @@ namespace ReportesUnis
                 log("ERROR - Error en la funcion actualizarInformacion en AceptarCarga " + informacion);
                 File.Delete(txtPath.Text + txtCarne.Text + ".jpg");
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
-            }                        
+            }
         }
         protected void BtnDownload_Click(object sender, EventArgs e)
         {
@@ -4534,7 +4609,7 @@ namespace ReportesUnis
             try
             {
                 // Carga el XML de respuesta de Campus
-                
+
                 xmlDocumentoRespuestaCampus.LoadXml(LlamarWebService(Variables.wsUrl, Variables.wsAction, Variables.soapBody));
             }
             catch (WebException)
@@ -5202,5 +5277,19 @@ namespace ReportesUnis
         {
             ChangeNIT.Value = "1";
         }
+
+        public void validaNitNo()
+        {
+            if (txtNit.Text == null && RadioButtonNombreNo.Checked && TrueNit.Value != txtNit.Text)
+            {
+                TxtNombreR.Text = "";
+                TxtApellidoR.Text = "";
+                TxtCasadaR.Text = "";
+                TxtDiRe1.Text = "";
+                TxtDiRe2.Text = "";
+                TxtDiRe3.Text = "";
+            }
+        }
+
     }
 }
