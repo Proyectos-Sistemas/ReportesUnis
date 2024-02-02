@@ -2661,18 +2661,28 @@ namespace ReportesUnis
                                         cmd.Connection = con;
                                         cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + txtCarne.Text + "'";
                                         cmd.ExecuteNonQuery();
-                                        string DeleteBanco = "DELETE FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CODIGO ='" + txtCarne.Text + "' OR CARNET '" + txtCarne.Text + "'";
-                                        ConsumoSQL(DeleteBanco);
+                                        if (ControlAct.Value != "AC")
+                                        {
+                                            string DeleteBanco = "DELETE FROM [dbo].[Tarjeta_Identificacion_admins] WHERE CARNET ='" + txtCarne.Text + "'";
+                                            ConsumoSQL(DeleteBanco);
+                                        }
 
                                         //cmd.CommandText = txtInsert.Text;
                                         //cmd.ExecuteNonQuery();
                                         FileUpload2.Visible = false;
                                         CargaDPI.Visible = false;
                                         RegistroCarne = "1";
-                                        matrizDatos();
+                                        //matrizDatos();
                                         mensaje = "Su información fue almacenada correctamente. </br> La información ingresada debe ser aprobada antes de ser confirmada. </br> Actualmente, solo se muestran los datos que han sido previamente confirmados.";
                                         string script = "<script>ConfirmacionActualizacionSensible();</script>";
                                         ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                                    }
+
+                                    cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + txtCarne.Text + "'";
+                                    reader = cmd.ExecuteReader();
+                                    while (reader.Read())
+                                    {
+                                        RegistroCarne = reader["CONTADOR"].ToString();
                                     }
 
                                     if (RegistroCarne == "0")
@@ -2917,6 +2927,7 @@ namespace ReportesUnis
                                                 txtNit.Text = "CF";
                                             }
                                             mensaje = "0";
+                                            matrizDatos();
                                             //log("La información fue actualizada de forma correcta");
                                             //ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                                         }
@@ -3505,6 +3516,11 @@ namespace ReportesUnis
         private void AlmacenarFotografia()
         {
             EliminarRegistrosFotos();
+            if (ControlAct.Value != "AC" && ControlAct.Value != "PC" && ControlAct.Value != "RC")
+            {
+                validarAccion();
+            }
+
             if (!urlPath2.Value.IsNullOrWhiteSpace())
             {
                 int ExisteFoto;
@@ -3538,8 +3554,30 @@ namespace ReportesUnis
                                     cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE (FOTOGRAFIA, CARNET, CONTROL) VALUES ('Existe', '" + txtCarne.Text + "', 1)";
                                     cmd.ExecuteNonQuery();
                                 }
-                                SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/UltimasCargas/", txtCarne.Text + ".jpg");
+                                int controlRenovacionPC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'PC'");
+                                int controlRenovacionAC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'AC'");
+
+                                if (ControlAct.Value == "AC" && (CONFIRMACION == "1000" || CONFIRMACION == "0"))
+                                {
+                                    SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/ACTUALIZACION-AC/", txtCarne.Text + ".jpg");
+                                }
+                                else
+                                if (ControlAct.Value == "PC" || (ControlAct.Value == "AC" && CONFIRMACION == "1"))
+                                {
+                                    if (controlRenovacionPC <= 1 || controlRenovacionAC <= 1)
+                                        SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/PRIMER_CARNET-PC/", txtCarne.Text + ".jpg");
+                                    else
+                                        SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/RENOVACION_CARNE-RC/", txtCarne.Text + ".jpg");
+                                }
+                                else
+                                if (ControlAct.Value == "RC")
+                                {
+                                    SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/RENOVACION_CARNE-RC/", txtCarne.Text + ".jpg");
+                                }
+
+                                SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/CONTROL/", txtCarne.Text + ".jpg");
                                 transaction.Commit();
+                                urlPathControl2.Value = "";
                             }
                             catch (Exception X)
                             {
@@ -3608,11 +3646,32 @@ namespace ReportesUnis
                         if (contador > 0)
                         {
                             ImgBase.Visible = true;
-                            ImgBase.ImageUrl = (File.Exists(Server.MapPath($"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg"))) ? $"~/Usuarios/UltimasCargas/{txtCarne.Text}.jpg?c={DateTime.Now.Ticks}" : string.Empty;
-                            byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + txtCarne.Text + ".jpg");
-                            string base64String = Convert.ToBase64String(imageBytes);
-                            urlPath2.Value = base64String;
-                            urlPathControl2.Value = "0";
+                            byte[] imageBytes = null;
+
+                            try
+                            {
+                                if (ControlAct.Value == "AC")
+                                {
+                                    ImgBase.ImageUrl = (File.Exists(Server.MapPath($"~/Usuarios/FotosColaboradores/UltimasCargas/ACTUALIZACION-AC/{txtCarne.Text}.jpg"))) ? $"~/Usuarios/FotosColaboradores/UltimasCargas/ACTUALIZACION-AC/{txtCarne.Text}.jpg?c={DateTime.Now.Ticks}" : string.Empty;
+                                    imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/ACTUALIZACION-AC/" + txtCarne.Text + ".jpg");
+                                }
+                                else if (ControlAct.Value == "PC")
+                                {
+                                    ImgBase.ImageUrl = (File.Exists(Server.MapPath($"~/Usuarios/FotosColaboradores/UltimasCargas/PRIMER_CARNET-PC/{txtCarne.Text}.jpg"))) ? $"~/Usuarios/FotosColaboradores/UltimasCargas/PRIMER_CARNET-PC/{txtCarne.Text}.jpg?c={DateTime.Now.Ticks}" : string.Empty;
+                                    imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/PRIMER_CARNET-PC/" + txtCarne.Text + ".jpg");
+                                }
+                                else if (ControlAct.Value == "RC")
+                                {
+                                    ImgBase.ImageUrl = (File.Exists(Server.MapPath($"~/Usuarios/FotosColaboradores/UltimasCargas/RENOVACION_CARNE-RC/{txtCarne.Text}.jpg"))) ? $"~/Usuarios/FotosColaboradores/UltimasCargas/RENOVACION_CARNE-RC/{txtCarne.Text}.jpg?c={DateTime.Now.Ticks}" : string.Empty;
+                                    imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/RENOVACION_CARNE-RC/" + txtCarne.Text + ".jpg");
+                                }
+                                string base64String = Convert.ToBase64String(imageBytes);
+                                urlPath2.Value = base64String;
+                                urlPathControl2.Value = "0";
+                            }
+                            catch
+                            {
+                            }
                         }
                     }
                     con.Close();

@@ -692,25 +692,6 @@ namespace ReportesUnis
                             respuesta = ConsumoOracle(txtInsertApex.Text);
                             if (respuesta == "0")
                             {
-
-                                if (controlRenovacion == 0)
-                                {
-                                    //INSERTA INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
-                                    respuesta = ConsumoOracle("INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO) VALUES ('" + Carnet + "','1','" + DateTime.Now.ToString("dd/MM/yyyy") + "')");
-                                }
-                                else
-                                {
-                                    if (controlRenovacionFecha < 1)
-                                    {
-                                        //ACTUALIZA INFORMACIÓN DE LA RENOVACION
-                                        respuesta = ConsumoOracle("UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "' WHERE EMPLID='" + Carnet + "'");
-                                    }
-                                    else
-                                    {
-                                        respuesta = "0";
-                                    }
-                                }
-
                                 if (respuesta == "0")
                                 {
                                     Upload(Carnet);
@@ -4193,7 +4174,7 @@ namespace ReportesUnis
                 }
                 mensaje = "0";
             }
-            catch (Exception )
+            catch (Exception)
             {
                 mensaje = ". Ocurrió un error al cargar la imagen";
                 mensaje = "1";

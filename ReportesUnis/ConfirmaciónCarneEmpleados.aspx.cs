@@ -100,18 +100,29 @@ namespace ReportesUnis
                 divDPIAC.Visible = true;
                 divFotografiaAC.Visible = true;
                 divBtnConfirmarAC.Visible = true;
-                Buscar("1", "AC");
+                BuscarAC("1");
                 lblActualizacionAC.Text = null;
+               
 
-                //PARA TAB PRIMER CARNE
+                //PARA TAB ACTUALIZACION
                 LimpiarCamposPC();
                 divCamposPC.Visible = true;
                 divDPIPC.Visible = true;
                 divFotografiaPC.Visible = true;
                 divBtnConfirmarPC.Visible = true;
-                Buscar("1", "PC");
+                BuscarPC("1");
                 lblActualizacionPC.Text = null;
 
+
+                //PARA TAB ACTUALIZACION
+                LimpiarCamposRC();
+                divCamposRC.Visible = true;
+                divDPIRC.Visible = true;
+                divFotografiaRC.Visible = true;
+                divBtnConfirmarRC.Visible = true;
+                BuscarRC("1");
+                lblActualizacionRC.Text = null;
+               
                 // Establecer el índice de la pestaña activa por defecto en la primera carga
                 ViewState["ActiveTabIndex"] = 0;
                 ControlTabs.Value = "AC";
@@ -243,7 +254,7 @@ namespace ReportesUnis
                                 cmd.ExecuteNonQuery();
                                 transaction.Commit();
                                 con.Close();
-                                Buscar("1", "AC");
+                                BuscarAC("1");
                                 File.Delete(txtPath.Text + Carnet + ".jpg");
                                 File.Delete(CurrentDirectory + "/Usuarios/FotosConfirmacion/" + Carnet + ".jpg");
                                 File.Delete(CurrentDirectory + "/Usuarios/UltimasCargas/" + Carnet + ".jpg");
@@ -314,30 +325,11 @@ namespace ReportesUnis
                                 respuesta = ConsumoOracleAC(txtInsertApex.Text);
                                 if (respuesta == "0")
                                 {
-                                    if (controlRenovacion == 0)
-                                    {
-                                        //INSERTA INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
-                                        respuesta = ConsumoOracleAC("INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO) VALUES ('" + Carnet + "','1','" + DateTime.Now.ToString("dd/MM/yyyy") + "')");
-                                    }
-                                    else
-                                    {
-                                        if (controlRenovacionFecha < 2)
-                                        {
-                                            //ACTUALIZA INFORMACIÓN DE LA RENOVACION
-                                            respuesta = ConsumoOracleAC("UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "' WHERE EMPLID='" + Carnet + "'");
-                                        }
-                                        else
-                                        {
-                                            respuesta = "0";
-                                        }
-
-                                    }
-
-                                    if (respuesta == "0" && ROLES.Value.Contains("Estudiante"))
+                                    if (respuesta == "0" && (ROLES.Value.Contains("Estudiante") || ROLES.Value.Contains("Profesor")))
                                     {
                                         Upload(Carnet);
                                     }
-                                    else if (respuesta != "0")
+                                    else if (respuesta != "0" && (ROLES.Value.Contains("Estudiante") || ROLES.Value.Contains("Profesor")))
                                     {
                                         log("ERROR - Actualizacion de fotografia en campus AC", Carnet);
                                     }
@@ -372,9 +364,9 @@ namespace ReportesUnis
                     if (respuesta == "0")
                     {
                         lblActualizacionAC.Text = "Se confirmó correctamente la información";
-                        EnvioCorreo("bodyConfirmacionEstudiante.txt", "datosConfirmacionEstudiante.txt", TxtPrimerNombreAC.Text + " " + TxtPrimerApellidoAC.Text, TxtCorreoInstitucionalAC.Text);
+                        EnvioCorreo("bodyConfirmacionEmpleados.txt", "datosConfirmacionEmpleados.txt", TxtPrimerNombreAC.Text + " " + TxtPrimerApellidoAC.Text, TxtCorreoInstitucionalAC.Text);
                         log("La información fue confirmada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "- AC", Carnet);
-                        Buscar("1", "AC");
+                        BuscarAC("1");
                         for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
                         {
                             File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
@@ -794,7 +786,7 @@ namespace ReportesUnis
                                                     "        </COLL_NAMES>" +
                                                     "      </COLL_NAME_TYPE_VW>";
                             }
-                            contadorUP = contadorUP++;
+                            contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit >= 0 && ContadorEffdtNombreNit > 0)
                         {//UPDATE
@@ -867,7 +859,7 @@ namespace ReportesUnis
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                 }
                             }
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
                         else
                         {//UPDATE
@@ -941,7 +933,7 @@ namespace ReportesUnis
                                 "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                             }
 
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
 
                         //ACTUALIZA NIT
@@ -993,7 +985,7 @@ namespace ReportesUnis
                                               "\n" +
                                             "                                            </COLL_ADDRESSES> \n" +
                                          "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUP = contadorUP++;
+                            contadorUP = contadorUP + 1;
                         }
                         else if (EffdtDireccionNitUltimo == Hoy && ContadorDirecionNit > 0 && ContadorEffdtDirecionNit > 0)
                         {//ACTUALIZA
@@ -1015,7 +1007,7 @@ namespace ReportesUnis
                                               "\n" +
                                             "                                            </COLL_ADDRESSES> \n" +
                                          "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
                         else
                         {//UPDATE
@@ -1037,7 +1029,7 @@ namespace ReportesUnis
                                                   "\n" +
                                                 "                                            </COLL_ADDRESSES> \n" +
                                              "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
 
                         auxConsulta = 0;
@@ -1194,7 +1186,7 @@ namespace ReportesUnis
                                                 "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
-                            contadorUP = contadorUP++;
+                            contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreUltimo == Hoy && ContadorNombre > 0 && ContadorEffdtNombre > 0)
                         {
@@ -1222,7 +1214,7 @@ namespace ReportesUnis
                                                 "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
                         else
                         {
@@ -1250,16 +1242,16 @@ namespace ReportesUnis
                                                 "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
-                        auxConsulta = 2;
+                        auxConsulta = 0;
                         string consultaUP = "1";
                         string consultaUD = "1";
                         if (contadorUP > 0)
                         {
                             consultaUP = Consultar();
                         }
-                        auxConsulta = 3;
+                        auxConsulta = 1;
                         if (contadorUD > 0)
                         {
                             consultaUD = Consultar();
@@ -1473,9 +1465,11 @@ namespace ReportesUnis
                                 cmd.Connection = con;
                                 cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + Carnet + "'";
                                 cmd.ExecuteNonQuery();
+                                cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_CONTROL_CARNET WHERE EMPLID = '" + Carnet + "'";
+                                cmd.ExecuteNonQuery();
                                 transaction.Commit();
                                 con.Close();
-                                Buscar("1", "PC");
+                                BuscarPC("1");
                                 File.Delete(txtPath.Text + Carnet + ".jpg");
                                 File.Delete(CurrentDirectory + "/Usuarios/FotosColaboradores/FotosConfirmacion/PRIMER_CARNET-PC/" + Carnet + ".jpg");
                                 File.Delete(CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/PRIMER_CARNET-PC/" + Carnet + ".jpg");
@@ -1517,7 +1511,7 @@ namespace ReportesUnis
                 LlenadoPC("CODIGO = '" + Carnet + "' AND CONTROL_ACCION ='PC' ");
                 string respuesta = null;
                 string fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                QueryInsertBi();
+                QueryInsertBi(CmbCarnePC.SelectedValue);
 
                 if (ROLES.Value.Contains("Estudiante") || ROLES.Value.Contains("Profesor"))
                     respuesta = QueryActualizaNombrePC(Carnet);
@@ -1569,11 +1563,11 @@ namespace ReportesUnis
                                                 respuesta = "0";
                                             }
 
-                                            if (respuesta == "0" && ROLES.Value.Contains("Estudiante"))
+                                            if (respuesta == "0" && (ROLES.Value.Contains("Estudiante") || ROLES.Value.Contains("Profesor")))
                                             {
                                                 Upload(Carnet);
                                             }
-                                            else if (respuesta != "0")
+                                            else if (respuesta != "0" && (ROLES.Value.Contains("Estudiante") || ROLES.Value.Contains("Profesor")))
                                             {
                                                 log("ERROR - Actualizacion de fotografia en campus del carnet PC " + Carnet, Carnet);
                                             }
@@ -1616,7 +1610,7 @@ namespace ReportesUnis
                         lblActualizacionPC.Text = "Se confirmó correctamente la información";
                         EnvioCorreo("bodyConfirmacionEmpleados.txt", "datosConfirmacionEmpleados.txt", TxtPrimerNombrePC.Text, TxtPrimerApellidoPC.Text);
                         log("La información fue confirmada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "- PC", Carnet);
-                        Buscar("1", "PC");
+                        BuscarPC("1");
                         for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
                         {
                             File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
@@ -2036,7 +2030,7 @@ namespace ReportesUnis
                                                     "        </COLL_NAMES>" +
                                                     "      </COLL_NAME_TYPE_VW>";
                             }
-                            contadorUP = contadorUP++;
+                            contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit >= 0 && ContadorEffdtNombreNit > 0)
                         {//UPDATE
@@ -2109,7 +2103,7 @@ namespace ReportesUnis
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                 }
                             }
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
                         else
                         {//UPDATE
@@ -2182,7 +2176,7 @@ namespace ReportesUnis
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                 }
                             }
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
 
                         //ACTUALIZA NIT
@@ -2234,7 +2228,7 @@ namespace ReportesUnis
                                               "\n" +
                                             "                                            </COLL_ADDRESSES> \n" +
                                          "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUP = contadorUP++;
+                            contadorUP = contadorUP + 1;
                         }
                         else if (EffdtDireccionNitUltimo == Hoy && ContadorDirecionNit > 0 && ContadorEffdtDirecionNit > 0)
                         {//ACTUALIZA
@@ -2256,7 +2250,7 @@ namespace ReportesUnis
                                               "\n" +
                                             "                                            </COLL_ADDRESSES> \n" +
                                          "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
                         else
                         {//UPDATE
@@ -2278,17 +2272,17 @@ namespace ReportesUnis
                                                   "\n" +
                                                 "                                            </COLL_ADDRESSES> \n" +
                                              "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
 
-                        auxConsulta = 4;
+                        auxConsulta = 2;
                         string consultaUP = "1";
                         string consultaUD = "1";
                         if (contadorUP > 0)
                         {
                             consultaUP = Consultar();
                         }
-                        auxConsulta = 5;
+                        auxConsulta = 3;
                         if (contadorUD > 0)
                         {
                             consultaUD = Consultar();
@@ -2435,7 +2429,7 @@ namespace ReportesUnis
                                                 "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
-                            contadorUP = contadorUP++;
+                            contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreUltimo == Hoy && ContadorNombre > 0 && ContadorEffdtNombre > 0)
                         {
@@ -2463,7 +2457,7 @@ namespace ReportesUnis
                                                 "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
                         else
                         {
@@ -2491,16 +2485,16 @@ namespace ReportesUnis
                                                 "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
-                        auxConsulta = 0;
+                        auxConsulta = 2;
                         string consultaUP = "1";
                         string consultaUD = "1";
                         if (contadorUP > 0)
                         {
                             consultaUP = Consultar();
                         }
-                        auxConsulta = 1;
+                        auxConsulta = 3;
                         if (contadorUD > 0)
                         {
                             consultaUD = Consultar();
@@ -2716,7 +2710,7 @@ namespace ReportesUnis
                                 cmd.ExecuteNonQuery();
                                 transaction.Commit();
                                 con.Close();
-                                Buscar("1", "RC");
+                                BuscarRC("1");
                                 File.Delete(txtPath.Text + Carnet + ".jpg");
                                 File.Delete(CurrentDirectory + "/Usuarios/FotosColaboradores/FotosConfirmacion/RENOVACION_CARNE-RC/" + Carnet + ".jpg");
                                 File.Delete(CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/RENOVACION_CARNE-RC/" + Carnet + ".jpg");
@@ -2758,7 +2752,7 @@ namespace ReportesUnis
                 LlenadoRC("CODIGO = '" + Carnet + "' AND CONTROL_ACCION ='RC' ");
                 string respuesta = null;
                 string fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                QueryInsertBi();
+                QueryInsertBi(CmbCarneRC.SelectedValue);
 
                 if (ROLES.Value.Contains("Estudiante") || ROLES.Value.Contains("Profesor"))
                     respuesta = QueryActualizaNombreRC(Carnet);
@@ -2810,11 +2804,11 @@ namespace ReportesUnis
                                                 respuesta = "0";
                                             }
 
-                                            if (respuesta == "0" && ROLES.Value.Contains("Estudiante"))
+                                            if (respuesta == "0" && (ROLES.Value.Contains("Estudiante") || ROLES.Value.Contains("Profesor")))
                                             {
                                                 Upload(Carnet);
                                             }
-                                            else if (respuesta != "0")
+                                            else if (respuesta != "0" && (ROLES.Value.Contains("Estudiante") || ROLES.Value.Contains("Profesor")))
                                             {
                                                 log("ERROR - Actualizacion de fotografia en campus RC", Carnet);
                                             }
@@ -2857,7 +2851,7 @@ namespace ReportesUnis
                         lblActualizacionRC.Text = "Se confirmó correctamente la información";
                         EnvioCorreo("bodyConfirmacionEmpleados.txt", "datosConfirmacionEmpleados.txt", TxtPrimerNombreRC.Text, TxtPrimerApellidoRC.Text);
                         log("La información fue confirmada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "- RC", Carnet); 
-                        Buscar("1", "RC");
+                        BuscarRC("1");
                         for (int i = 1; i <= Convert.ToInt16(txtCantidad.Text); i++)
                         {
                             File.Delete(CurrentDirectory + "/Usuarios/DPI/" + Carnet + "(" + i + ").jpg");
@@ -3277,7 +3271,7 @@ namespace ReportesUnis
                                                     "        </COLL_NAMES>" +
                                                     "      </COLL_NAME_TYPE_VW>";
                             }
-                            contadorUP = contadorUP++;
+                            contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit >= 0 && ContadorEffdtNombreNit > 0)
                         {//UPDATE
@@ -3351,7 +3345,7 @@ namespace ReportesUnis
                                 }
 
                             }
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
                         else
                         {//UPDATE
@@ -3424,7 +3418,7 @@ namespace ReportesUnis
                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                 }
                             }
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
 
                         //ACTUALIZA NIT
@@ -3476,7 +3470,7 @@ namespace ReportesUnis
                                               "\n" +
                                             "                                            </COLL_ADDRESSES> \n" +
                                          "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUP = contadorUP++;
+                            contadorUP = contadorUP + 1;
                         }
                         else if (EffdtDireccionNitUltimo == Hoy && ContadorDirecionNit > 0 && ContadorEffdtDirecionNit > 0)
                         {//ACTUALIZA
@@ -3498,7 +3492,7 @@ namespace ReportesUnis
                                               "\n" +
                                             "                                            </COLL_ADDRESSES> \n" +
                                          "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
                         else
                         {//UPDATE
@@ -3520,17 +3514,17 @@ namespace ReportesUnis
                                                   "\n" +
                                                 "                                            </COLL_ADDRESSES> \n" +
                                              "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
 
-                        auxConsulta = 0;
+                        auxConsulta = 4;
                         string consultaUP = "1";
                         string consultaUD = "1";
                         if (contadorUP > 0)
                         {
                             consultaUP = Consultar();
                         }
-                        auxConsulta = 1;
+                        auxConsulta = 5;
                         if (contadorUD > 0)
                         {
                             consultaUD = Consultar();
@@ -3677,7 +3671,7 @@ namespace ReportesUnis
                                                 "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
-                            contadorUP = contadorUP++;
+                            contadorUP = contadorUP + 1;
                         }
                         else if (EffdtNombreUltimo == Hoy && ContadorNombre > 0 && ContadorEffdtNombre > 0)
                         {
@@ -3705,7 +3699,7 @@ namespace ReportesUnis
                                                 "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
                         else
                         {
@@ -3733,16 +3727,16 @@ namespace ReportesUnis
                                                 "          <PROP_SECOND_LAST_NAME>" + TxtCasada + @"</PROP_SECOND_LAST_NAME>" +
                                                 "        </COLL_NAMES>" +
                                                 "      </COLL_NAME_TYPE_VW>";
-                            contadorUD = contadorUD++;
+                            contadorUD = contadorUD + 1;
                         }
-                        auxConsulta = 0;
+                        auxConsulta = 4;
                         string consultaUP = "1";
                         string consultaUD = "1";
                         if (contadorUP > 0)
                         {
                             consultaUP = Consultar();
                         }
-                        auxConsulta = 1;
+                        auxConsulta = 5;
                         if (contadorUD > 0)
                         {
                             consultaUD = Consultar();
@@ -3836,7 +3830,7 @@ namespace ReportesUnis
         }
 
 
-        protected void QueryInsertBi()
+        protected void QueryInsertBi( string CODIGO)
         {
             string constr = TxtURL.Text;
             txtInsertBI.Text = null;
@@ -3981,7 +3975,7 @@ namespace ReportesUnis
                                     "||O_CONDMIG||''','''  " + //OTRA CONDICION MIGRANTE
                                     "||VALIDAR_ENVIO||''')'" +//OTRA CONDICION MIGRANTE 
                                     " AS INS " +
-                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + CmbCarneAC.SelectedValue + "')";
+                                    "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + CODIGO + "')";
                     }
                     else
                     {
@@ -4115,7 +4109,7 @@ namespace ReportesUnis
                                         "||O_CONDMIG||''','''  " + //OTRA CONDICION MIGRANTE
                                         "||VALIDAR_ENVIO||''')'" +//OTRA CONDICION MIGRANTE 
                                         " AS INS " +
-                                        "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + CmbCarneAC.SelectedValue + "')";
+                                        "FROM ( SELECT * FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + CODIGO + "')";
                     }
                     OracleDataReader reader = cmd.ExecuteReader();
                     reader = cmd.ExecuteReader();
@@ -4126,7 +4120,7 @@ namespace ReportesUnis
                 }
             }
         }
-        private void Buscar(string confirmacion, string ACCION)
+        private void BuscarAC(string confirmacion)
         {
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -4135,7 +4129,7 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT ' ' CODIGO FROM DUAL UNION SELECT CODIGO FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE (TIPO_PERSONA != 2 OR ROLES IS NOT NULL) AND CONFIRMACION = '" + confirmacion + "' AND CONTROL_ACCION = '" + ACCION + "'";
+                    cmd.CommandText = "SELECT ' ' CODIGO FROM DUAL UNION SELECT CODIGO FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE (TIPO_PERSONA != 2 OR ROLES IS NOT NULL) AND CONFIRMACION = '" + confirmacion + "' AND CONTROL_ACCION = 'AC'";
                     OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                     DataSet ds = new DataSet();
                     adapter.Fill(ds);
@@ -4143,6 +4137,48 @@ namespace ReportesUnis
                     CmbCarneAC.DataTextField = "CODIGO";
                     CmbCarneAC.DataValueField = "CODIGO";
                     CmbCarneAC.DataBind();
+                    con.Close();
+                }
+            }
+        }
+        private void BuscarPC(string confirmacion)
+        {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT ' ' CODIGO FROM DUAL UNION SELECT CODIGO FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE (TIPO_PERSONA != 2 OR ROLES IS NOT NULL) AND CONFIRMACION = '" + confirmacion + "' AND CONTROL_ACCION = 'PC'";
+                    OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    adapter.Fill(ds);
+                    CmbCarnePC.DataSource = ds;
+                    CmbCarnePC.DataTextField = "CODIGO";
+                    CmbCarnePC.DataValueField = "CODIGO";
+                    CmbCarnePC.DataBind();
+                    con.Close();
+                }
+            }
+        }
+        private void BuscarRC(string confirmacion)
+        {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT ' ' CODIGO FROM DUAL UNION SELECT CODIGO FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE (TIPO_PERSONA != 2 OR ROLES IS NOT NULL) AND CONFIRMACION = '" + confirmacion + "' AND CONTROL_ACCION = 'RC'";
+                    OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    adapter.Fill(ds);
+                    CmbCarneRC.DataSource = ds;
+                    CmbCarneRC.DataTextField = "CODIGO";
+                    CmbCarneRC.DataValueField = "CODIGO";
+                    CmbCarneRC.DataBind();
                     con.Close();
                 }
             }
@@ -5017,7 +5053,7 @@ namespace ReportesUnis
             else if (auxConsulta == 2)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UP.V1";
-                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, CmbCarnePC.SelectedValue, UP_NAMES_PRI_PC.Value, UP_NAMES_PRF_PC.Value, UP_NAMES_NIT_PC.Value, UP_ADDRESSES_NIT_PC.Value);
+                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, CmbCarnePC.SelectedValue, UP_NAMES_PRI_AC.Value, UP_NAMES_PRF_AC.Value, UP_NAMES_NIT_AC.Value, UP_ADDRESSES_NIT_PC.Value);
             }
             else if (auxConsulta == 3)
             {
