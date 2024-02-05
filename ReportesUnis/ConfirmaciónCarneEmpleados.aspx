@@ -73,7 +73,7 @@
         <%-- TEXTBOX ALMACENA UD NOMBRE PC--%>
         <input type="hidden" id="UD_NAMES_PRI_PC" runat="server" />
 
-         <%-- TEXTBOX ALMACENA UP NOMBRE NIT RC--%>
+        <%-- TEXTBOX ALMACENA UP NOMBRE NIT RC--%>
         <input type="hidden" id="UP_NAMES_NIT_RC" runat="server" />
         <%-- TEXTBOX ALMACENA UP DIRECCION NIT RC--%>
         <input type="hidden" id="UP_ADDRESSES_NIT_RC" runat="server" />
@@ -104,6 +104,11 @@
         <asp:TextBox ID="txtUpdateNR" runat="server" Visible="false"></asp:TextBox>
         <asp:TextBox ID="txtControlNR" runat="server" Visible="false"></asp:TextBox>
         <asp:TextBox ID="txtControlAR" runat="server" Visible="false"></asp:TextBox>
+
+        <%-- VERSIONES DE SOAP CAMPUS --%>
+        <input type="hidden" id="VersionUP" runat="server" />
+        <input type="hidden" id="VersionUD" runat="server" />
+
     </div>
     <!-- Código ASP.NET para las pestañas -->
     <div class="tab">

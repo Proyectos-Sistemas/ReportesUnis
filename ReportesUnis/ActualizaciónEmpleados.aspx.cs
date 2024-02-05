@@ -22,6 +22,7 @@ using MailKit.Security;
 using System.Security.Authentication;
 using Windows.Media.Protection.PlayReady;
 using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office.Word;
 
 namespace ReportesUnis
 {
@@ -44,6 +45,7 @@ namespace ReportesUnis
         string HoyEffdt = DateTime.Now.ToString("dd-MM-yyyy").Substring(0, 10).TrimEnd();
         int aux = 0;
         string mensajeError = "Ocurrió un problema al actualizar su: ";
+
 
         public static class StringExtensions
         {
@@ -72,6 +74,7 @@ namespace ReportesUnis
                 TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
                 if (!IsPostBack)
                 {
+                    ControlRBS.Value = "0";
                     matrizDatos();
                     txtControlBit.Text = "0";
                     txtControlNR.Text = "0";
@@ -1386,7 +1389,7 @@ namespace ReportesUnis
                     if (!String.IsNullOrEmpty(CmbMunicipioNIT.SelectedValue))
                     {
                         string descrip = "";
-                        if (cMBpAIS.SelectedValue == "Guatemala")
+                        if (CmbPaisNIT.SelectedValue == "Guatemala")
                         {
                             descrip = CmbMunicipioNIT.SelectedValue + "-" + CmbDepartamentoNIT.SelectedValue;
                         }
@@ -1768,7 +1771,7 @@ namespace ReportesUnis
                                 if (String.IsNullOrEmpty(StateNIT.Text))
                                     StateNIT.Text = State.Text;
 
-                                if (RadioButtonNombreSi.Checked && ControlRBS.Value == "1" && TrueNit.Value != txtNit.Text)
+                                if (RadioButtonNombreSi.Checked && /*ControlRBS.Value == "1" && */TrueNit.Value != txtNit.Text)
                                 {
                                     TxtNombreR.Text = txtNombre1.Text + " " + txtNombre2.Text;
                                     TxtApellidoR.Text = txtApellido1.Text + " " + txtApellido2.Text;
@@ -1829,7 +1832,7 @@ namespace ReportesUnis
                                                 "'" + FlagCedula.Value + "'," +
                                                 "'" + FlagDpi.Value + "'," +
                                                 "'" + FlagPasaporte.Value + "'," +
-                                                "'" + CmbDepartamento.SelectedValue + "'," +//MUNICIPIO DE RESIDENCIA
+                                                "'" + CmbMunicipio.SelectedValue + "'," +//MUNICIPIO DE RESIDENCIA
                                                 "'" + txtNit.Text + "'," +//NIT
                                                 "'" + NoCui.Value + "'," +// NO_CUI
                                                 "'" + Pasaporte.Value + "'," +// NUMERO DE PASAPORTE
@@ -3967,6 +3970,33 @@ namespace ReportesUnis
             {
                 aux = 2;
                 listadoMunicipiosNit();
+
+                string constr = TxtURL.Text;
+                using (OracleConnection con = new OracleConnection(constr))
+                {
+                    con.Open();
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        string descrip = "";
+                        if (CmbPaisNIT.SelectedValue == "Guatemala")
+                        {
+                            descrip = CmbMunicipioNIT.SelectedValue + "-" + CmbDepartamentoNIT.SelectedValue;
+                        }
+                        else
+                        {
+                            descrip = CmbDepartamentoNIT.SelectedValue;
+                        }
+                        cmd.Connection = con;
+                        cmd.CommandText = "SELECT STATE FROM SYSADM.PS_STATE_TBL " +
+                            "WHERE DESCR ='" + descrip.TrimEnd('-') + "'";
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            StateNIT.Text = reader["STATE"].ToString();
+                        }
+                        con.Close();
+                    }
+                }
             }
             else
             {
@@ -4376,6 +4406,7 @@ namespace ReportesUnis
                     TxtDiRe3.Enabled = true;
                     txtNit.Enabled = true;
                     ValidarNIT.Enabled = true;
+
                 }
                 else
                 {
