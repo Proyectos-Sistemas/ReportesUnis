@@ -76,7 +76,7 @@ namespace ReportesUnis
         }
         void llenadoGridPC()
         {
-           string[] archivos = Directory.GetFiles(rutaFisicaPC);
+            string[] archivos = Directory.GetFiles(rutaFisicaPC);
             List<object> imagenes = new List<object>();
 
             foreach (string archivo in archivos)
@@ -583,6 +583,7 @@ namespace ReportesUnis
                 con.Open();
                 using (OracleCommand cmd = new OracleCommand())
                 {
+                    byte[] imageBytes = null;
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT COUNT(*) CONTADOR FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET ='" + Carnet + "'";
                     OracleDataReader reader3 = cmd.ExecuteReader();
@@ -591,7 +592,20 @@ namespace ReportesUnis
                         contador = Convert.ToInt32(reader3["CONTADOR"].ToString());
                         if (contador > 0)
                         {
-                            byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + Carnet + ".jpg");
+                            if (ControlTabs.Value == "AC")
+                            {
+                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/ACTUALIZACION-AC/" + CODIGO.Value + ".jpg");
+
+                            }
+                            if (ControlTabs.Value == "PC")
+                            {
+                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/PRIMER_CARNET-PC/" + CODIGO.Value + ".jpg");
+
+                            }
+                            if (ControlTabs.Value == "RC")
+                            {
+                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/RENOVACION_CARNE-RC/" + CODIGO.Value + ".jpg");
+                            }
                             string base64String = Convert.ToBase64String(imageBytes);
                             ImagenData = base64String;
                         }
@@ -737,6 +751,7 @@ namespace ReportesUnis
                     con.Open();
                     using (OracleCommand cmd = new OracleCommand())
                     {
+                        byte[] imageBytes = null;
                         cmd.Connection = con;
                         cmd.CommandText = "SELECT COUNT(*) CONTADOR FROM UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE WHERE CARNET ='" + CODIGO.Value + "'";
                         OracleDataReader reader3 = cmd.ExecuteReader();
@@ -745,7 +760,20 @@ namespace ReportesUnis
                             contador = Convert.ToInt32(reader3["CONTADOR"].ToString());
                             if (contador > 0)
                             {
-                                byte[] imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/" + CODIGO.Value + ".jpg");
+                                if (ControlTabs.Value == "AC")
+                                {
+                                    imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/ACTUALIZACION-AC/" + CODIGO.Value + ".jpg");
+
+                                }
+                                if (ControlTabs.Value == "PC")
+                                {
+                                    imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/PRIMER_CARNET-PC/" + CODIGO.Value + ".jpg");
+
+                                }
+                                if (ControlTabs.Value == "RC")
+                                {
+                                    imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/RENOVACION_CARNE-RC/" + CODIGO.Value + ".jpg");
+                                }
                                 base64String = Convert.ToBase64String(imageBytes);
                             }
                         }
@@ -1058,7 +1086,7 @@ namespace ReportesUnis
                     carne.Value = nombre;
                     tipoPersona(nombre);
                     string[] datos = DatosCorreo();
-                    string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + nombre + "' OR CARNET = '"+nombre+"'";
+                    string cadena = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO = '" + nombre + "' OR CARNET = '" + nombre + "'";
                     string respuesta = ConsumoOracle(cadena);
                     if (respuesta == "0")
                     {

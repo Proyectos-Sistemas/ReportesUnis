@@ -688,45 +688,90 @@
         </div>
     </div>
 
-    <div id="myModalActualizacion" class="modal">
+    <div class="modal" id="myModalActualizacion" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-spinner">
-                    <div class="spinner"></div>
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="modal-spinnerCarne">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                    </div>
                 </div>
-                <div class="modal-message">Por favor, espera mientras la información se está actualizando...</div>
-
-            </div>
-        </div>
-    </div>
-    <div id="myModalCorrecto" class="modal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-message">Su información fue actualizada correctamente.</div>
-
-            </div>
-        </div>
-    </div>
-    <div id="myModalEspera" class="modal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-spinner">
-                    <div class="spinner"></div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <div class="modal-messageCarne">Por favor, espera mientras la información se está actualizando...</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
                 </div>
-                <div class="modal-message">Por favor, espera un momento</div>
-
             </div>
         </div>
     </div>
 
-    <div id="myModalError" class="modal">
+    <div class="modal" id="myModalCorrecto" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-message">Ocurrió un error, intente más tarde.</div>
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div style="margin-bottom: 20px;"></div>
+                        <div class="modal-messageCarne">Su información fue actualizada correctamente.</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <div class="modal" id="myModalEspera" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-4 mx-auto text-center">
+                    </div>
+                    <div class="col-md-4 mx-auto text-center">
+                        <div class="modal-spinnerCarne">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mx-auto text-center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div style="margin-bottom: 20px;"></div>
+                        <div class="modal-messageCarne">Por favor, espera un momento</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="myModalError" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div style="margin-bottom: 20px;"></div>
+                        <div class="modal-messageCarne">Ocurrió un error, intente más tarde.</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <div class="container" runat="server">
@@ -761,7 +806,7 @@
         </div>
     </div>
 
-    <div id="myModal" class="modal">
+    <div id="myModal" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1732,7 +1777,7 @@
                 return false;
             }
             return true;
-        }             
+        }
 
     </script>
 

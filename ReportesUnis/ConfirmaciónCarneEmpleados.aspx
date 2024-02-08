@@ -365,14 +365,26 @@
                             </asp:Table>
                         </div>
 
-                        <div id="myModalActualizacionAC" class="modal">
+                        <div class="modal" id="myModalActualizacionAC" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
-                                    <div class="modal-spinner">
-                                        <div class="spinner"></div>
+                                    <div class="row">
+                                        <div class="col-md-4 mx-auto text-center">
+                                        </div>
+                                        <div class="col-md-4 mx-auto text-center">
+                                            <div class="modal-spinnerCarne">
+                                                <div class="spinner"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mx-auto text-center">
+                                        </div>
                                     </div>
-                                    <div class="modal-message">Por favor, espera mientras la información se está actualizando...</div>
-
+                                    <div class="row">
+                                        <div class="col-md-12 mx-auto text-center">
+                                            <div class="modal-messageCarne">Por favor, espera mientras la información se está actualizando...</div>
+                                            <div style="margin-bottom: 20px;"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -631,14 +643,26 @@
                             </asp:Table>
                         </div>
 
-                        <div id="myModalActualizacionPC" class="modal">
+                        <div class="modal" id="myModalActualizacionPC" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
-                                    <div class="modal-spinner">
-                                        <div class="spinner"></div>
+                                    <div class="row">
+                                        <div class="col-md-4 mx-auto text-center">
+                                        </div>
+                                        <div class="col-md-4 mx-auto text-center">
+                                            <div class="modal-spinnerCarne">
+                                                <div class="spinner"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mx-auto text-center">
+                                        </div>
                                     </div>
-                                    <div class="modal-message">Por favor, espera mientras la información se está actualizando...</div>
-
+                                    <div class="row">
+                                        <div class="col-md-12 mx-auto text-center">
+                                            <div class="modal-messageCarne">Por favor, espera mientras la información se está actualizando...</div>
+                                            <div style="margin-bottom: 20px;"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -897,14 +921,26 @@
                             </asp:Table>
                         </div>
 
-                        <div id="myModalActualizacionRC" class="modal">
+                        <div class="modal" id="myModalActualizacionRC" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
-                                    <div class="modal-spinner">
-                                        <div class="spinner"></div>
+                                    <div class="row">
+                                        <div class="col-md-4 mx-auto text-center">
+                                        </div>
+                                        <div class="col-md-4 mx-auto text-center">
+                                            <div class="modal-spinnerCarne">
+                                                <div class="spinner"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mx-auto text-center">
+                                        </div>
                                     </div>
-                                    <div class="modal-message">Por favor, espera mientras la información se está actualizando...</div>
-
+                                    <div class="row">
+                                        <div class="col-md-12 mx-auto text-center">
+                                            <div class="modal-messageCarne">Por favor, espera mientras la información se está actualizando...</div>
+                                            <div style="margin-bottom: 20px;"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

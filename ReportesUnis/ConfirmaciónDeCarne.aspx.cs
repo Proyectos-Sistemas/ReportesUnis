@@ -2553,6 +2553,11 @@ namespace ReportesUnis
                         else
                             FechaEfectiva = EFFDT_NameR_AC.Value;
 
+                        UD_NAMES_PRI_AC.Value = "";
+                        UD_NAMES_PRF_AC.Value = "";
+                        UP_NAMES_PRI_AC.Value = "";
+                        UP_NAMES_PRF_AC.Value = "";
+
                         if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNombreNit >= 0)
                         {//INSERT
 
@@ -3137,6 +3142,8 @@ namespace ReportesUnis
 
                         UD_NAMES_PRI_PC.Value = "";
                         UD_NAMES_PRF_PC.Value = "";
+                        UP_NAMES_PRI_PC.Value = "";
+                        UP_NAMES_PRF_PC.Value = "";
 
                         if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNombreNit >= 0)
                         {//INSERT
@@ -3723,6 +3730,10 @@ namespace ReportesUnis
                         else
                             FechaEfectiva = EFFDT_NameR_RC.Value;
 
+                        UD_NAMES_PRI_RC.Value = "";
+                        UD_NAMES_PRF_RC.Value = "";
+                        UP_NAMES_PRI_RC.Value = "";
+                        UP_NAMES_PRF_RC.Value = "";
                         if (EffdtNombreNitUltimo != Hoy && ContadorNombreNit == 0 && ContadorEffdtNombreNit >= 0)
                         {//INSERT
                             if (!TxtApellidoRRC.IsNullOrWhiteSpace())
@@ -4098,15 +4109,15 @@ namespace ReportesUnis
                         {
                             if (ControlTabs.Value == "AC")
                             {
-                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/ACTUALIZACION-AC/" + Carnet + ".jpg");
+                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/Fotos/ACTUALIZACION-AC/" + Carnet + ".jpg");
                             }
                             if (ControlTabs.Value == "PC")
                             {
-                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/PRIMER_CARNET-PC/" + Carnet + ".jpg");
+                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/Fotos/PRIMER_CARNET-PC/" + Carnet + ".jpg");
                             }
                             if (ControlTabs.Value == "RC")
                             {
-                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/UltimasCargas/RENOVACION_CARNE-RC/" + Carnet + ".jpg");
+                                imageBytes = File.ReadAllBytes(CurrentDirectory + "/Usuarios/Fotos/RENOVACION_CARNE-RC/" + Carnet + ".jpg");
                             }
 
                             string base64String = Convert.ToBase64String(imageBytes);

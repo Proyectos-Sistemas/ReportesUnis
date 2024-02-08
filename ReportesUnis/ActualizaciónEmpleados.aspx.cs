@@ -1726,12 +1726,12 @@ namespace ReportesUnis
 
                             if (cargaFt == 0)
                             {
-                                int controlRenovacionAC = ControlAC("WHERE EMPLID  ='" + txtCarne.Text + "' AND ACCION = 'AC'");
+                                int controlRenovacionAC = ControlRenovacion("WHERE EMPLID  ='" + txtCarne.Text + "' AND ACCION = 'AC'");
                                 int controlRenovacionPC = ControlAC("WHERE EMPLID  ='" + txtCarne.Text + "' AND ACCION = 'PC'");
 
                                 if (txtConfirmacion.Text == "01")
                                 {
-                                    if (ControlAct.Value == "AC" && (CONFIRMACION == "1000" || CONFIRMACION == "0"))
+                                    if (ControlAct.Value == "AC" && (CONFIRMACION == "1000" || CONFIRMACION == "0" || controlRenovacionAC == 0))
                                     {
                                         SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\ACTUALIZACION-AC\\", txtCarne.Text + ".jpg");
                                     }
@@ -1740,7 +1740,7 @@ namespace ReportesUnis
                                         if (controlRenovacionPC == 0)
                                             SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\PRIMER_CARNET-PC\\", txtCarne.Text + ".jpg");
                                         else
-                                            SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosConfirmacion\\RENOVACION_CARNE-RC\\", txtCarne.Text + ".jpg");
+                                            SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\RENOVACION_CARNE-RC\\", txtCarne.Text + ".jpg");
                                     }
                                     if (ControlAct.Value == "RC")
                                     {
@@ -1749,7 +1749,7 @@ namespace ReportesUnis
                                 }
                                 else
                                 {
-                                    if (ControlAct.Value == "AC" && (CONFIRMACION == "1000" || CONFIRMACION == "0"))
+                                    if (ControlAct.Value == "AC" && (CONFIRMACION == "1000" || CONFIRMACION == "0" || controlRenovacionAC == 0))
                                     {
                                         SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\ACTUALIZACION-AC\\", txtCarne.Text + ".jpg");
                                     }
@@ -2108,9 +2108,10 @@ namespace ReportesUnis
                                     {
                                         if (!String.IsNullOrEmpty(TxtNombreR.Text))
                                         {
-                                            if (txtAInicial1.Value == txtApellido1.Text && txtNInicial1.Value == txtNombre1.Text && txtCInicial.Value == txtApellidoCasada.Text
-                                                && txtAInicial2.Value == txtApellido2.Text && txtNInicial2.Value == txtNombre2.Text)
+                                            if (txtNit.Text == "CF" && (InicialNR1.Value.TrimEnd() != TxtNombreR.Text.TrimEnd()|| InicialNR2.Value.TrimEnd() != TxtApellidoR.Text.TrimEnd() || InicialNR3.Value.TrimEnd() != TxtCasadaR.Text.TrimEnd()))
                                             {
+                                                /*if (txtAInicial1.Value == txtApellido1.Text && txtNInicial1.Value == txtNombre1.Text && txtCInicial.Value == txtApellidoCasada.Text && txtAInicial2.Value == txtApellido2.Text && txtNInicial2.Value == txtNombre2.Text)
+                                                {*/
                                                 int ContadorNombreNit = 0;
                                                 int ContadorEffdtNombreNit = 0;
                                                 int ContadorEffdtNit = 0;
@@ -2584,6 +2585,8 @@ namespace ReportesUnis
                                                     contadorUD = contadorUD + 1;
                                                 }
                                             }
+
+                                            /*}*/
                                             else
                                             {
                                                 llenadoPaisnit();
@@ -3557,10 +3560,10 @@ namespace ReportesUnis
                                     cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_FOTOGRAFIAS_CARNE (FOTOGRAFIA, CARNET, CONTROL) VALUES ('Existe', '" + txtCarne.Text + "', 1)";
                                     cmd.ExecuteNonQuery();
                                 }
-                                int controlRenovacionPC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'PC'");
-                                int controlRenovacionAC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'AC'");
+                                int controlRenovacionPC = ControlAC("WHERE EMPLID  ='" + txtCarne.Text + "' AND ACCION = 'PC'");
+                                int controlRenovacionAC = ControlRenovacion("WHERE EMPLID  ='" + txtCarne.Text + "' AND ACCION = 'AC'");
 
-                                if (ControlAct.Value == "AC" && (CONFIRMACION == "1000" || CONFIRMACION == "0"))
+                                if (ControlAct.Value == "AC" && (CONFIRMACION == "1000" || CONFIRMACION == "0" || controlRenovacionAC == 0))
                                 {
                                     SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/ACTUALIZACION-AC/", txtCarne.Text + ".jpg");
                                 }
