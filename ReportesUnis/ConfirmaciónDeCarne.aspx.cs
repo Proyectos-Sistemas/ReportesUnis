@@ -674,7 +674,6 @@ namespace ReportesUnis
                 llenadoAC("CARNET = '" + Carnet + "'");
                 string respuesta = null;
                 string fecha = DateTime.Now.ToString("yyyy-MM-dd");
-                //QueryInsertBi();
                 respuesta = QueryActualizaNombreAC(Carnet);
                 controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + Carnet + "' AND FECH_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
                 controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + Carnet + "'");
@@ -4299,11 +4298,9 @@ namespace ReportesUnis
             string[] datos = LeerInfoEmail(subject);
             string[] credenciales = LeerCredencialesMail();
             var email = new MimeMessage();
-            //var para = TxtPrimerNombre.Text + " " + TxtPrimerApellido.Text;
 
             email.From.Add(new MailboxAddress(credenciales[0], credenciales[3]));
             email.To.Add(new MailboxAddress(para, emailInstitu));
-            //email.To.Add(new MailboxAddress(para, TxtCorreoInstitucional.Text));
 
             email.Subject = datos[0];
             email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
@@ -4315,7 +4312,6 @@ namespace ReportesUnis
             {
                 try
                 {
-                    //smtp.Connect("smtp.gmail.com", 587, false);
                     smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
 
                     // Note: only needed if the SMTP server requires authentication

@@ -873,7 +873,6 @@
         var userAgent = navigator.userAgent;
         console.log(userAgent);
         if (userAgent.indexOf("Safari") != -1 && userAgent.indexOf("Chrome") == 0) {
-            console.log("Safari");
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     var videoElement = document.getElementById('videoElement');
@@ -1192,9 +1191,6 @@
                 $('#myModal').css('display', 'block');
                 return false;
             } else if (TrueNit !== nit && nit !== "CF" && Estudiante > 0) {
-                console.log(TrueNit);
-                console.log(nit);
-                console.log(Estudiante);
                 alert("El NIT ha cambiado, es necesario validar.");
                 return false;
             } else {
@@ -1275,11 +1271,8 @@
                     }
                 }
 
-                console.log(Estudiante);
                 if (Estudiante > 0) {
-                    console.log("1 " + mensaje);
                     if ($('#<%= RadioButtonNombreNo.ClientID %>').is(':checked')) {
-                        console.log("2 " + mensaje);
                         if (nit.trim() === "") {
                             if (mensaje.trim() == "") {
                                 mensaje = "-El NIT para el recibo es requerido.";
@@ -1321,7 +1314,6 @@
                         }
                     }
                 }
-                console.log("3 " + mensaje);
                 if (mensaje.trim() !== "") {
                     mensaje = mensaje.replace("/\n/g", "<br>");
                     alert(mensaje);
@@ -1494,9 +1486,9 @@
                 $('#<%= RadioButtonActualiza.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
                         $('#<%= ControlAct.ClientID %>').val("AC");
-                        console.log("Actualización");
+
                         $('#<%= ControlClicAct.ClientID %>').val("A");
-                        console.log("Actualización");
+
                     }
                 });
             }
@@ -1509,9 +1501,7 @@
             // Function to add the code
             function RBAC() {
                 $('#<%= RadioButtonCarne.ClientID %>').on('change', function () {
-                    if ($(this).is(':checked')) {
                         $('#<%= ControlAct.ClientID %>').val("");
-                        console.log("Renovacion");
                         $('#<%= ControlClicAct.ClientID %>').val("C");
                     }
                 });
@@ -1615,13 +1605,11 @@
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     document.getElementById('<%= hdnCameraAvailable.ClientID %>').value = 'true';
-                    console.log('Ingresa Funcion')
                     stream.getTracks().forEach(function (track) {
                         track.stop();
                     });
                 })
                 .catch(function (error) {
-                    console.log('Error')
                 });
         }
 

@@ -997,7 +997,6 @@
                 ValidarEstadoCamara1(); // Ejecuta la función una vez inmediatamente
 
                 // Establece un intervalo para ejecutar la función cada 10 minutos
-                console.log('ingreso');
                 intervalID = setInterval(ValidarEstadoCamara1, 600000); // 600,000 milisegundos = 10 minutos
             }
 

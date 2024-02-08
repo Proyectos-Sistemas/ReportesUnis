@@ -6,7 +6,6 @@ using System.Web;
 using System.Web.UI;
 using System.Data;
 using DocumentFormat.OpenXml.Spreadsheet;
-//using System.Drawing;
 using System.Web.UI.WebControls;
 using DocumentFormat.OpenXml.Office.Word;
 using Microsoft.Ajax.Utilities;
@@ -270,7 +269,6 @@ namespace ReportesUnis
                         if (respuesta == "0")
                         {
                             File.Delete(CurrentDirectory + txtPathAC.Text + "/" + row.Cells[1].Text);
-                            //File.Delete(txtPath2.Text + row.Cells[1].Text);
                             llenadoGrid();
                             log("La fotografía de fue rechazada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), nombre, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
                             lblActualizacion.Text = "Se rechazaron las fotos seleccionadas.";
@@ -383,7 +381,6 @@ namespace ReportesUnis
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     ConsumoSQL("DELETE FROM [Carnets].[dbo].[Tarjeta_Identificacion_prueba]  WHERE CARNET = '" + carnet + "'");
                     respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
-                    //respuesta = "0";
 
                     if (respuesta == "0")
                     {
@@ -515,7 +512,6 @@ namespace ReportesUnis
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     ConsumoSQL("DELETE FROM [Carnets].[dbo].[Tarjeta_Identificacion_prueba]  WHERE CARNET = '" + carnet + "'");
                     respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
-                    //respuesta = "0";
 
                     if (respuesta == "0")
                     {
@@ -699,7 +695,6 @@ namespace ReportesUnis
             {
                 try
                 {
-                    //smtp.Connect("smtp.gmail.com", 587, false);
                     smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
 
                     // Note: only needed if the SMTP server requires authentication
@@ -911,11 +906,6 @@ namespace ReportesUnis
                             log("ERROR - Actualización de Fotografía", carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
                         }
                     }
-                    /* }
-                     else
-                     {
-                         log("ERROR - Inserta BI del carnet: " + carnet, carnet, "CONFIRMACION FOTOGRAFIA ESTUDIANTE AC");
-                     }*/
 
                     if (respuesta == "0")
                     {

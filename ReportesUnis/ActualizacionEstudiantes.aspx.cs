@@ -432,7 +432,6 @@ namespace ReportesUnis
                         else
                         {
                             llenadoPaisnit();
-                            //CmbPaisNIT.SelectedValue = "Guatemala";
                             llenadoDepartamentoNit();
                             llenadoMunicipioNIT();
                         }
@@ -480,7 +479,7 @@ namespace ReportesUnis
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();// + reader["EFFDT"].ToString().Substring(9, 2).TrimEnd();
+                        EFFDT_A_NIT.Value = reader["EFFDT"].ToString().Substring(0, 10).TrimEnd();
                         if (!String.IsNullOrEmpty(EFFDT_A_NIT.Value))
                         {
                             if (EFFDT_A_NIT.Value.Length == 9)
@@ -1247,7 +1246,7 @@ namespace ReportesUnis
                             }
                         }
                     }
-                    else //if (RadioButtonNombreSi.Checked)
+                    else 
                     {
                         IngresoDatos();
 
@@ -2602,8 +2601,6 @@ namespace ReportesUnis
                                     cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE ID_REGISTRO = '" + RegistroCarne + "'";
                                     cmd.ExecuteNonQuery();
                                     ConsumoSQL("DELETE FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CARNET ='" + txtCarne.Text + "'");
-                                    //cmd.CommandText = txtInsert.Text;
-                                    //cmd.ExecuteNonQuery();
                                     FileUpload2.Visible = false;
                                     CargaDPI.Visible = false;
                                     mostrarInformación();
@@ -3721,7 +3718,7 @@ namespace ReportesUnis
                         ControlAct.Value = "RC";
                     }
                 }
-                else if ((controlRenovacionPC < 1 && contadorConfirmacion == 0) || (controlRenovacionAC <= 1 && contadorConfirmacion != 0 && controlRenovacionRC == 0))/*|| (controlRenovacionPC < 1 && contadorConfirmacion != 0)*/
+                else if ((controlRenovacionPC < 1 && contadorConfirmacion == 0) || (controlRenovacionAC <= 1 && contadorConfirmacion != 0 && controlRenovacionRC == 0))
                 {
                     ControlAct.Value = "PC";
                 }

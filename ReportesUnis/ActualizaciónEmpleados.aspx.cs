@@ -1603,7 +1603,6 @@ namespace ReportesUnis
                 try
                 {
 
-                    //smtp.Connect("smtp.gmail.com", 587, false);
                     smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
 
                     // Note: only needed if the SMTP server requires authentication
@@ -1771,7 +1770,7 @@ namespace ReportesUnis
                                 if (String.IsNullOrEmpty(StateNIT.Text))
                                     StateNIT.Text = State.Text;
 
-                                if (RadioButtonNombreSi.Checked && /*ControlRBS.Value == "1" && */TrueNit.Value != txtNit.Text)
+                                if (RadioButtonNombreSi.Checked && TrueNit.Value != txtNit.Text)
                                 {
                                     TxtNombreR.Text = txtNombre1.Text + " " + txtNombre2.Text;
                                     TxtApellidoR.Text = txtApellido1.Text + " " + txtApellido2.Text;
@@ -2109,9 +2108,7 @@ namespace ReportesUnis
                                         if (!String.IsNullOrEmpty(TxtNombreR.Text))
                                         {
                                             if (txtNit.Text == "CF" && (InicialNR1.Value.TrimEnd() != TxtNombreR.Text.TrimEnd()|| InicialNR2.Value.TrimEnd() != TxtApellidoR.Text.TrimEnd() || InicialNR3.Value.TrimEnd() != TxtCasadaR.Text.TrimEnd()))
-                                            {
-                                                /*if (txtAInicial1.Value == txtApellido1.Text && txtNInicial1.Value == txtNombre1.Text && txtCInicial.Value == txtApellidoCasada.Text && txtAInicial2.Value == txtApellido2.Text && txtNInicial2.Value == txtNombre2.Text)
-                                                {*/
+                                            {                                               
                                                 int ContadorNombreNit = 0;
                                                 int ContadorEffdtNombreNit = 0;
                                                 int ContadorEffdtNit = 0;
@@ -2586,7 +2583,7 @@ namespace ReportesUnis
                                                 }
                                             }
 
-                                            /*}*/
+
                                             else
                                             {
                                                 llenadoPaisnit();
@@ -2673,12 +2670,9 @@ namespace ReportesUnis
                                             ConsumoSQL(DeleteBanco);
                                         }
 
-                                        //cmd.CommandText = txtInsert.Text;
-                                        //cmd.ExecuteNonQuery();
                                         FileUpload2.Visible = false;
                                         CargaDPI.Visible = false;
                                         RegistroCarne = "1";
-                                        //matrizDatos();
                                         mensaje = "Su información fue almacenada correctamente. </br> La información ingresada debe ser aprobada antes de ser confirmada. </br> Actualmente, solo se muestran los datos que han sido previamente confirmados.";
                                         string script = "<script>ConfirmacionActualizacionSensible();</script>";
                                         ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
@@ -2934,8 +2928,6 @@ namespace ReportesUnis
                                             }
                                             mensaje = "0";
                                             matrizDatos();
-                                            //log("La información fue actualizada de forma correcta");
-                                            //ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                                         }
                                         else
                                         {
@@ -3173,7 +3165,7 @@ namespace ReportesUnis
                             }
                         }
                     }
-                    //mensaje = IngresoDatos();
+
                     if (Convert.ToInt16(Estudiante.Value) > 0)
                     {
                         if (RadioButtonNombreSi.Checked && (InicialNR1.Value != txtNombre1.Text + " " + txtNombre2.Text || InicialNR2.Value != txtApellido1.Text + " " + txtApellido2.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value) || ControlCF.Value != "CF"))
@@ -3773,7 +3765,7 @@ namespace ReportesUnis
                         ControlAct.Value = "RC";
                     }
                 }
-                else if ((controlRenovacionPC <= 1 && contadorConfirmacion == 0) || (controlRenovacionAC <= 1 && contadorConfirmacion != 0 && controlRenovacionRC == 0))/*|| (controlRenovacionPC < 1 && contadorConfirmacion != 0)*/
+                else if ((controlRenovacionPC <= 1 && contadorConfirmacion == 0) || (controlRenovacionAC <= 1 && contadorConfirmacion != 0 && controlRenovacionRC == 0))
                 {
                     ControlAct.Value = "PC";
                 }
@@ -4181,14 +4173,6 @@ namespace ReportesUnis
                 }
             }
 
-            /*try
-            {
-                File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\" + txtCarne.Text + ".jpg");
-            }
-            catch
-            {
-
-            }*/
         }
         protected void CmbRoles_TextChanged(object sender, EventArgs e)
         {

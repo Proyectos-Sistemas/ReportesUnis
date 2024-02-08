@@ -4609,7 +4609,6 @@ namespace ReportesUnis
             {
                 try
                 {
-                    //smtp.Connect("smtp.gmail.com", 587, false);
                     smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
 
                     // Note: only needed if the SMTP server requires authentication
@@ -4621,7 +4620,6 @@ namespace ReportesUnis
                 }
                 catch (Exception)
                 {
-                    //lblActualizacion.Text = ex.ToString();
                     log("ERROR - Al enviar el correo para : " + EmailInstitucional.Value, "");
                 }
             }

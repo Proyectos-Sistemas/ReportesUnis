@@ -43,7 +43,6 @@ namespace ReportesUnis
             }
             if (!IsPostBack)
             {
-                //llenadoGridAC();
                 ViewState["ActiveTabIndex"] = 0;
                 ControlTabs.Value = "AC";
                 // Establecer la pestaña activa y su estilo correspondiente
@@ -617,26 +616,7 @@ namespace ReportesUnis
             string mensaje = "";
             try
             {
-                string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                /* int ContadorArchivos = 0;
-                 int ContadorArchivosCorrectos = 0;
-                 int ContadorArchivosConError = 0;
-                 bool Error = false;*/
-
-                /*//Ruta del archivo que guarda la bitácora
-                string RutaBitacora = Request.PhysicalApplicationPath + "Logs\\";
-                //Nombre del archiov que guarda la bitácora
-                string ArchivoBitacora = RutaBitacora + FechaHoraInicioEjecución.Replace("/", "").Replace(":", "") + ".txt";
-
-                //Se crea un nuevo archivo para guardar la bitacora de la ejecución
-                CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
-
-                //Guadar encabezado de la bitácora
-                GuardarBitacora(ArchivoBitacora, "                              Informe de ejecución de importación de fotografías Campus Fecha: " + FechaHoraInicioEjecución + "              ");
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    EMPLID                      Estado                 Descripción                                    ");
-                GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
-                */
+                string FechaHoraInicioEjecución = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");               
                 string EmplidFoto = Carnet;
                 string EmplidExisteFoto = "";
                 string mensajeValidacion = "";
@@ -1008,7 +988,6 @@ namespace ReportesUnis
             {
                 try
                 {
-                    //smtp.Connect("smtp.gmail.com", 587, false);
                     smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
 
                     // Note: only needed if the SMTP server requires authentication
@@ -1091,7 +1070,6 @@ namespace ReportesUnis
                     if (respuesta == "0")
                     {
                         File.Delete(CurrentDirectory + txtPathAC.Text + row.Cells[1].Text);
-                        //File.Delete(txtPath2.Text + row.Cells[1].Text);
                         llenadoGridAC();
                         log("La fotografía de fue rechazada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), nombre, "CONFIRMACION FOTOGRAFIA EMPLEADOS AC");
                         lblActualizacionAC.Text = "Se rechazaron las fotos seleccionadas.";
@@ -1324,7 +1302,6 @@ namespace ReportesUnis
                     if (respuesta == "0")
                     {
                         File.Delete(CurrentDirectory + txtPathRC.Text + row.Cells[1].Text);
-                        //File.Delete(txtPath2.Text + row.Cells[1].Text);
                         llenadoGridRC();
                         log("La fotografía de fue rechazada por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), nombre, "CONFIRMACION FOTOGRAFIA EMPLEADOS RC");
                         lblActualizacionRC.Text = "Se rechazaron las fotos seleccionadas.";
