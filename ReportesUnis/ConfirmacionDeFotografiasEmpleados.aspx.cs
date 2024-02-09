@@ -233,7 +233,7 @@ namespace ReportesUnis
                 {
                     cmd.Transaction = transaction;
                     cmd.Connection = con;
-                    if (TipoPersona.Value.Contains("Estudiante"))
+                    if (TipoPersona.Value.Contains("Estudiante") && NumeroTipoPersona.Value == "2")
                     {
                         cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_admins] " +
                                    "([Carnet] " +
@@ -537,7 +537,7 @@ namespace ReportesUnis
 
         private void ValidacionCheckPC()
         {
-            foreach (GridViewRow row in GridViewFotosAC.Rows)
+            foreach (GridViewRow row in GridViewFotosPC.Rows)
             {
                 CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImageP");
                 if (checkBox.Checked)
@@ -556,7 +556,7 @@ namespace ReportesUnis
 
         private void ValidacionCheckRC()
         {
-            foreach (GridViewRow row in GridViewFotosAC.Rows)
+            foreach (GridViewRow row in GridViewFotosRC.Rows)
             {
                 CheckBox checkBox = (CheckBox)row.FindControl("CheckBoxImage");
                 if (checkBox.Checked)
@@ -699,12 +699,13 @@ namespace ReportesUnis
                 {
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT ROLES, " +
-                        "NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, CODIGO, EMPLID, EMAIL, NOMBRE1||' '||APELLIDO1 AS NOMBRE " +
+                        "NO_CUI||DEPTO_CUI||MUNI_CUI CARNET, CODIGO, EMPLID, EMAIL, NOMBRE1||' '||APELLIDO1 AS NOMBRE, TIPO_PERSONA " +
                         "FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CODIGO ='" + carne + "'  OR CARNET = '" + carne + "'";
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
                         TipoPersona.Value = reader["ROLES"].ToString();
+                        NumeroTipoPersona.Value = reader["TIPO_PERSONA"].ToString();
                         DPI.Value = reader["CARNET"].ToString();
                         CODIGO.Value = reader["CODIGO"].ToString();
                         EMPLID.Value = reader["EMPLID"].ToString();
@@ -1264,6 +1265,8 @@ namespace ReportesUnis
                     {
                         lblActualizacionPC.Text = "Se confirmó correctamente la información";
                         File.Delete(CurrentDirectory + txtPathPC.Text + row.Cells[1].Text);
+                        string nombre = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
+                        carne.Value = nombre;
                         string[] datos = DatosCorreo();
                         llenadoGridPC();
                         log("La fotografía de: " + DPI.Value + ", con el carne : " + carnet + " fue confirmada de forma correcta por el usuario " + Context.User.Identity.Name.Replace("@unis.edu.gt", ""), carnet, "CONFIRMACION FOTOGRAFIA EMPLEADO PC");

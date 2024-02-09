@@ -1734,7 +1734,7 @@ namespace ReportesUnis
                                     {
                                         SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\ACTUALIZACION-AC\\", txtCarne.Text + ".jpg");
                                     }
-                                    if (ControlAct.Value == "PC" || (ControlAct.Value == "AC" && CONFIRMACION == "1"))
+                                    if (ControlAct.Value == "PC" || (ControlAct.Value == "AC" && (CONFIRMACION == "1" || controlRenovacionAC == 0)))
                                     {
                                         if (controlRenovacionPC == 0)
                                             SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\PRIMER_CARNET-PC\\", txtCarne.Text + ".jpg");
@@ -1752,7 +1752,7 @@ namespace ReportesUnis
                                     {
                                         SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\ACTUALIZACION-AC\\", txtCarne.Text + ".jpg");
                                     }
-                                    if (ControlAct.Value == "PC" || (ControlAct.Value == "AC" && CONFIRMACION == "1"))
+                                    if (ControlAct.Value == "PC" || (ControlAct.Value == "AC" && (CONFIRMACION == "1" || controlRenovacionAC == 0)))
                                     {
                                         if (controlRenovacionPC <= 1 || controlRenovacionAC <= 1)
                                             SaveCanvasImage(urlPath2.Value, CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\PRIMER_CARNET-PC\\", txtCarne.Text + ".jpg");
@@ -2107,8 +2107,8 @@ namespace ReportesUnis
                                     {
                                         if (!String.IsNullOrEmpty(TxtNombreR.Text))
                                         {
-                                            if (txtNit.Text == "CF" && (InicialNR1.Value.TrimEnd() != TxtNombreR.Text.TrimEnd()|| InicialNR2.Value.TrimEnd() != TxtApellidoR.Text.TrimEnd() || InicialNR3.Value.TrimEnd() != TxtCasadaR.Text.TrimEnd()))
-                                            {                                               
+                                            if (txtNit.Text == "CF" && (InicialNR1.Value.TrimEnd() != TxtNombreR.Text.TrimEnd() || InicialNR2.Value.TrimEnd() != TxtApellidoR.Text.TrimEnd() || InicialNR3.Value.TrimEnd() != TxtCasadaR.Text.TrimEnd()))
+                                            {
                                                 int ContadorNombreNit = 0;
                                                 int ContadorEffdtNombreNit = 0;
                                                 int ContadorEffdtNit = 0;
@@ -3560,7 +3560,7 @@ namespace ReportesUnis
                                     SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/ACTUALIZACION-AC/", txtCarne.Text + ".jpg");
                                 }
                                 else
-                                if (ControlAct.Value == "PC" || (ControlAct.Value == "AC" && CONFIRMACION == "1"))
+                                if (ControlAct.Value == "PC" || (ControlAct.Value == "AC" && (CONFIRMACION == "1" || controlRenovacionAC == 0)))
                                 {
                                     if (controlRenovacionPC <= 1 || controlRenovacionAC <= 1)
                                         SaveCanvasImage(urlPath2.Value, CurrentDirectory + "/Usuarios/FotosColaboradores/UltimasCargas/PRIMER_CARNET-PC/", txtCarne.Text + ".jpg");
@@ -4098,33 +4098,43 @@ namespace ReportesUnis
                 {
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
                 }
                 else if (control == "PC" && ControlAct.Value != "AC" && CONFIRMACION != "0")
                 {
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
                 }
                 else if (control == "RC" && ControlAct.Value != "AC" && CONFIRMACION != "0")
                 {
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
                 }
                 else if (ControlAct.Value == "PC")
                 {
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
                 }
                 else if (ControlAct.Value == "RC")
                 {
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
                     File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
                 }
             }
-
+            string accion = ControlAct.Value;
             string informacion = actualizarInformacion();
             if (informacion != "" && informacion != "Error")
             {
@@ -4147,10 +4157,23 @@ namespace ReportesUnis
                         }
                         else
                         {
-                            // Llama a la función JavaScript para mostrar el modal
                             EliminarAlmacenada();
                             EnvioCorreo();
                             EnvioCorreoEmpleado();
+                            using (OracleConnection con = new OracleConnection(constr))
+                            {
+                                con.Open();
+                                OracleTransaction transaction;
+                                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                                using (OracleCommand cmd = new OracleCommand())
+                                {
+                                    cmd.Transaction = transaction;
+                                    cmd.Connection = con;
+                                    cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION ='2', CONTROL_ACCION = '" + accion + "' WHERE CARNET='" + txtCarne.Text + "' OR CODIGO = '" + txtCarne.Text + "'";
+                                    cmd.ExecuteNonQuery();
+                                    transaction.Commit();
+                                }
+                            }
                             log("La información de fue actualizada de forma correcta");
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                         }
@@ -4161,6 +4184,20 @@ namespace ReportesUnis
                         EliminarAlmacenada();
                         EnvioCorreo();
                         EnvioCorreoEmpleado();
+                        using (OracleConnection con = new OracleConnection(constr))
+                        {
+                            con.Open();
+                            OracleTransaction transaction;
+                            transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                            using (OracleCommand cmd = new OracleCommand())
+                            {
+                                cmd.Transaction = transaction;
+                                cmd.Connection = con;
+                                cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION ='2', CONTROL_ACCION = '" + accion + "' WHERE CARNET='" + txtCarne.Text + "' OR CODIGO = '" + txtCarne.Text + "'";
+                                cmd.ExecuteNonQuery();
+                                transaction.Commit();
+                            }
+                        }
                         log("La información de fue actualizada de forma correcta");
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                     }
@@ -4500,35 +4537,45 @@ namespace ReportesUnis
 
                 if ((control == "AC" && CONFIRMACION != "0") || (control == null && CONFIRMACION == "1000"))
                 {
-                    File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
-                    File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
                 }
                 else if (control == "PC" && ControlAct.Value != "AC" && CONFIRMACION != "0")
                 {
-                    File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
-                    File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
                 }
                 else if (control == "RC" && ControlAct.Value != "AC" && CONFIRMACION != "0")
                 {
-                    File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
-                    File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
                 }
                 else if (ControlAct.Value == "PC")
                 {
-                    File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
-                    File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
-                    File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
-                    File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
                 }
                 else if (ControlAct.Value == "RC")
                 {
-                    File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
-                    File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
-                    File.Delete(CurrentDirectory + "\\Usuarios\\Fotos\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
-                    File.Delete(CurrentDirectory + "\\Usuarios\\UltimasCargas\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\PRIMER_CARNET-PC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\ACTUALIZACION-AC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\Fotos\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\UltimasCargas\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
+                    File.Delete(CurrentDirectory + "\\Usuarios\\FotosColaboradores\\FotosConfirmacion\\RENOVACION_CARNE-RC\\" + txtCarne.Text + ".jpg");
                 }
             }
-
+            string accion = ControlAct.Value;
             string informacion = actualizarInformacion();
             if (informacion != "" && informacion != "Error")
             {
@@ -4564,7 +4611,7 @@ namespace ReportesUnis
                                     {
                                         cmd.Transaction = transaction;
                                         cmd.Connection = con;
-                                        cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION ='1'" + " WHERE CARNET='" + txtCarne.Text + "' OR CODIGO = '" + txtCarne.Text + "'";
+                                        cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION ='1', CONTROL_ACCION = '" + accion + "' WHERE CARNET='" + txtCarne.Text + "' OR CODIGO = '" + txtCarne.Text + "'";
                                         cmd.ExecuteNonQuery();
                                         transaction.Commit();
                                     }
@@ -4589,7 +4636,7 @@ namespace ReportesUnis
                                 {
                                     cmd.Transaction = transaction;
                                     cmd.Connection = con;
-                                    cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION ='1'" + " WHERE CARNET='" + txtCarne.Text + "' OR CODIGO = '" + txtCarne.Text + "'";
+                                    cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION ='1', CONTROL_ACCION = '" + accion + "' WHERE CARNET='" + txtCarne.Text + "' OR CODIGO = '" + txtCarne.Text + "'";
                                     cmd.ExecuteNonQuery();
                                     transaction.Commit();
                                 }
@@ -4606,8 +4653,21 @@ namespace ReportesUnis
                     EliminarAlmacenada();
                     EnvioCorreo();
                     EnvioCorreoEmpleado();
+                    using (OracleConnection con = new OracleConnection(constr))
+                    {
+                        con.Open();
+                        OracleTransaction transaction;
+                        transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                        using (OracleCommand cmd = new OracleCommand())
+                        {
+                            cmd.Transaction = transaction;
+                            cmd.Connection = con;
+                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION ='2', CONTROL_ACCION = '" + accion + "' WHERE CARNET='" + txtCarne.Text + "' OR CODIGO = '" + txtCarne.Text + "'"; cmd.ExecuteNonQuery();
+                            transaction.Commit();
+                        }
+                    }
                     log("La información de fue actualizada de forma correcta");
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalSensible", "ConfirmacionActualizacionSensible();", true);
                 }
             }
             else

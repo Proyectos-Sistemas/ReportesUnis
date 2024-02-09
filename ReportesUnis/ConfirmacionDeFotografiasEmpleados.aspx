@@ -25,6 +25,7 @@
         <asp:TextBox ID="prueba" runat="server" Visible="false"></asp:TextBox>
         <%-- TEXTBOX ALMACENA EL TIPO PERSONA--%>
         <input type="hidden" id="TipoPersona" runat="server" />
+        <input type="hidden" id="NumeroTipoPersona" runat="server" />
         <input type="hidden" id="DPI" runat="server" />
         <input type="hidden" id="CODIGO" runat="server" />
         <input type="hidden" id="EMPLID" runat="server" />

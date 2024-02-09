@@ -114,6 +114,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden TipoPersona;
 
         /// <summary>
+        /// Control NumeroTipoPersona.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden NumeroTipoPersona;
+
+        /// <summary>
         /// Control DPI.
         /// </summary>
         /// <remarks>

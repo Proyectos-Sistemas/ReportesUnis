@@ -1501,6 +1501,7 @@
             // Function to add the code
             function RBAC() {
                 $('#<%= RadioButtonCarne.ClientID %>').on('change', function () {
+                    if ($(this).is(':checked')) {
                         $('#<%= ControlAct.ClientID %>').val("");
                         $('#<%= ControlClicAct.ClientID %>').val("C");
                     }
