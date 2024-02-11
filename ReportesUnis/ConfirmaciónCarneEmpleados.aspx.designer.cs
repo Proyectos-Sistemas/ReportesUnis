@@ -384,6 +384,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden ROLES;
 
         /// <summary>
+        /// Control TipoPersona.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden TipoPersona;
+
+        /// <summary>
         /// Control UserEmplid.
         /// </summary>
         /// <remarks>

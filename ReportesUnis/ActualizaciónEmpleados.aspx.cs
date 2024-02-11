@@ -4662,7 +4662,7 @@ namespace ReportesUnis
                         {
                             cmd.Transaction = transaction;
                             cmd.Connection = con;
-                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION ='2', CONTROL_ACCION = '" + accion + "' WHERE CARNET='" + txtCarne.Text + "' OR CODIGO = '" + txtCarne.Text + "'"; cmd.ExecuteNonQuery();
+                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONFIRMACION ='1', CONTROL_ACCION = '" + accion + "' WHERE CARNET='" + txtCarne.Text + "' OR CODIGO = '" + txtCarne.Text + "'"; cmd.ExecuteNonQuery();
                             transaction.Commit();
                         }
                     }

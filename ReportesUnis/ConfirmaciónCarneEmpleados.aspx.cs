@@ -3880,7 +3880,7 @@ namespace ReportesUnis
                 {
                     cmd.Transaction = transaction;
                     cmd.Connection = con;
-                    if (ROLES.Value.Contains("Estudiante"))
+                    if (ROLES.Value.Contains("Estudiante") && TxtRolAC.Text == "2")
                     {
                         cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_admins] " +
                                    "([Carnet] " +

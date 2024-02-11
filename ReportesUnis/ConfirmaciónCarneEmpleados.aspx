@@ -92,6 +92,8 @@
 
         <%-- TEXTBOX ALMACENA ROLES--%>
         <input type="hidden" id="ROLES" runat="server" />
+        <%-- TEXTBOX ALMACENA TIPO PERSONA--%>
+        <input type="hidden" id="TipoPersona" runat="server" />
         <%-- TEXTBOX ALMACENA EL EMPLID--%>
         <input type="hidden" id="UserEmplid" runat="server" />
         <%-- TEXTBOX ALMACENA EL CORREO INSTITUCIONAL--%>
