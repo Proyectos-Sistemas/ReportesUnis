@@ -194,7 +194,7 @@ namespace ReportesUnis
                 {
                     cmd.Transaction = transaction;
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_admins] " +
+                    cmd.CommandText = "SELECT 'INSERT INTO[dbo].[[Tarjeta_Identificacion_prueba]] " +
                                    "([Carnet] " +
                                    ",[Carrera] " +
                                    ",[Direccion] " +

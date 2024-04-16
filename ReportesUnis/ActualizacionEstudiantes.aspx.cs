@@ -244,7 +244,7 @@ namespace ReportesUnis
 
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT APELLIDO_NIT, NOMBRE_NIT, CASADA_NIT, NIT, PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO, " +
-                                        "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, CNT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT, STATE, EMAILUNIS,EMAILPERSONAL FROM ( " +
+                                        "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT, STATE, EMAILUNIS,EMAILPERSONAL FROM ( " +
                                         "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, " +
                                         "PD.LAST_NAME, PD.SECOND_LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
                                         "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
@@ -265,7 +265,7 @@ namespace ReportesUnis
                                         "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = '" + emplid + "' AND EMAIL.E_ADDR_TYPE IN ('HOM1') FETCH FIRST 1 ROWS ONLY) EMAILPERSONAL , " +
                                         "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, " +
                                         "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, " +
-                                        "TT.TERM_BEGIN_DT, ROW_NUMBER() OVER (PARTITION BY PD.EMPLID ORDER BY 18 DESC) CNT, C.DESCR PAIS " +
+                                        "TT.TERM_BEGIN_DT, C.DESCR PAIS " +
                                         "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
                                         "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
                                         "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID AND ADDRESS_TYPE= 'HOME'" +
@@ -293,8 +293,9 @@ namespace ReportesUnis
                                         "AND PP.PHONE_TYPE = 'HOME' " +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
                                         "WHERE PN.NATIONAL_ID ='" + TextUser.Text + "' " +
-                                        "ORDER BY CT.FULLY_ENRL_DT DESC" +
-                                       ") WHERE CNT = 1";
+                                        "ORDER BY CT.FULLY_ENRL_DT DESC " +
+                                        "FETCH FIRST 1 ROWS ONLY" +
+                                       ") ";
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -1052,7 +1053,7 @@ namespace ReportesUnis
 
             validarAccion();
 
-            if (txtAInicial.Value == txtApellido.Text && txtNInicial.Value == txtNombre.Text && txtCInicial.Value == txtCasada.Text)
+            if (txtAInicial.Value == txtApellido.Text && txtNInicial.Value == txtNombre.Text && txtCInicial.Value.TrimEnd() == txtCasada.Text)
             {
                 txtAccion.Text = "1";
                 txtTipoAccion.Text = "1.1";
@@ -1334,7 +1335,7 @@ namespace ReportesUnis
                 }
                 else
                 {
-                    if (txtAInicial.Value != txtApellido.Text || txtNInicial.Value != txtNombre.Text || txtCInicial.Value != txtCasada.Text)
+                    if (txtAInicial.Value != txtApellido.Text || txtNInicial.Value != txtNombre.Text || txtCInicial.Value.TrimEnd() != txtCasada.Text)
                     {
                         string script = "<script>Documentos();</script>";
                         ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
@@ -2053,7 +2054,7 @@ namespace ReportesUnis
 
                                 if (!String.IsNullOrEmpty(TxtNombreR.Text))
                                 {
-                                    if (txtAInicial.Value == txtApellido.Text && txtNInicial.Value == txtNombre.Text && txtCInicial.Value == txtCasada.Text)
+                                    if (txtAInicial.Value == txtApellido.Text && txtNInicial.Value == txtNombre.Text && txtCInicial.Value.TrimEnd() == txtCasada.Text)
                                     {
                                         int ContadorNombreNit = 0;
                                         int ContadorEffdtNombreNit = 0;
@@ -2595,7 +2596,7 @@ namespace ReportesUnis
                                     RegistroCarne = reader["CONTADOR"].ToString();
                                 }
 
-                                if ((txtAInicial.Value != txtApellido.Text || txtNInicial.Value != txtNombre.Text || txtCInicial.Value != txtCasada.Text))
+                                if ((txtAInicial.Value != txtApellido.Text || txtNInicial.Value != txtNombre.Text || txtCInicial.Value.TrimEnd() != txtCasada.Text))
                                 {
                                     cmd.Connection = con;
                                     cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE ID_REGISTRO = '" + RegistroCarne + "'";
@@ -3658,12 +3659,12 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + txtCarne.Text + "','" + ErrorLog + "','ACTUALIZACION ESTUDIANTES',SYSDATE)";
                     cmd.ExecuteNonQuery();
-                    if (txtControlBit.Text == "0" && !txtInsertBit.Text.IsNullOrWhiteSpace())
+                    /*if (txtControlBit.Text == "0" && !txtInsertBit.Text.IsNullOrWhiteSpace())
                     {
                         cmd.CommandText = txtInsertBit.Text;
                         cmd.ExecuteNonQuery();
                         txtControlBit.Text = "1";
-                    }
+                    }*/
                     if (txtControlAR.Text == "0" && !txtUpdateAR.Text.IsNullOrWhiteSpace())
                     {
                         cmd.CommandText = txtUpdateAR.Text;

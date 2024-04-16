@@ -2666,7 +2666,7 @@ namespace ReportesUnis
                                         cmd.ExecuteNonQuery();
                                         if (ControlAct.Value != "AC")
                                         {
-                                            string DeleteBanco = "DELETE FROM [dbo].[Tarjeta_Identificacion_admins] WHERE CARNET ='" + txtCarne.Text + "'";
+                                            string DeleteBanco = "DELETE FROM [dbo].[[Tarjeta_Identificacion_prueba]] WHERE CARNET ='" + txtCarne.Text + "'";
                                             ConsumoSQL(DeleteBanco);
                                         }
 

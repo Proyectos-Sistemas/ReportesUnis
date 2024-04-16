@@ -390,14 +390,14 @@ namespace ReportesUnis
                             log("ERROR - Actualizacion HCM del carnet: " + Carnet + "- AC", Carnet);
                         }
                         lblActualizacionAC.Text = "Ocurrió un problema al confirmar la información";
-                        ConsumoSQLAC("DELETE FROM [dbo].[Tarjeta_Identificacion_admins] WHERE CODIGO ='" + Carnet + "'");
+                        ConsumoSQLAC("DELETE FROM [dbo].[[Tarjeta_Identificacion_prueba]] WHERE CODIGO ='" + Carnet + "'");
                     }
                 }
                 else
                 {
                     lblActualizacionAC.Text = "Ocurrió un problema al confirmar la información";
                     log("ERROR - Actualizacion nombre en Campus del carnet: " + Carnet + "- AC", Carnet);
-                    ConsumoSQLAC("DELETE FROM [dbo].[Tarjeta_Identificacion_admins] WHERE CODIGO ='" + Carnet + "'");
+                    ConsumoSQLAC("DELETE FROM [dbo].[[Tarjeta_Identificacion_prueba]] WHERE CODIGO ='" + Carnet + "'");
                 }
             }
             else
@@ -1636,14 +1636,14 @@ namespace ReportesUnis
                             log("ERROR - Actualizacion HCM del carnet: " + Carnet + "- PC", Carnet);
                         }
                         lblActualizacionPC.Text = "Ocurrió un problema al confirmar la información";
-                        ConsumoSQLPC("DELETE FROM [dbo].[Tarjeta_Identificacion_admins] WHERE CODIGO ='" + Carnet + "'");
+                        ConsumoSQLPC("DELETE FROM [dbo].[[Tarjeta_Identificacion_prueba]] WHERE CODIGO ='" + Carnet + "'");
                     }
                 }
                 else
                 {
                     lblActualizacionPC.Text = "Ocurrió un problema al confirmar la información";
                     log("ERROR - Actualizacion nombre en Campus del carnet: " + Carnet + "- PC", Carnet);
-                    ConsumoSQLPC("DELETE FROM [dbo].[Tarjeta_Identificacion_admins] WHERE CODIGO ='" + Carnet + "'");
+                    ConsumoSQLPC("DELETE FROM [dbo].[[Tarjeta_Identificacion_prueba]] WHERE CODIGO ='" + Carnet + "'");
                 }
             }
             else
@@ -2879,14 +2879,14 @@ namespace ReportesUnis
                             log("ERROR - Actualizacion HCM del carnet: " + Carnet + "- RC", Carnet);
                         }
                         lblActualizacionRC.Text = "Ocurrió un problema al confirmar la información";
-                        ConsumoSQLRC("DELETE FROM [dbo].[Tarjeta_Identificacion_admins] WHERE CODIGO ='" + Carnet + "'");
+                        ConsumoSQLRC("DELETE FROM [dbo].[[Tarjeta_Identificacion_prueba]] WHERE CODIGO ='" + Carnet + "'");
                     }
                 }
                 else
                 {
                     lblActualizacionRC.Text = "Ocurrió un problema al confirmar la información";
                     log("ERROR - Actualizacion nombre en Campus del carnet: " + Carnet + "- RC", Carnet);
-                    ConsumoSQLRC("DELETE FROM [dbo].[Tarjeta_Identificacion_admins] WHERE CODIGO ='" + Carnet + "'");
+                    ConsumoSQLRC("DELETE FROM [dbo].[[Tarjeta_Identificacion_prueba]] WHERE CODIGO ='" + Carnet + "'");
                 }
             }
             else
@@ -3882,7 +3882,7 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     if (ROLES.Value.Contains("Estudiante") && TxtRolAC.Text == "2")
                     {
-                        cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_admins] " +
+                        cmd.CommandText = "SELECT 'INSERT INTO[dbo].[[Tarjeta_Identificacion_prueba]] " +
                                    "([Carnet] " +
                                    ",[Carrera] " +
                                    ",[Direccion] " +
@@ -4016,7 +4016,7 @@ namespace ReportesUnis
                     }
                     else
                     {
-                        cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_admins] " +
+                        cmd.CommandText = "SELECT 'INSERT INTO[dbo].[[Tarjeta_Identificacion_prueba]] " +
                                        "([Carnet] " +
                                        ",[Carrera] " +
                                        ",[Direccion] " +

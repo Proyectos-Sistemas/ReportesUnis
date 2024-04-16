@@ -676,7 +676,7 @@
                 <div class="row">
                     <div class="col-md-12 mx-auto text-center">
                         <div style="margin-bottom: 20px;"></div>
-                        <div class="modal-messageCarne">Ocurrió un error, intente más tarde.></div>
+                        <div class="modal-messageCarne">Ocurrió un error, intente más tarde.</div>
                         <div style="margin-bottom: 20px;"></div>
                     </div>
                 </div>
