@@ -421,10 +421,8 @@
     <Content Include="CapturaFoto.aspx" />
     <Content Include="Cargarfotografia.aspx" />
     <Content Include="CargarFotografiaEmpleados.aspx" />
-    <Content Include="conexion.txt" />
     <Content Include="Tabs.aspx" />
     <Content Include="VersionesCampus.txt" />
-    <Content Include="conexionSQL.txt" />
     <Content Include="ConfirmacionDeFotografias.aspx" />
     <Content Include="ConfirmacionDeFotografiasEmpleados.aspx" />
     <Content Include="ConfirmaciónCarneEmpleados.aspx" />
@@ -480,13 +478,9 @@
     <Content Include="DataSetLocalRpt.xsc">
       <DependentUpon>DataSetLocalRpt.xsd</DependentUpon>
     </Content>
-    <Content Include="conf.dat" />
-    <Content Include="Config.dat" />
-    <Content Include="ConfigWS.dat" />
     <Content Include="DataSet1.xsc">
       <DependentUpon>DataSet1.xsd</DependentUpon>
     </Content>
-    <Content Include="ConfigCampus.dat" />
     <None Include="DataSet1.xsd" />
     <Content Include="DataSet1.xss">
       <DependentUpon>DataSet1.xsd</DependentUpon>

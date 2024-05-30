@@ -235,7 +235,7 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     if (TipoPersona.Value.Contains("Estudiante") && NumeroTipoPersona.Value == "2")
                     {
-                        cmd.CommandText = "SELECT 'INSERT INTO[dbo].[[Tarjeta_Identificacion_prueba]] " +
+                        cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
                                    "([Carnet] " +
                                    ",[Carrera] " +
                                    ",[Direccion] " +
@@ -369,7 +369,7 @@ namespace ReportesUnis
                     }
                     else
                     {
-                        cmd.CommandText = "SELECT 'INSERT INTO[dbo].[[Tarjeta_Identificacion_prueba]] " +
+                        cmd.CommandText = "SELECT 'INSERT INTO[dbo].[Tarjeta_Identificacion_prueba] " +
                                        "([Carnet] " +
                                        ",[Carrera] " +
                                        ",[Direccion] " +
@@ -1224,7 +1224,7 @@ namespace ReportesUnis
                     string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                     tipoPersona(carnet);
                     QueryInsertBi(carnet);
-                    ConsumoSQL("DELETE FROM [Carnets].[dbo].[[Tarjeta_Identificacion_prueba]]  WHERE CARNET = '" + carnet + "'");
+                    ConsumoSQL("DELETE FROM [Carnets].[dbo].[Tarjeta_Identificacion_prueba]  WHERE CARNET = '" + carnet + "'");
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
                     if (respuesta == "0")
@@ -1345,7 +1345,7 @@ namespace ReportesUnis
                     string carnet = row.Cells[1].Text.Substring(0, row.Cells[1].Text.Length - 4);
                     carne.Value = carnet;
                     tipoPersona(carnet);
-                    ConsumoSQL("DELETE FROM [Carnets].[dbo].[[Tarjeta_Identificacion_prueba]]  WHERE CARNET = '" + carnet + "'");
+                    ConsumoSQL("DELETE FROM [Carnets].[dbo].[Tarjeta_Identificacion_prueba]  WHERE CARNET = '" + carnet + "'");
                     QueryInsertBi(carnet);
                     //SE INGRESA LA INFORMACIÓN EN EL BANCO
                     respuesta = ConsumoSQL(txtInsertBI.Text.ToUpper());
