@@ -86,10 +86,10 @@ namespace ReportesUnis
                 CrearArchivoBitacora(ArchivoBitacora, FechaHoraInicioEjecución);
 
                 //Guadar encabezado de la bitácora
-                GuardarBitacora(ArchivoBitacora, "                              Informe de ejecución de importación de fotografías Campus Fecha: " + FechaHoraInicioEjecución + "              ");
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    EMPLID                      Estado                 Descripción                                    ");
-                GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
+                //GuardarBitacora(ArchivoBitacora, "                              Informe de ejecución de importación de fotografías Campus Fecha: " + FechaHoraInicioEjecución + "              ");
+                //GuardarBitacora(ArchivoBitacora, "");
+                //GuardarBitacora(ArchivoBitacora, "Nombre del archivo                    EMPLID                      Estado                 Descripción                                    ");
+                //GuardarBitacora(ArchivoBitacora, "------------------------------------  --------------------------  ---------------------  ------------------------------------------------------------");
 
 
                 string constr = TxtURL.Text;
@@ -141,7 +141,7 @@ namespace ReportesUnis
                                     if (contadorDuplicadosXUsuario > 1)
                                     {
                                         mensajeValidacion = "La fotografía no se puede registrar para más de un usuario en Campus.";
-                                        GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                        //GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
                                         ContadorArchivosConError++;
                                         if (Error == false)
                                         {
@@ -158,7 +158,7 @@ namespace ReportesUnis
                                 catch (OracleException ex)
                                 {
                                     mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
-                                    GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                    //GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
                                     if (Error == false)
                                     {
                                         ContadorArchivosConError++;
@@ -192,7 +192,7 @@ namespace ReportesUnis
                                         if (contadorDuplicadosXNID > 1)
                                         {
                                             mensajeValidacion = "La fotografía no se puede registrar para más de una persona en Campus.";
-                                            GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                            //GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
                                             ContadorArchivosConError++;
                                             if (Error == false)
                                             {
@@ -209,7 +209,7 @@ namespace ReportesUnis
                                     catch (OracleException ex)
                                     {
                                         mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
-                                        GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                        //GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
                                         if (Error == false)
                                         {
                                             ContadorArchivosConError++;
@@ -242,7 +242,7 @@ namespace ReportesUnis
                                     catch (OracleException ex)
                                     {
                                         mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
-                                        GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                        //GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
                                         if (Error == false)
                                         {
                                             ContadorArchivosConError++;
@@ -292,7 +292,7 @@ namespace ReportesUnis
                                                     if (FilasAfectadas == 0)
                                                     {
                                                         mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus";
-                                                        GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                                        //GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
                                                         if (Error == false)
                                                         {
                                                             ContadorArchivosConError++;
@@ -301,14 +301,14 @@ namespace ReportesUnis
                                                     }
                                                     else
                                                     {
-                                                        GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "  " + EmplidFoto.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
+                                                        //GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "  " + EmplidFoto.PadRight(26) + "  Correcto               " + mensajeValidacion.PadRight(60));
                                                         ContadorArchivosCorrectos++;
                                                     }
                                                 }
                                                 catch (OracleException ex)
                                                 {
                                                     mensajeValidacion = "Error con la base de datos de Campus, no se registró la fotografía en Campus. " + ex.Message;
-                                                    GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                                    //GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
                                                     if (Error == false)
                                                     {
                                                         ContadorArchivosConError++;
@@ -322,7 +322,7 @@ namespace ReportesUnis
                             else
                             {
                                 mensajeValidacion = "La fotografía no se registró en Campus, es necesario tener registrado un ID de usuario como estudiante en Campus o un identificador nacional con el nombre de la fotografía.";
-                                GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                                //GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
                                 if (Error == false)
                                 {
                                     ContadorArchivosConError++;
@@ -332,7 +332,7 @@ namespace ReportesUnis
                         else
                         {
                             mensajeValidacion = "La fotografía no tiene formato .JPEG o .JPG";
-                            GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
+                           // GuardarBitacora(ArchivoBitacora, NombreFoto.PadRight(36) + "                              Error                  " + mensajeValidacion.PadRight(60));
                             if (Error == false)
                             {
                                 ContadorArchivosConError++;
@@ -341,18 +341,18 @@ namespace ReportesUnis
                     }
                 }
 
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "");
-                GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
-                GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
-                GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
-                GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
+                //GuardarBitacora(ArchivoBitacora, "");
+                //GuardarBitacora(ArchivoBitacora, "");
+                //GuardarBitacora(ArchivoBitacora, "-----------------------------------------------------------------------------------------------");
+                //GuardarBitacora(ArchivoBitacora, "Total de archivos: " + ContadorArchivos.ToString());
+                //GuardarBitacora(ArchivoBitacora, "Archivos cargados correctamente: " + ContadorArchivosCorrectos.ToString());
+                //GuardarBitacora(ArchivoBitacora, "Archivos con error: " + ContadorArchivosConError.ToString());
 
-                Response.ContentType = "application/text";
-                Response.AddHeader("content-disposition", "attachment; filename=Reporte de Carga.txt");
-                Response.TransmitFile(ArchivoBitacora);
-                Response.Flush();
-                Response.End();
+                //Response.ContentType = "application/text";
+                //Response.AddHeader("content-disposition", "attachment; filename=Reporte de Carga.txt");
+                //Response.TransmitFile(ArchivoBitacora);
+                //Response.Flush();
+                //Response.End();
             }
             catch (Exception)
             {

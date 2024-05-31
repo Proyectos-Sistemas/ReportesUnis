@@ -54,7 +54,7 @@ namespace ReportesUnis
 
                 if (respuesta.Contains("ACCESO_CARNETIZACION"))
                 {
-                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = GestionesEmpleados.Visible = ConfirmacionEmpleados.Visible = true;
+                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = GestionesEmpleados.Visible = ConfirmacionEmpleados.Visible = ActualizacionGeneralEstudiantes.Visible = true;
                 }
                 else
                 {
@@ -62,7 +62,7 @@ namespace ReportesUnis
                     GestionesEstudiantes.Visible = respuesta.Contains(GestionesEstudiantes.ValidationGroup);
                     GestionesEmpleados.Visible = respuesta.Contains(GestionesEmpleados.ValidationGroup);
                     Confirmacion.Visible = respuesta.Contains(Confirmacion.ValidationGroup);
-                    ConfirmacionEmpleados.Visible = respuesta.Contains(ConfirmacionEmpleados.ValidationGroup);
+                    ActualizacionGeneralEstudiantes.Visible = respuesta.Contains(ActualizacionGeneralEstudiantes.ValidationGroup);
                 }
             }
             catch (Exception)

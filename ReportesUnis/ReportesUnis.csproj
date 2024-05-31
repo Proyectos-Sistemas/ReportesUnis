@@ -417,7 +417,9 @@
     <Content Include="About.aspx" />
     <Content Include="Account\SignOut.aspx" />
     <Content Include="ActualizacionEstudiantes.aspx" />
+    <Content Include="ActualizacionGeneralEstudiantes.aspx" />
     <Content Include="ActualizaciónEmpleados.aspx" />
+    <Content Include="BusquedaModal.aspx" />
     <Content Include="CapturaFoto.aspx" />
     <Content Include="Cargarfotografia.aspx" />
     <Content Include="CargarFotografiaEmpleados.aspx" />
@@ -608,6 +610,13 @@
     <Compile Include="ActualizacionEstudiantes.aspx.designer.cs">
       <DependentUpon>ActualizacionEstudiantes.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ActualizacionGeneralEstudiantes.aspx.cs">
+      <DependentUpon>ActualizacionGeneralEstudiantes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ActualizacionGeneralEstudiantes.aspx.designer.cs">
+      <DependentUpon>ActualizacionGeneralEstudiantes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ActualizaciónEmpleados.aspx.cs">
       <DependentUpon>ActualizaciónEmpleados.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -626,6 +635,13 @@
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StartupAuth.cs" />
+    <Compile Include="BusquedaModal.aspx.cs">
+      <DependentUpon>BusquedaModal.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BusquedaModal.aspx.designer.cs">
+      <DependentUpon>BusquedaModal.aspx</DependentUpon>
+    </Compile>
     <Compile Include="CapturaFoto.aspx.cs">
       <DependentUpon>CapturaFoto.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
