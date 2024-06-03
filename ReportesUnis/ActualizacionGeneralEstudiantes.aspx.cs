@@ -55,7 +55,7 @@ namespace ReportesUnis
             txtExiste.Text = controlPantalla.ToString();
             if (controlPantalla >= 1)
             {
-                TextUser.Text = "9876543210101";// Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+                TextUser.Text =  Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
                 if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
                 {
@@ -68,6 +68,7 @@ namespace ReportesUnis
                     llenadoPais();
                     llenadoDepartamento();
                     llenadoState();
+                    llenadoPaisNacimiento();
                     txtControlBit.Text = "0";
                     txtControlNR.Text = "0";
                     txtControlAR.Text = "0";
@@ -244,10 +245,11 @@ namespace ReportesUnis
 
                     cmd.Connection = con;
                     cmd.CommandText = "SELECT APELLIDO_NIT, NOMBRE_NIT, CASADA_NIT, NIT, PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO, " +
-                                        "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT, STATE, EMAILUNIS,EMAILPERSONAL FROM ( " +
+                                        "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT, STATE, EMAILUNIS,EMAILPERSONAL, BIRTHCOUNTRY, MUNICIPIO_NAC, DEPARTAMENTO_NAC FROM ( " +
                                         "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, " +
                                         "PD.LAST_NAME, PD.SECOND_LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
                                         "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, " +
+                                        "(SELECT DESCR FROM SYSADM.PS_COUNTRY_TBL WHERE COUNTRY = (select BIRTHCOUNTRY from sysadm.PS_PERS_DATA_SA_VW WHERE EMPLID ='"+emplid+"')) BIRTHCOUNTRY, " +
                                         "APD.DESCR CARRERA, AGT.DESCR FACULTAD, " +
                                         "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'No Consta' END STATUS, " +
                                         "(SELECT EXTERNAL_SYSTEM_ID FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + emplid + "' ORDER BY EFFDT DESC FETCH FIRST 1 ROWS ONLY) NIT," +
@@ -259,7 +261,9 @@ namespace ReportesUnis
                                         "(SELECT ADDRESS3 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DIRECCION3_NIT, " +
                                         "(SELECT C.DESCR FROM SYSADM.PS_ADDRESSES PA JOIN SYSADM.PS_COUNTRY_TBL C ON PA.COUNTRY = C.COUNTRY AND PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) PAIS_NIT, " +
                                         "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) MUNICIPIO_NIT, " +
+                                        "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_PERS_DATA_SA_VW PD ON ST.STATE = PD.BIRTHSTATE AND ST.COUNTRY = PD.BIRTHCOUNTRY WHERE PD.EMPLID='" + emplid + "' ) MUNICIPIO_NAC, " +
                                         "(SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DEPARTAMENTO_NIT, " +
+                                        "COALESCE((SELECT SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_PERS_DATA_SA_VW PD ON ST.STATE = PD.BIRTHSTATE AND ST.COUNTRY = PD.BIRTHCOUNTRY WHERE PD.EMPLID='" + emplid + "' ),' ') DEPARTAMENTO_NAC, " +
                                         "(SELECT ST.STATE FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) STATE_NIT, " +
                                         "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = '" + emplid + "' AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAILUNIS , " +
                                         "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = '" + emplid + "' AND EMAIL.E_ADDR_TYPE IN ('HOM1') FETCH FIRST 1 ROWS ONLY) EMAILPERSONAL , " +
@@ -406,6 +410,21 @@ namespace ReportesUnis
                         else
                         {
                             CmbPais.SelectedValue = "";
+                        }
+
+                        if (!String.IsNullOrEmpty(reader["BIRTHCOUNTRY"].ToString()))
+                        {
+                            CmbPaisNacimiento.SelectedValue = reader["BIRTHCOUNTRY"].ToString();
+                            llenadoDepartamentoNac();
+                            //if (!String.IsNullOrEmpty(reader["DEPARTAMENTO_NAC"].ToString()))
+                            CmbDeptoNacimiento.SelectedValue = reader["DEPARTAMENTO_NAC"].ToString();
+                            llenadoMunicipioNacimiento();
+                            if (!String.IsNullOrEmpty(reader["MUNICIPIO_NAC"].ToString()))
+                            CmbMuncNacimiento.SelectedValue = reader["MUNICIPIO_NAC"].ToString();
+                        }
+                        else
+                        {
+                            CmbPaisNacimiento.SelectedValue = "";
                         }
 
                         if (!String.IsNullOrEmpty(reader["PAIS_NIT"].ToString()))
@@ -749,6 +768,43 @@ namespace ReportesUnis
             }
             ISESSION.Value = "0";
             banderaSESSION.Value = "1";
+        }public void llenadoDepartamentoNac()
+        {
+            banderaSESSION.Value = "1";
+            ISESSION.Value = "0";
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT ' ' AS DEPARTAMENTO FROM DUAL UNION " +
+                        "SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
+                        "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
+                        "WHERE CT.DESCR ='" + CmbPaisNacimiento.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL  " +
+                        "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+
+                    try
+                    {
+                        OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                        DataSet ds = new DataSet();
+                        adapter.Fill(ds);
+                        CmbDeptoNacimiento.DataSource = ds;
+                        CmbDeptoNacimiento.DataTextField = "DEPARTAMENTO";
+                        CmbDeptoNacimiento.DataValueField = "DEPARTAMENTO";
+                        CmbDeptoNacimiento.DataBind();
+                        con.Close();
+                    }
+                    catch (Exception)
+                    {
+                        CmbDepartamentoNIT.DataTextField = " ";
+                        CmbDepartamentoNIT.DataValueField = " ";
+                    }
+                }
+            }
+            ISESSION.Value = "0";
+            banderaSESSION.Value = "1";
         }
         public void llenadoMunicipioNIT()
         {
@@ -794,6 +850,43 @@ namespace ReportesUnis
                         CmbMunicipioNIT.DataSource = " ";
                         CmbMunicipioNIT.DataTextField = " ";
                         CmbMunicipioNIT.DataValueField = " ";
+                    }
+                }
+            }
+            banderaSESSION.Value = "0";
+            ISESSION.Value = "0";
+        }
+        protected void llenadoMunicipioNacimiento()
+        {
+            banderaSESSION.Value = "0";
+            ISESSION.Value = "0";
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    try
+                    {
+                        cmd.Connection = con;
+                        cmd.CommandText = "SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
+                        "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDeptoNacimiento.SelectedValue + "') " +
+                       // "AND ST.DESCR = '"+ CmbPaisNacimiento.Text + "'" +
+                        "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
+                        OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                        DataSet ds = new DataSet();
+                        adapter.Fill(ds);
+                        CmbMuncNacimiento.DataSource = ds;
+                        CmbMuncNacimiento.DataTextField = "MUNICIPIO";
+                        CmbMuncNacimiento.DataValueField = "MUNICIPIO";
+                        CmbMuncNacimiento.DataBind();
+                        con.Close();
+                    }
+                    catch (Exception)
+                    {
+                        CmbMuncNacimiento.DataSource = "-";
+                        CmbMuncNacimiento.DataTextField = "-";
+                        CmbMuncNacimiento.DataValueField = "-";
                     }
                 }
             }
@@ -888,6 +981,36 @@ namespace ReportesUnis
             }
             banderaSESSION.Value = "1";
         }
+
+        protected void llenadoPaisNacimiento()
+        {
+            banderaSESSION.Value = "1";
+            ISESSION.Value = "0";
+            string where = "";
+            if (!String.IsNullOrEmpty(CmbPaisNacimiento.Text))
+                where = "WHERE COUNTRY='" + CmbPaisNacimiento.Text + "'";
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT ' ' PAIS, ' ' COUNTRY FROM DUAL UNION SELECT * FROM (SELECT DESCR AS PAIS, COUNTRY FROM SYSADM.PS_COUNTRY_TBL " + where + ")PAIS ORDER BY 1 ASC";
+                    OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    adapter.Fill(ds);
+                    CmbPaisNacimiento.DataSource = ds;
+                    CmbPaisNacimiento.DataTextField = "PAIS";
+                    CmbPaisNacimiento.DataValueField = "PAIS";
+                    CmbPaisNacimiento.DataBind();
+                    con.Close();
+                }
+            }
+            banderaSESSION.Value = "1";
+            ISESSION.Value = "0";
+        }
+
         protected void llenadoState()
         {
             string constr = TxtURL.Text;
@@ -4058,7 +4181,7 @@ namespace ReportesUnis
         public void consultaNombre(string NombreBusqueda)
         {
             NombreBusqueda = NombreBusqueda.Replace(" ", "%");
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=10.11.0.36/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -4084,7 +4207,7 @@ namespace ReportesUnis
 
         public void consultarDocumento(string Documento)
         {
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=10.11.0.36/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -4112,7 +4235,7 @@ namespace ReportesUnis
 
         public void consultarId(string Id)
         {
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=10.11.0.36/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -4156,6 +4279,7 @@ namespace ReportesUnis
         protected void BtnAceptarBusqueda_Click(object sender, EventArgs e)
         {
             bool radioButtonSelected = false;
+            string validarAcceso = null;
             foreach (GridViewRow row in GridViewBusqueda.Rows)
             {
                 RadioButton rb = (RadioButton)row.FindControl("RBBusqueda");
@@ -4180,22 +4304,67 @@ namespace ReportesUnis
 
             if (radioButtonSelected is true)
             {
-                mostrarInformación(txtEmplid.Value);
-                if (String.IsNullOrEmpty(txtCarne.Text))
+                validarAcceso = ValidacionAccesoVista(txtEmplid.Value);
+                if (validarAcceso != null)
                 {
-                    string script = "<script>NoExisteAlumno();</script>";
-                    ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
-                    BtnBuscar.Enabled = true;
-                    BtnLimpiarBusqueda.Enabled = false;
-                    TxtBusqueda.Enabled = true;
+                    mostrarInformación(txtEmplid.Value);
+                    if (String.IsNullOrEmpty(txtCarne.Text))
+                    {
+                        string script = "<script>NoExisteAlumno();</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                        BtnBuscar.Enabled = true;
+                        BtnLimpiarBusqueda.Enabled = false;
+                        TxtBusqueda.Enabled = true;
+                    }
+                    else
+                    {
+                        BtnBuscar.Enabled = false;
+                        BtnLimpiarBusqueda.Enabled = true;
+                        TxtBusqueda.Enabled = false;
+                    }
                 }
                 else
                 {
-                    BtnBuscar.Enabled = false;
-                    BtnLimpiarBusqueda.Enabled = true;
-                    TxtBusqueda.Enabled = false;
+                    string script = "<script>NoTienePermisos();</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                 }
             }
+        }
+
+        protected string ValidacionAccesoVista(string carnet)
+        {
+            string constr = TxtURL.Text;
+            string facultad = null;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.CommandText = "SELECT COD_FACULTAD " +
+                        "FROM UNIS_INTERFACES.TBL_PERMISOS_ACT_CARNET " +
+                        "WHERE DPI ='"+ Context.User.Identity.Name.Replace("@unis.edu.gt", "") + "'  " +
+                        "AND COD_FACULTAD = ( " +
+                            "SELECT AGT.DESCRSHORT " +
+                            "FROM SYSADM.PS_STDNT_CAR_TERM CT " +
+                            "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.ACAD_PROG_PRIMARY = APD.ACAD_PROG " +
+                            "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
+                            "AND CT.INSTITUTION = APD.INSTITUTION " +
+                            "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
+                            "AND APD.INSTITUTION = AGT.INSTITUTION " +
+                            "JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
+                            "AND CT.INSTITUTION = TT.INSTITUTION " +
+                            "AND (SYSDATE BETWEEN TT.TERM_BEGIN_DT AND TT.TERM_END_DT) " +
+                            "WHERE EMPLID ='"+carnet+"'" +
+                        ")";
+                    cmd.Connection = con;
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        facultad = reader["COD_FACULTAD"].ToString();
+                    }
+                }
+            }
+            return facultad;
         }
     }
 

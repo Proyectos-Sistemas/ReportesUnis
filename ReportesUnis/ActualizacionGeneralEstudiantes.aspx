@@ -688,6 +688,35 @@
             </div>
         </div>
 
+        <div id="myModalPermisos" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; justify-content: center; align-items: center; z-index: 9999;">
+            <div class="modal-dialog" role="document" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 style="text-align: center; color: darkred;"><strong>Alerta</strong></h5>
+                        <span class="closePermisos" style="cursor: pointer;">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <contenttemplate>
+                            <div class="container emp-profile">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="profile-head">
+                                            <div class="row">
+                                                <div class="form-group col-md">
+                                                    <asp:Label ID="Label10" runat="server" ForeColor="Black">No cuenta con los permisos correspondientes para visualizar la información de dicho estudiante</asp:Label>
+                                                    <br />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </contenttemplate>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal" id="myModalCorrecto" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -1104,7 +1133,12 @@
             }
 
             function NoExisteAlumno() {
-                $('#myModalNoExisteAlumno').css('display', 'block');;
+                $('#myModalNoExisteAlumno').css('display', 'block');
+                return false;
+            }
+
+            function NoTienePermisos() {
+                $('#myModalPermisos').css('display', 'block');
                 return false;
             }
 
@@ -1251,6 +1285,11 @@
 
             $('.closeNoExisteAlumno').click(function () {
                 $('#myModalNoExisteAlumno').css('display', 'none');
+            });
+
+            $('.closePermisos').click(function () {
+                $('#myModalPermisos').css('display', 'none');
+                $('#myModalBusquedaMultiple').css('display', 'block');
             });
 
             //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
