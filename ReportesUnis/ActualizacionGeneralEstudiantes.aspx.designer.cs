@@ -465,6 +465,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label txtCantidadImagenesDpi;
 
         /// <summary>
+        /// Control txtDPI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDPI;
+
+        /// <summary>
         /// Control InfePersonal.
         /// </summary>
         /// <remarks>
@@ -663,6 +672,42 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden UP_EMAIL_ADDRESSES;
 
         /// <summary>
+        /// Control UP_BIRTHDATE.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UP_BIRTHDATE;
+
+        /// <summary>
+        /// Control UP_BIRTHSTATE.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UP_BIRTHSTATE;
+
+        /// <summary>
+        /// Control UP_BIRTHPLACE.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UP_BIRTHPLACE;
+
+        /// <summary>
+        /// Control UP_BIRTHCOUNTRY.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UP_BIRTHCOUNTRY;
+
+        /// <summary>
         /// Control UD_PERS_DATA_EFFDT.
         /// </summary>
         /// <remarks>
@@ -715,6 +760,42 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden UD_EMAIL_ADDRESSES;
+
+        /// <summary>
+        /// Control UD_BIRTHDATE.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UD_BIRTHDATE;
+
+        /// <summary>
+        /// Control UD_BIRTHSTATE.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UD_BIRTHSTATE;
+
+        /// <summary>
+        /// Control UD_BIRTHPLACE.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UD_BIRTHPLACE;
+
+        /// <summary>
+        /// Control UD_BIRTHCOUNTRY.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden UD_BIRTHCOUNTRY;
 
         /// <summary>
         /// Control VersionUP.
@@ -834,6 +915,33 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden ExisteBusqueda;
 
         /// <summary>
+        /// Control PaisNacimiento.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden PaisNacimiento;
+
+        /// <summary>
+        /// Control LugarNacimiento.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden LugarNacimiento;
+
+        /// <summary>
+        /// Control StateNacimiento.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden StateNacimiento;
+
+        /// <summary>
         /// Control tabla.
         /// </summary>
         /// <remarks>
@@ -841,6 +949,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tabla;
+
+        /// <summary>
+        /// Control GridViewDocumentos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridViewDocumentos;
 
         /// <summary>
         /// Control txtCarne.
@@ -852,22 +969,49 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.Label txtCarne;
 
         /// <summary>
+        /// Control txtFacultad.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtFacultad;
+
+        /// <summary>
+        /// Control txtCarrera.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label txtCarrera;
+
+        /// <summary>
+        /// Control EmailUnis.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label EmailUnis;
+
+        /// <summary>
         /// Control txtCumple.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtCumple;
+        protected global::System.Web.UI.WebControls.TextBox txtCumple;
 
         /// <summary>
-        /// Control txtDPI.
+        /// Control TxtLugarNac.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDPI;
+        protected global::System.Web.UI.WebControls.TextBox TxtLugarNac;
 
         /// <summary>
         /// Control CmbPaisNacimiento.
@@ -895,33 +1039,6 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList CmbMuncNacimiento;
-
-        /// <summary>
-        /// Control EmailUnis.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label EmailUnis;
-
-        /// <summary>
-        /// Control txtFacultad.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtFacultad;
-
-        /// <summary>
-        /// Control txtCarrera.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label txtCarrera;
 
         /// <summary>
         /// Control txtNombre.

@@ -2663,11 +2663,11 @@ namespace ReportesUnis
                                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                 }
                             }
-                            catch (Exception)
+                            catch (Exception x)
                             {
                                 transaction.Rollback();
                                 EliminarAlmacenada();
-                                log("ERROR - Error en almacenamiento Campus: UD = " + consultaUD + "; UP = " + consultaUP + " SOAP: " + Variables.soapBody);
+                                log("ERROR - "+ x.Message +"-  Error en almacenamiento Campus: UD = " + consultaUD + "; UP = " + consultaUP + " SOAP: " + Variables.soapBody);
                                 File.Delete(txtPath.Text + UserEmplid.Text + ".jpg");
                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                             }
@@ -3659,12 +3659,12 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + txtCarne.Text + "','" + ErrorLog + "','ACTUALIZACION ESTUDIANTES',SYSDATE)";
                     cmd.ExecuteNonQuery();
-                    /*if (txtControlBit.Text == "0" && !txtInsertBit.Text.IsNullOrWhiteSpace())
+                    if (txtControlBit.Text == "0" && !txtInsertBit.Text.IsNullOrWhiteSpace())
                     {
                         cmd.CommandText = txtInsertBit.Text;
                         cmd.ExecuteNonQuery();
                         txtControlBit.Text = "1";
-                    }*/
+                    }
                     if (txtControlAR.Text == "0" && !txtUpdateAR.Text.IsNullOrWhiteSpace())
                     {
                         cmd.CommandText = txtUpdateAR.Text;

@@ -157,6 +157,7 @@
                 <asp:Label ID="txtPaisPasaporte" runat="server" Visible="false"></asp:Label>
                 <%-- ¡tiene pasaporte? --%>
                 <asp:Label ID="txtCantidadImagenesDpi" runat="server" Visible="false">0</asp:Label>
+                <asp:TextBox ID="txtDPI" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control" Visible="false"></asp:TextBox>
             </div>
             <div id="InfePersonal" runat="server">
 
@@ -171,6 +172,7 @@
                         </div>
                     </div>
                 </div>
+                <br />
 
                 <%-- EMPLID A BUSCAR--%>
                 <input type="hidden" id="txtEmplid" runat="server" />
@@ -216,6 +218,16 @@
                 <%-- TEXTBOX ALMACENA UP CORREO PERSONAL--%>
                 <input type="hidden" id="UP_EMAIL_ADDRESSES" runat="server" />
 
+                <%-- TEXTBOX ALMACENA UP BIRTHDATE--%>
+                <input type="hidden" id="UP_BIRTHDATE" runat="server" />
+                <%-- TEXTBOX ALMACENA UP BIRTHSTATE--%>
+                <input type="hidden" id="UP_BIRTHSTATE" runat="server" />
+                <%-- TEXTBOX ALMACENA UP BIRTHPLACE--%>
+                <input type="hidden" id="UP_BIRTHPLACE" runat="server" />
+                <%-- TEXTBOX ALMACENA UP BIRTHCOUNTRY--%>
+                <input type="hidden" id="UP_BIRTHCOUNTRY" runat="server" />
+
+
                 <%-- TEXTBOX ALMACENA UD ESTADO CIVIL--%>
                 <input type="hidden" id="UD_PERS_DATA_EFFDT" runat="server" />
                 <%-- TEXTBOX ALMACENA UD NOMBRE NIT--%>
@@ -228,6 +240,16 @@
                 <input type="hidden" id="UD_PERSONAL_PHONE" runat="server" />
                 <%-- TEXTBOX ALMACENA UD CORREO PERSONAL--%>
                 <input type="hidden" id="UD_EMAIL_ADDRESSES" runat="server" />
+
+                <%-- TEXTBOX ALMACENA UD BIRTHDATE--%>
+                <input type="hidden" id="UD_BIRTHDATE" runat="server" />
+                <%-- TEXTBOX ALMACENA UD BIRTHSTATE--%>
+                <input type="hidden" id="UD_BIRTHSTATE" runat="server" />
+                <%-- TEXTBOX ALMACENA UD BIRTHPLACE--%>
+                <input type="hidden" id="UD_BIRTHPLACE" runat="server" />
+                <%-- TEXTBOX ALMACENA UD BIRTHCOUNTRY--%>
+                <input type="hidden" id="UD_BIRTHCOUNTRY" runat="server" />
+
 
                 <input type="hidden" id="VersionUP" runat="server" />
                 <input type="hidden" id="VersionUD" runat="server" />
@@ -252,6 +274,11 @@
                 <%-- VALIDA BUSQUEDA--%>
                 <input type="hidden" id="ExisteBusqueda" runat="server" />
 
+                <%-- VALIDA DATOS NACIMIENTO--%>
+                <input type="hidden" id="PaisNacimiento" runat="server" />
+                <input type="hidden" id="LugarNacimiento" runat="server" />
+                <input type="hidden" id="StateNacimiento" runat="server" />
+
 
                 <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
                 <div class="container" id="tabla" runat="server">
@@ -259,51 +286,48 @@
                         <div class="col-md">
                             <div class="container">
                                 <div class="row">
-
+                                    <div class="form-group col-md 12">
+                                        <%-- GRIDVIEW DONDE SE MUESTRA LA INFORMACION DEL REPORTE --%>
+                                        <div class="containerGV">
+                                            <asp:GridView ID="GridViewDocumentos" runat="server" AutoGenerateColumns="false"
+                                                CssClass="table table-condensed table-bordered" OnRowDataBound="GridViewDocumentos_RowDataBound">
+                                                <Columns>
+                                                    <asp:TemplateField HeaderText="Documento Principal" ItemStyle-HorizontalAlign="Center">
+                                                        <ItemTemplate>
+                                                            <asp:RadioButton ID="RBDocPrincipal" runat="server" GroupName="DocumentosIdentificacion" Checked='<%# Eval("PRIMARY_NID").ToString() == "Y" %>' OnClick="selectOnlyThisDoc(this)" />
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="País">
+                                                        <ItemTemplate>
+                                                            <asp:DropDownList ID="DDLPais" runat="server">
+                                                            </asp:DropDownList>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Tipo de Documento de Identidad" ItemStyle-CssClass="nowrap">
+                                                        <ItemTemplate>
+                                                            <asp:DropDownList ID="TipoDocumento" runat="server" SelectedValue='<%# Eval("TipoDocumento") %>'>
+                                                                <asp:ListItem Text="Seleccione un tipo" Value=""></asp:ListItem>
+                                                                <asp:ListItem Text="DPI" Value="DPI"></asp:ListItem>
+                                                                <asp:ListItem Text="Pasaporte" Value="PAS"></asp:ListItem>
+                                                            </asp:DropDownList>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Documento" ItemStyle-CssClass="nowrap">
+                                                        <ItemTemplate>
+                                                            <asp:TextBox ID="TxtNroDocumento" runat="server" Text='<%# Eval("Documento") %>'></asp:TextBox>
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                    <asp:BoundField DataField="PRIMARY_NID" HeaderText="PRIMARY_NID" Visible="false" />
+                                                </Columns>
+                                            </asp:GridView>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Carné:</asp:Label>
                                         <br />
                                         <asp:Label ID="txtCarne" runat="server" Enabled="false"></asp:Label>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Fecha de nacimiento:</asp:Label>
-                                        <br />
-                                        <asp:Label ID="txtCumple" runat="server" Enabled="false"></asp:Label>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">DPI/Pasaporte:</asp:Label>
-                                        <br />
-                                        <asp:TextBox ID="txtDPI" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">País de Nacimiento*:</asp:Label><br />
-                                        <asp:DropDownList ID="CmbPaisNacimiento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
-                                        </asp:DropDownList>
-                                        <br />
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Departamento de Nacimiento*:</asp:Label>
-                                        <asp:DropDownList ID="CmbDeptoNacimiento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
-                                        </asp:DropDownList>
-                                        <br />
-                                    </div>
-
-                                    <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Municipio de Nacimiento*:</asp:Label>
-                                        <asp:DropDownList ID="CmbMuncNacimiento" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
-                                        </asp:DropDownList>
-                                        <br />
-                                    </div>
-
-
-                                    <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Correo Institucional:</asp:Label>
-                                        <br />
-                                        <asp:Label ID="EmailUnis" runat="server" Enabled="false"></asp:Label>
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -317,6 +341,50 @@
                                         <br />
                                         <asp:Label ID="txtCarrera" runat="server" Enabled="false"></asp:Label>
                                     </div>
+
+                                    <div class="form-group col-md-4">
+                                        <asp:Label runat="server" Font-Bold="true">Correo Institucional:</asp:Label>
+                                        <br />
+                                        <asp:Label ID="EmailUnis" runat="server" Enabled="false"></asp:Label>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <asp:Label runat="server" Font-Bold="true">Fecha de nacimiento:</asp:Label>
+                                        <br />
+                                        <asp:TextBox ID="txtCumple" runat="server" Enabled="true" Width="275px" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <asp:Label runat="server" Font-Bold="true">Lugar de Nacimiento:</asp:Label>
+                                        <br />
+                                        <asp:TextBox ID="TxtLugarNac" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
+                                    </div>
+
+
+                                    <div class="form-group col-md-4">
+                                        <asp:Label runat="server" Font-Bold="true">País de Nacimiento*:</asp:Label><br />
+                                        <asp:DropDownList ID="CmbPaisNacimiento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPaisNac_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
+                                        </asp:DropDownList>
+                                        <br />
+                                    </div>
+
+
+                                    <div class="form-group col-md-4">
+                                        <asp:Label runat="server" Font-Bold="true">Departamento de Nacimiento*:</asp:Label>
+                                        <asp:DropDownList ID="CmbDeptoNacimiento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamentoNac_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
+                                        </asp:DropDownList>
+                                        <br />
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <asp:Label runat="server" Font-Bold="true">Municipio de Nacimiento*:</asp:Label>
+                                        <asp:DropDownList ID="CmbMuncNacimiento" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipioNac_SelectedIndexChanged" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
+                                        </asp:DropDownList>
+                                        <br />
+                                    </div>
+
+
+
 
 
 
@@ -598,7 +666,7 @@
                     <div class="col-md-4 mx-auto text-center">
                     </div>
                     <div class="col-md-4 mx-auto text-center">
-                        <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="false" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
+                        <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
                     </div>
                     <div class="col-md-4 mx-auto text-center">
                     </div>
@@ -919,253 +987,253 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+    </div>
+    <script>
+        var userAgent = navigator.userAgent;
 
-        <script>
-            var userAgent = navigator.userAgent;
+        function validarCorreo(correo) {
+            var errorCorreoElement = document.getElementById("errorCorreo");
+            var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            function validarCorreo(correo) {
-                var errorCorreoElement = document.getElementById("errorCorreo");
-                var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                if (correo.trim() === "") {
-                    errorCorreoElement.textContent = "Ingrese su correo personal.";
-                } else if (!regex.test(correo)) {
-                    errorCorreoElement.textContent = "El formato del correo electrónico no es válido.";
-                } else {
-                    errorCorreoElement.textContent = " ";
-                }
+            if (correo.trim() === "") {
+                errorCorreoElement.textContent = "Ingrese su correo personal.";
+            } else if (!regex.test(correo)) {
+                errorCorreoElement.textContent = "El formato del correo electrónico no es válido.";
+            } else {
+                errorCorreoElement.textContent = " ";
             }
+        }
 
-            function validarTelefono(Telefono) {
-                var errorTelefonoElement = document.getElementById("errorTelefono");
+        function validarTelefono(Telefono) {
+            var errorTelefonoElement = document.getElementById("errorTelefono");
 
-                if (Telefono.trim() === "") {
-                    errorTelefonoElement.textContent = "Ingrese su teléfono.";
-                } else if (Telefono.length > 0 && Telefono.length <= 7) {
-                    errorTelefonoElement.textContent = "El número de télefono debe de tener 8 caracteres";
-                } else {
-                    errorTelefonoElement.textContent = "";
-                }
+            if (Telefono.trim() === "") {
+                errorTelefonoElement.textContent = "Ingrese su teléfono.";
+            } else if (Telefono.length > 0 && Telefono.length <= 7) {
+                errorTelefonoElement.textContent = "El número de télefono debe de tener 8 caracteres";
+            } else {
+                errorTelefonoElement.textContent = "";
             }
+        }
 
-            function mostrarAlerta() {
-                var mensaje = "";
-                var apellido = document.getElementById('<%= txtApellido.ClientID %>').value;
-                var nombre = document.getElementById('<%= txtNombre.ClientID %>').value;
-                var nombreR = document.getElementById('<%= TxtNombreR.ClientID %>').value;
-                var nit = document.getElementById('<%= txtNit.ClientID %>').value;
-                var direccion1 = document.getElementById('<%= txtDireccion.ClientID %>').value;
-                var direccionR1 = document.getElementById('<%= TxtDiRe1.ClientID %>').value;
-                var telefono = document.getElementById('<%= txtTelefono.ClientID %>').value;
-                var pais = document.getElementById('<%= CmbPais.ClientID %>').value;
-                var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
-                var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
-                var paisN = document.getElementById('<%= CmbPaisNIT.ClientID %>').value;
-                var deptoN = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>').value;
-                var muniN = document.getElementById('<%= CmbMunicipioNIT.ClientID %>').value;
-                var Correo = document.getElementById('<%= TxtCorreoPersonal.ClientID %>').value;
+        function mostrarAlerta() {
+            var mensaje = "";
+            var apellido = document.getElementById('<%= txtApellido.ClientID %>').value;
+            var nombre = document.getElementById('<%= txtNombre.ClientID %>').value;
+            var nombreR = document.getElementById('<%= TxtNombreR.ClientID %>').value;
+            var nit = document.getElementById('<%= txtNit.ClientID %>').value;
+            var direccion1 = document.getElementById('<%= txtDireccion.ClientID %>').value;
+            var direccionR1 = document.getElementById('<%= TxtDiRe1.ClientID %>').value;
+            var telefono = document.getElementById('<%= txtTelefono.ClientID %>').value;
+            var pais = document.getElementById('<%= CmbPais.ClientID %>').value;
+            var depto = document.getElementById('<%= CmbDepartamento.ClientID %>').value;
+            var muni = document.getElementById('<%= CmbMunicipio.ClientID %>').value;
+            var paisN = document.getElementById('<%= CmbPaisNIT.ClientID %>').value;
+            var deptoN = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>').value;
+            var muniN = document.getElementById('<%= CmbMunicipioNIT.ClientID %>').value;
+            var Correo = document.getElementById('<%= TxtCorreoPersonal.ClientID %>').value;
 
-                // Obtener el valor del <textarea>
-                var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
-                var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
-                var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
-                var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
-                var ControlCF2 = $('#<%= ControlCF2.ClientID %>').val().trim();
-                var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
-                var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
-                var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
-                var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
-                var modal = document.getElementById("myModalActualizacion");
-                var divCombos = $('#<%= Combos.ClientID %>');
-                var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
-                var files = fileUpload.files;
-
-
-                if ((txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) && $('#myModal').css('display') != 'block') {
-                    $('#myModal').css('display', 'block');
-                    return false;
-                } else if (files.length == 0 && $('#myModal').css('display') === 'block') {
-                    alert("Es necesario adjuntar la imagen de su documento de identificación para continuar con la actualización.");
-                    $('#myModal').css('display', 'block');
-                    return false;
-                } else if (TrueNit !== nit && nit !== "CF") {
-                    // Realiza las acciones necesarias si el valor es diferente de cero
-                    alert("El NIT ha cambiado, es necesario validar.");
-                    return false;
-                } else {
-                    if (apellido.trim() === "") {
-                        mensaje = "-Los Apellidos son requerido.";
-                    }
-
-                    if (nombre.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-Los Nombres son requeridos.";
-                        } else {
-                            mensaje = mensaje + "\n-Los Nombres son requeridos.";
-                        }
-                    }
-
-                    if (direccion1.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-La Dirección 1 es requerida.";
-                        } else {
-                            mensaje = mensaje + "\n-La Dirección 1 es requerida.";
-                        }
-                    }
-
-                    if (pais.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El país es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El país es requerido.";
-                        }
-                    }
-
-                    if (depto.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El departamento es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El departamento es requerido.";
-                        }
-                    }
-
-                    if (muni.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El municipio es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El municipio es requerido.";
-                        }
-                    }
-
-                    if (Correo.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El Correo Personal es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El Correo Personal es requerido.";
-                        }
-                    }
-
-                    if (telefono.length > 0 && telefono.length <= 7) {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El Teléfono debe de tener 8 carácteres.";
-                        } else {
-                            mensaje = mensaje + "\n-El Teléfono debe de tener 8 carácteres.";
-                        }
-                    }
-
-                    if (telefono.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El Teléfono es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El Teléfono es requerido.";
-                        }
-
-                    }
+            // Obtener el valor del <textarea>
+            var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
+            var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
+            var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
+            var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
+            var ControlCF2 = $('#<%= ControlCF2.ClientID %>').val().trim();
+            var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
+            var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
+            var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
+            var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
+            var modal = document.getElementById("myModalActualizacion");
+            var divCombos = $('#<%= Combos.ClientID %>');
+            var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
+            var files = fileUpload.files;
 
 
-                    if (nit.trim() === "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El NIT para el recibo es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El NIT para el recibo es requerido.";
-                        }
-                    }
-
-                    if (direccionR1.trim() === "" && nombreR.trim() !== "") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-La Dirección 1 para el recibo es requerida.";
-                        } else {
-                            mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
-                        }
-                    }
-
-
-
-                    if (paisN.trim() === "" && ControlCF2.trim() === "2") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El país para el recibo es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El país para el recibo es requerido.";
-                        }
-                    }
-
-                    if (deptoN.trim() === "" && ControlCF2.trim() === "2") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El departamento para el recibo es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El departamento para el recibo es requerido.";
-                        }
-                    }
-
-                    if (muniN.trim() === "" && ControlCF2.trim() === "2") {
-                        if (mensaje.trim() == "") {
-                            mensaje = "-El municipio para el recibo es requerido.";
-                        } else {
-                            mensaje = mensaje + "\n-El municipio para el recibo es requerido.";
-                        }
-                    }
-
-                    if (mensaje.trim() !== "") {
-                        mensaje = mensaje.replace("/\n/g", "<br>");
-                        alert(mensaje);
-                        return false;
-                    } else if (confirm("¿Está seguro de que su información es correcta?")) {
-                        $('#myModal').css('display', 'none'); // Cierra #myModal cuando se abre para cargar documentos
-                        $('#myModalActualizacion').css('display', 'block');
-                        __doPostBack('<%= BtnActualizar.ClientID %>', '');
-                        return true; // Permite continuar con la acción del botón
-                    } else {
-                        return false; // Cancela la acción del botón
-                    }
-                }
-            }
-
-            function Documentos() {
-                alert("Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.");
+            if ((txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) && $('#myModal').css('display') != 'block') {
                 $('#myModal').css('display', 'block');
                 return false;
-            }
-
-            function NoExiste() {
-                $('#myModalAlumno').css('display', 'block');
-                $('#myModalBusquedaMultiple').css('display', 'none');
+            } else if (files.length == 0 && $('#myModal').css('display') === 'block') {
+                alert("Es necesario adjuntar la imagen de su documento de identificación para continuar con la actualización.");
+                $('#myModal').css('display', 'block');
                 return false;
-            }
-
-            function NoExisteAlumno() {
-                $('#myModalNoExisteAlumno').css('display', 'block');
+            } else if (TrueNit !== nit && nit !== "CF") {
+                // Realiza las acciones necesarias si el valor es diferente de cero
+                alert("El NIT ha cambiado, es necesario validar.");
                 return false;
-            }
+            } else {
+                if (apellido.trim() === "") {
+                    mensaje = "-Los Apellidos son requerido.";
+                }
 
-            function NoTienePermisos() {
-                $('#myModalPermisos').css('display', 'block');
-                return false;
-            }
+                if (nombre.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Los Nombres son requeridos.";
+                    } else {
+                        mensaje = mensaje + "\n-Los Nombres son requeridos.";
+                    }
+                }
 
-            function NoExisteNit() {
-                alert("El NIT no existe. Intente de nuevo");
-            }
+                if (direccion1.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-La Dirección 1 es requerida.";
+                    } else {
+                        mensaje = mensaje + "\n-La Dirección 1 es requerida.";
+                    }
+                }
 
-            function ConfirmacionActualizacionSensible() {
-                mensaje = "Su información fue almacenada correctamente. \nLa información ingresada debe ser aprobada antes de ser confirmada.\nActualmente, solo se muestran los datos que han sido previamente confirmados.";
-                mensaje = mensaje.replace("/\n/g", "<br>");
-                alert(mensaje);
-                window.location.href = "ActualizacionGeneralEstudiantes.aspx";
-            }
+                if (pais.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El país es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El país es requerido.";
+                    }
+                }
 
-            function ConfirmacionActualizacion() {
-                mensaje = "Su información fue actualizada correctamente.";
-                mensaje = mensaje.replace("/\n/g", "<br>");
-                alert(mensaje);
-                window.location.href = "ActualizacionGeneralEstudiantes.aspx";
-            }
+                if (depto.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El departamento es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El departamento es requerido.";
+                    }
+                }
 
-            $(document).ready(function () {
-                // Function to add the code
-                function RBSi() {
-                    $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
-                        if ($(this).is(':checked')) {
-                            $('#<%= ControlCF.ClientID %>').val(" ");
+                if (muni.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El municipio es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El municipio es requerido.";
+                    }
+                }
+
+                if (Correo.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El Correo Personal es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El Correo Personal es requerido.";
+                    }
+                }
+
+                if (telefono.length > 0 && telefono.length <= 7) {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El Teléfono debe de tener 8 carácteres.";
+                    } else {
+                        mensaje = mensaje + "\n-El Teléfono debe de tener 8 carácteres.";
+                    }
+                }
+
+                if (telefono.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El Teléfono es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El Teléfono es requerido.";
+                    }
+
+                }
+
+
+                if (nit.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El NIT para el recibo es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El NIT para el recibo es requerido.";
+                    }
+                }
+
+                if (direccionR1.trim() === "" && nombreR.trim() !== "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-La Dirección 1 para el recibo es requerida.";
+                    } else {
+                        mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
+                    }
+                }
+
+
+
+                if (paisN.trim() === "" && ControlCF2.trim() === "2") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El país para el recibo es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El país para el recibo es requerido.";
+                    }
+                }
+
+                if (deptoN.trim() === "" && ControlCF2.trim() === "2") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El departamento para el recibo es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El departamento para el recibo es requerido.";
+                    }
+                }
+
+                if (muniN.trim() === "" && ControlCF2.trim() === "2") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El municipio para el recibo es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El municipio para el recibo es requerido.";
+                    }
+                }
+
+                if (mensaje.trim() !== "") {
+                    mensaje = mensaje.replace("/\n/g", "<br>");
+                    alert(mensaje);
+                    return false;
+                } else if (confirm("¿Está seguro de que su información es correcta?")) {
+                    $('#myModal').css('display', 'none'); // Cierra #myModal cuando se abre para cargar documentos
+                    $('#myModalActualizacion').css('display', 'block');
+                    __doPostBack('<%= BtnActualizar.ClientID %>', '');
+                    return true; // Permite continuar con la acción del botón
+                } else {
+                    return false; // Cancela la acción del botón
+                }
+            }
+        }
+
+        function Documentos() {
+            alert("Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.");
+            $('#myModal').css('display', 'block');
+            return false;
+        }
+
+        function NoExiste() {
+            $('#myModalAlumno').css('display', 'block');
+            $('#myModalBusquedaMultiple').css('display', 'none');
+            return false;
+        }
+
+        function NoExisteAlumno() {
+            $('#myModalNoExisteAlumno').css('display', 'block');
+            return false;
+        }
+
+        function NoTienePermisos() {
+            $('#myModalPermisos').css('display', 'block');
+            return false;
+        }
+
+        function NoExisteNit() {
+            alert("El NIT no existe. Intente de nuevo");
+        }
+
+        function ConfirmacionActualizacionSensible() {
+            mensaje = "Su información fue almacenada correctamente. \nLa información ingresada debe ser aprobada antes de ser confirmada.\nActualmente, solo se muestran los datos que han sido previamente confirmados.";
+            mensaje = mensaje.replace("/\n/g", "<br>");
+            alert(mensaje);
+            window.location.href = "ActualizacionGeneralEstudiantes.aspx";
+        }
+
+        function ConfirmacionActualizacion() {
+            mensaje = "Su información fue actualizada correctamente.";
+            mensaje = mensaje.replace("/\n/g", "<br>");
+            alert(mensaje);
+            window.location.href = "ActualizacionGeneralEstudiantes.aspx";
+        }
+
+        $(document).ready(function () {
+            // Function to add the code
+            function RBSi() {
+                $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        $('#<%= ControlCF.ClientID %>').val(" ");
                             $('#<%= ControlCF2.ClientID %>').val("1");
                             $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
                             $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
@@ -1192,46 +1260,46 @@
                             $('#<%= Combos.ClientID %>').hide();
                             // Hacer visible la fila sustitucion de Combos
                             $('#<%= sustituirCombos.ClientID %>').hide();
-                        }
-                    });
-                }
+                    }
+                });
+            }
 
-                // Call the function
-                RBSi();
-            });
+            // Call the function
+            RBSi();
+        });
 
-            $(document).ready(function () {
-                // Capturar el cambio de estado del RadioButton
-                $('#<%= RadioButtonNombreSi.ClientID %>').change(function () {
-                    if ($(this).is(':checked')) {
-                        // El RadioButton ha sido marcado, ocultar la fila
-                        $('#<%= Combos.ClientID %>').hide();
+        $(document).ready(function () {
+            // Capturar el cambio de estado del RadioButton
+            $('#<%= RadioButtonNombreSi.ClientID %>').change(function () {
+                if ($(this).is(':checked')) {
+                    // El RadioButton ha sido marcado, ocultar la fila
+                    $('#<%= Combos.ClientID %>').hide();
                         $('#<%= sustituirCombos.ClientID %>').show();
                     } else {
                         // El RadioButton ha sido desmarcado, mostrar la fila
                         $('#<%= Combos.ClientID %>').show();
                         $('#<%= sustituirCombos.ClientID %>').hide();
-                    }
-                });
+                }
+            });
 
-                // Verificar el estado inicial del RadioButton al cargar la página
-                if ($('#<%= RadioButtonNombreSi.ClientID %>').is(':checked')) {
-                    // El RadioButton está marcado, ocultar la fila
-                    $('#<%= Combos.ClientID %>').hide();
+            // Verificar el estado inicial del RadioButton al cargar la página
+            if ($('#<%= RadioButtonNombreSi.ClientID %>').is(':checked')) {
+                // El RadioButton está marcado, ocultar la fila
+                $('#<%= Combos.ClientID %>').hide();
                     $('#<%= sustituirCombos.ClientID %>').show();
                 } else {
                     // El RadioButton no está marcado, mostrar la fila
                     $('#<%= Combos.ClientID %>').show();
                     $('#<%= sustituirCombos.ClientID %>').hide();
-                }
-            });
+            }
+        });
 
-            $(document).ready(function () {
-                // Function to add the code
-                function RBNo() {
-                    $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
-                        if ($(this).is(':checked')) {
-                            $('#<%= ControlCF.ClientID %>').val(" ");
+        $(document).ready(function () {
+            // Function to add the code
+            function RBNo() {
+                $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        $('#<%= ControlCF.ClientID %>').val(" ");
                             $('#<%= ControlCF2.ClientID %>').val("2");
                             $('#<%= TxtNombreR.ClientID %>').val("");
                             $('#<%= TxtApellidoR.ClientID %>').val("");
@@ -1259,307 +1327,315 @@
 
                             var deptos = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>');
                             var muni = document.getElementById('<%= CmbMunicipioNIT.ClientID %>');
-                            while (deptos.options.length > 0) {
-                                deptos.remove(0);
-                            }
-                            while (muni.options.length > 0) {
-                                muni.remove(0);
-                            }
+                        while (deptos.options.length > 0) {
+                            deptos.remove(0);
                         }
-                    });
-                }
-
-                // Call the function
-                RBNo();
-
-            });
-
-
-            $('.close').click(function () {
-                $('#myModal').css('display', 'none');
-            });
-
-            $('.closeAlumno').click(function () {
-                $('#myModalAlumno').css('display', 'none');
-            });
-
-            $('.closeNoExisteAlumno').click(function () {
-                $('#myModalNoExisteAlumno').css('display', 'none');
-            });
-
-            $('.closePermisos').click(function () {
-                $('#myModalPermisos').css('display', 'none');
-                $('#myModalBusquedaMultiple').css('display', 'block');
-            });
-
-            //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
-            $(document).ready(function () {
-                $('#<%= txtNombre.ClientID %>').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
-                        $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+                        while (muni.options.length > 0) {
+                            muni.remove(0);
+                        }
                     }
                 });
-            });
-
-            //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO EN EL RECIBO 
-            $(document).ready(function () {
-                $('#<%= txtApellido.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
-                        $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
-                    }
-                });
-            });
-
-            //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO DE CASADA EN EL RECIBO 
-            $(document).ready(function () {
-                $('#<%= txtCasada.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
-                        $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
-                    }
-                });
-            });
-
-            //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 1 EN EL RECIBO 
-            $(document).ready(function () {
-                $('#<%= txtDireccion.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
-                        $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
-                    }
-                });
-            });
-
-            //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 2 EN EL RECIBO 2.0
-            $(document).ready(function () {
-                $('#<%= txtDireccion2.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
-                        $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
-                    }
-                });
-            });
-
-            //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 3 EN EL RECIBO 
-            $(document).ready(function () {
-                $('#<%= txtDireccion3.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
-                        $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
-                    }
-                });
-            });
-
-            //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO PAIS EN EL RECIBO
-            $(document).ready(function () {
-                $('#<%= CmbPaisNIT.ClientID %> ').on('input', function () {
-                    if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
-                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
-                    }
-                });
-            });
-
-            function VerificarCantidadTelefono(sender, args) {
-                args.IsValid = (args.Value.length >= 7);
             }
 
+            // Call the function
+            RBNo();
 
-            function validarCargaArchivos() {
-                var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
-                var files = fileUpload.files;
+        });
 
-                if (files.length > 2) {
-                    alert("Solo se permiten cargar 2 archivos.");
 
-                    for (var i = 0; i < fileUpload.files.length; i++) {
-                        var file = fileUpload.files[i];
+        $('.close').click(function () {
+            $('#myModal').css('display', 'none');
+        });
 
-                        // Elimina el archivo seleccionado
-                        fileUpload.value = '';
+        $('.closeAlumno').click(function () {
+            $('#myModalAlumno').css('display', 'none');
+        });
 
-                    }
+        $('.closeNoExisteAlumno').click(function () {
+            $('#myModalNoExisteAlumno').css('display', 'none');
+        });
+
+        $('.closePermisos').click(function () {
+            $('#myModalPermisos').css('display', 'none');
+            $('#myModalBusquedaMultiple').css('display', 'block');
+        });
+
+        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
+        $(document).ready(function () {
+            $('#<%= txtNombre.ClientID %>').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
+                    $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+                }
+            });
+        });
+
+        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO EN EL RECIBO 
+        $(document).ready(function () {
+            $('#<%= txtApellido.ClientID %> ').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
+                    $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+                }
+            });
+        });
+
+        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO DE CASADA EN EL RECIBO 
+        $(document).ready(function () {
+            $('#<%= txtCasada.ClientID %> ').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
+                    $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
+                }
+            });
+        });
+
+        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 1 EN EL RECIBO 
+        $(document).ready(function () {
+            $('#<%= txtDireccion.ClientID %> ').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
+                    $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
+                }
+            });
+        });
+
+        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 2 EN EL RECIBO 2.0
+        $(document).ready(function () {
+            $('#<%= txtDireccion2.ClientID %> ').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
+                    $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
+                }
+            });
+        });
+
+        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 3 EN EL RECIBO 
+        $(document).ready(function () {
+            $('#<%= txtDireccion3.ClientID %> ').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
+                    $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
+                }
+            });
+        });
+
+        //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO PAIS EN EL RECIBO
+        $(document).ready(function () {
+            $('#<%= CmbPaisNIT.ClientID %> ').on('input', function () {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
+                    $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
+                }
+            });
+        });
+
+        function VerificarCantidadTelefono(sender, args) {
+            args.IsValid = (args.Value.length >= 7);
+        }
+
+
+        function validarCargaArchivos() {
+            var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
+            var files = fileUpload.files;
+
+            if (files.length > 2) {
+                alert("Solo se permiten cargar 2 archivos.");
+
+                for (var i = 0; i < fileUpload.files.length; i++) {
+                    var file = fileUpload.files[i];
+
+                    // Elimina el archivo seleccionado
+                    fileUpload.value = '';
+
                 }
             }
+        }
 
-            //FUNCION PARA EVITAR QUE SEA INGRESADO EL -
-            $(document).ready(function () {
-                $('#<%= txtNit.ClientID %>').on('keypress', function (event) {
-                    var keyCode = event.which || event.keyCode;
-                    var character = String.fromCharCode(keyCode);
-                    if (character === '-') {
-                        event.preventDefault();
-                        alert('No se permite el ingreso del guión (-)');
-                    } else if (character === 'C' || character === 'c') {
-                        event.preventDefault();
-                        alert('Para ingresar CF, seleccione la casilla NO, que se encuentra arriba del campo del ingreso del NIT');
-                    }
-                });
+        //FUNCION PARA EVITAR QUE SEA INGRESADO EL -
+        $(document).ready(function () {
+            $('#<%= txtNit.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+                if (character === '-') {
+                    event.preventDefault();
+                    alert('No se permite el ingreso del guión (-)');
+                } else if (character === 'C' || character === 'c') {
+                    event.preventDefault();
+                    alert('Para ingresar CF, seleccione la casilla NO, que se encuentra arriba del campo del ingreso del NIT');
+                }
+            });
+        });
+
+        //Valdar Numeros de telefono
+        $(document).ready(function () {
+            $('#<%= txtTelefono.ClientID %>').on('input', function () {
+                var inputValue = $(this).val();
+                var numericValue = inputValue.replace(/[^0-9]/g, '');
+                $(this).val(numericValue);
             });
 
-            //Valdar Numeros de telefono
-            $(document).ready(function () {
-                $('#<%= txtTelefono.ClientID %>').on('input', function () {
-                    var inputValue = $(this).val();
-                    var numericValue = inputValue.replace(/[^0-9]/g, '');
-                    $(this).val(numericValue);
-                });
+            $('#<%= txtTelefono.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
 
-                $('#<%= txtTelefono.ClientID %>').on('keypress', function (event) {
-                    var keyCode = event.which || event.keyCode;
-                    var character = String.fromCharCode(keyCode);
-
-                    if (!/^[0-9]+$/.test(character)) {
-                        event.preventDefault();
-                        alert('Solo se permiten ingresar números.');
-                    }
-                });
+                if (!/^[0-9]+$/.test(character)) {
+                    event.preventDefault();
+                    alert('Solo se permiten ingresar números.');
+                }
             });
+        });
 
-            //Detectar cambio de nit
-            $(document).ready(function () {
-                $('#<%= txtNit.ClientID %>').on('input', function () {
-                    var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
-                    var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
-                    var labelValidacion = $('#<%= ValidacionNit.ClientID %>').val().trim();
+        //Detectar cambio de nit
+        $(document).ready(function () {
+            $('#<%= txtNit.ClientID %>').on('input', function () {
+                var txtNit = $('#<%= txtNit.ClientID %>').val().trim();
+                var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
+                var labelValidacion = $('#<%= ValidacionNit.ClientID %>').val().trim();
 
 
-                    if (txtNit !== TrueNit || txtNit !== 'CF') {
-                        $('#<%= ValidacionNit.ClientID %>').val("1");
+                if (txtNit !== TrueNit || txtNit !== 'CF') {
+                    $('#<%= ValidacionNit.ClientID %>').val("1");
                     } else {
                         $('#<%= ValidacionNit.ClientID %>').val("0");
-                        TrueNit.text(txtNit);
-                    }
-                });
+                    TrueNit.text(txtNit);
+                }
             });
+        });
 
 
 
-            function mostrarModalEspera() {
-                var modal = document.getElementById("myModalEspera");
-                modal.style.display = "block";
+        function mostrarModalEspera() {
+            var modal = document.getElementById("myModalEspera");
+            modal.style.display = "block";
+        }
+
+        function ocultarModalEspera() {
+            var modal = document.getElementById("myModalEspera");
+            modal.style.display = "none";
+        }
+
+        function ocultarModalActualizacion() {
+            var modal = document.getElementById("myModalActualizacion");
+            modal.style.display = "none";
+        }
+
+        function mostrarModalCorrecto() {
+            var modal = document.getElementById("myModalCorrecto");
+            modal.style.display = "block";
+            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+            lblActualizacion.html("");
+
+            setTimeout(function () {
+                modal.style.display = "none"; // Oculta el modal después de 10 segundos
+                window.location.href = "ActualizacionGeneralEstudiantes.aspx";
+            }, 4000); // 4000 milisegundos =  segundos
+        }
+
+        function mostrarModalError() {
+            var modal = document.getElementById("myModalError");
+            modal.style.display = "block";
+            var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+            lblActualizacion.html("");
+
+            setTimeout(function () {
+                modal.style.display = "none"; // Oculta el modal después de 10 segundos
+                window.location.href = "ActualizacionGeneralEstudiantes.aspx";
+            }, 4000); // 4000 milisegundos =  segundos
+        }
+
+        //evitar enter y letras, permite ingresar solo numeros
+        function evitarEnteryNumeros(e) {
+            var charCode = (e.which) ? e.which : event.keyCode;
+
+            // Verifica si la tecla presionada es un número y no es Enter
+            if ((charCode >= 48 && charCode <= 57) && charCode !== 13) {
+                return true;
             }
 
-            function ocultarModalEspera() {
-                var modal = document.getElementById("myModalEspera");
+            return false;
+        }
+
+
+        function evitarEnter(e) {
+            var charCode = (e.which) ? e.which : event.keyCode;
+
+            // Verifica si la tecla presionada es un número y no es Enter
+            if (charCode !== 13) {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the modal
+            var modal = document.getElementById("myModalAlumno");
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("openModalBtn"); // Assuming you have a button with this ID
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("closeAlumno")[0];
+
+            // When the user clicks on the button, open the modal
+            btn.onclick = function () {
+                modal.style.display = "flex";
+            }
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
                 modal.style.display = "none";
             }
 
-            function ocultarModalActualizacion() {
-                var modal = document.getElementById("myModalActualizacion");
-                modal.style.display = "none";
-            }
-
-            function mostrarModalCorrecto() {
-                var modal = document.getElementById("myModalCorrecto");
-                modal.style.display = "block";
-                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                lblActualizacion.html("");
-
-                setTimeout(function () {
-                    modal.style.display = "none"; // Oculta el modal después de 10 segundos
-                    window.location.href = "ActualizacionGeneralEstudiantes.aspx";
-                }, 4000); // 4000 milisegundos =  segundos
-            }
-
-            function mostrarModalError() {
-                var modal = document.getElementById("myModalError");
-                modal.style.display = "block";
-                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                lblActualizacion.html("");
-
-                setTimeout(function () {
-                    modal.style.display = "none"; // Oculta el modal después de 10 segundos
-                    window.location.href = "ActualizacionGeneralEstudiantes.aspx";
-                }, 4000); // 4000 milisegundos =  segundos
-            }
-
-            //evitar enter y letras, permite ingresar solo numeros
-            function evitarEnteryNumeros(e) {
-                var charCode = (e.which) ? e.which : event.keyCode;
-
-                // Verifica si la tecla presionada es un número y no es Enter
-                if ((charCode >= 48 && charCode <= 57) && charCode !== 13) {
-                    return true;
-                }
-
-                return false;
-            }
-
-
-            function evitarEnter(e) {
-                var charCode = (e.which) ? e.which : event.keyCode;
-
-                // Verifica si la tecla presionada es un número y no es Enter
-                if (charCode !== 13) {
-                    return true;
-                }
-
-                return false;
-            }
-
-
-            document.addEventListener("DOMContentLoaded", function () {
-                // Get the modal
-                var modal = document.getElementById("myModalAlumno");
-
-                // Get the button that opens the modal
-                var btn = document.getElementById("openModalBtn"); // Assuming you have a button with this ID
-
-                // Get the <span> element that closes the modal
-                var span = document.getElementsByClassName("closeAlumno")[0];
-
-                // When the user clicks on the button, open the modal
-                btn.onclick = function () {
-                    modal.style.display = "flex";
-                }
-
-                // When the user clicks on <span> (x), close the modal
-                span.onclick = function () {
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
                     modal.style.display = "none";
                 }
+            }
+        });
 
-                // When the user clicks anywhere outside of the modal, close it
-                window.onclick = function (event) {
-                    if (event.target == modal) {
-                        modal.style.display = "none";
-                    }
-                }
-            });
+        function validarCargaFoto() {
+            var fileUpload = document.getElementById('<%= FileUpload1.ClientID %>');
+            var files = fileUpload.files;
 
-            function validarCargaFoto() {
-                var fileUpload = document.getElementById('<%= FileUpload1.ClientID %>');
-                var files = fileUpload.files;
+            if (files.length > 1) {
+                alert("Solo se permite cargar 1 archivo.");
 
-                if (files.length > 1) {
-                    alert("Solo se permite cargar 1 archivo.");
+                for (var i = 0; i < fileUpload.files.length; i++) {
+                    var file = fileUpload.files[i];
 
-                    for (var i = 0; i < fileUpload.files.length; i++) {
-                        var file = fileUpload.files[i];
+                    // Elimina el archivo seleccionado
+                    fileUpload.value = '';
 
-                        // Elimina el archivo seleccionado
-                        fileUpload.value = '';
-
-                    }
                 }
             }
+        }
 
-            function Busqueda() {
-                $('#myModalBusquedaMultiple').css('display', 'block');
-                return false;
-            }
+        function Busqueda() {
+            $('#myModalBusquedaMultiple').css('display', 'block');
+            return false;
+        }
 
-            $('.closeBusqueda').click(function () {
-                $('#myModalBusquedaMultiple').css('display', 'none');
+        $('.closeBusqueda').click(function () {
+            $('#myModalBusquedaMultiple').css('display', 'none');
+        });
+
+        function selectOnlyThis(radioButton) {
+            var allRadios = document.querySelectorAll('[id*="RBBusqueda"]');
+            allRadios.forEach(function (radio) {
+                radio.checked = false;
             });
+            radioButton.checked = true;
+        }
 
-            function selectOnlyThis(radioButton) {
-                var allRadios = document.querySelectorAll('[id*="RBBusqueda"]');
-                allRadios.forEach(function (radio) {
-                    radio.checked = false;
-                });
-                radioButton.checked = true;
-            }
-        </script>
+        function selectOnlyThisDoc(radioButton) {
+            var allRadios = document.querySelectorAll('[id*="RBDocPrincipal"]');
+            allRadios.forEach(function (radio) {
+                radio.checked = false;
+            });
+            radioButton.checked = true;
+        }
+    </script>
 
 
-        <script src="Scripts/UNIS/Unis.js"></script>
-        <div class="preloader" id="preloader"></div>
+    <script src="Scripts/UNIS/Unis.js"></script>
+    <div class="preloader" id="preloader"></div>
 </asp:Content>
 
 
