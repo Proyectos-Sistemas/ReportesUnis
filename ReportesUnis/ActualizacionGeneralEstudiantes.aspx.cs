@@ -28,6 +28,7 @@ namespace ReportesUnis
     public partial class ActualizacionGeneralEstudiantes : System.Web.UI.Page
     {
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        public static string archivoWS = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConfigWS.dat");
         string mensaje = "";
         int controlPantalla;
         int controlRenovacion = 0;
@@ -73,7 +74,7 @@ namespace ReportesUnis
                     txtControlNR.Text = "0";
                     txtControlAR.Text = "0";
                     //emplid = mostrarInformación();
-                   
+
 
                     /*if (urlPathControl2.Value == "1")
                     {
@@ -257,7 +258,7 @@ namespace ReportesUnis
                                         "AND CT.INSTITUTION = APD.INSTITUTION " +
                                         "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
                                         "AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                        "JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
+                                        "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
                                         "AND CT.INSTITUTION = TT.INSTITUTION " +
                                         "AND (SYSDATE BETWEEN TT.TERM_BEGIN_DT AND TT.TERM_END_DT)" +
                                         "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
@@ -1249,241 +1250,7 @@ namespace ReportesUnis
                     IngresoDatos();
                 }
             }
-            else
-            {
-                if (FileUpload2.HasFile)
-                {
-                    int txtCantidad = 0;
-                    string constr = TxtURL.Text;
-                    using (OracleConnection con = new OracleConnection(constr))
-                    {
-                        con.Open();
-                        OracleTransaction transaction;
-                        transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
-                        using (OracleCommand cmd = new OracleCommand())
-                        {
-
-                            cmd.Transaction = transaction;
-                            //Obtener codigo país
-                            cmd.Connection = con;
-                            cmd.CommandText = "SELECT TOTALFOTOS FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE CARNET = '" + UserEmplid.Text + "'";
-                            OracleDataReader reader = cmd.ExecuteReader();
-                            while (reader.Read())
-                            {
-                                txtCantidad = Convert.ToInt16(reader["TOTALFOTOS"]);
-                            }
-                        }
-                    }
-                    for (int i = 1; i <= txtCantidad; i++)
-                    {
-                        File.Delete(CurrentDirectory + "/Usuarios/DPI/" + txtCarne.Text + "(" + i + ").jpg");
-                    }
-                    foreach (HttpPostedFile uploadedFile in FileUpload2.PostedFiles)
-                    {
-                        contador++;
-                        string nombreArchivo = txtCarne.Text + "(" + contador + ").jpg";
-                        string ruta = CurrentDirectory + "/Usuarios/DPI/" + nombreArchivo;
-                        uploadedFile.SaveAs(ruta);
-                    }
-                    txtAccion.Text = "1";
-                    txtTipoAccion.Text = "1.1";
-                    txtConfirmacion.Text = "01"; //Requiere confirmación de operador 
-                    txtCantidadImagenesDpi.Text = contador.ToString();
-                    if (RadioButtonNombreSi.Checked && (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value) || ControlCF.Value != "CF"))
-                    {
-                        TxtNombreR.Text = txtNombre.Text;
-                        TxtApellidoR.Text = txtApellido.Text;
-                        TxtCasadaR.Text = txtCasada.Text;
-                        TxtDiRe1.Text = txtDireccion.Text;
-                        TxtDiRe2.Text = txtDireccion2.Text;
-                        TxtDiRe3.Text = txtDireccion3.Text;
-                        txtNit.Text = "CF";
-                        IngresoDatos();
-
-                        using (OracleConnection con = new OracleConnection(constr))
-                        {
-                            con.Open();
-                            OracleTransaction transaction;
-                            transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
-                            using (OracleCommand cmd = new OracleCommand())
-                            {
-                                cmd.Transaction = transaction;
-                                //Obtener codigo país
-                                cmd.Connection = con;
-                                controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "' AND FECH_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
-                                controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "'");
-                                int controlRenovacionAC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'AC'");
-                                try
-                                {
-                                    if (controlRenovacion == 0)
-                                    {
-                                        //INSERTA INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
-                                        if (ControlAct.Value == "AC" && controlRenovacionAC == 0)
-                                        {
-                                            cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO, ACCION) " +
-                                        "VALUES ('" + UserEmplid.Text + "','0','" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'AC')";
-                                            cmd.ExecuteNonQuery();
-                                        }
-                                        else if (ControlAct.Value != "AC" && controlRenovacionAC == 0)
-                                        {
-                                            cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO, ACCION) " +
-                                        "VALUES ('" + UserEmplid.Text + "','1','" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'PC')";
-                                            cmd.ExecuteNonQuery();
-                                        }
-                                        else if (ControlAct.Value == "PC")
-                                        {
-                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '1', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='PC'" +
-                                                                " WHERE EMPLID='" + UserEmplid.Text + "'";
-                                            cmd.ExecuteNonQuery();
-
-                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='PC'" +
-                                                                " WHERE CARNET='" + UserEmplid.Text + "'";
-                                            cmd.ExecuteNonQuery();
-                                        }
-                                        else if (ControlAct.Value == "RC")
-                                        {
-                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='RC'" +
-                                                                " WHERE EMPLID='" + UserEmplid.Text + "'";
-                                            cmd.ExecuteNonQuery();
-                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='RC', CONFIRMACION = '2'" +
-                                                                " WHERE CARNET='" + UserEmplid.Text + "'";
-                                            cmd.ExecuteNonQuery();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (ControlAct.Value == "PC")
-                                        {
-                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '1', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='PC'" +
-                                                                " WHERE EMPLID='" + UserEmplid.Text + "'";
-                                            cmd.ExecuteNonQuery();
-
-                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='PC'" +
-                                                                " WHERE CARNET='" + UserEmplid.Text + "'";
-                                            cmd.ExecuteNonQuery();
-                                        }
-                                        else if (ControlAct.Value == "RC")
-                                        {
-                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='RC'" +
-                                                                " WHERE EMPLID='" + UserEmplid.Text + "'";
-                                            cmd.ExecuteNonQuery();
-                                            cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='RC', CONFIRMACION = '2'" +
-                                                                " WHERE CARNET='" + UserEmplid.Text + "'";
-                                            cmd.ExecuteNonQuery();
-                                        }
-                                    }
-                                    transaction.Commit();
-                                }
-                                catch (Exception)
-                                {
-                                    transaction.Rollback();
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        IngresoDatos();
-
-                        using (OracleConnection con = new OracleConnection(constr))
-                        {
-                            con.Open();
-                            OracleTransaction transaction;
-                            transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
-                            using (OracleCommand cmd = new OracleCommand())
-                            {
-                                cmd.Transaction = transaction;
-                                //Obtener codigo país
-                                cmd.Connection = con;
-                                controlRenovacionFecha = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "' AND FECH_ULTIMO_REGISTRO = '" + DateTime.Now.ToString("dd/MM/yyyy") + "'");
-                                controlRenovacion = ControlRenovacion("WHERE EMPLID  ='" + UserEmplid.Text + "'");
-                                int controlRenovacionAC = ControlAC("WHERE EMPLID  ='" + UserEmplid.Text + "' AND ACCION = 'AC'");
-                                if (controlRenovacion == 0)
-                                {
-                                    //INSERTA INFORMACIÓN PARA EL CONTROL DE LA RENOVACIÓN
-                                    if (ControlAct.Value == "AC" && controlRenovacionAC == 0)
-                                    {
-                                        cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO, ACCION) " +
-                                    "VALUES ('" + UserEmplid.Text + "','0','" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'AC')";
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                    else if (ControlAct.Value != "AC" && controlRenovacionAC == 0)
-                                    {
-                                        cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_CONTROL_CARNET (EMPLID, CONTADOR, FECH_ULTIMO_REGISTRO, ACCION) " +
-                                    "VALUES ('" + UserEmplid.Text + "','1','" + DateTime.Now.ToString("dd/MM/yyyy") + "', 'PC')";
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                    else if (ControlAct.Value == "PC")
-                                    {
-                                        cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '1', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='PC'" +
-                                                            " WHERE EMPLID='" + UserEmplid.Text + "'";
-                                        cmd.ExecuteNonQuery();
-
-                                        cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='PC'" +
-                                                            " WHERE CARNET='" + UserEmplid.Text + "'";
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                    else if (ControlAct.Value == "RC")
-                                    {
-                                        cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='RC'" +
-                                                            " WHERE EMPLID='" + UserEmplid.Text + "'";
-                                        cmd.ExecuteNonQuery();
-                                        cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='RC', CONFIRMACION = '2'" +
-                                                            " WHERE CARNET='" + UserEmplid.Text + "'";
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                }
-                                else
-                                {
-                                    if (ControlAct.Value == "PC")
-                                    {
-                                        cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '1', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='PC'" +
-                                                            " WHERE EMPLID='" + UserEmplid.Text + "'";
-                                        cmd.ExecuteNonQuery();
-
-                                        cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='PC'" +
-                                                            " WHERE CARNET='" + UserEmplid.Text + "'";
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                    else if (ControlAct.Value == "RC")
-                                    {
-                                        cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_CONTROL_CARNET SET CONTADOR = '" + (controlRenovacion + 1) + "', FECH_ULTIMO_REGISTRO ='" + DateTime.Now.ToString("dd/MM/yyyy") + "', ACCION ='RC'" +
-                                                            " WHERE EMPLID='" + UserEmplid.Text + "'";
-                                        cmd.ExecuteNonQuery();
-                                        cmd.CommandText = "UPDATE UNIS_INTERFACES.TBL_HISTORIAL_CARNE SET CONTROL_ACCION ='RC', CONFIRMACION = '2'" +
-                                                            " WHERE CARNET='" + UserEmplid.Text + "'";
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                }
-                                string registroCarne = ValidarRegistros();
-                                if (registroCarne == "0")
-                                {
-                                    cmd.CommandText = txtInsert.Text;
-                                    cmd.ExecuteNonQuery();
-                                }
-                                transaction.Commit();
-                                con.Close();
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (txtAInicial.Value != txtApellido.Text || txtNInicial.Value != txtNombre.Text || txtCInicial.Value.TrimEnd() != txtCasada.Text)
-                    {
-                        string script = "<script>Documentos();</script>";
-                        ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
-                        mensaje = "Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.";
-                        if ((InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text) || String.IsNullOrEmpty(InicialNR1.Value))
-                        {
-                            TxtNombreR.Text = txtNombre.Text;
-                            TxtApellidoR.Text = txtApellido.Text;
-                            TxtCasadaR.Text = TxtCasadaR.Text;
-                        }
-                    }
-                    fotoAlmacenada();
-                }
-            }
+           
             return mensaje;
         }
         public void DescargaArchivo()
@@ -2736,8 +2503,8 @@ namespace ReportesUnis
                                     cmd.CommandText = "DELETE FROM UNIS_INTERFACES.TBL_HISTORIAL_CARNE WHERE ID_REGISTRO = '" + RegistroCarne + "'";
                                     cmd.ExecuteNonQuery();
                                     ConsumoSQL("DELETE FROM [dbo].[Tarjeta_Identificacion_prueba] WHERE CARNET ='" + txtCarne.Text + "'");
-                                    FileUpload2.Visible = false;
-                                    CargaDPI.Visible = false;
+                                    //FileUpload2.Visible = false;
+                                    //CargaDPI.Visible = false;
                                     mostrarInformación(txtDPI.Text);
                                     mensaje = "Su información fue almacenada correctamente. </br> La información ingresada debe ser aprobada antes de ser confirmada. </br> Actualmente, solo se muestran los datos que han sido previamente confirmados.";
                                     string script = "<script>ConfirmacionActualizacionSensible();</script>";
@@ -3107,9 +2874,50 @@ namespace ReportesUnis
         protected void BtnActualizar_Click(object sender, EventArgs e)
         {
             string constr = TxtURL.Text;
-            IngresoDatosGenerales();
-            /*string control = null;
-            using (OracleConnection con = new OracleConnection(constr))
+            string PartyNumber = null;
+            string getInfo = null;
+            string body = null;
+            var Residencia = datosResidencia();
+            string DeptoResidencia = Residencia.Departamento;
+            string MunicResidencia = Residencia.Municipio;
+            string PaisResidencia = Residencia.País;
+
+
+            /* esto comentado ya funciona correctamente
+            var respuesta = RecorrerDocumentos();
+            UP_IDENTIFICACION.Value = respuesta.UP_Doc;
+            UD_IDENTIFICACION.Value = respuesta.UD_Doc;
+            IngresoDatosGenerales();*/
+            limpiarVariables();
+            getInfo = consultaGet(txtDPI.Text);
+            PartyNumber = getBetween(getInfo, "PartyNumber\" : \"", "\",");
+            string FechaCumple = Convert.ToDateTime(txtCumple.Text).ToString("yyyy-MM-dd");
+            body = "{\r\n    " +
+                "\"FirstName\": \""+txtNombre.Text+"\",\r\n    " +
+                "\"LastName\": \""+txtApellido.Text+"\",\r\n    " +
+                "\"MiddleName\": \"\",\r\n    " +
+                "\"UniqueNameSuffix\": \""+txtCasada.Text+"\",\r\n    " +
+                "\"TaxpayerIdentificationNumber\": \""+txtDPI.Text+"\",\r\n    " +
+                "\"DateOfBirth\": \""+FechaCumple+"\",\r\n    " +
+                //"\"MaritalStatus\": \"T\",\r\n    " +
+                "\"MobileNumber\": \""+txtTelefono.Text+"\",\r\n    " +
+                "\"EmailAddress\": \""+TxtCorreoPersonal.Text+"\",\r\n    " +
+                "\"AddressElementAttribute3\": \""+txtDireccion3.Text+"\",\r\n    " +
+                "\"AddressLine1\": \""+txtDireccion.Text+"\",\r\n    " +
+                "\"AddressLine2\": \""+txtDireccion2.Text+"\",\r\n    " +
+                "\"City\": \""+MunicResidencia+"\",\r\n    " +
+                "\"Country\": \""+PaisResidencia+"\",\r\n    " +
+                "\"County\": \""+DeptoResidencia+"\",\r\n    " +
+                //"\"PostalCode\": \"16001\",\r\n    " +
+                //"\"PersonDEO_TipoDeDocumentoDeIdentidad_c\": \"CUI\",\r\n    " +
+                "\"PersonDEO_T1_PaisDeNacimiento_c\": \""+ CmbPaisNacimiento.Text + "\",\r\n    " +
+                //"\"PersonDEO_TallaSudadero_c\": null,\r\n    " +
+                "\"PersonDEO_NumeroDeIdentificacionTributaria_c\": \""+txtNit.Text+"\"" +
+                "\r\n}";
+            //Actualiza por medio del metodo PATCH
+            /*updatePatch(body,PartyNumber);*/
+            string control = null;
+            /*using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
                 OracleTransaction transaction;
@@ -3264,7 +3072,8 @@ namespace ReportesUnis
 
 
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
-        }protected void CmbPaisNac_SelectedIndexChanged(object sender, EventArgs e)
+        }
+        protected void CmbPaisNac_SelectedIndexChanged(object sender, EventArgs e)
         {
             /*if (urlPathControl2.Value == "1")
             {
@@ -4127,12 +3936,12 @@ namespace ReportesUnis
             if (auxConsulta == 0)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UP.V1";
-                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UP_NAMES_NIT.Value, UP_PERS_DATA_EFFDT.Value, UP_ADDRESSES_NIT.Value, UP_ADDRESSES.Value, UP_PERSONAL_PHONE.Value, UP_EMAIL_ADDRESSES.Value, UP_BIRTHCOUNTRY.Value, UP_BIRTHPLACE.Value, VersionUP.Value);
+                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UP_NAMES_NIT.Value, UP_PERS_DATA_EFFDT.Value, UP_ADDRESSES_NIT.Value, UP_ADDRESSES.Value, UP_PERSONAL_PHONE.Value, UP_EMAIL_ADDRESSES.Value, UP_BIRTHCOUNTRY.Value, UP_BIRTHPLACE.Value, UP_BIRTHDATE.Value, UP_BIRTHSTATE.Value, UP_IDENTIFICACION.Value, VersionUP.Value);
             }
             else if (auxConsulta == 1)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UD.V1";
-                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UD_NAMES_NIT.Value, UD_PERS_DATA_EFFDT.Value, UD_ADDRESSES_NIT.Value, UD_ADDRESSES.Value, UD_PERSONAL_PHONE.Value, UD_EMAIL_ADDRESSES.Value, UD_BIRTHCOUNTRY.Value, UD_BIRTHPLACE.Value, UD_BIRTHDATE.Value, VersionUD.Value);
+                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UD_NAMES_NIT.Value, UD_PERS_DATA_EFFDT.Value, UD_ADDRESSES_NIT.Value, UD_ADDRESSES.Value, UD_PERSONAL_PHONE.Value, UD_EMAIL_ADDRESSES.Value, UD_BIRTHCOUNTRY.Value, UD_BIRTHPLACE.Value, UD_BIRTHDATE.Value, UD_BIRTHSTATE.Value, UD_IDENTIFICACION.Value, VersionUD.Value);
             }
 
             //Crea un documento de respuesta Campus
@@ -4159,7 +3968,7 @@ namespace ReportesUnis
         }
 
         private static void CuerpoConsultaUD(string Usuario, string Pass, string EMPLID, string COLL_NAMES, string COLL_PERS_DATA_EFFDT, string COLL_ADDRESSES_NIT, string COLL_ADDRESSES, string COLL_PERSONAL_PHONE,
-            string COLL_EMAIL_ADDRESSES, string PROP_BIRTHCOUNTRY, string PROP_BIRTHPLACE, string PROP_BIRTHDATE, string VersionUD)
+            string COLL_EMAIL_ADDRESSES, string PROP_BIRTHCOUNTRY, string PROP_BIRTHPLACE, string PROP_BIRTHDATE, string PROP_BIRTHSTATE,  string PROP_NID, string VersionUD)
         {
             //Crea el cuerpo que se utiliza para hacer PATCH en CAMPUS
             Variables.soapBody = @"<?xml version=""1.0""?>
@@ -4178,6 +3987,8 @@ namespace ReportesUnis
                                          " + PROP_BIRTHCOUNTRY + @"
                                          " + PROP_BIRTHPLACE + @"
                                          " + PROP_BIRTHDATE + @"
+                                         " + PROP_BIRTHSTATE + @"
+                                         " + PROP_NID + @"
                                          " + COLL_PERS_DATA_EFFDT + @"
                                          " + COLL_NAMES + @"
                                          " + COLL_ADDRESSES + @"
@@ -4189,7 +4000,7 @@ namespace ReportesUnis
                                 </soapenv:Envelope>";
         }
         private static void CuerpoConsultaUP(string Usuario, string Pass, string EMPLID, string COLL_NAMES, string COLL_PERS_DATA_EFFDT, string COLL_ADDRESSES_NIT, string COLL_ADDRESSES, string COLL_PERSONAL_PHONE,
-            string COLL_EMAIL_ADDRESSES, string PROP_BIRTHCOUNTRY, string PROP_BIRTHPLACE, string VersionUP)
+            string COLL_EMAIL_ADDRESSES, string PROP_BIRTHCOUNTRY, string PROP_BIRTHPLACE, string PROP_BIRTHDATE, string PROP_BIRTHSTATE, string PROP_NID, string VersionUP)
         {
             //Crea el cuerpo que se utiliza para hacer POST en CAMPUS
             Variables.soapBody = @"<?xml version=""1.0""?>
@@ -4207,12 +4018,15 @@ namespace ReportesUnis
                                          <KEYPROP_EMPLID>" + EMPLID + @"</KEYPROP_EMPLID>
                                          " + PROP_BIRTHCOUNTRY + @"
                                          " + PROP_BIRTHPLACE + @"
+                                         " + PROP_BIRTHDATE + @"
+                                         " + PROP_BIRTHSTATE + @"
+                                         " + PROP_NID + @"
                                          " + COLL_PERS_DATA_EFFDT + @"
                                          " + COLL_NAMES + @"
-                                         " + COLL_PERSONAL_PHONE + @"
-                                         " + COLL_EMAIL_ADDRESSES + @"
                                          " + COLL_ADDRESSES + @"
+                                         " + COLL_PERSONAL_PHONE + @"
                                          " + COLL_ADDRESSES_NIT + @"
+                                         " + COLL_EMAIL_ADDRESSES + @"
                                       </Update__CompIntfc__CI_PERSONAL_DATA>
                                    </soapenv:Body>
                                 </soapenv:Envelope>";
@@ -4377,20 +4191,28 @@ namespace ReportesUnis
         private void LoadDataDocumentos()
         {
             DataTable dt = new DataTable();
-            DataRow dr;
+            DataRow drDPI, drPasaporte;
 
             dt.Columns.Add("Pais");
             dt.Columns.Add("TipoDocumento");
             dt.Columns.Add("Documento");
             dt.Columns.Add("PRIMARY_NID");
 
-            dr = dt.NewRow();
-            dr["Pais"] = String.Empty;
-            dr["TipoDocumento"] = String.Empty;
-            dr["Documento"] = String.Empty;
-            dr["PRIMARY_NID"] = String.Empty;
+            // Fila para DPI
+            drDPI = dt.NewRow();
+            drDPI["Pais"] = String.Empty;
+            drDPI["TipoDocumento"] = "DPI";
+            drDPI["Documento"] = String.Empty;
+            drDPI["PRIMARY_NID"] = String.Empty;
+            dt.Rows.Add(drDPI);
 
-            dt.Rows.Add(dr);
+            // Fila para Pasaporte
+            drPasaporte = dt.NewRow();
+            drPasaporte["Pais"] = String.Empty;
+            drPasaporte["TipoDocumento"] = "Pasaporte";
+            drPasaporte["Documento"] = String.Empty;
+            drPasaporte["PRIMARY_NID"] = String.Empty;
+            dt.Rows.Add(drPasaporte);
 
             this.GridViewDocumentos.DataSource = dt;
             this.GridViewDocumentos.DataBind();
@@ -4424,9 +4246,9 @@ namespace ReportesUnis
 
             if (radioButtonSelected is true)
             {
-                validarAcceso = ValidacionAccesoVista(txtEmplid.Value);
+                /*validarAcceso = ValidacionAccesoVista(txtEmplid.Value);
                 if (validarAcceso != null)
-                {
+                {*/
                     mostrarInformación(txtEmplid.Value);
                     if (txtNit.Text == "CF")
                     {
@@ -4474,12 +4296,12 @@ namespace ReportesUnis
                         BtnLimpiarBusqueda.Enabled = true;
                         TxtBusqueda.Enabled = false;
                     }
-                }
+                /*}
                 else
                 {
                     string script = "<script>NoTienePermisos();</script>";
                     ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
-                }
+                }*/
             }
         }
 
@@ -4520,9 +4342,11 @@ namespace ReportesUnis
             return facultad;
         }
 
-        protected void LlenadoGridDocumentos()
+        private void LlenadoGridDocumentos()
         {
             string constr = TxtURL.Text;
+            ExisteDPI.Value = "0";
+            ExistePasaporte.Value = "0";
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -4533,11 +4357,33 @@ namespace ReportesUnis
                     "WHERE EMPLID = '" + txtCarne.Text + "'";
                     cmd.Connection = con;
                     OracleDataReader reader = cmd.ExecuteReader();
+
+                    DataTable dt = (DataTable)GridViewDocumentos.DataSource;
+
                     if (reader.HasRows)
                     {
-                        GridViewDocumentos.DataSource = cmd.ExecuteReader();
-                        GridViewDocumentos.DataBind();
+                        while (reader.Read())
+                        {
+                            string tipoDocumento = reader["TipoDocumento"].ToString();
+                            if (tipoDocumento == "DPI")
+                            {
+                                dt.Rows[0]["Pais"] = reader["Pais"].ToString();
+                                dt.Rows[0]["Documento"] = reader["Documento"].ToString();
+                                dt.Rows[0]["PRIMARY_NID"] = reader["PRIMARY_NID"].ToString();
+                                ExisteDPI.Value = "1";
+                            }
+                            else if (tipoDocumento == "PAS")
+                            {
+                                dt.Rows[1]["Pais"] = reader["Pais"].ToString();
+                                dt.Rows[1]["Documento"] = reader["Documento"].ToString();
+                                dt.Rows[1]["PRIMARY_NID"] = reader["PRIMARY_NID"].ToString();
+                                ExistePasaporte.Value = "1";
+                            }
+                        }
                     }
+
+                    GridViewDocumentos.DataSource = dt;
+                    GridViewDocumentos.DataBind();
                 }
             }
         }
@@ -4587,6 +4433,14 @@ namespace ReportesUnis
                     ddlPais.Items.Add(new ListItem(pais, pais));
                     ddlPais.SelectedValue = pais;
                 }
+
+                // Reemplazar DropDownList de TipoDocumento por un Label
+                /*Label lblTipoDocumento = new Label();
+                string tipoDocumento = DataBinder.Eval(e.Row.DataItem, "TipoDocumento").ToString();
+                lblTipoDocumento.Text = tipoDocumento;
+
+                e.Row.Cells[2].Controls.Clear();
+                e.Row.Cells[2].Controls.Add(lblTipoDocumento);*/
             }
         }
 
@@ -4600,12 +4454,7 @@ namespace ReportesUnis
                 string codPais = "";
                 string codPaisNIT = "";
                 string ec = estadoCivil();
-                string RegistroCarne = "0";
-                var apellidoEx = "0";
-                int posicion = 0;
-                int posicion2 = 0;
                 int largoApellido = txtApellido.Text.Length;
-                int excepcionApellido = 0;
                 int espaciosApellido = ContarEspacios(txtApellido.Text);
                 int espaciosNombre = ContarEspacios(txtNombre.Text);
                 string[] nombres = txtNombre.Text.TrimEnd(' ').Split(' ');
@@ -5380,7 +5229,7 @@ namespace ReportesUnis
                             //LUGAR DE NACIMIENTO
                             if (String.IsNullOrEmpty(LugarNacimiento.Value))
                             {
-                                UP_BIRTHPLACE.Value = "<PROP_BIRTHPLACE>"+ TxtLugarNac.Text+"</PROP_BIRTHPLACE>";
+                                UP_BIRTHPLACE.Value = "<PROP_BIRTHPLACE>" + TxtLugarNac.Text + "</PROP_BIRTHPLACE>";
                                 contadorUP = contadorUP + 1;
                             }
                             else
@@ -5403,15 +5252,24 @@ namespace ReportesUnis
 
                             //STATE NACIMIENTO
                             llenadoStateNac();
-                            if (!String.IsNullOrEmpty(StateNacimiento.Value))
-                            {                                
-                                UD_BIRTHCOUNTRY.Value = "<PROP_BIRTHSTATE>" + StateNacimiento.Value + "</PROP_BIRTHSTATE>";
+                            if (String.IsNullOrEmpty(StateNacimiento.Value))
+                            {
+                                UP_BIRTHSTATE.Value = "<PROP_BIRTHSTATE>" + StateNacimiento.Value + "</PROP_BIRTHSTATE>";
+                                contadorUP = contadorUP + 1;
+                            }
+                            else
+                            {
+                                UD_BIRTHSTATE.Value = "<PROP_BIRTHSTATE>" + StateNacimiento.Value + "</PROP_BIRTHSTATE>";
                                 contadorUD = contadorUD + 1;
                             }
-                            
+
                             //FECHA NACIMIENTO
-                            if (!String.IsNullOrEmpty(txtCumple.Text))
-                            {                                
+                            if (String.IsNullOrEmpty(txtCumple.Text))
+                            {
+                                UP_BIRTHDATE.Value = "<PROP_BIRTHDATE>" + txtCumple.Text + "</PROP_BIRTHDATE>";
+                                contadorUP = contadorUP + 1;
+                            }else
+                            {
                                 UD_BIRTHDATE.Value = "<PROP_BIRTHDATE>" + txtCumple.Text + "</PROP_BIRTHDATE>";
                                 contadorUD = contadorUD + 1;
                             }
@@ -5461,7 +5319,7 @@ namespace ReportesUnis
                         {
                             transaction.Rollback();
                             EliminarAlmacenada();
-                            log("ERROR - "+ x.Message +"- Error en almacenamiento Campus: UD = " + consultaUD + "; UP = " + consultaUP + " SOAP: " + Variables.soapBody);
+                            log("ERROR - " + x.Message + "- Error en almacenamiento Campus: UD = " + consultaUD + "; UP = " + consultaUP + " SOAP: " + Variables.soapBody);
                             File.Delete(txtPath.Text + UserEmplid.Text + ".jpg");
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                         }
@@ -5478,8 +5336,170 @@ namespace ReportesUnis
             return mensaje;
         }
 
+        protected (string UP_Doc, string UD_Doc) RecorrerDocumentos()
+        {
+            string UP_PROP_NID = "";
+            string UD_PROP_NID = "";
+            string Primaria = "";
+            foreach (GridViewRow row in GridViewDocumentos.Rows)
+            {
+                // Accede a los controles de la fila actual
+                RadioButton RBDocPrincipal = (RadioButton)row.FindControl("RBDocPrincipal");
+                DropDownList DDLPais = (DropDownList)row.FindControl("DDLPais");
+                TextBox TxtNroDocumento = (TextBox)row.FindControl("TxtNroDocumento");
+
+                // Accede a los valores de los controles
+                bool isPrincipal = RBDocPrincipal.Checked;
+                string pais = DDLPais.SelectedValue;
+                string tipoDocumento = row.Cells[2].Text;
+                string documento = TxtNroDocumento.Text;
+
+                if (tipoDocumento == "Pasaporte")
+                    tipoDocumento = "PAS";
+
+                if (isPrincipal)
+                    Primaria = "Y";
+                else
+                    Primaria = "N";
+                if (!String.IsNullOrEmpty(documento))
+                {
+                    if (ExisteDPI.Value == "0" && tipoDocumento == "DPI")
+                    {
+                        UP_PROP_NID = "<COLL_PERS_NID>\n" +
+                                    "   <KEYPROP_COUNTRY>" + pais + "</KEYPROP_COUNTRY> \n" +
+                                    "   <KEYPROP_NATIONAL_ID_TYPE>" + tipoDocumento + "</KEYPROP_NATIONAL_ID_TYPE> \n" +
+                                    "   <PROP_PRIMARY_NID>" + Primaria + "</PROP_PRIMARY_NID>\n " +
+                                    "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
+                                    "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
+                                    "</COLL_PERS_NID>\n " + UP_PROP_NID;
+                    }
+                    else if (tipoDocumento == "DPI")
+                    {
+                        UD_PROP_NID = "<COLL_PERS_NID>\n" +
+                                    "   <KEYPROP_COUNTRY>" + pais + "</KEYPROP_COUNTRY> \n" +
+                                    "   <KEYPROP_NATIONAL_ID_TYPE>" + tipoDocumento + "</KEYPROP_NATIONAL_ID_TYPE> \n" +
+                                    "   <PROP_PRIMARY_NID>" + Primaria + "</PROP_PRIMARY_NID>\n " +
+                                    "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
+                                    "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
+                                    "</COLL_PERS_NID>\n " + UD_PROP_NID;
+                    }
+                    if (ExistePasaporte.Value == "0" && tipoDocumento == "PAS")
+                    {
+                        UP_PROP_NID = "<COLL_PERS_NID>\n" +
+                                    "   <KEYPROP_COUNTRY>" + pais + "</KEYPROP_COUNTRY> \n" +
+                                    "   <KEYPROP_NATIONAL_ID_TYPE>" + tipoDocumento + "</KEYPROP_NATIONAL_ID_TYPE> \n" +
+                                    "   <PROP_PRIMARY_NID>" + Primaria + "</PROP_PRIMARY_NID>\n " +
+                                    "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
+                                    "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
+                                    "</COLL_PERS_NID>\n " + UP_PROP_NID;
+                    }
+                    else if (tipoDocumento == "PAS")
+                    {
+                        UD_PROP_NID = "<COLL_PERS_NID>\n" +
+                                    "   <KEYPROP_COUNTRY>" + pais + "</KEYPROP_COUNTRY> \n" +
+                                    "   <KEYPROP_NATIONAL_ID_TYPE>" + tipoDocumento + "</KEYPROP_NATIONAL_ID_TYPE> \n" +
+                                    "   <PROP_PRIMARY_NID>" + Primaria + "</PROP_PRIMARY_NID>\n " +
+                                    "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
+                                    "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
+                                    "</COLL_PERS_NID>\n " + UD_PROP_NID;
+                    }
+                }
+            }
+
+            return (UP_PROP_NID,UD_PROP_NID);
+        }
 
 
+        /*-------------------PARA CONSUMO DE SERVICIOS CRM-------------------*/
+        private static void credencialesWS_CRM(string RutaConfiguracion, string strMetodo)
+        {
+            //Función para obtener información de acceso al servicio de HCM
+            int cont = 0;
+
+            foreach (var line in File.ReadLines(RutaConfiguracion))
+            {
+                if (cont == 1)
+                    Variables.wsUrl = line.ToString();
+                if (cont == 2)
+                    Variables.wsUsuario = line.ToString();
+                if (cont == 3)
+                    Variables.wsPassword = line.ToString();
+                cont++;
+            }
+        }
+
+        int respuestaPatch = 0;
+
+        private void updatePatch(string info, string PartyNumber)
+        {
+            credencialesWS_CRM(archivoWS, "Consultar");
+            var vchrUrlWS = Variables.wsUrl;
+            var user = Variables.wsUsuario;
+            var pass = Variables.wsPassword;
+            int respuesta = api.Patch_CRM(vchrUrlWS + "/crmRestApi/resources/11.13.18.05/contacts/" + PartyNumber, user, pass, info);
+            respuestaPatch = respuesta + respuestaPatch;
+        }
+
+        private string consultaGet(string identificacion)
+        {
+            credencialesWS_CRM(archivoWS, "Consultar");
+            var vchrUrlWS = Variables.wsUrl;
+            var user = Variables.wsUsuario;
+            var pass = Variables.wsPassword;
+            var dtFechaBuscarPersona = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+            string respuesta = api.Get(vchrUrlWS + "/crmRestApi/resources/11.13.18.05/contacts/?q=TaxpayerIdentificationNumber='" + identificacion + "'" , user, pass);
+            return respuesta;
+        }
+
+        private (string Departamento, string Municipio, string País) datosResidencia()
+        {
+            //string constr = TxtURL.Text;
+            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string depto = null;
+            string mun = null;
+            string pais = null;
+            string paisN = null;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.CommandText = "SELECT GEOGRAPHY_NAME_CRM " +
+                        "FROM UNIS_INTERFACES.OPT_CONTACT_CATALOG_DEPT " +
+                        "WHERE STATE_CAMPUS ='" + State.Text + "'  " ;
+                    cmd.Connection = con;
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        depto = reader["GEOGRAPHY_NAME_CRM"].ToString();
+                    }
+                    
+                    cmd.CommandText = "SELECT GEOGRAPHY_NAME_CRM " +
+                        "FROM UNIS_INTERFACES.OPT_CONTACT_CATALOG_MUNICP " +
+                        "WHERE STATE_CAMPUS ='" + State.Text + "'  " ;
+                    cmd.Connection = con;
+                    OracleDataReader reader2 = cmd.ExecuteReader();
+                    while (reader2.Read())
+                    {
+                        mun = reader2["GEOGRAPHY_NAME_CRM"].ToString();
+                    }
+
+
+                    cmd.CommandText = "SELECT GEOGRAPHY_CODE_CRM " +
+                        "FROM UNIS_INTERFACES.OPT_CONTACT_CATALOG_PAIS " +
+                        "WHERE DESCRIPCION_CAMPUS ='" + CmbPais.Text + "'  ";
+                    cmd.Connection = con;
+                    OracleDataReader reader3 = cmd.ExecuteReader();
+                    while (reader3.Read())
+                    {
+                        pais = reader3["GEOGRAPHY_CODE_CRM"].ToString();
+                    }
+
+                }
+            }
+
+            return (depto, mun, pais);
+        }
     }
 
 }

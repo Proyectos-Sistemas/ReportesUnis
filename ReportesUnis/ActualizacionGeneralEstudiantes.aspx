@@ -62,34 +62,7 @@
         </div>
         <div id="Informacion" runat="server">
 
-            <hr />
-            <div class="container">
-                <div class="col-md-4 mx-auto text-center">
-                    <h5 style="text-align: center;">Carga de Fotografía</h5>
-                </div>
-            </div>
-            <asp:TextBox ID="TextBox1" runat="server" Visible="false"></asp:TextBox>
-            <div class="container2">
-                <asp:FileUpload ID="FileUpload1" runat="server" AllowMultiple="True" accept="image/png, image/jpeg" onchange="validarCargaFoto();" />
-            </div>
-            <hr />
-            <br />
-
-            <div class="container" id="CargaDPI" runat="server" style="display: none">
-                <div>
-                    <h5 style="text-align: center; color: darkred;"><strong>Carga de Documento de identificación</strong></h5>
-                </div>
-                <asp:Label ID="Label3" runat="server" Font-Bold="false" ForeColor="Blue">Para realizar un cambio en su nombre es necesario adjuntar según sea el caso:</asp:Label>
-                <br />
-                <asp:Label ID="Label4" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">a.) Fotografía de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
-                <br />
-                <asp:Label ID="Label5" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">b.) Fotografía de su Pasaporte (1 fotografía)</asp:Label>
-                <br />
-                <br />
-
-                <br />
-                <hr />
-            </div>
+            <hr />        
             <div id="CamposAuxiliares" runat="server" visible="false">
                 <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
                 <asp:Label ID="UserEmplid" runat="server" Visible="false"></asp:Label>
@@ -250,9 +223,16 @@
                 <%-- TEXTBOX ALMACENA UD BIRTHCOUNTRY--%>
                 <input type="hidden" id="UD_BIRTHCOUNTRY" runat="server" />
 
+                <%-- TEXTBOX ALMACENA UP DOCUMENTOS DE IDENTIFICACION--%>
+                <input type="hidden" id="UP_IDENTIFICACION" runat="server" />
+                <%-- TEXTBOX ALMACENA UD DOCUMENTOS DE IDENTIFICACION--%>
+                <input type="hidden" id="UD_IDENTIFICACION" runat="server" />
 
+
+                <%-- CONTROL DE VERSIONES UP Y UD--%>
                 <input type="hidden" id="VersionUP" runat="server" />
                 <input type="hidden" id="VersionUD" runat="server" />
+
                 <%-- TEXTBOX ALMACENA LA VARIABLE DE SESION--%>
                 <input type="text" id="ISESSION" style="display: none" value="0" runat="server" />
                 <input type="hidden" id="banderaSESSION" runat="server" />
@@ -279,6 +259,10 @@
                 <input type="hidden" id="LugarNacimiento" runat="server" />
                 <input type="hidden" id="StateNacimiento" runat="server" />
 
+                <%-- VALIDA DOCUMENTO IDENTIFICACION--%>
+                <input type="hidden" id="ExistePasaporte" runat="server" />
+                <input type="hidden" id="ExisteDPI" runat="server" />
+
 
                 <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
                 <div class="container" id="tabla" runat="server">
@@ -292,7 +276,7 @@
                                             <asp:GridView ID="GridViewDocumentos" runat="server" AutoGenerateColumns="false"
                                                 CssClass="table table-condensed table-bordered" OnRowDataBound="GridViewDocumentos_RowDataBound">
                                                 <Columns>
-                                                    <asp:TemplateField HeaderText="Documento Principal" ItemStyle-HorizontalAlign="Center">
+                                                    <asp:TemplateField HeaderText="Principal" ItemStyle-HorizontalAlign="Center">
                                                         <ItemTemplate>
                                                             <asp:RadioButton ID="RBDocPrincipal" runat="server" GroupName="DocumentosIdentificacion" Checked='<%# Eval("PRIMARY_NID").ToString() == "Y" %>' OnClick="selectOnlyThisDoc(this)" />
                                                         </ItemTemplate>
@@ -303,15 +287,7 @@
                                                             </asp:DropDownList>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
-                                                    <asp:TemplateField HeaderText="Tipo de Documento de Identidad" ItemStyle-CssClass="nowrap">
-                                                        <ItemTemplate>
-                                                            <asp:DropDownList ID="TipoDocumento" runat="server" SelectedValue='<%# Eval("TipoDocumento") %>'>
-                                                                <asp:ListItem Text="Seleccione un tipo" Value=""></asp:ListItem>
-                                                                <asp:ListItem Text="DPI" Value="DPI"></asp:ListItem>
-                                                                <asp:ListItem Text="Pasaporte" Value="PAS"></asp:ListItem>
-                                                            </asp:DropDownList>
-                                                        </ItemTemplate>
-                                                    </asp:TemplateField>
+                                                    <asp:BoundField DataField="TipoDocumento" HeaderText="Tipo de Documento de Identidad" />
                                                     <asp:TemplateField HeaderText="Documento" ItemStyle-CssClass="nowrap">
                                                         <ItemTemplate>
                                                             <asp:TextBox ID="TxtNroDocumento" runat="server" Text='<%# Eval("Documento") %>'></asp:TextBox>
@@ -925,63 +901,8 @@
             </div>
         </div>
 
-        <div id="myModal" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 style="text-align: center; color: darkred; text-align: center"><strong>Carga de Documento de Identificación</strong></h4>
-                        <span class="close">&times;</span>
-                    </div>
-                    <div class="modal-body">
-                        <contenttemplate>
-                            <div class="container emp-profile">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="profile-head">
-                                            <div class="row">
-                                                <div class="form-group col-md">
-                                                    <asp:Label ID="Label1" runat="server" Font-Bold="true" ForeColor="Black">Para realizar un cambio en su nombre es necesario adjuntar según sea el caso:</asp:Label>
-                                                    <br />
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md">
-                                                    <asp:Label ID="Label2" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Black">&nbsp;&nbsp;&nbsp;&nbsp;a.) Fotografia de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
-                                                    <br />
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md">
-                                                    <asp:Label ID="Label6" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Black">&nbsp;&nbsp;&nbsp;&nbsp;b.) Fotografia de su Pasaporte (1 fotografía)</asp:Label>
-                                                    <br />
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md">
-                                                    <asp:FileUpload ID="FileUpload2" runat="server" AllowMultiple="true" accept="image/jpeg" onchange="validarCargaArchivos();" />
-                                                    <div id="dvMsge1" style="background-color: Red; color: White; width: 190px; padding: 3px; display: none;">
-                                                        El tamaño máximo permitido es de 1 GB
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md-5">
-                                                </div>
-                                                <div class="form-group col-md-2">
-                                                    <asp:Button ID="BtnAceptarCarga" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnAceptarCarga_Click" />
-                                                </div>
-                                                <div class="form-group col-md-5">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </contenttemplate>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
+
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
@@ -1045,18 +966,10 @@
             var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
             var modal = document.getElementById("myModalActualizacion");
             var divCombos = $('#<%= Combos.ClientID %>');
-            var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
             var files = fileUpload.files;
 
 
-            if ((txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) && $('#myModal').css('display') != 'block') {
-                $('#myModal').css('display', 'block');
-                return false;
-            } else if (files.length == 0 && $('#myModal').css('display') === 'block') {
-                alert("Es necesario adjuntar la imagen de su documento de identificación para continuar con la actualización.");
-                $('#myModal').css('display', 'block');
-                return false;
-            } else if (TrueNit !== nit && nit !== "CF") {
+            if (TrueNit !== nit && nit !== "CF") {
                 // Realiza las acciones necesarias si el valor es diferente de cero
                 alert("El NIT ha cambiado, es necesario validar.");
                 return false;
@@ -1177,8 +1090,7 @@
                     mensaje = mensaje.replace("/\n/g", "<br>");
                     alert(mensaje);
                     return false;
-                } else if (confirm("¿Está seguro de que su información es correcta?")) {
-                    $('#myModal').css('display', 'none'); // Cierra #myModal cuando se abre para cargar documentos
+                } else if (confirm("¿Está seguro de que su información es correcta?")) {                   
                     $('#myModalActualizacion').css('display', 'block');
                     __doPostBack('<%= BtnActualizar.ClientID %>', '');
                     return true; // Permite continuar con la acción del botón
@@ -1188,12 +1100,7 @@
             }
         }
 
-        function Documentos() {
-            alert("Es necesario adjuntar la imagen de su documento de actualización para continuar con la actualización.");
-            $('#myModal').css('display', 'block');
-            return false;
-        }
-
+        
         function NoExiste() {
             $('#myModalAlumno').css('display', 'block');
             $('#myModalBusquedaMultiple').css('display', 'none');
@@ -1234,32 +1141,32 @@
                 $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
                         $('#<%= ControlCF.ClientID %>').val(" ");
-                            $('#<%= ControlCF2.ClientID %>').val("1");
-                            $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
-                            $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
-                            $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
-                            $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
-                            $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
-                            $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
-                            $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPais.ClientID %>').val());
-                            $('#<%= MunicipioNit.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
-                            $('#<%= DepartamentoNit.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
-                            $('#<%= StateNIT.ClientID %>').val($('#<%= State.ClientID %>').val());
-                            $('#<%= txtNit.ClientID %>').val('CF');
-                            $('#<%= txtNit.ClientID %>').prop('disabled', true);
-                            $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
-                            $('#<%= TxtDiRe1.ClientID %>').prop('disabled', true);
-                            $('#<%= TxtDiRe2.ClientID %>').prop('disabled', true);
-                            $('#<%= TxtDiRe3.ClientID %>').prop('disabled', true);
-                            $('#<%= PaisNit.ClientID %>').prop('disabled', true);
-                            $('#<%= MunicipioNit.ClientID %>').prop('disabled', true);
-                            $('#<%= DepartamentoNit.ClientID %>').prop('disabled', true);
-                            $('#<%= lblActualizacion.ClientID %>').text('');
+                        $('#<%= ControlCF2.ClientID %>').val("1");
+                        $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
+                        $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
+                        $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
+                        $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
+                        $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
+                        $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
+                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPais.ClientID %>').val());
+                        $('#<%= MunicipioNit.ClientID %>').val($('#<%= CmbMunicipio.ClientID %>').val());
+                        $('#<%= DepartamentoNit.ClientID %>').val($('#<%= CmbDepartamento.ClientID %>').val());
+                        $('#<%= StateNIT.ClientID %>').val($('#<%= State.ClientID %>').val());
+                        $('#<%= txtNit.ClientID %>').val('CF');
+                        $('#<%= txtNit.ClientID %>').prop('disabled', true);
+                        $('#<%= ValidarNIT.ClientID %>').prop('disabled', true);
+                        $('#<%= TxtDiRe1.ClientID %>').prop('disabled', true);
+                        $('#<%= TxtDiRe2.ClientID %>').prop('disabled', true);
+                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', true);
+                        $('#<%= PaisNit.ClientID %>').prop('disabled', true);
+                        $('#<%= MunicipioNit.ClientID %>').prop('disabled', true);
+                        $('#<%= DepartamentoNit.ClientID %>').prop('disabled', true);
+                        $('#<%= lblActualizacion.ClientID %>').text('');
 
-                            // Hacer visible la fila Combos
-                            $('#<%= Combos.ClientID %>').hide();
-                            // Hacer visible la fila sustitucion de Combos
-                            $('#<%= sustituirCombos.ClientID %>').hide();
+                        // Hacer visible la fila Combos
+                        $('#<%= Combos.ClientID %>').hide();
+                        // Hacer visible la fila sustitucion de Combos
+                        $('#<%= sustituirCombos.ClientID %>').hide();
                     }
                 });
             }
@@ -1274,11 +1181,11 @@
                 if ($(this).is(':checked')) {
                     // El RadioButton ha sido marcado, ocultar la fila
                     $('#<%= Combos.ClientID %>').hide();
-                        $('#<%= sustituirCombos.ClientID %>').show();
-                    } else {
-                        // El RadioButton ha sido desmarcado, mostrar la fila
-                        $('#<%= Combos.ClientID %>').show();
-                        $('#<%= sustituirCombos.ClientID %>').hide();
+                    $('#<%= sustituirCombos.ClientID %>').show();
+                } else {
+                    // El RadioButton ha sido desmarcado, mostrar la fila
+                    $('#<%= Combos.ClientID %>').show();
+                    $('#<%= sustituirCombos.ClientID %>').hide();
                 }
             });
 
@@ -1286,11 +1193,11 @@
             if ($('#<%= RadioButtonNombreSi.ClientID %>').is(':checked')) {
                 // El RadioButton está marcado, ocultar la fila
                 $('#<%= Combos.ClientID %>').hide();
-                    $('#<%= sustituirCombos.ClientID %>').show();
-                } else {
-                    // El RadioButton no está marcado, mostrar la fila
-                    $('#<%= Combos.ClientID %>').show();
-                    $('#<%= sustituirCombos.ClientID %>').hide();
+                $('#<%= sustituirCombos.ClientID %>').show();
+            } else {
+                // El RadioButton no está marcado, mostrar la fila
+                $('#<%= Combos.ClientID %>').show();
+                $('#<%= sustituirCombos.ClientID %>').hide();
             }
         });
 
@@ -1300,33 +1207,33 @@
                 $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
                         $('#<%= ControlCF.ClientID %>').val(" ");
-                            $('#<%= ControlCF2.ClientID %>').val("2");
-                            $('#<%= TxtNombreR.ClientID %>').val("");
-                            $('#<%= TxtApellidoR.ClientID %>').val("");
-                            $('#<%= TxtCasadaR.ClientID %>').val("");
-                            $('#<%= txtNit.ClientID %>').val("");
-                            $('#<%= TxtDiRe1.ClientID %>').val("");
-                            $('#<%= TxtDiRe2.ClientID %>').val("");
-                            $('#<%= TxtDiRe3.ClientID %>').val("");
-                            $('#<%= CmbPaisNIT.ClientID %>').val("");
-                            $('#<%= CmbDepartamentoNIT.ClientID %>').val("");
-                            $('#<%= CmbMunicipioNIT.ClientID %>').val("");
-                            $('#<%= StateNIT.ClientID %>').val("");
-                            $('#<%= txtNit.ClientID %>').prop('disabled', false);
-                            $('#<%= ValidarNIT.ClientID %>').prop('disabled', false);
-                            $('#<%= TxtDiRe1.ClientID %>').prop('disabled', false);
-                            $('#<%= TxtDiRe2.ClientID %>').prop('disabled', false);
-                            $('#<%= TxtDiRe3.ClientID %>').prop('disabled', false);
-                            $('#<%= CmbPaisNIT.ClientID %>').prop('disabled', false);
-                            $('#<%= CmbDepartamentoNIT.ClientID %>').prop('disabled', false);
-                            $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);
-                            $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
-                            // Hacer visible la fila Combos
-                            $('#<%= Combos.ClientID %>').show();
-                            $('#<%= sustituirCombos.ClientID %>').hide();
+                        $('#<%= ControlCF2.ClientID %>').val("2");
+                        $('#<%= TxtNombreR.ClientID %>').val("");
+                        $('#<%= TxtApellidoR.ClientID %>').val("");
+                        $('#<%= TxtCasadaR.ClientID %>').val("");
+                        $('#<%= txtNit.ClientID %>').val("");
+                        $('#<%= TxtDiRe1.ClientID %>').val("");
+                        $('#<%= TxtDiRe2.ClientID %>').val("");
+                        $('#<%= TxtDiRe3.ClientID %>').val("");
+                        $('#<%= CmbPaisNIT.ClientID %>').val("");
+                        $('#<%= CmbDepartamentoNIT.ClientID %>').val("");
+                        $('#<%= CmbMunicipioNIT.ClientID %>').val("");
+                        $('#<%= StateNIT.ClientID %>').val("");
+                        $('#<%= txtNit.ClientID %>').prop('disabled', false);
+                        $('#<%= ValidarNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= TxtDiRe1.ClientID %>').prop('disabled', false);
+                        $('#<%= TxtDiRe2.ClientID %>').prop('disabled', false);
+                        $('#<%= TxtDiRe3.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbPaisNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbDepartamentoNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= CmbMunicipioNIT.ClientID %>').prop('disabled', false);
+                        $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
+                        // Hacer visible la fila Combos
+                        $('#<%= Combos.ClientID %>').show();
+                        $('#<%= sustituirCombos.ClientID %>').hide();
 
-                            var deptos = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>');
-                            var muni = document.getElementById('<%= CmbMunicipioNIT.ClientID %>');
+                        var deptos = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>');
+                        var muni = document.getElementById('<%= CmbMunicipioNIT.ClientID %>');
                         while (deptos.options.length > 0) {
                             deptos.remove(0);
                         }
@@ -1343,9 +1250,6 @@
         });
 
 
-        $('.close').click(function () {
-            $('#myModal').css('display', 'none');
-        });
 
         $('.closeAlumno').click(function () {
             $('#myModalAlumno').css('display', 'none');
@@ -1428,23 +1332,6 @@
         }
 
 
-        function validarCargaArchivos() {
-            var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
-            var files = fileUpload.files;
-
-            if (files.length > 2) {
-                alert("Solo se permiten cargar 2 archivos.");
-
-                for (var i = 0; i < fileUpload.files.length; i++) {
-                    var file = fileUpload.files[i];
-
-                    // Elimina el archivo seleccionado
-                    fileUpload.value = '';
-
-                }
-            }
-        }
-
         //FUNCION PARA EVITAR QUE SEA INGRESADO EL -
         $(document).ready(function () {
             $('#<%= txtNit.ClientID %>').on('keypress', function (event) {
@@ -1489,8 +1376,8 @@
 
                 if (txtNit !== TrueNit || txtNit !== 'CF') {
                     $('#<%= ValidacionNit.ClientID %>').val("1");
-                    } else {
-                        $('#<%= ValidacionNit.ClientID %>').val("0");
+                } else {
+                    $('#<%= ValidacionNit.ClientID %>').val("0");
                     TrueNit.text(txtNit);
                 }
             });
@@ -1590,23 +1477,7 @@
             }
         });
 
-        function validarCargaFoto() {
-            var fileUpload = document.getElementById('<%= FileUpload1.ClientID %>');
-            var files = fileUpload.files;
-
-            if (files.length > 1) {
-                alert("Solo se permite cargar 1 archivo.");
-
-                for (var i = 0; i < fileUpload.files.length; i++) {
-                    var file = fileUpload.files[i];
-
-                    // Elimina el archivo seleccionado
-                    fileUpload.value = '';
-
-                }
-            }
-        }
-
+        
         function Busqueda() {
             $('#myModalBusquedaMultiple').css('display', 'block');
             return false;
@@ -1631,6 +1502,15 @@
             });
             radioButton.checked = true;
         }
+
+        $(document).ready(function () {
+            $('#GridViewDocumentos tr').each(function () {
+                var tipoDocumento = $(this).find('td:eq(2)').text();
+                if (tipoDocumento == "DPI" || tipoDocumento == "Pasaporte") {
+                    $(this).css('background-color', '#CCCCCC');
+                }
+            });
+        });
     </script>
 
 

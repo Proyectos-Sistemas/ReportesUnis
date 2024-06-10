@@ -203,5 +203,34 @@ namespace ReportesUnis.API
                 return 1;
             }
         }
+
+
+        public int Patch_CRM(string url, string user, string pass, string info)
+        {
+            string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(user + ":" + pass));
+
+            try
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest(Method.PATCH);
+                request.AddHeader("Authorization", "Basic " + svcCredentials);
+                request.AddHeader("content-type", "application/vnd.oracle.adf.resourceitem+json");
+                request.AddHeader("username", user);
+                request.AddHeader("password", pass);
+                request.AddParameter("application/vnd.oracle.adf.resourceitem+json", info, ParameterType.RequestBody);
+
+                IRestResponse response = client.Execute(request);
+
+                //dynamic datos = JsonConvert.DeserializeObject(response.Content).ToString();
+                if (response.StatusCode.ToString() == "OK")
+                    return 0;
+                else
+                    return 1;
+            }
+            catch (Exception)
+            {
+                return 1;
+            }
+        }
     }
 }
