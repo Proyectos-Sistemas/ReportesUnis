@@ -8,25 +8,6 @@
                 <h2 style="text-align: center;">ACTUALIZACIÓN DE INFORMACIÓN ESTUDIANTES</h2>
             </div>
         </div>
-        <%--<div id="divActividad" runat="server" style="display: block">
-            <div class="row">
-                <div class="form-group col">
-                    <h6 style="text-align: center;">¿Qué desea realizar el día de hoy?*</h6>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2 mx-auto text-center">
-                </div>
-                <div class="col-md-4 mx-auto text-center">
-                    <asp:RadioButton ID="RadioButtonCarne" runat="server" GroupName="Accion" Text="Solicitar carné y actualizar información" />
-                </div>
-                <div class="col-md-4 mx-auto text-center">
-                    <asp:RadioButton ID="RadioButtonActualiza" runat="server" GroupName="Accion" Text="Solo actualizar información" />
-                </div>
-                <div class="col-md-2 mx-auto text-center">
-                </div>
-            </div>
-        </div>--%>
 
         <div class="container" id="Div1" runat="server">
             <div class="row justify-content-center">
@@ -62,7 +43,7 @@
         </div>
         <div id="Informacion" runat="server">
 
-            <hr />        
+            <hr />
             <div id="CamposAuxiliares" runat="server" visible="false">
                 <%-- TEXTBOX USEREMPLID ALMACENA EL EMPLID DEL USUARIO QUE ESTA HACIENDO LA ACTUALIZACION --%>
                 <asp:Label ID="UserEmplid" runat="server" Visible="false"></asp:Label>
@@ -359,11 +340,6 @@
                                         <br />
                                     </div>
 
-
-
-
-
-
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Nombres*:</asp:Label>
                                         <br />
@@ -457,6 +433,7 @@
                                         </asp:DropDownList>
                                         <br />
                                     </div>
+
                                 </div>
                             </div>
 
@@ -629,285 +606,501 @@
 
                                 </div>
                             </div>
+
+                            <hr />
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-2 mx-auto text-center">
+                                    </div>
+                                    <div class="col-md-8 mx-auto text-center">
+                                        <h5 style="text-align: center;">Información atención de emergencias</h5>
+                                    </div>
+                                    <div class="col-md-2 mx-auto text-center">
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div id="TableEmergencias">
+                                <div>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <asp:Label runat="server" Font-Bold="true">Seguro Médico</asp:Label>
+                                                <br />
+                                                <asp:TextBox ID="TextBox7" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <br />
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <asp:Label runat="server" Font-Bold="true">Número de Afiliación</asp:Label>
+                                                <br />
+                                                <asp:TextBox ID="TextBox8" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <br />
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <asp:Label runat="server" Font-Bold="true">Tipo de Sangre*:</asp:Label>
+                                                <asp:DropDownList ID="DropDownList4" runat="server" Width="500px" CssClass="form-control">
+                                                    <asp:ListItem>O+</asp:ListItem>
+                                                    <asp:ListItem>O-</asp:ListItem>
+                                                    <asp:ListItem>A+</asp:ListItem>
+                                                    <asp:ListItem>A-</asp:ListItem>
+                                                    <asp:ListItem>B+</asp:ListItem>
+                                                    <asp:ListItem>B-</asp:ListItem>
+                                                    <asp:ListItem>AB+</asp:ListItem>
+                                                    <asp:ListItem>AB-</asp:ListItem>
+                                                </asp:DropDownList>
+                                                <br />
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <asp:Label runat="server" Font-Bold="true">Hospital para traslado:</asp:Label>
+                                                <br />
+                                                <asp:TextBox ID="TextBox4" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <br />
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <asp:Label runat="server" Font-Bold="true">Antecedentes Médicos:</asp:Label>
+                                                <asp:TextBox ID="TextBox5" runat="server" TextMode="MultiLine" Rows="4" MaxLength="250" Width="500px" CssClass="form-control" Enabled="true" onkeypress="return evitarEnter(event)"></asp:TextBox>
+                                                <br />
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <asp:Label runat="server" Font-Bold="true">Alergias:</asp:Label>
+                                                <asp:TextBox ID="TextBox6" runat="server" TextMode="MultiLine" Rows="4" MaxLength="250" Width="500px" CssClass="form-control" Enabled="true" onkeypress="return evitarEnter(event)"></asp:TextBox>
+                                                <br />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-2 mx-auto text-center">
+                                    </div>
+                                    <div class="col-md-8 mx-auto text-center">
+                                        <h5 style="text-align: center;">Contactos de Emergencia</h5>
+                                    </div>
+                                    <div class="col-md-2 mx-auto text-center">
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div id="TableContactoE">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-4 mx-auto text-center">
+                                        </div>
+                                        <br />
+                                        <div class="col-md-4 mx-auto text-center">
+                                            <asp:Label runat="server" Font-Bold="true">Contacto 1 de Emergencia</asp:Label>
+                                            <br />
+                                        </div>
+
+                                        <div class="col-md-4 mx-auto text-center">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <asp:Label runat="server" Font-Bold="true">Nombre *:</asp:Label>
+                                            <br />
+                                            <asp:TextBox ID="TxtNombreE1" runat="server" Enabled="true" MaxLength="30" Width="275px"
+                                                CssClass="form-control"></asp:TextBox>
+                                            <br />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <asp:Label runat="server" Font-Bold="true">Parentesco</asp:Label>
+                                            <br />
+
+                                            <asp:DropDownList ID="CmbPatentesco1" runat="server" Width="275px" CssClass="form-control">
+                                                <asp:ListItem Selected="False" Value=""></asp:ListItem>
+                                                <asp:ListItem>Madre</asp:ListItem>
+                                                <asp:ListItem>Padre</asp:ListItem>
+                                                <asp:ListItem>Abuelo</asp:ListItem>
+                                                <asp:ListItem>Abuela</asp:ListItem>
+                                                <asp:ListItem>Tío</asp:ListItem>
+                                                <asp:ListItem>Tía</asp:ListItem>
+                                                <asp:ListItem>Cónyugue</asp:ListItem>
+                                            </asp:DropDownList>
+                                            <br />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <asp:Label runat="server" Font-Bold="true">Teléfono:</asp:Label>
+                                            <br />
+                                            <asp:TextBox ID="txtTelefonoE1" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
+                                            <br />
+                                        </div>
+
+                                        <div class="col-md-4 mx-auto text-center">
+                                        </div>
+
+
+                                        <div class="col-md-4 mx-auto text-center">
+                                            <asp:Label runat="server" Font-Bold="true">Contacto 2 de Emergencia</asp:Label>
+                                            <br />
+                                        </div>
+
+                                        <div class="col-md-4 mx-auto text-center">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <asp:Label runat="server" Font-Bold="true">Nombre *:</asp:Label>
+                                            <br />
+                                            <asp:TextBox ID="TxtNombreE2" runat="server" Enabled="true" MaxLength="30" Width="275px"
+                                                CssClass="form-control"></asp:TextBox>
+                                            <br />
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            <asp:Label runat="server" Font-Bold="true">Parentezco</asp:Label>
+                                            <br />
+
+                                            <asp:DropDownList ID="CmbPatentesco2" runat="server" Width="275px" CssClass="form-control">
+                                                <asp:ListItem Selected="False" Value=""></asp:ListItem>
+                                                <asp:ListItem>Madre</asp:ListItem>
+                                                <asp:ListItem>Padre</asp:ListItem>
+                                                <asp:ListItem>Abuelo</asp:ListItem>
+                                                <asp:ListItem>Abuela</asp:ListItem>
+                                                <asp:ListItem>Tío</asp:ListItem>
+                                                <asp:ListItem>Tía</asp:ListItem>
+                                                <asp:ListItem>Cónyugue</asp:ListItem>
+                                            </asp:DropDownList>
+                                            <br />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <asp:Label runat="server" Font-Bold="true">Teléfono:</asp:Label>
+                                            <br />
+                                            <asp:TextBox ID="txtTelefonoE2" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
+                                            <br />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-2 mx-auto text-center">
+                                    </div>
+                                    <div class="col-md-8 mx-auto text-center">
+                                        <h5 style="text-align: center;">Información adicional</h5>
+                                    </div>
+                                    <div class="col-md-2 mx-auto text-center">
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-4 mx-auto text-center">
+                                    </div>
+
+
+                                    <div class="col-md-4 mx-auto text-center">
+                                        <asp:Label runat="server" Font-Bold="true">Talla Sudadero</asp:Label>
+                                        <br />
+                                    </div>
+
+                                    <div class="col-md-4 mx-auto text-center">
+                                    </div>
+
+                                    <div class="col-md-4 mx-auto text-center">
+                                    </div>
+
+                                    <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
+                                        <asp:DropDownList ID="CmbTalla" runat="server" Width="275px" CssClass="form-control">
+                                            <asp:ListItem Selected="False" Value=""></asp:ListItem>
+                                            <asp:ListItem>S</asp:ListItem>
+                                            <asp:ListItem>M</asp:ListItem>
+                                            <asp:ListItem>L</asp:ListItem>
+                                            <asp:ListItem>XL</asp:ListItem>
+                                            <asp:ListItem>XXL</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                    <div class="col-md-4 mx-auto text-center">
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
+        </div>
 
-            <br />
+        <br />
 
 
-            <div class="container" id="tbactualizar" runat="server">
+        <div class="container" id="tbactualizar" runat="server">
+            <div class="row">
+                <div class="col-md-4 mx-auto text-center">
+                </div>
+                <div class="col-md-4 mx-auto text-center">
+                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
+                </div>
+                <div class="col-md-4 mx-auto text-center">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="myModalActualizacion" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
                 <div class="row">
                     <div class="col-md-4 mx-auto text-center">
                     </div>
                     <div class="col-md-4 mx-auto text-center">
-                        <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
+                        <div class="modal-spinnerCarne">
+                            <div class="spinner"></div>
+                        </div>
                     </div>
                     <div class="col-md-4 mx-auto text-center">
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="modal" id="myModalActualizacion" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="row">
-                        <div class="col-md-4 mx-auto text-center">
-                        </div>
-                        <div class="col-md-4 mx-auto text-center">
-                            <div class="modal-spinnerCarne">
-                                <div class="spinner"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mx-auto text-center">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 mx-auto text-center">
-                            <div class="modal-messageCarne">Por favor, espera mientras la información se está actualizando...</div>
-                            <div style="margin-bottom: 20px;"></div>
-                        </div>
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div class="modal-messageCarne">Por favor, espera mientras la información se está actualizando...</div>
+                        <div style="margin-bottom: 20px;"></div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div id="myModalAlumno" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; justify-content: center; align-items: center; z-index: 9999;">
-            <div class="modal-dialog" role="document" style="display: flex; flex-direction: column; align-items: center;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 style="text-align: center; color: darkred;"><strong>Alerta</strong></h5>
-                        <span class="closeAlumno" style="cursor: pointer;">&times;</span>
+    <div id="myModalAlumno" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="text-align: center; color: darkred;"><strong>Alerta</strong></h5>
+                    <span class="closeAlumno" style="cursor: pointer;">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <contenttemplate>
+                        <div class="container emp-profile">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="profile-head">
+                                        <div class="row">
+                                            <div class="form-group col-md">
+                                                <asp:Label ID="Label7" runat="server" ForeColor="Black">No se encontró información relacionada a la información proporcionada</asp:Label>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </contenttemplate>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModalNoExisteAlumno" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="text-align: center; color: darkred;"><strong>Alerta</strong></h5>
+                    <span class="closeNoExisteAlumno" style="cursor: pointer;">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <contenttemplate>
+                        <div class="container emp-profile">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="profile-head">
+                                        <div class="row">
+                                            <div class="form-group col-md">
+                                                <asp:Label ID="Label9" runat="server" ForeColor="Black">La persona seleccionada no se encuentra matriculada en un ciclo lectivo vigente</asp:Label>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </contenttemplate>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModalPermisos" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="text-align: center; color: darkred;"><strong>Alerta</strong></h5>
+                    <span class="closePermisos" style="cursor: pointer;">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <contenttemplate>
+                        <div class="container emp-profile">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="profile-head">
+                                        <div class="row">
+                                            <div class="form-group col-md">
+                                                <asp:Label ID="Label10" runat="server" ForeColor="Black">No cuenta con los permisos correspondientes para visualizar la información de dicho estudiante</asp:Label>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </contenttemplate>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="myModalCorrecto" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div style="margin-bottom: 20px;"></div>
+                        <div class="modal-messageCarne">Su información fue actualizada correctamente.</div>
+                        <div style="margin-bottom: 20px;"></div>
                     </div>
-                    <div class="modal-body">
-                        <contenttemplate>
-                            <div class="container emp-profile">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="profile-head">
-                                            <div class="row">
-                                                <div class="form-group col-md">
-                                                    <asp:Label ID="Label7" runat="server" ForeColor="Black">No se encontró información relacionada a la información proporcionada</asp:Label>
-                                                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="myModalEspera" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-4 mx-auto text-center">
+                    </div>
+                    <div class="col-md-4 mx-auto text-center">
+                        <div class="modal-spinnerCarne">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mx-auto text-center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div class="modal-messageCarne">Por favor, espera un momento</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="myModalError" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div style="margin-bottom: 20px;"></div>
+                        <div class="modal-messageCarne">Ocurrió un error, intente más tarde.</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModalBusquedaMultiple" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 style="text-align: center; color: darkred; text-align: center"><strong>Información de Busqueda</strong></h4>
+                    <span class="closeBusqueda">&times;</span>
+                </div>
+
+                <div class="modal-body">
+                    <contenttemplate>
+                        <div class="container emp-profile">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="profile-head">
+                                        <div class="row">
+                                            <div class="form-group col-md">
+                                                <asp:Label ID="Label8" runat="server" Font-Bold="true" ForeColor="Black">Selecciona una opción</asp:Label>
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md">
+                                                <asp:Button ID="BtnAceptarBusqueda" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" CausesValidation="false" OnClick="BtnAceptarBusqueda_Click" />
+                                                <br />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md" style="max-height: calc(100vh - 150px); overflow-y: auto;">
+                                                <%-- GRIDVIEW DONDE SE MUESTRA LA INFORMACION DEL REPORTE --%>
+                                                <div class="containerGV" id="GVContainer">
+                                                    <asp:GridView ID="GridViewBusqueda" runat="server" AutoGenerateColumns="false"
+                                                        CssClass="table table-condensed table-bordered ">
+                                                        <Columns>
+                                                            <asp:TemplateField HeaderText="Seleccionar" ItemStyle-HorizontalAlign="Center">
+                                                                <ItemTemplate>
+                                                                    <asp:RadioButton ID="RBBusqueda" runat="server" GroupName="BusquedaGroup" OnClick="selectOnlyThis(this)" />
+                                                                </ItemTemplate>
+                                                            </asp:TemplateField>
+                                                            <asp:BoundField DataField="EMPLID" HeaderText="ID" />
+                                                            <asp:BoundField DataField="NAME" HeaderText="Nombre" ItemStyle-CssClass="nowrap" />
+                                                        </Columns>
+                                                    </asp:GridView>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </contenttemplate>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="myModalNoExisteAlumno" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; justify-content: center; align-items: center; z-index: 9999;">
-            <div class="modal-dialog" role="document" style="display: flex; flex-direction: column; align-items: center;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 style="text-align: center; color: darkred;"><strong>Alerta</strong></h5>
-                        <span class="closeNoExisteAlumno" style="cursor: pointer;">&times;</span>
-                    </div>
-                    <div class="modal-body">
-                        <contenttemplate>
-                            <div class="container emp-profile">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="profile-head">
-                                            <div class="row">
-                                                <div class="form-group col-md">
-                                                    <asp:Label ID="Label9" runat="server" ForeColor="Black">La persona seleccionada no se encuentra matriculada en un ciclo lectivo vigente</asp:Label>
-                                                    <br />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </contenttemplate>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="myModalPermisos" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; justify-content: center; align-items: center; z-index: 9999;">
-            <div class="modal-dialog" role="document" style="display: flex; flex-direction: column; align-items: center;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 style="text-align: center; color: darkred;"><strong>Alerta</strong></h5>
-                        <span class="closePermisos" style="cursor: pointer;">&times;</span>
-                    </div>
-                    <div class="modal-body">
-                        <contenttemplate>
-                            <div class="container emp-profile">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="profile-head">
-                                            <div class="row">
-                                                <div class="form-group col-md">
-                                                    <asp:Label ID="Label10" runat="server" ForeColor="Black">No cuenta con los permisos correspondientes para visualizar la información de dicho estudiante</asp:Label>
-                                                    <br />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </contenttemplate>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal" id="myModalCorrecto" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="row">
-                        <div class="col-md-12 mx-auto text-center">
-                            <div style="margin-bottom: 20px;"></div>
-                            <div class="modal-messageCarne">Su información fue actualizada correctamente.</div>
-                            <div style="margin-bottom: 20px;"></div>
                         </div>
-                    </div>
+                    </contenttemplate>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="modal" id="myModalEspera" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="row">
-                        <div class="col-md-4 mx-auto text-center">
-                        </div>
-                        <div class="col-md-4 mx-auto text-center">
-                            <div class="modal-spinnerCarne">
-                                <div class="spinner"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mx-auto text-center">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 mx-auto text-center">
-                            <div class="modal-messageCarne">Por favor, espera un momento</div>
-                            <div style="margin-bottom: 20px;"></div>
-                        </div>
-                    </div>
-                </div>
+
+    <div class="container" runat="server">
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8 d-flex justify-content-center align-items-center">
+                <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"></asp:Label>
+            </div>
+            <div class="col-md-2">
             </div>
         </div>
-
-        <div class="modal" id="myModalError" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="row">
-                        <div class="col-md-12 mx-auto text-center">
-                            <div style="margin-bottom: 20px;"></div>
-                            <div class="modal-messageCarne">Ocurrió un error, intente más tarde.</div>
-                            <div style="margin-bottom: 20px;"></div>
-                        </div>
-                    </div>
-                </div>
+        <br />
+        <div class="row">
+            <div class="col-md-4 mx-auto text-center">
+            </div>
+            <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center">
+                <asp:Button ID="BtnDownload" runat="server" Text="Descargar Manual" CssClass="btn-danger-unis" OnClick="BtnDownload_Click" Style="display: none" />
+            </div>
+            <div class="col-md-4 mx-auto text-center">
             </div>
         </div>
-
-        <div id="myModalBusquedaMultiple" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 style="text-align: center; color: darkred; text-align: center"><strong>Información de Busqueda</strong></h4>
-                        <span class="closeBusqueda">&times;</span>
-                    </div>
-
-                    <div class="modal-body">
-                        <contenttemplate>
-                            <div class="container emp-profile">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="profile-head">
-                                            <div class="row">
-                                                <div class="form-group col-md">
-                                                    <asp:Label ID="Label8" runat="server" Font-Bold="true" ForeColor="Black">Selecciona una opción</asp:Label>
-                                                    <br />
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md">
-                                                    <asp:Button ID="BtnAceptarBusqueda" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" CausesValidation="false" OnClick="BtnAceptarBusqueda_Click" />
-                                                    <br />
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-md" style="max-height: calc(100vh - 150px); overflow-y: auto;">
-                                                    <%-- GRIDVIEW DONDE SE MUESTRA LA INFORMACION DEL REPORTE --%>
-                                                    <div class="containerGV" id="GVContainer">
-                                                        <asp:GridView ID="GridViewBusqueda" runat="server" AutoGenerateColumns="false"
-                                                            CssClass="table table-condensed table-bordered ">
-                                                            <Columns>
-                                                                <asp:TemplateField HeaderText="Seleccionar" ItemStyle-HorizontalAlign="Center">
-                                                                    <ItemTemplate>
-                                                                        <asp:RadioButton ID="RBBusqueda" runat="server" GroupName="BusquedaGroup" OnClick="selectOnlyThis(this)" />
-                                                                    </ItemTemplate>
-                                                                </asp:TemplateField>
-                                                                <asp:BoundField DataField="EMPLID" HeaderText="ID" />
-                                                                <asp:BoundField DataField="NAME" HeaderText="Nombre" ItemStyle-CssClass="nowrap" />
-                                                            </Columns>
-                                                        </asp:GridView>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </contenttemplate>
-                    </div>
-                </div>
+        <br />
+        <div class="row">
+            <div class="col-md-4 mx-auto text-center">
+            </div>
+            <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center">
+                <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" OnClick="BtnReload_Click" Style="display: none" />
+            </div>
+            <div class="col-md-4 mx-auto text-center">
             </div>
         </div>
+    </div>
 
 
-        <div class="container" runat="server">
-            <div class="row">
-                <div class="col-md-2">
-                </div>
-                <div class="col-md-8 d-flex justify-content-center align-items-center">
-                    <asp:Label ID="lblActualizacion" runat="server" Font-Bold="true" ForeColor="Red" Text="" Font-Size="Large"></asp:Label>
-                </div>
-                <div class="col-md-2">
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                <div class="col-md-4 mx-auto text-center">
-                </div>
-                <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center">
-                    <asp:Button ID="BtnDownload" runat="server" Text="Descargar Manual" CssClass="btn-danger-unis" OnClick="BtnDownload_Click" Style="display: none" />
-                </div>
-                <div class="col-md-4 mx-auto text-center">
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                <div class="col-md-4 mx-auto text-center">
-                </div>
-                <div class="col-md-4 mx-auto text-center d-flex justify-content-center align-items-center">
-                    <asp:Button ID="BtnReload" runat="server" Text="Recargar Página" CssClass="btn-danger-unis" OnClick="BtnReload_Click" Style="display: none" />
-                </div>
-                <div class="col-md-4 mx-auto text-center">
-                </div>
-            </div>
-        </div>
-
-        
 
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
     </div>
     <script>
         var userAgent = navigator.userAgent;
@@ -1090,7 +1283,7 @@
                     mensaje = mensaje.replace("/\n/g", "<br>");
                     alert(mensaje);
                     return false;
-                } else if (confirm("¿Está seguro de que su información es correcta?")) {                   
+                } else if (confirm("¿Está seguro de que su información es correcta?")) {
                     $('#myModalActualizacion').css('display', 'block');
                     __doPostBack('<%= BtnActualizar.ClientID %>', '');
                     return true; // Permite continuar con la acción del botón
@@ -1100,7 +1293,7 @@
             }
         }
 
-        
+
         function NoExiste() {
             $('#myModalAlumno').css('display', 'block');
             $('#myModalBusquedaMultiple').css('display', 'none');
@@ -1477,7 +1670,7 @@
             }
         });
 
-        
+
         function Busqueda() {
             $('#myModalBusquedaMultiple').css('display', 'block');
             return false;

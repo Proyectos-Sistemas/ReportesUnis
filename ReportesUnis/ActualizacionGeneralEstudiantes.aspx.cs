@@ -2882,13 +2882,15 @@ namespace ReportesUnis
             string MunicResidencia = Residencia.Municipio;
             string PaisResidencia = Residencia.País;
 
+            if (!String.IsNullOrEmpty(txtNit.Text) || txtNit.Text == "")
+                txtNit.Text = "CF";
 
-            /* esto comentado ya funciona correctamente
-            var respuesta = RecorrerDocumentos();
-            UP_IDENTIFICACION.Value = respuesta.UP_Doc;
-            UD_IDENTIFICACION.Value = respuesta.UD_Doc;
-            IngresoDatosGenerales();*/
-            limpiarVariables();
+                /* esto comentado ya funciona correctamente
+                var respuesta = RecorrerDocumentos();
+                UP_IDENTIFICACION.Value = respuesta.UP_Doc;
+                UD_IDENTIFICACION.Value = respuesta.UD_Doc;
+                IngresoDatosGenerales();*/
+                limpiarVariables();
             getInfo = consultaGet(txtDPI.Text);
             PartyNumber = getBetween(getInfo, "PartyNumber\" : \"", "\",");
             string FechaCumple = Convert.ToDateTime(txtCumple.Text).ToString("yyyy-MM-dd");
@@ -2902,20 +2904,26 @@ namespace ReportesUnis
                 //"\"MaritalStatus\": \"T\",\r\n    " +
                 "\"MobileNumber\": \""+txtTelefono.Text+"\",\r\n    " +
                 "\"EmailAddress\": \""+TxtCorreoPersonal.Text+"\",\r\n    " +
-                "\"AddressElementAttribute3\": \""+txtDireccion3.Text+"\",\r\n    " +
+                "\"AddressElementAttribute3\": \"Zona "+txtDireccion3.Text+"\",\r\n    " +
                 "\"AddressLine1\": \""+txtDireccion.Text+"\",\r\n    " +
-                "\"AddressLine2\": \""+txtDireccion2.Text+"\",\r\n    " +
+                "\"AddressLine2\": \""+txtDireccion2.Text.TrimEnd()+"\",\r\n    " +
                 "\"City\": \""+MunicResidencia+"\",\r\n    " +
                 "\"Country\": \""+PaisResidencia+"\",\r\n    " +
                 "\"County\": \""+DeptoResidencia+"\",\r\n    " +
                 //"\"PostalCode\": \"16001\",\r\n    " +
                 //"\"PersonDEO_TipoDeDocumentoDeIdentidad_c\": \"CUI\",\r\n    " +
+                "\"PersonDEO_TallaSudadero_c\": \"" + CmbTalla.SelectedValue + "\",\r\n    " + 
                 "\"PersonDEO_T1_PaisDeNacimiento_c\": \""+ CmbPaisNacimiento.Text + "\",\r\n    " +
-                //"\"PersonDEO_TallaSudadero_c\": null,\r\n    " +
-                "\"PersonDEO_NumeroDeIdentificacionTributaria_c\": \""+txtNit.Text+"\"" +
-                "\r\n}";
+                "\"PersonDEO_NumeroDeIdentificacionTributaria_c\": \""+txtNit.Text + "\",\r\n    " +
+                "\"PersonDEO_ContactoDeEmergencia1_c\": \"" + TxtNombreE1.Text + "\",\r\n    " +
+                "\"PersonDEO_ContactoDeEmergencia2_c\": \"" + TxtNombreE2.Text + "\",\r\n    " +
+                "\"PersonDEO_ParentescoContactoEmergencia1_c\": \""+CmbPatentesco1.SelectedValue + "\",\r\n    " +
+                "\"PersonDEO_ParentescoContactoEmergencia2_c\": \"" + CmbPatentesco2.SelectedValue + "\",\r\n    " +
+                "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + txtTelefonoE2.Text + "\",\r\n    " +
+                "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + txtTelefonoE1.Text + "\"\r\n    " +
+                "}";
             //Actualiza por medio del metodo PATCH
-            /*updatePatch(body,PartyNumber);*/
+            updatePatch(body,PartyNumber);
             string control = null;
             /*using (OracleConnection con = new OracleConnection(constr))
             {
@@ -5453,8 +5461,8 @@ namespace ReportesUnis
 
         private (string Departamento, string Municipio, string País) datosResidencia()
         {
-            //string constr = TxtURL.Text;
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
+            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             string depto = null;
             string mun = null;
             string pais = null;
