@@ -73,6 +73,8 @@ namespace ReportesUnis
                     txtControlBit.Text = "0";
                     txtControlNR.Text = "0";
                     txtControlAR.Text = "0";
+                    LoadDataDocumentos();
+                    LoadDataContactos();
                     //emplid = mostrarInformación();
 
 
@@ -212,61 +214,61 @@ namespace ReportesUnis
                     }
 
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT APELLIDO_NIT, NOMBRE_NIT, CASADA_NIT, NIT, PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO, " +
-                                        "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT, STATE, EMAILUNIS,EMAILPERSONAL, BIRTHCOUNTRY, MUNICIPIO_NAC, DEPARTAMENTO_NAC, BIRTHPLACE, BIRTHSTATE FROM ( " +
-                                        "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, " +
-                                        "PD.LAST_NAME, PD.SECOND_LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , " +
-                                        "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, PD.BIRTHPLACE, PD.BIRTHSTATE, " +
-                                        "(SELECT BIRTHCOUNTRY FROM SYSADM.PS_PERS_DATA_SA_VW WHERE EMPLID ='" + emplid + "') BIRTHCOUNTRY, " +
-                                        "APD.DESCR CARRERA, AGT.DESCR FACULTAD, " +
-                                        "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'No Consta' END STATUS, " +
-                                        "(SELECT EXTERNAL_SYSTEM_ID FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + emplid + "' ORDER BY EFFDT DESC FETCH FIRST 1 ROWS ONLY) NIT," +
-                                        "(SELECT PNA.FIRST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "' ORDER BY EFFDT DESC FETCH FIRST 1 ROWS ONLY) NOMBRE_NIT, " +
-                                        "(SELECT PNA.LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "' ORDER BY EFFDT DESC FETCH FIRST 1 ROWS ONLY) APELLIDO_NIT, " +
-                                        "(SELECT SECOND_LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "' ORDER BY PNA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) CASADA_NIT, " +
-                                        "(SELECT ADDRESS1 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DIRECCION1_NIT, " +
-                                        "(SELECT ADDRESS2 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DIRECCION2_NIT, " +
-                                        "(SELECT ADDRESS3 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DIRECCION3_NIT, " +
-                                        "(SELECT C.DESCR FROM SYSADM.PS_ADDRESSES PA JOIN SYSADM.PS_COUNTRY_TBL C ON PA.COUNTRY = C.COUNTRY AND PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) PAIS_NIT, " +
-                                        "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) MUNICIPIO_NIT, " +
-                                        "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_PERS_DATA_SA_VW PD ON ST.STATE = PD.BIRTHSTATE AND ST.COUNTRY = PD.BIRTHCOUNTRY WHERE PD.EMPLID='" + emplid + "' ) MUNICIPIO_NAC, " +
-                                        "(SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DEPARTAMENTO_NIT, " +
-                                        "COALESCE((SELECT SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_PERS_DATA_SA_VW PD ON ST.STATE = PD.BIRTHSTATE AND ST.COUNTRY = PD.BIRTHCOUNTRY WHERE PD.EMPLID='" + emplid + "' ),' ') DEPARTAMENTO_NAC, " +
-                                        "(SELECT ST.STATE FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) STATE_NIT, " +
-                                        "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = '" + emplid + "' AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAILUNIS , " +
-                                        "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = '" + emplid + "' AND EMAIL.E_ADDR_TYPE IN ('HOM1') FETCH FIRST 1 ROWS ONLY) EMAILPERSONAL , " +
-                                        "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, " +
-                                        "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, " +
-                                        "TT.TERM_BEGIN_DT, C.DESCR PAIS " +
-                                        "FROM SYSADM.PS_PERS_DATA_SA_VW PD " +
-                                        "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID " +
-                                        "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID AND ADDRESS_TYPE= 'HOME'" +
-                                        "AND A.EFFDT =( " +
-                                        "    SELECT " +
-                                        "        MAX(EFFDT) " +
-                                        "    FROM " +
-                                        "        SYSADM.PS_ADDRESSES A2 " +
-                                        "    WHERE " +
-                                        "        A.EMPLID = A2.EMPLID " +
-                                        "        AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE " +
-                                        ") " +
-                                        "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID " +
-                                        "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE " +
-                                        "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON PD.EMPLID = CT.EMPLID " +
-                                        "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG " +
-                                        "AND CT.ACAD_CAREER = APD.ACAD_CAREER " +
-                                        "AND CT.INSTITUTION = APD.INSTITUTION " +
-                                        "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP " +
-                                        "AND APD.INSTITUTION = AGT.INSTITUTION " +
-                                        "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM " +
-                                        "AND CT.INSTITUTION = TT.INSTITUTION " +
-                                        "AND (SYSDATE BETWEEN TT.TERM_BEGIN_DT AND TT.TERM_END_DT)" +
-                                        "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID " +
-                                        "AND PP.PHONE_TYPE = 'HOME' " +
-                                        "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY " +
-                                        "WHERE PN.NATIONAL_ID ='" + DPI + "' " +
-                                        "ORDER BY CT.FULLY_ENRL_DT DESC " +
-                                        "FETCH FIRST 1 ROWS ONLY" +
+                    cmd.CommandText = "SELECT APELLIDO_NIT, NOMBRE_NIT, CASADA_NIT, NIT, PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO, \r\n" +
+                                        "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT, STATE, EMAILUNIS,EMAILPERSONAL, BIRTHCOUNTRY, MUNICIPIO_NAC, DEPARTAMENTO_NAC, BIRTHPLACE, BIRTHSTATE FROM ( \r\n" +
+                                        "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, \r\n" +
+                                        "PD.LAST_NAME, PD.SECOND_LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , \r\n" +
+                                        "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, PD.BIRTHPLACE, PD.BIRTHSTATE, \r\n" +
+                                        "(SELECT BIRTHCOUNTRY FROM SYSADM.PS_PERS_DATA_SA_VW WHERE EMPLID ='" + emplid + "') BIRTHCOUNTRY, \r\n" +
+                                        "APD.DESCR CARRERA, AGT.DESCR FACULTAD, \r\n" +
+                                        "CASE WHEN PD.MAR_STATUS = 'M' THEN 'Casado' WHEN PD.MAR_STATUS = 'S' THEN 'Soltero' ELSE 'No Consta' END STATUS, \r\n" +
+                                        "(SELECT EXTERNAL_SYSTEM_ID FROM SYSADM.PS_EXTERNAL_SYSTEM WHERE EXTERNAL_SYSTEM = 'NRE' AND EMPLID = '" + emplid + "' ORDER BY EFFDT DESC FETCH FIRST 1 ROWS ONLY) NIT, \r\n" +
+                                        "(SELECT PNA.FIRST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "' ORDER BY EFFDT DESC FETCH FIRST 1 ROWS ONLY) NOMBRE_NIT, \r\n" +
+                                        "(SELECT PNA.LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "' ORDER BY EFFDT DESC FETCH FIRST 1 ROWS ONLY) APELLIDO_NIT, \r\n" +
+                                        "(SELECT SECOND_LAST_NAME FROM SYSADM.PS_NAMES PNA WHERE PNA.NAME_TYPE = 'REC' AND PNA.EMPLID='" + emplid + "' ORDER BY PNA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) CASADA_NIT, \r\n" +
+                                        "(SELECT ADDRESS1 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DIRECCION1_NIT, \r\n" +
+                                        "(SELECT ADDRESS2 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DIRECCION2_NIT, \r\n" +
+                                        "(SELECT ADDRESS3 FROM SYSADM.PS_ADDRESSES PA WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DIRECCION3_NIT, \r\n" +
+                                        "(SELECT C.DESCR FROM SYSADM.PS_ADDRESSES PA JOIN SYSADM.PS_COUNTRY_TBL C ON PA.COUNTRY = C.COUNTRY AND PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) PAIS_NIT, \r\n" +
+                                        "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) MUNICIPIO_NIT, \r\n" +
+                                        "(SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_PERS_DATA_SA_VW PD ON ST.STATE = PD.BIRTHSTATE AND ST.COUNTRY = PD.BIRTHCOUNTRY WHERE PD.EMPLID='" + emplid + "' ) MUNICIPIO_NAC, \r\n" +
+                                        "(SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) DEPARTAMENTO_NIT, \r\n" +
+                                        "COALESCE((SELECT SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)) FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_PERS_DATA_SA_VW PD ON ST.STATE = PD.BIRTHSTATE AND ST.COUNTRY = PD.BIRTHCOUNTRY WHERE PD.EMPLID='" + emplid + "' ),' ') DEPARTAMENTO_NAC, \r\n" +
+                                        "(SELECT ST.STATE FROM SYSADM.PS_STATE_TBL ST JOIN SYSADM.PS_ADDRESSES PA ON ST.STATE = PA.STATE WHERE PA.ADDRESS_TYPE = 'REC' AND PA.EMPLID='" + emplid + "' ORDER BY PA.EFFDT DESC FETCH FIRST 1 ROWS ONLY) STATE_NIT, \r\n" +
+                                        "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = '" + emplid + "' AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAILUNIS , \r\n" +
+                                        "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = '" + emplid + "' AND EMAIL.E_ADDR_TYPE IN ('HOM1') FETCH FIRST 1 ROWS ONLY) EMAILPERSONAL , \r\n" +
+                                        "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, \r\n" +
+                                        "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, \r\n" +
+                                        "TT.TERM_BEGIN_DT, C.DESCR PAIS \r\n" +
+                                        "FROM SYSADM.PS_PERS_DATA_SA_VW PD \r\n" +
+                                        "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID \r\n" +
+                                        "LEFT JOIN SYSADM.PS_ADDRESSES A ON PD.EMPLID = A.EMPLID AND ADDRESS_TYPE= 'HOME' \r\n" +
+                                        "AND A.EFFDT =( \r\n" +
+                                        "    SELECT \r\n" +
+                                        "        MAX(EFFDT) \r\n" +
+                                        "    FROM \r\n" +
+                                        "        SYSADM.PS_ADDRESSES A2 \r\n" +
+                                        "    WHERE \r\n" +
+                                        "        A.EMPLID = A2.EMPLID \r\n" +
+                                        "        AND A.ADDRESS_TYPE = A2.ADDRESS_TYPE \r\n" +
+                                        ") \r\n" +
+                                        "LEFT JOIN SYSADM.PS_PERSONAL_DATA PPD ON PD.EMPLID = PPD.EMPLID \r\n" +
+                                        "LEFT JOIN SYSADM.PS_STATE_TBL ST ON PPD.STATE = ST.STATE \r\n" +
+                                        "LEFT JOIN SYSADM.PS_STDNT_CAR_TERM CT ON PD.EMPLID = CT.EMPLID \r\n" +
+                                        "LEFT JOIN SYSADM.PS_ACAD_PROG_TBL APD ON CT.acad_prog_primary = APD.ACAD_PROG \r\n" +
+                                        "AND CT.ACAD_CAREER = APD.ACAD_CAREER \r\n" +
+                                        "AND CT.INSTITUTION = APD.INSTITUTION \r\n" +
+                                        "LEFT JOIN SYSADM.PS_ACAD_GROUP_TBL AGT ON APD.ACAD_GROUP = AGT.ACAD_GROUP \r\n" +
+                                        "AND APD.INSTITUTION = AGT.INSTITUTION \r\n" +
+                                        "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM \r\n" +
+                                        "AND CT.INSTITUTION = TT.INSTITUTION \r\n" +
+                                        "AND (SYSDATE BETWEEN TT.TERM_BEGIN_DT AND TT.TERM_END_DT) \r\n" +
+                                        "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID \r\n" +
+                                        "AND PP.PHONE_TYPE = 'HOME' \r\n" +
+                                        "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY \r\n" +
+                                        "WHERE PN.NATIONAL_ID ='" + DPI + "' \r\n" +
+                                        "ORDER BY CT.FULLY_ENRL_DT DESC \r\n" +
+                                        "FETCH FIRST 1 ROWS ONLY \r\n" +
                                        ") ";
                     reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -1250,7 +1252,7 @@ namespace ReportesUnis
                     IngresoDatos();
                 }
             }
-           
+
             return mensaje;
         }
         public void DescargaArchivo()
@@ -2881,49 +2883,134 @@ namespace ReportesUnis
             string DeptoResidencia = Residencia.Departamento;
             string MunicResidencia = Residencia.Municipio;
             string PaisResidencia = Residencia.País;
+            string parentesco1 = null;
+            string nombre1 = null;
+            string telefono1 = null;
+            string parentesco2 = null;
+            string nombre2 = null;
+            string telefono2 = null;
+            string pais1 = null;
+            string nroDocumento1 = null;
+            string pais2 = null;
+            string nroDocumento2 = null;
+            string DocumentoCRM = null;
+            string TipoDocumentoCRM = null;
+
+            if (GridViewDocumentos.Rows.Count >= 2)
+            {
+                // Obtener la primera fila
+                GridViewRow row1 = GridViewDocumentos.Rows[0];
+                RadioButton rdbPrincipal1 = (RadioButton)row1.FindControl("RBDocPrincipal");
+                DropDownList ddlPais1 = (DropDownList)row1.FindControl("DDLPais");
+                TextBox txtNroDocumento1 = (TextBox)row1.FindControl("TxtNroDocumento");
+                //string tipoDocumento1 = ((DataBoundLiteralControl)row1.Cells[3].Controls[0]).Text.Trim(); // Tipo de Documento
+
+                // Variables para la primera fila
+                bool isPrincipal1 = rdbPrincipal1.Checked;
+                pais1 = ddlPais1.SelectedValue;
+                nroDocumento1 = txtNroDocumento1.Text;
+                //tipoDoc1 = tipoDocumento1;
+
+                // Obtener la segunda fila
+                GridViewRow row2 = GridViewDocumentos.Rows[1];
+                RadioButton rdbPrincipal2 = (RadioButton)row2.FindControl("RBDocPrincipal");
+                DropDownList ddlPais2 = (DropDownList)row2.FindControl("DDLPais");
+                TextBox txtNroDocumento2 = (TextBox)row2.FindControl("TxtNroDocumento");
+                //string tipoDocumento2 = ((DataBoundLiteralControl)row2.Cells[3].Controls[0]).Text.Trim(); // Tipo de Documento
+
+                // Variables para la segunda fila
+                bool isPrincipal2 = rdbPrincipal2.Checked;
+                pais2 = ddlPais2.SelectedValue;
+                nroDocumento2 = txtNroDocumento2.Text;
+                //tipoDoc2 = tipoDocumento2;
+
+            }
+
+
+            if (GridViewContactos.Rows.Count >= 2)
+            {
+                // Obtener la primera fila
+                GridViewRow row1 = GridViewContactos.Rows[0];
+                RadioButton rdbPrincipal1 = (RadioButton)row1.FindControl("RBContPrincipal");
+                DropDownList ddlParentesco1 = (DropDownList)row1.FindControl("CmbPatentesco");
+                TextBox txtNombre1 = (TextBox)row1.FindControl("TxtNombreE");
+                TextBox txtTelefono1 = (TextBox)row1.FindControl("TxtTelefonoE");
+
+                // Variables para la primera fila
+                bool isPrincipal1 = rdbPrincipal1.Checked;
+                parentesco1 = ddlParentesco1.SelectedValue;
+                nombre1 = txtNombre1.Text;
+                telefono1 = txtTelefono1.Text;
+
+                // Obtener la segunda fila
+                GridViewRow row2 = GridViewContactos.Rows[1];
+                RadioButton rdbPrincipal2 = (RadioButton)row2.FindControl("RBContPrincipal");
+                DropDownList ddlParentesco2 = (DropDownList)row2.FindControl("CmbPatentesco");
+                TextBox txtNombre2 = (TextBox)row2.FindControl("TxtNombreE");
+                TextBox txtTelefono2 = (TextBox)row2.FindControl("TxtTelefonoE");
+
+                // Variables para la segunda fila
+                bool isPrincipal2 = rdbPrincipal2.Checked;
+                parentesco2 = ddlParentesco2.SelectedValue;
+                nombre2 = txtNombre2.Text;
+                telefono2 = txtTelefono2.Text;
+
+                // Aquí puedes hacer lo que necesites con las variables obtenidas
+            }
 
             if (!String.IsNullOrEmpty(txtNit.Text) || txtNit.Text == "")
                 txtNit.Text = "CF";
 
-                /* esto comentado ya funciona correctamente
-                var respuesta = RecorrerDocumentos();
-                UP_IDENTIFICACION.Value = respuesta.UP_Doc;
-                UD_IDENTIFICACION.Value = respuesta.UD_Doc;
-                IngresoDatosGenerales();*/
-                limpiarVariables();
+            if (!String.IsNullOrEmpty(nroDocumento1.Trim()))
+            {
+                DocumentoCRM = nroDocumento1;
+                TipoDocumentoCRM = "DPI";
+            }
+            else 
+            {
+                DocumentoCRM = nroDocumento2;
+                TipoDocumentoCRM= "PAS";
+            }
+
+            /* esto comentado ya funciona correctamente
+            var respuesta = RecorrerDocumentos();
+            UP_IDENTIFICACION.Value = respuesta.UP_Doc;
+            UD_IDENTIFICACION.Value = respuesta.UD_Doc;
+            IngresoDatosGenerales();*/
+            limpiarVariables();
             getInfo = consultaGet(txtDPI.Text);
             PartyNumber = getBetween(getInfo, "PartyNumber\" : \"", "\",");
             string FechaCumple = Convert.ToDateTime(txtCumple.Text).ToString("yyyy-MM-dd");
             body = "{\r\n    " +
-                "\"FirstName\": \""+txtNombre.Text+"\",\r\n    " +
-                "\"LastName\": \""+txtApellido.Text+"\",\r\n    " +
+                "\"FirstName\": \"" + txtNombre.Text + "\",\r\n    " +
+                "\"LastName\": \"" + txtApellido.Text + "\",\r\n    " +
                 "\"MiddleName\": \"\",\r\n    " +
-                "\"UniqueNameSuffix\": \""+txtCasada.Text+"\",\r\n    " +
-                "\"TaxpayerIdentificationNumber\": \""+txtDPI.Text+"\",\r\n    " +
-                "\"DateOfBirth\": \""+FechaCumple+"\",\r\n    " +
+                "\"UniqueNameSuffix\": \"" + txtCasada.Text + "\",\r\n    " +
+                "\"TaxpayerIdentificationNumber\": \"" + DocumentoCRM + "\",\r\n    " +
+                "\"DateOfBirth\": \"" + FechaCumple + "\",\r\n    " +
                 //"\"MaritalStatus\": \"T\",\r\n    " +
-                "\"MobileNumber\": \""+txtTelefono.Text+"\",\r\n    " +
-                "\"EmailAddress\": \""+TxtCorreoPersonal.Text+"\",\r\n    " +
-                "\"AddressElementAttribute3\": \"Zona "+txtDireccion3.Text+"\",\r\n    " +
-                "\"AddressLine1\": \""+txtDireccion.Text+"\",\r\n    " +
-                "\"AddressLine2\": \""+txtDireccion2.Text.TrimEnd()+"\",\r\n    " +
-                "\"City\": \""+MunicResidencia+"\",\r\n    " +
-                "\"Country\": \""+PaisResidencia+"\",\r\n    " +
-                "\"County\": \""+DeptoResidencia+"\",\r\n    " +
+                "\"MobileNumber\": \"" + txtTelefono.Text + "\",\r\n    " +
+                "\"EmailAddress\": \"" + TxtCorreoPersonal.Text + "\",\r\n    " +
+                "\"AddressElementAttribute3\": \"Zona " + txtDireccion3.Text + "\",\r\n    " +
+                "\"AddressLine1\": \"" + txtDireccion.Text + "\",\r\n    " +
+                "\"AddressLine2\": \"" + txtDireccion2.Text.TrimEnd() + "\",\r\n    " +
+                "\"City\": \"" + MunicResidencia + "\",\r\n    " +
+                "\"Country\": \"" + PaisResidencia + "\",\r\n    " +
+                "\"County\": \"" + DeptoResidencia + "\",\r\n    " +
                 //"\"PostalCode\": \"16001\",\r\n    " +
-                //"\"PersonDEO_TipoDeDocumentoDeIdentidad_c\": \"CUI\",\r\n    " +
-                "\"PersonDEO_TallaSudadero_c\": \"" + CmbTalla.SelectedValue + "\",\r\n    " + 
-                "\"PersonDEO_T1_PaisDeNacimiento_c\": \""+ CmbPaisNacimiento.Text + "\",\r\n    " +
-                "\"PersonDEO_NumeroDeIdentificacionTributaria_c\": \""+txtNit.Text + "\",\r\n    " +
-                "\"PersonDEO_ContactoDeEmergencia1_c\": \"" + TxtNombreE1.Text + "\",\r\n    " +
-                "\"PersonDEO_ContactoDeEmergencia2_c\": \"" + TxtNombreE2.Text + "\",\r\n    " +
-                "\"PersonDEO_ParentescoContactoEmergencia1_c\": \""+CmbPatentesco1.SelectedValue + "\",\r\n    " +
-                "\"PersonDEO_ParentescoContactoEmergencia2_c\": \"" + CmbPatentesco2.SelectedValue + "\",\r\n    " +
-                "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + txtTelefonoE2.Text + "\",\r\n    " +
-                "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + txtTelefonoE1.Text + "\"\r\n    " +
+                "\"PersonDEO_TipoDeDocumentoDeIdentidad_c\": \""+TipoDocumentoCRM+"\",\r\n    " +
+                "\"PersonDEO_TallaSudadero_c\": \"" + CmbTalla.SelectedValue + "\",\r\n    " +
+                "\"PersonDEO_T1_PaisDeNacimiento_c\": \"" + CmbPaisNacimiento.Text + "\",\r\n    " +
+                "\"PersonDEO_NumeroDeIdentificacionTributaria_c\": \"" + txtNit.Text + "\",\r\n    " +
+                "\"PersonDEO_ContactoDeEmergencia1_c\": \"" + nombre1 + "\",\r\n    " +
+                "\"PersonDEO_ContactoDeEmergencia2_c\": \"" + nombre2 + "\",\r\n    " +
+                "\"PersonDEO_ParentescoContactoEmergencia1_c\": \""+parentesco1 + "\",\r\n    " +
+                "\"PersonDEO_ParentescoContactoEmergencia2_c\": \"" + parentesco2 + "\",\r\n    " +
+                "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + telefono1 + "\",\r\n    " +
+                "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + telefono2 + "\"\r\n    " +
                 "}";
             //Actualiza por medio del metodo PATCH
-            updatePatch(body,PartyNumber);
+            //updatePatch(body, PartyNumber);
             string control = null;
             /*using (OracleConnection con = new OracleConnection(constr))
             {
@@ -3976,7 +4063,7 @@ namespace ReportesUnis
         }
 
         private static void CuerpoConsultaUD(string Usuario, string Pass, string EMPLID, string COLL_NAMES, string COLL_PERS_DATA_EFFDT, string COLL_ADDRESSES_NIT, string COLL_ADDRESSES, string COLL_PERSONAL_PHONE,
-            string COLL_EMAIL_ADDRESSES, string PROP_BIRTHCOUNTRY, string PROP_BIRTHPLACE, string PROP_BIRTHDATE, string PROP_BIRTHSTATE,  string PROP_NID, string VersionUD)
+            string COLL_EMAIL_ADDRESSES, string PROP_BIRTHCOUNTRY, string PROP_BIRTHPLACE, string PROP_BIRTHDATE, string PROP_BIRTHSTATE, string PROP_NID, string VersionUD)
         {
             //Crea el cuerpo que se utiliza para hacer PATCH en CAMPUS
             Variables.soapBody = @"<?xml version=""1.0""?>
@@ -4201,14 +4288,13 @@ namespace ReportesUnis
             DataTable dt = new DataTable();
             DataRow drDPI, drPasaporte;
 
-            dt.Columns.Add("Pais");
+            dt.Columns.Add("País");
             dt.Columns.Add("TipoDocumento");
             dt.Columns.Add("Documento");
             dt.Columns.Add("PRIMARY_NID");
 
-            // Fila para DPI
             drDPI = dt.NewRow();
-            drDPI["Pais"] = String.Empty;
+            drDPI["País"] = String.Empty;
             drDPI["TipoDocumento"] = "DPI";
             drDPI["Documento"] = String.Empty;
             drDPI["PRIMARY_NID"] = String.Empty;
@@ -4216,7 +4302,7 @@ namespace ReportesUnis
 
             // Fila para Pasaporte
             drPasaporte = dt.NewRow();
-            drPasaporte["Pais"] = String.Empty;
+            drPasaporte["País"] = String.Empty;
             drPasaporte["TipoDocumento"] = "Pasaporte";
             drPasaporte["Documento"] = String.Empty;
             drPasaporte["PRIMARY_NID"] = String.Empty;
@@ -4224,6 +4310,39 @@ namespace ReportesUnis
 
             this.GridViewDocumentos.DataSource = dt;
             this.GridViewDocumentos.DataBind();
+        }
+
+        private void LoadDataContactos()
+        {
+            DataTable dt = new DataTable();
+            DataRow dr1, dr2;
+
+            dt.Columns.Add("PrincipalCE");
+            dt.Columns.Add("Parentesco");
+            dt.Columns.Add("Nombre");
+            dt.Columns.Add("Teléfono");
+            dt.Columns.Add("PRIMARY_CONTACT");
+
+            // Fila para Contacto1
+            dr1 = dt.NewRow();
+            dr1["PrincipalCE"] = String.Empty;
+            dr1["Parentesco"] = String.Empty;
+            dr1["Nombre"] = String.Empty;
+            dr1["Teléfono"] = String.Empty;
+            dr1["PRIMARY_CONTACT"] = String.Empty;
+            dt.Rows.Add(dr1);
+
+            // Fila para Contacto2
+            dr2 = dt.NewRow();
+            dr2["PrincipalCE"] = String.Empty;
+            dr2["Parentesco"] = String.Empty;
+            dr2["Nombre"] = String.Empty;
+            dr2["Teléfono"] = String.Empty;
+            dr2["PRIMARY_CONTACT"] = String.Empty;
+            dt.Rows.Add(dr2);
+
+            this.GridViewContactos.DataSource = dt;
+            this.GridViewContactos.DataBind();
         }
 
         protected void BtnAceptarBusqueda_Click(object sender, EventArgs e)
@@ -4257,53 +4376,55 @@ namespace ReportesUnis
                 /*validarAcceso = ValidacionAccesoVista(txtEmplid.Value);
                 if (validarAcceso != null)
                 {*/
-                    mostrarInformación(txtEmplid.Value);
-                    if (txtNit.Text == "CF")
+                mostrarInformación(txtEmplid.Value);
+                if (txtNit.Text == "CF")
+                {
+                    txtNit.Enabled = false;
+                    RadioButtonNombreSi.Checked = true;
+                    ControlCF2.Value = "1";
+                    ControlCF.Value = "CF";
+                    ValidarNIT.Enabled = false;
+                    if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
                     {
-                        txtNit.Enabled = false;
-                        RadioButtonNombreSi.Checked = true;
-                        ControlCF2.Value = "1";
-                        ControlCF.Value = "CF";
-                        ValidarNIT.Enabled = false;
-                        if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
-                        {
-                            PaisNit.Text = CmbPais.SelectedValue;
-                            DepartamentoNit.Text = CmbDepartamento.SelectedValue;
-                            MunicipioNit.Text = CmbMunicipio.SelectedValue;
-                        }
+                        PaisNit.Text = CmbPais.SelectedValue;
+                        DepartamentoNit.Text = CmbDepartamento.SelectedValue;
+                        MunicipioNit.Text = CmbMunicipio.SelectedValue;
                     }
-                    else
+                }
+                else
+                {
+                    RadioButtonNombreNo.Checked = true;
+                    ControlCF2.Value = "2";
+                    TxtDiRe1.Enabled = true;
+                    TxtDiRe2.Enabled = true;
+                    TxtDiRe3.Enabled = true;
+                    ValidarNIT.Enabled = true;
+                    txtNit.Enabled = true;
+                    if (txtNit.Text.IsNullOrWhiteSpace())
                     {
-                        RadioButtonNombreNo.Checked = true;
-                        ControlCF2.Value = "2";
-                        TxtDiRe1.Enabled = true;
-                        TxtDiRe2.Enabled = true;
-                        TxtDiRe3.Enabled = true;
-                        ValidarNIT.Enabled = true;
-                        txtNit.Enabled = true;
-                        if (txtNit.Text.IsNullOrWhiteSpace())
-                        {
-                            CmbPaisNIT.SelectedValue = " ";
-                            CmbDepartamentoNIT.SelectedValue = " ";
-                            CmbMunicipioNIT.SelectedValue = " ";
-                        }
+                        CmbPaisNIT.SelectedValue = " ";
+                        CmbDepartamentoNIT.SelectedValue = " ";
+                        CmbMunicipioNIT.SelectedValue = " ";
                     }
-                    LoadDataDocumentos();
-                    LlenadoGridDocumentos();
-                    if (String.IsNullOrEmpty(txtCarne.Text))
-                    {
-                        string script = "<script>NoExisteAlumno();</script>";
-                        ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
-                        BtnBuscar.Enabled = true;
-                        BtnLimpiarBusqueda.Enabled = false;
-                        TxtBusqueda.Enabled = true;
-                    }
-                    else
-                    {
-                        BtnBuscar.Enabled = false;
-                        BtnLimpiarBusqueda.Enabled = true;
-                        TxtBusqueda.Enabled = false;
-                    }
+                }
+                LoadDataContactos();
+                LlenadoContactosEmergencia();
+                LoadDataDocumentos();
+                LlenadoGridDocumentos();
+                if (String.IsNullOrEmpty(txtCarne.Text))
+                {
+                    string script = "<script>NoExisteAlumno();</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                    BtnBuscar.Enabled = true;
+                    BtnLimpiarBusqueda.Enabled = false;
+                    TxtBusqueda.Enabled = true;
+                }
+                else
+                {
+                    BtnBuscar.Enabled = false;
+                    BtnLimpiarBusqueda.Enabled = true;
+                    TxtBusqueda.Enabled = false;
+                }
                 /*}
                 else
                 {
@@ -4375,14 +4496,14 @@ namespace ReportesUnis
                             string tipoDocumento = reader["TipoDocumento"].ToString();
                             if (tipoDocumento == "DPI")
                             {
-                                dt.Rows[0]["Pais"] = reader["Pais"].ToString();
+                                dt.Rows[0]["País"] = reader["Pais"].ToString();
                                 dt.Rows[0]["Documento"] = reader["Documento"].ToString();
                                 dt.Rows[0]["PRIMARY_NID"] = reader["PRIMARY_NID"].ToString();
                                 ExisteDPI.Value = "1";
                             }
                             else if (tipoDocumento == "PAS")
                             {
-                                dt.Rows[1]["Pais"] = reader["Pais"].ToString();
+                                dt.Rows[1]["País"] = reader["Pais"].ToString();
                                 dt.Rows[1]["Documento"] = reader["Documento"].ToString();
                                 dt.Rows[1]["PRIMARY_NID"] = reader["PRIMARY_NID"].ToString();
                                 ExistePasaporte.Value = "1";
@@ -4419,6 +4540,54 @@ namespace ReportesUnis
                 }
             }
         }
+        protected void LlenarParentezco(DropDownList ddl)
+        {
+            //string constr = TxtURL.Text;
+            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand("SELECT PARENTESCO, ID_CAMPUS FROM UNIS_INTERFACES.TBL_RELACIONES_FAMILIARES", con))
+                {
+                    using (OracleDataReader reader = cmd.ExecuteReader())
+                    {
+                        ddl.Items.Clear();
+                        ddl.Items.Add(new ListItem("Seleccione una opción", "")); // Elemento predeterminado
+
+                        while (reader.Read())
+                        {
+                            string ID = reader["ID_CAMPUS"].ToString();
+                            string PARENTESCO = reader["PARENTESCO"].ToString();
+                            ddl.Items.Add(new ListItem(PARENTESCO, ID));
+                        }
+                    }
+                }
+            }
+        }
+
+        private void LlenadoContactosEmergencia()
+        {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.CommandText = "SELECT CONTACT_NAME AS Nombre, PHONE as Teléfono, RELATIONSHIP as Parentesco, PRIMARY_CONTACT " +
+                        "FROM SYSADM.PS_EMERGENCY_CNTCT " +
+                    "WHERE EMPLID = '" + txtCarne.Text + "'";
+                    cmd.Connection = con;
+                    OracleDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        GridViewContactos.DataSource = cmd.ExecuteReader();
+                        GridViewContactos.DataBind();
+                    }
+
+                }
+            }
+        }
 
 
         protected void GridViewDocumentos_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -4429,7 +4598,7 @@ namespace ReportesUnis
                 LlenarDDLPais(ddlPais);
 
                 // Asegúrate de seleccionar el valor correcto después de llenar la lista
-                string pais = DataBinder.Eval(e.Row.DataItem, "Pais").ToString();
+                string pais = DataBinder.Eval(e.Row.DataItem, "País").ToString();
 
                 if (ddlPais.Items.FindByValue(pais) != null)
                 {
@@ -4452,6 +4621,28 @@ namespace ReportesUnis
             }
         }
 
+        protected void GridViewContactos_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                DropDownList cmbParentesco = (DropDownList)e.Row.FindControl("CmbPatentesco");
+                LlenarParentezco(cmbParentesco);
+
+                // Asegúrate de seleccionar el valor correcto después de llenar la lista
+                string parentesco = DataBinder.Eval(e.Row.DataItem, "Parentesco").ToString();
+
+                if (cmbParentesco.Items.FindByValue(parentesco) != null)
+                {
+                    cmbParentesco.SelectedValue = parentesco;
+                }
+                else
+                {
+                    // Agregar y seleccionar el valor si no está presente en la lista
+                    cmbParentesco.Items.Add(new ListItem(parentesco, parentesco));
+                    cmbParentesco.SelectedValue = parentesco;
+                }
+            }
+        }
 
         protected string IngresoDatosGenerales()
         {
@@ -5276,7 +5467,8 @@ namespace ReportesUnis
                             {
                                 UP_BIRTHDATE.Value = "<PROP_BIRTHDATE>" + txtCumple.Text + "</PROP_BIRTHDATE>";
                                 contadorUP = contadorUP + 1;
-                            }else
+                            }
+                            else
                             {
                                 UD_BIRTHDATE.Value = "<PROP_BIRTHDATE>" + txtCumple.Text + "</PROP_BIRTHDATE>";
                                 contadorUD = contadorUD + 1;
@@ -5414,7 +5606,7 @@ namespace ReportesUnis
                 }
             }
 
-            return (UP_PROP_NID,UD_PROP_NID);
+            return (UP_PROP_NID, UD_PROP_NID);
         }
 
 
@@ -5455,7 +5647,7 @@ namespace ReportesUnis
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
             var dtFechaBuscarPersona = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
-            string respuesta = api.Get(vchrUrlWS + "/crmRestApi/resources/11.13.18.05/contacts/?q=TaxpayerIdentificationNumber='" + identificacion + "'" , user, pass);
+            string respuesta = api.Get(vchrUrlWS + "/crmRestApi/resources/11.13.18.05/contacts/?q=TaxpayerIdentificationNumber='" + identificacion + "'", user, pass);
             return respuesta;
         }
 
@@ -5474,17 +5666,17 @@ namespace ReportesUnis
                 {
                     cmd.CommandText = "SELECT GEOGRAPHY_NAME_CRM " +
                         "FROM UNIS_INTERFACES.OPT_CONTACT_CATALOG_DEPT " +
-                        "WHERE STATE_CAMPUS ='" + State.Text + "'  " ;
+                        "WHERE STATE_CAMPUS ='" + State.Text + "'  ";
                     cmd.Connection = con;
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
                         depto = reader["GEOGRAPHY_NAME_CRM"].ToString();
                     }
-                    
+
                     cmd.CommandText = "SELECT GEOGRAPHY_NAME_CRM " +
                         "FROM UNIS_INTERFACES.OPT_CONTACT_CATALOG_MUNICP " +
-                        "WHERE STATE_CAMPUS ='" + State.Text + "'  " ;
+                        "WHERE STATE_CAMPUS ='" + State.Text + "'  ";
                     cmd.Connection = con;
                     OracleDataReader reader2 = cmd.ExecuteReader();
                     while (reader2.Read())

@@ -244,6 +244,16 @@
                 <input type="hidden" id="ExistePasaporte" runat="server" />
                 <input type="hidden" id="ExisteDPI" runat="server" />
 
+                <%-- DATOS INCIALES CONTACTOS DE EMERGENCIA--%>
+                <input type="hidden" id="txtNombreE1_Inicial" runat="server" />
+                <input type="hidden" id="txtPatentesco1_Inicial" runat="server" />
+                <input type="hidden" id="txtTelefonoE1_Inicial" runat="server" />
+                <input type="hidden" id="txtNombreE2_Inicial" runat="server" />
+                <input type="hidden" id="txtPatentesco2_Inicial" runat="server" />
+                <input type="hidden" id="txtTelefonoE_2Inicial" runat="server" />
+                <input type="hidden" id="txtContatoEP_Inicial" runat="server" />
+                <input type="hidden" id="txtContatoEP2_Inicial" runat="server" />
+
 
                 <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
                 <div class="container" id="tabla" runat="server">
@@ -687,91 +697,38 @@
                                 </div>
                             </div>
                             <br />
-                            <div id="TableContactoE">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-4 mx-auto text-center">
-                                        </div>
-                                        <br />
-                                        <div class="col-md-4 mx-auto text-center">
-                                            <asp:Label runat="server" Font-Bold="true">Contacto 1 de Emergencia</asp:Label>
-                                            <br />
-                                        </div>
 
-                                        <div class="col-md-4 mx-auto text-center">
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <asp:Label runat="server" Font-Bold="true">Nombre *:</asp:Label>
-                                            <br />
-                                            <asp:TextBox ID="TxtNombreE1" runat="server" Enabled="true" MaxLength="30" Width="275px"
-                                                CssClass="form-control"></asp:TextBox>
-                                            <br />
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <asp:Label runat="server" Font-Bold="true">Parentesco</asp:Label>
-                                            <br />
-
-                                            <asp:DropDownList ID="CmbPatentesco1" runat="server" Width="275px" CssClass="form-control">
-                                                <asp:ListItem Selected="False" Value=""></asp:ListItem>
-                                                <asp:ListItem>Madre</asp:ListItem>
-                                                <asp:ListItem>Padre</asp:ListItem>
-                                                <asp:ListItem>Abuelo</asp:ListItem>
-                                                <asp:ListItem>Abuela</asp:ListItem>
-                                                <asp:ListItem>Tío</asp:ListItem>
-                                                <asp:ListItem>Tía</asp:ListItem>
-                                                <asp:ListItem>Cónyugue</asp:ListItem>
-                                            </asp:DropDownList>
-                                            <br />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <asp:Label runat="server" Font-Bold="true">Teléfono:</asp:Label>
-                                            <br />
-                                            <asp:TextBox ID="txtTelefonoE1" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
-                                            <br />
-                                        </div>
-
-                                        <div class="col-md-4 mx-auto text-center">
-                                        </div>
-
-
-                                        <div class="col-md-4 mx-auto text-center">
-                                            <asp:Label runat="server" Font-Bold="true">Contacto 2 de Emergencia</asp:Label>
-                                            <br />
-                                        </div>
-
-                                        <div class="col-md-4 mx-auto text-center">
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <asp:Label runat="server" Font-Bold="true">Nombre *:</asp:Label>
-                                            <br />
-                                            <asp:TextBox ID="TxtNombreE2" runat="server" Enabled="true" MaxLength="30" Width="275px"
-                                                CssClass="form-control"></asp:TextBox>
-                                            <br />
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <asp:Label runat="server" Font-Bold="true">Parentezco</asp:Label>
-                                            <br />
-
-                                            <asp:DropDownList ID="CmbPatentesco2" runat="server" Width="275px" CssClass="form-control">
-                                                <asp:ListItem Selected="False" Value=""></asp:ListItem>
-                                                <asp:ListItem>Madre</asp:ListItem>
-                                                <asp:ListItem>Padre</asp:ListItem>
-                                                <asp:ListItem>Abuelo</asp:ListItem>
-                                                <asp:ListItem>Abuela</asp:ListItem>
-                                                <asp:ListItem>Tío</asp:ListItem>
-                                                <asp:ListItem>Tía</asp:ListItem>
-                                                <asp:ListItem>Cónyugue</asp:ListItem>
-                                            </asp:DropDownList>
-                                            <br />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <asp:Label runat="server" Font-Bold="true">Teléfono:</asp:Label>
-                                            <br />
-                                            <asp:TextBox ID="txtTelefonoE2" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
-                                            <br />
-                                        </div>
+                            <div class="row">
+                                <div class="form-group col-md 12">
+                                    <%-- GRIDVIEW DONDE SE MUESTRA LA INFORMACION DEL REPORTE --%>
+                                    <div class="containerGV">
+                                        <asp:GridView ID="GridViewContactos" runat="server" AutoGenerateColumns="false"
+                                            CssClass="table table-condensed table-bordered" OnRowDataBound="GridViewContactos_RowDataBound">
+                                            <Columns>
+                                                <asp:TemplateField HeaderText="Principal" ItemStyle-HorizontalAlign="Center">
+                                                    <ItemTemplate>
+                                                        <asp:RadioButton ID="RBContPrincipal" runat="server" GroupName="ComtactoEmergencia" Checked='<%# Eval("PRIMARY_CONTACT").ToString() == "Y" %>' OnClick="selectOnlyThisContact(this)" />
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Parentesco">
+                                                    <ItemTemplate>
+                                                        <asp:DropDownList ID="CmbPatentesco" runat="server">
+                                                        </asp:DropDownList>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Nombre" ItemStyle-CssClass="nowrap">
+                                                    <ItemTemplate>
+                                                        <asp:TextBox ID="TxtNombreE" runat="server" Text='<%# Eval("Nombre") %>'></asp:TextBox>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Teléfono" ItemStyle-CssClass="nowrap">
+                                                    <ItemTemplate>
+                                                        <asp:TextBox ID="TxtTelefonoE" runat="server" Text='<%# Eval("Teléfono") %>'></asp:TextBox>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:BoundField DataField="PRIMARY_CONTACT" HeaderText="PRIMARY_CONTACT" Visible="false" />
+                                            </Columns>
+                                        </asp:GridView>
                                     </div>
                                 </div>
                             </div>
@@ -1690,6 +1647,14 @@
 
         function selectOnlyThisDoc(radioButton) {
             var allRadios = document.querySelectorAll('[id*="RBDocPrincipal"]');
+            allRadios.forEach(function (radio) {
+                radio.checked = false;
+            });
+            radioButton.checked = true;
+        }
+
+        function selectOnlyThisContact(radioButton) {
+            var allRadios = document.querySelectorAll('[id*="RBContPrincipal"]');
             allRadios.forEach(function (radio) {
                 radio.checked = false;
             });
