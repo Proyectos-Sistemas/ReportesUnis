@@ -2903,6 +2903,7 @@ namespace ReportesUnis
             string PrincipalC1 = null;
             bool isPrincipalC2 = false;
             string PrincipalC2 = null;
+            string EstadoCivilCRM = null;
 
             if (GridViewDocumentos.Rows.Count >= 2)
             {
@@ -3002,6 +3003,14 @@ namespace ReportesUnis
                 PrincipalD2 = "Y";
             }
 
+            if (CmbEstado.SelectedValue.Substring(0, 1).ToString().Equals("C"))
+            {
+                EstadoCivilCRM = "M";
+            }
+            else 
+            {
+                EstadoCivilCRM = "S";
+            }
             /* esto comentado ya funciona correctamente
             var respuesta = RecorrerDocumentos();
             UP_IDENTIFICACION.Value = respuesta.UP_Doc;
@@ -3018,7 +3027,7 @@ namespace ReportesUnis
                 "\"UniqueNameSuffix\": \"" + txtCasada.Text + "\",\r\n    " +
                 "\"TaxpayerIdentificationNumber\": \"" + DocumentoCRM + "\",\r\n    " +
                 "\"DateOfBirth\": \"" + FechaCumple + "\",\r\n    " +
-                //"\"MaritalStatus\": \"T\",\r\n    " +
+                "\"MaritalStatus\": \""+ EstadoCivilCRM + "\",\r\n    " +
                 "\"MobileNumber\": \"" + txtTelefono.Text + "\",\r\n    " +
                 "\"EmailAddress\": \"" + TxtCorreoPersonal.Text + "\",\r\n    " +
                 "\"AddressElementAttribute3\": \"Zona " + txtDireccion3.Text + "\",\r\n    " +
