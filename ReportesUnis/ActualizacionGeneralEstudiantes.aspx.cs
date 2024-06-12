@@ -3016,6 +3016,8 @@ namespace ReportesUnis
             UP_IDENTIFICACION.Value = respuesta.UP_Doc;
             UD_IDENTIFICACION.Value = respuesta.UD_Doc;
             IngresoDatosGenerales();*/
+
+            //ACTUALIZACION EN CRM
             limpiarVariables();
             getInfo = consultaGet(txtDPI.Text);
             PartyNumber = getBetween(getInfo, "PartyNumber\" : \"", "\",");
@@ -3050,6 +3052,8 @@ namespace ReportesUnis
                 "}";
             //Actualiza por medio del metodo PATCH
             //updatePatch(body, PartyNumber);
+
+            //ACTUALIZACION CONTACTOS DE EMERGENCIA EN CAMPUS
             ContactoEmergenciaCampus(nombre1, parentesco1, telefono1, PrincipalC1, nombre2, parentesco2, telefono2, PrincipalC2);
             string control = null;
             /*using (OracleConnection con = new OracleConnection(constr))
