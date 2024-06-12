@@ -2895,6 +2895,14 @@ namespace ReportesUnis
             string nroDocumento2 = null;
             string DocumentoCRM = null;
             string TipoDocumentoCRM = null;
+            bool isPrincipalD1 = false;
+            string PrincipalD1 = null;
+            bool isPrincipalD2 = false;
+            string PrincipalD2 = null;
+            bool isPrincipalC1 = false;
+            string PrincipalC1 = null;
+            bool isPrincipalC2 = false;
+            string PrincipalC2 = null;
 
             if (GridViewDocumentos.Rows.Count >= 2)
             {
@@ -2906,7 +2914,7 @@ namespace ReportesUnis
                 //string tipoDocumento1 = ((DataBoundLiteralControl)row1.Cells[3].Controls[0]).Text.Trim(); // Tipo de Documento
 
                 // Variables para la primera fila
-                bool isPrincipal1 = rdbPrincipal1.Checked;
+                isPrincipalD1 = rdbPrincipal1.Checked;
                 pais1 = ddlPais1.SelectedValue;
                 nroDocumento1 = txtNroDocumento1.Text;
                 //tipoDoc1 = tipoDocumento1;
@@ -2919,7 +2927,7 @@ namespace ReportesUnis
                 //string tipoDocumento2 = ((DataBoundLiteralControl)row2.Cells[3].Controls[0]).Text.Trim(); // Tipo de Documento
 
                 // Variables para la segunda fila
-                bool isPrincipal2 = rdbPrincipal2.Checked;
+                isPrincipalD2 = rdbPrincipal2.Checked;
                 pais2 = ddlPais2.SelectedValue;
                 nroDocumento2 = txtNroDocumento2.Text;
                 //tipoDoc2 = tipoDocumento2;
@@ -2937,7 +2945,7 @@ namespace ReportesUnis
                 TextBox txtTelefono1 = (TextBox)row1.FindControl("TxtTelefonoE");
 
                 // Variables para la primera fila
-                bool isPrincipal1 = rdbPrincipal1.Checked;
+                isPrincipalC1 = rdbPrincipal1.Checked;
                 parentesco1 = ddlParentesco1.SelectedValue;
                 nombre1 = txtNombre1.Text;
                 telefono1 = txtTelefono1.Text;
@@ -2950,7 +2958,7 @@ namespace ReportesUnis
                 TextBox txtTelefono2 = (TextBox)row2.FindControl("TxtTelefonoE");
 
                 // Variables para la segunda fila
-                bool isPrincipal2 = rdbPrincipal2.Checked;
+                isPrincipalC2 = rdbPrincipal2.Checked;
                 parentesco2 = ddlParentesco2.SelectedValue;
                 nombre2 = txtNombre2.Text;
                 telefono2 = txtTelefono2.Text;
@@ -2966,10 +2974,32 @@ namespace ReportesUnis
                 DocumentoCRM = nroDocumento1;
                 TipoDocumentoCRM = "DPI";
             }
-            else 
+            else
             {
                 DocumentoCRM = nroDocumento2;
-                TipoDocumentoCRM= "PAS";
+                TipoDocumentoCRM = "PAS";
+            }
+
+            if (isPrincipalC1)
+            {
+                PrincipalC1 = "Y";
+                PrincipalC2 = "N";
+            }
+            else
+            {
+                PrincipalC1 = "N";
+                PrincipalC2 = "Y";
+            }
+
+            if (isPrincipalD1)
+            {
+                PrincipalD1 = "Y";
+                PrincipalD2 = "N";
+            }
+            else
+            {
+                PrincipalD1 = "N";
+                PrincipalD2 = "Y";
             }
 
             /* esto comentado ya funciona correctamente
@@ -2998,19 +3028,20 @@ namespace ReportesUnis
                 "\"Country\": \"" + PaisResidencia + "\",\r\n    " +
                 "\"County\": \"" + DeptoResidencia + "\",\r\n    " +
                 //"\"PostalCode\": \"16001\",\r\n    " +
-                "\"PersonDEO_TipoDeDocumentoDeIdentidad_c\": \""+TipoDocumentoCRM+"\",\r\n    " +
+                "\"PersonDEO_TipoDeDocumentoDeIdentidad_c\": \"" + TipoDocumentoCRM + "\",\r\n    " +
                 "\"PersonDEO_TallaSudadero_c\": \"" + CmbTalla.SelectedValue + "\",\r\n    " +
                 "\"PersonDEO_T1_PaisDeNacimiento_c\": \"" + CmbPaisNacimiento.Text + "\",\r\n    " +
                 "\"PersonDEO_NumeroDeIdentificacionTributaria_c\": \"" + txtNit.Text + "\",\r\n    " +
                 "\"PersonDEO_ContactoDeEmergencia1_c\": \"" + nombre1 + "\",\r\n    " +
                 "\"PersonDEO_ContactoDeEmergencia2_c\": \"" + nombre2 + "\",\r\n    " +
-                "\"PersonDEO_ParentescoContactoEmergencia1_c\": \""+parentesco1 + "\",\r\n    " +
+                "\"PersonDEO_ParentescoContactoEmergencia1_c\": \"" + parentesco1 + "\",\r\n    " +
                 "\"PersonDEO_ParentescoContactoEmergencia2_c\": \"" + parentesco2 + "\",\r\n    " +
                 "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + telefono1 + "\",\r\n    " +
                 "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + telefono2 + "\"\r\n    " +
                 "}";
             //Actualiza por medio del metodo PATCH
             //updatePatch(body, PartyNumber);
+            ContactoEmergenciaCampus(nombre1, parentesco1, telefono1, PrincipalC1, nombre2, parentesco2, telefono2, PrincipalC2);
             string control = null;
             /*using (OracleConnection con = new OracleConnection(constr))
             {
@@ -4568,6 +4599,7 @@ namespace ReportesUnis
         private void LlenadoContactosEmergencia()
         {
             string constr = TxtURL.Text;
+            int contador = 0;
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -4578,13 +4610,32 @@ namespace ReportesUnis
                     "WHERE EMPLID = '" + txtCarne.Text + "'";
                     cmd.Connection = con;
                     OracleDataReader reader = cmd.ExecuteReader();
-
+                    DataTable dt = (DataTable)GridViewContactos.DataSource;
                     if (reader.HasRows)
                     {
-                        GridViewContactos.DataSource = cmd.ExecuteReader();
-                        GridViewContactos.DataBind();
+                        while (reader.Read())
+                        {
+                            if (contador == 0)
+                            {
+                                dt.Rows[0]["Nombre"] = reader["Nombre"].ToString();
+                                dt.Rows[0]["Teléfono"] = reader["Teléfono"].ToString();
+                                dt.Rows[0]["Parentesco"] = reader["Parentesco"].ToString();
+                                dt.Rows[0]["PRIMARY_CONTACT"] = reader["PRIMARY_CONTACT"].ToString();
+                                contador++;
+                            }
+                            else if (contador == 1)
+                            {
+                                dt.Rows[1]["Nombre"] = reader["Nombre"].ToString();
+                                dt.Rows[1]["Teléfono"] = reader["Teléfono"].ToString();
+                                dt.Rows[1]["Parentesco"] = reader["Parentesco"].ToString();
+                                dt.Rows[1]["PRIMARY_CONTACT"] = reader["PRIMARY_CONTACT"].ToString();
+                                contador++;
+                            }
+                        }
                     }
 
+                    GridViewContactos.DataSource = dt;
+                    GridViewContactos.DataBind();
                 }
             }
         }
@@ -5699,6 +5750,87 @@ namespace ReportesUnis
             }
 
             return (depto, mun, pais);
+        }
+
+        protected void ContactoEmergenciaCampus(string nombre1, string parentesco1, string telefono1, string principal1, string nombre2, string parentesco2, string telefono2, string principal2)
+        {
+            string InsertContacto1 = "INSERT INTO SYSADM.PS_EMERGENCY_CNTCT (EMPLID, CONTACT_NAME, PHONE, PRIMARY_CONTACT, RELATIONSHIP, SAME_ADDRESS_EMPL,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,NUM1,NUM2,HOUSE_TYPE,ADDR_FIELD1,ADDR_FIELD2,ADDR_FIELD3,COUNTY,STATE,POSTAL,GEO_CODE,IN_CITY_LIMIT,COUNTRY_CODE,SAME_PHONE_EMPL,ADDRESS_TYPE,PHONE_TYPE,EXTENSION) " +
+            "VALUES ('" + txtEmplid.Value + "', '" + nombre1 + "', '" + telefono1 + "', '" + principal1 + "', '" + parentesco1 + "', 'N',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','N',' ',' ',' ')";
+
+            string UpdateContacto1 = "UPDATE SET SYSADM.PS_EMERGENCY_CNTCT " +
+                "CONTACT_NAME = '" + nombre1 + "', " +
+                "PRIMARY_CONTACT = '" + principal1 + "', " +
+                "PHONE = '" + telefono1 + "', " +
+                "RELATIONSHIP = '" + parentesco1 + "' " +
+                "WHERE EMPLID ='" + txtEmplid.Value + "'";
+
+            string InsertContacto2 = "INSERT INTO SYSADM.PS_EMERGENCY_CNTCT (EMPLID, CONTACT_NAME, PHONE, PRIMARY_CONTACT, RELATIONSHIP,SAME_ADDRESS_EMPL,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,NUM1,NUM2,HOUSE_TYPE,ADDR_FIELD1,ADDR_FIELD2,ADDR_FIELD3,COUNTY,STATE,POSTAL,GEO_CODE,IN_CITY_LIMIT,COUNTRY_CODE,SAME_PHONE_EMPL,ADDRESS_TYPE,PHONE_TYPE,EXTENSION) " +
+            "VALUES ('" + txtEmplid.Value + "', '" + nombre2 + "', '" + telefono2 + "', '" + principal2 + "', '" + parentesco2 + "', 'N', ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','N',' ',' ',' ')";
+
+            string UpdateContacto2 = "UPDATE SET SYSADM.PS_EMERGENCY_CNTCT " +
+                "CONTACT_NAME = '" + nombre2 + "', " +
+                "PRIMARY_CONTACT = '" + principal2 + "', " +
+                "PHONE = '" + telefono2 + "', " +
+                "RELATIONSHIP = '" + parentesco2 + "' " +
+                "WHERE EMPLID ='" + txtEmplid.Value + "'";
+
+            string constr = TxtURL.Text;
+            string control = "0";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    try
+                    {
+                        if (!String.IsNullOrEmpty(txtNombreE1_Inicial.Value) || txtNombreE1_Inicial.Value == "")
+                        {
+                            cmd.CommandText = InsertContacto1;
+                            cmd.ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            cmd.CommandText = UpdateContacto1;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch (Exception x)
+                    {
+                        control = x.ToString();
+                    }
+
+                    try
+                    {
+                        if (!String.IsNullOrEmpty(txtNombreE2_Inicial.Value) || txtNombreE2_Inicial.Value == "")
+                        {
+                            cmd.CommandText = InsertContacto2;
+                            cmd.ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            cmd.CommandText = UpdateContacto2;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch (Exception x)
+                    {
+                        control = x.ToString();
+                    }
+
+                    if (control == "0")
+                    {
+                        transaction.Commit();
+                    }
+                    else
+                    {
+                        transaction.Rollback();
+                    }
+                    con.Close();
+                }
+            }
         }
     }
 
