@@ -2947,7 +2947,10 @@ namespace ReportesUnis
 
                 // Variables para la primera fila
                 isPrincipalC1 = rdbPrincipal1.Checked;
-                parentesco1 = ddlParentesco1.SelectedValue;
+                if(!String.IsNullOrEmpty(ddlParentesco1.SelectedValue))
+                {
+                    parentesco1 = "\""+ddlParentesco1.SelectedItem.Text+ "\"";
+                }
                 nombre1 = txtNombre1.Text;
                 telefono1 = txtTelefono1.Text;
 
@@ -2960,7 +2963,14 @@ namespace ReportesUnis
 
                 // Variables para la segunda fila
                 isPrincipalC2 = rdbPrincipal2.Checked;
-                parentesco2 = ddlParentesco2.SelectedValue;
+                if (!String.IsNullOrEmpty(ddlParentesco2.SelectedValue))
+                {
+                    parentesco2 = "\""+ddlParentesco2.SelectedItem.Text+ "\"";
+                }
+                else
+                {
+                    parentesco2 = "null";
+                }
                 nombre2 = txtNombre2.Text;
                 telefono2 = txtTelefono2.Text;
 
@@ -2973,7 +2983,7 @@ namespace ReportesUnis
             if (!String.IsNullOrEmpty(nroDocumento1.Trim()))
             {
                 DocumentoCRM = nroDocumento1;
-                TipoDocumentoCRM = "DPI";
+                TipoDocumentoCRM = "CUI";
             }
             else
             {
@@ -3009,7 +3019,7 @@ namespace ReportesUnis
             }
             else 
             {
-                EstadoCivilCRM = "S";
+                EstadoCivilCRM = "T";
             }
             /* esto comentado ya funciona correctamente
             var respuesta = RecorrerDocumentos();
@@ -3038,20 +3048,26 @@ namespace ReportesUnis
                 "\"City\": \"" + MunicResidencia + "\",\r\n    " +
                 "\"Country\": \"" + PaisResidencia + "\",\r\n    " +
                 "\"County\": \"" + DeptoResidencia + "\",\r\n    " +
-                //"\"PostalCode\": \"16001\",\r\n    " +
                 "\"PersonDEO_TipoDeDocumentoDeIdentidad_c\": \"" + TipoDocumentoCRM + "\",\r\n    " +
                 "\"PersonDEO_TallaSudadero_c\": \"" + CmbTalla.SelectedValue + "\",\r\n    " +
                 "\"PersonDEO_T1_PaisDeNacimiento_c\": \"" + CmbPaisNacimiento.Text + "\",\r\n    " +
                 "\"PersonDEO_NumeroDeIdentificacionTributaria_c\": \"" + txtNit.Text + "\",\r\n    " +
                 "\"PersonDEO_ContactoDeEmergencia1_c\": \"" + nombre1 + "\",\r\n    " +
                 "\"PersonDEO_ContactoDeEmergencia2_c\": \"" + nombre2 + "\",\r\n    " +
-                "\"PersonDEO_ParentescoContactoEmergencia1_c\": \"" + parentesco1 + "\",\r\n    " +
-                "\"PersonDEO_ParentescoContactoEmergencia2_c\": \"" + parentesco2 + "\",\r\n    " +
-                "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + telefono1 + "\",\r\n    " +
-                "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + telefono2 + "\"\r\n    " +
+                "\"PersonDEO_ParentescoContactoEmergencia1_c\":  "+ parentesco1 + ",\r\n    " +
+                "\"PersonDEO_ParentescoContactoEmergencia2_c\":  "+ parentesco2 + ",\r\n    " +
+                "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + telefono1 + "\",\r\n    " +
+                "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + telefono2 + "\",\r\n    " +
+                "\"PersonDEO_HospitalParaTraslado_c\": \"" + TxtHospital.Text  + "\",\r\n    " +
+                "\"PersonDEO_Alergias_c\": \"" + TxtAlergias.Text + "\",\r\n    " +
+                "\"PersonDEO_AntecedentesMedicos_c\": \"" + TxtAntecedentesM.Text + "\",\r\n    " +
+                "\"PersonDEO_TipoDeSangre_c\": \"" + CmbSangre.SelectedValue + "\",\r\n    " +
+                "\"PersonDEO_SeguroMedico_c\": \"" + TxtSeguro.Text + "\",\r\n    " +
+                "\"PersonDEO_NroDeAfiliacion_c\": \"" + TxtAfiliacion.Text + "\"\r\n    " +
                 "}";
             //Actualiza por medio del metodo PATCH
-            //updatePatch(body, PartyNumber);
+            if (!String.IsNullOrEmpty(PartyNumber))
+            updatePatch(body, PartyNumber);
 
             //ACTUALIZACION CONTACTOS DE EMERGENCIA EN CAMPUS
             ContactoEmergenciaCampus(nombre1, parentesco1, telefono1, PrincipalC1, nombre2, parentesco2, telefono2, PrincipalC2);

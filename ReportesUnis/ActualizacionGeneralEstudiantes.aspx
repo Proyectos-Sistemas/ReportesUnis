@@ -637,26 +637,26 @@
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Seguro Médico</asp:Label>
                                                 <br />
-                                                <asp:TextBox ID="TextBox7" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="TxtSeguro" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
                                                 <br />
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Número de Afiliación</asp:Label>
                                                 <br />
-                                                <asp:TextBox ID="TextBox8" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="TxtAfiliacion" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
                                                 <br />
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Tipo de Sangre*:</asp:Label>
-                                                <asp:DropDownList ID="DropDownList4" runat="server" Width="500px" CssClass="form-control">
-                                                    <asp:ListItem>O+</asp:ListItem>
-                                                    <asp:ListItem>O-</asp:ListItem>
-                                                    <asp:ListItem>A+</asp:ListItem>
-                                                    <asp:ListItem>A-</asp:ListItem>
-                                                    <asp:ListItem>B+</asp:ListItem>
-                                                    <asp:ListItem>B-</asp:ListItem>
-                                                    <asp:ListItem>AB+</asp:ListItem>
-                                                    <asp:ListItem>AB-</asp:ListItem>
+                                                <asp:DropDownList ID="CmbSangre" runat="server" Width="500px" CssClass="form-control">
+                                                    <asp:ListItem Text="O+" Value="OP"></asp:ListItem>
+                                                    <asp:ListItem Text="O-" Value="ON"></asp:ListItem>
+                                                    <asp:ListItem Text="A+" Value="AP"></asp:ListItem>
+                                                    <asp:ListItem Text="A-" Value="AN"></asp:ListItem>
+                                                    <asp:ListItem Text="B+" Value="BP"></asp:ListItem>
+                                                    <asp:ListItem Text="B-" Value="BN"></asp:ListItem>
+                                                    <asp:ListItem Text="AB+" Value="ABP"></asp:ListItem>
+                                                    <asp:ListItem Text="AB-" Value="ABN"></asp:ListItem>
                                                 </asp:DropDownList>
                                                 <br />
                                             </div>
@@ -664,19 +664,19 @@
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Hospital para traslado:</asp:Label>
                                                 <br />
-                                                <asp:TextBox ID="TextBox4" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="TxtHospital" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
                                                 <br />
                                             </div>
 
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Antecedentes Médicos:</asp:Label>
-                                                <asp:TextBox ID="TextBox5" runat="server" TextMode="MultiLine" Rows="4" MaxLength="250" Width="500px" CssClass="form-control" Enabled="true" onkeypress="return evitarEnter(event)"></asp:TextBox>
+                                                <asp:TextBox ID="TxtAntecedentesM" runat="server" TextMode="MultiLine" Rows="4" MaxLength="250" Width="500px" CssClass="form-control" Enabled="true" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                                 <br />
                                             </div>
 
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Alergias:</asp:Label>
-                                                <asp:TextBox ID="TextBox6" runat="server" TextMode="MultiLine" Rows="4" MaxLength="250" Width="500px" CssClass="form-control" Enabled="true" onkeypress="return evitarEnter(event)"></asp:TextBox>
+                                                <asp:TextBox ID="TxtAlergias" runat="server" TextMode="MultiLine" Rows="4" MaxLength="250" Width="500px" CssClass="form-control" Enabled="true" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                                 <br />
                                             </div>
 
