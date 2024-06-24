@@ -254,6 +254,14 @@
                 <input type="hidden" id="txtContatoEP_Inicial" runat="server" />
                 <input type="hidden" id="txtContatoEP2_Inicial" runat="server" />
 
+                <%-- DATOS INCIALES EMERGENCIAS--%>
+                <input type="hidden" id="EmplidAtencion" runat="server" />
+                <input type="hidden" id="seleccionadosAlergia" runat="server" />
+                <input type="hidden" id="seleccionadosAntecedentes" runat="server" />
+                <input type="hidden" id="seleccionadosInicialAlergia" runat="server" />
+                <input type="hidden" id="seleccionadosInicialOtrosAlergia" runat="server" />
+                <input type="hidden" id="seleccionadosInicialAntecedentes" runat="server" />
+                <input type="hidden" id="seleccionadosInicialOtrosAntecedentes" runat="server" />
 
                 <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
                 <div class="container" id="tabla" runat="server">
@@ -634,21 +642,21 @@
                                 <div>
                                     <div class="container">
                                         <div class="row">
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Seguro Médico</asp:Label>
                                                 <br />
-                                                <asp:TextBox ID="TxtSeguro" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="TxtSeguro" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                                 <br />
                                             </div>
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Número de Afiliación</asp:Label>
                                                 <br />
-                                                <asp:TextBox ID="TxtAfiliacion" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="TxtAfiliacion" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                                 <br />
                                             </div>
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Tipo de Sangre*:</asp:Label>
-                                                <asp:DropDownList ID="CmbSangre" runat="server" Width="500px" CssClass="form-control">
+                                                <asp:DropDownList ID="CmbSangre" runat="server" Width="275px" CssClass="form-control">
                                                     <asp:ListItem Text="O+" Value="OP"></asp:ListItem>
                                                     <asp:ListItem Text="O-" Value="ON"></asp:ListItem>
                                                     <asp:ListItem Text="A+" Value="AP"></asp:ListItem>
@@ -664,22 +672,41 @@
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Hospital para traslado:</asp:Label>
                                                 <br />
-                                                <asp:TextBox ID="TxtHospital" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <asp:DropDownList ID="CmbHospital" runat="server" Width="500px" CssClass="form-control"></asp:DropDownList>
+                                                <br />
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <asp:Label runat="server" Font-Bold="true">Otro Hospital para traslado:</asp:Label>
+                                                <br />
+                                                <asp:TextBox ID="TxtOtroHospital" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
                                                 <br />
                                             </div>
 
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Antecedentes Médicos:</asp:Label>
-                                                <asp:TextBox ID="TxtAntecedentesM" runat="server" TextMode="MultiLine" Rows="4" MaxLength="250" Width="500px" CssClass="form-control" Enabled="true" onkeypress="return evitarEnter(event)"></asp:TextBox>
+                                                <asp:ListBox ID="CmbAntecedentes" runat="server" Width="500px" CssClass="chosen-select form-control" Multiple="true" SelectionMode="Multiple"></asp:ListBox>
+                                                <br />
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <asp:Label runat="server" Font-Bold="true">Otros antecedentes médicos</asp:Label>
+                                                <asp:TextBox ID="TxtOtrosAntecedentesM" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <asp:Label runat="server" Font-Bold="true" Font-Size="X-Small">Si ingresa más de uno, separarlos por comas (,)</asp:Label>
                                                 <br />
                                             </div>
 
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Alergias:</asp:Label>
-                                                <asp:TextBox ID="TxtAlergias" runat="server" TextMode="MultiLine" Rows="4" MaxLength="250" Width="500px" CssClass="form-control" Enabled="true" onkeypress="return evitarEnter(event)"></asp:TextBox>
+                                                <asp:ListBox ID="CmbAlergias" runat="server" Width="500px" CssClass="chosen-select form-control" Multiple="true" SelectionMode="Multiple"></asp:ListBox>
                                                 <br />
                                             </div>
-
+                                            <div class="form-group col-md-6">
+                                                <asp:Label runat="server" Font-Bold="true">Otras alergias:</asp:Label>
+                                                <asp:TextBox ID="TxtOtrasAlergias" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <asp:Label runat="server" Font-Bold="true" Font-Size="X-Small">Si ingresa más de uno, separarlos por comas (,)</asp:Label>
+                                                <br />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -747,23 +774,10 @@
                             <br />
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-md-4 mx-auto text-center">
-                                    </div>
-
-
-                                    <div class="col-md-4 mx-auto text-center">
+                                    <div class="form-group col-md-6">
                                         <asp:Label runat="server" Font-Bold="true">Talla Sudadero</asp:Label>
                                         <br />
-                                    </div>
-
-                                    <div class="col-md-4 mx-auto text-center">
-                                    </div>
-
-                                    <div class="col-md-4 mx-auto text-center">
-                                    </div>
-
-                                    <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
-                                        <asp:DropDownList ID="CmbTalla" runat="server" Width="275px" CssClass="form-control">
+                                        <asp:DropDownList ID="CmbTalla" runat="server" Width="500px" CssClass="form-control">
                                             <asp:ListItem Selected="False" Value=""></asp:ListItem>
                                             <asp:ListItem>S</asp:ListItem>
                                             <asp:ListItem>M</asp:ListItem>
@@ -772,7 +786,11 @@
                                             <asp:ListItem>XXL</asp:ListItem>
                                         </asp:DropDownList>
                                     </div>
-                                    <div class="col-md-4 mx-auto text-center">
+
+                                    <div class="form-group col-md-6">
+                                        <asp:Label runat="server" Font-Bold="true">Información de carro en campus:</asp:Label>
+                                        <asp:TextBox ID="TxtCarro" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                        <br />
                                     </div>
 
                                 </div>
@@ -1058,6 +1076,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+
     </div>
     <script>
         var userAgent = navigator.userAgent;
@@ -1671,8 +1690,23 @@
         });
     </script>
 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".chosen-select").chosen({
+                placeholder_text_multiple: "Da click y selecciona "
+            });
+
+            $(".chosen-container .chosen-single").addClass("form-control");
+            $(".chosen-container .chosen-choices").addClass("form-control");
+
+        });
+    </script>
+
 
     <script src="Scripts/UNIS/Unis.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>
 

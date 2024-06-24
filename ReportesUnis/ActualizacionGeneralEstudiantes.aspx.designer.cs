@@ -996,6 +996,69 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtContatoEP2_Inicial;
 
         /// <summary>
+        /// Control EmplidAtencion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden EmplidAtencion;
+
+        /// <summary>
+        /// Control seleccionadosAlergia.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosAlergia;
+
+        /// <summary>
+        /// Control seleccionadosAntecedentes.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosAntecedentes;
+
+        /// <summary>
+        /// Control seleccionadosInicialAlergia.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosInicialAlergia;
+
+        /// <summary>
+        /// Control seleccionadosInicialOtrosAlergia.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosInicialOtrosAlergia;
+
+        /// <summary>
+        /// Control seleccionadosInicialAntecedentes.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosInicialAntecedentes;
+
+        /// <summary>
+        /// Control seleccionadosInicialOtrosAntecedentes.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosInicialOtrosAntecedentes;
+
+        /// <summary>
         /// Control tabla.
         /// </summary>
         /// <remarks>
@@ -1419,31 +1482,58 @@ namespace ReportesUnis
         protected global::System.Web.UI.WebControls.DropDownList CmbSangre;
 
         /// <summary>
-        /// Control TxtHospital.
+        /// Control CmbHospital.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtHospital;
+        protected global::System.Web.UI.WebControls.DropDownList CmbHospital;
 
         /// <summary>
-        /// Control TxtAntecedentesM.
+        /// Control TxtOtroHospital.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtAntecedentesM;
+        protected global::System.Web.UI.WebControls.TextBox TxtOtroHospital;
 
         /// <summary>
-        /// Control TxtAlergias.
+        /// Control CmbAntecedentes.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtAlergias;
+        protected global::System.Web.UI.WebControls.ListBox CmbAntecedentes;
+
+        /// <summary>
+        /// Control TxtOtrosAntecedentesM.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtOtrosAntecedentesM;
+
+        /// <summary>
+        /// Control CmbAlergias.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ListBox CmbAlergias;
+
+        /// <summary>
+        /// Control TxtOtrasAlergias.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtOtrasAlergias;
 
         /// <summary>
         /// Control GridViewContactos.
@@ -1462,6 +1552,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList CmbTalla;
+
+        /// <summary>
+        /// Control TxtCarro.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtCarro;
 
         /// <summary>
         /// Control tbactualizar.

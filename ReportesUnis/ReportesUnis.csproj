@@ -423,6 +423,7 @@
     <Content Include="CapturaFoto.aspx" />
     <Content Include="Cargarfotografia.aspx" />
     <Content Include="CargarFotografiaEmpleados.aspx" />
+    <Content Include="ComboDinamicoaspx.aspx" />
     <Content Include="Tabs.aspx" />
     <Content Include="VersionesCampus.txt" />
     <Content Include="ConfirmacionDeFotografias.aspx" />
@@ -662,6 +663,13 @@
     </Compile>
     <Compile Include="CargarFotografiaEmpleados.aspx.designer.cs">
       <DependentUpon>CargarFotografiaEmpleados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ComboDinamicoaspx.aspx.cs">
+      <DependentUpon>ComboDinamicoaspx.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ComboDinamicoaspx.aspx.designer.cs">
+      <DependentUpon>ComboDinamicoaspx.aspx</DependentUpon>
     </Compile>
     <Compile Include="ConfirmacionDeFotografias.aspx.cs">
       <DependentUpon>ConfirmacionDeFotografias.aspx</DependentUpon>

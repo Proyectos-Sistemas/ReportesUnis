@@ -23,6 +23,7 @@ using System.Web.UI.WebControls.WebParts;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Office.Word;
 using System.Web.UI.WebControls;
+using System.Security.Principal;
 namespace ReportesUnis
 {
     public partial class ActualizacionGeneralEstudiantes : System.Web.UI.Page
@@ -73,8 +74,11 @@ namespace ReportesUnis
                     txtControlBit.Text = "0";
                     txtControlNR.Text = "0";
                     txtControlAR.Text = "0";
+                    LlenarHospital();
                     LoadDataDocumentos();
                     LoadDataContactos();
+                    LlenarAlergias();
+                    LlenarAntecedentes();
                     //emplid = mostrarInformación();
 
 
@@ -2947,9 +2951,9 @@ namespace ReportesUnis
 
                 // Variables para la primera fila
                 isPrincipalC1 = rdbPrincipal1.Checked;
-                if(!String.IsNullOrEmpty(ddlParentesco1.SelectedValue))
+                if (!String.IsNullOrEmpty(ddlParentesco1.SelectedValue))
                 {
-                    parentesco1 = "\""+ddlParentesco1.SelectedItem.Text+ "\"";
+                    parentesco1 = "\"" + ddlParentesco1.SelectedItem.Text + "\"";
                 }
                 nombre1 = txtNombre1.Text;
                 telefono1 = txtTelefono1.Text;
@@ -2965,7 +2969,7 @@ namespace ReportesUnis
                 isPrincipalC2 = rdbPrincipal2.Checked;
                 if (!String.IsNullOrEmpty(ddlParentesco2.SelectedValue))
                 {
-                    parentesco2 = "\""+ddlParentesco2.SelectedItem.Text+ "\"";
+                    parentesco2 = "\"" + ddlParentesco2.SelectedItem.Text + "\"";
                 }
                 else
                 {
@@ -3017,61 +3021,72 @@ namespace ReportesUnis
             {
                 EstadoCivilCRM = "M";
             }
-            else 
+            else
             {
                 EstadoCivilCRM = "T";
             }
             /* esto comentado ya funciona correctamente
-            var respuesta = RecorrerDocumentos();
-            UP_IDENTIFICACION.Value = respuesta.UP_Doc;
-            UD_IDENTIFICACION.Value = respuesta.UD_Doc;
-            IngresoDatosGenerales();*/
+            //var respuestaDocumentos = RecorrerDocumentos();
+            //UP_IDENTIFICACION.Value = respuestaDocumentos.UP_Doc;
+            //UD_IDENTIFICACION.Value = respuestaDocumentos.UD_Doc;
+            //IngresoDatosGenerales();*/
 
+            //seleccionadosAlergia.Value = DatosAlergias();
+            //seleccionadosAntecedentes.Value = DatosEnfermedades();
+            //AlmacenarAlergiasCampus(seleccionadosAlergia.Value);
+            //AlmacenarAntecedentesCampus(seleccionadosAntecedentes.Value);
+            AlmacenerEmergencias();
             //ACTUALIZACION EN CRM
-            limpiarVariables();
-            getInfo = consultaGet(txtDPI.Text);
-            PartyNumber = getBetween(getInfo, "PartyNumber\" : \"", "\",");
-            string FechaCumple = Convert.ToDateTime(txtCumple.Text).ToString("yyyy-MM-dd");
-            body = "{\r\n    " +
-                "\"FirstName\": \"" + txtNombre.Text + "\",\r\n    " +
-                "\"LastName\": \"" + txtApellido.Text + "\",\r\n    " +
-                "\"MiddleName\": \"\",\r\n    " +
-                "\"UniqueNameSuffix\": \"" + txtCasada.Text + "\",\r\n    " +
-                "\"TaxpayerIdentificationNumber\": \"" + DocumentoCRM + "\",\r\n    " +
-                "\"DateOfBirth\": \"" + FechaCumple + "\",\r\n    " +
-                "\"MaritalStatus\": \""+ EstadoCivilCRM + "\",\r\n    " +
-                "\"MobileNumber\": \"" + txtTelefono.Text + "\",\r\n    " +
-                "\"EmailAddress\": \"" + TxtCorreoPersonal.Text + "\",\r\n    " +
-                "\"AddressElementAttribute3\": \"Zona " + txtDireccion3.Text + "\",\r\n    " +
-                "\"AddressLine1\": \"" + txtDireccion.Text + "\",\r\n    " +
-                "\"AddressLine2\": \"" + txtDireccion2.Text.TrimEnd() + "\",\r\n    " +
-                "\"City\": \"" + MunicResidencia + "\",\r\n    " +
-                "\"Country\": \"" + PaisResidencia + "\",\r\n    " +
-                "\"County\": \"" + DeptoResidencia + "\",\r\n    " +
-                "\"PersonDEO_TipoDeDocumentoDeIdentidad_c\": \"" + TipoDocumentoCRM + "\",\r\n    " +
-                "\"PersonDEO_TallaSudadero_c\": \"" + CmbTalla.SelectedValue + "\",\r\n    " +
-                "\"PersonDEO_T1_PaisDeNacimiento_c\": \"" + CmbPaisNacimiento.Text + "\",\r\n    " +
-                "\"PersonDEO_NumeroDeIdentificacionTributaria_c\": \"" + txtNit.Text + "\",\r\n    " +
-                "\"PersonDEO_ContactoDeEmergencia1_c\": \"" + nombre1 + "\",\r\n    " +
-                "\"PersonDEO_ContactoDeEmergencia2_c\": \"" + nombre2 + "\",\r\n    " +
-                "\"PersonDEO_ParentescoContactoEmergencia1_c\":  "+ parentesco1 + ",\r\n    " +
-                "\"PersonDEO_ParentescoContactoEmergencia2_c\":  "+ parentesco2 + ",\r\n    " +
-                "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + telefono1 + "\",\r\n    " +
-                "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + telefono2 + "\",\r\n    " +
-                "\"PersonDEO_HospitalParaTraslado_c\": \"" + TxtHospital.Text  + "\",\r\n    " +
-                "\"PersonDEO_Alergias_c\": \"" + TxtAlergias.Text + "\",\r\n    " +
-                "\"PersonDEO_AntecedentesMedicos_c\": \"" + TxtAntecedentesM.Text + "\",\r\n    " +
-                "\"PersonDEO_TipoDeSangre_c\": \"" + CmbSangre.SelectedValue + "\",\r\n    " +
-                "\"PersonDEO_SeguroMedico_c\": \"" + TxtSeguro.Text + "\",\r\n    " +
-                "\"PersonDEO_NroDeAfiliacion_c\": \"" + TxtAfiliacion.Text + "\"\r\n    " +
-                "}";
-            //Actualiza por medio del metodo PATCH
-            if (!String.IsNullOrEmpty(PartyNumber))
-            updatePatch(body, PartyNumber);
-
-            //ACTUALIZACION CONTACTOS DE EMERGENCIA EN CAMPUS
-            ContactoEmergenciaCampus(nombre1, parentesco1, telefono1, PrincipalC1, nombre2, parentesco2, telefono2, PrincipalC2);
-            string control = null;
+            //SI FUNCIONA LO DE CRM ---
+            /* limpiarVariables();
+             getInfo = consultaGet(txtDPI.Text);
+             PartyNumber = getBetween(getInfo, "PartyNumber\" : \"", "\",");
+             string FechaCumple = Convert.ToDateTime(txtCumple.Text).ToString("yyyy-MM-dd");
+             body = "{\r\n    " +
+                 "\"FirstName\": \"" + txtNombre.Text + "\",\r\n    " +
+                 "\"LastName\": \"" + txtApellido.Text + "\",\r\n    " +
+                 "\"MiddleName\": \"\",\r\n    " +
+                 "\"UniqueNameSuffix\": \"" + txtCasada.Text + "\",\r\n    " +
+                 "\"TaxpayerIdentificationNumber\": \"" + DocumentoCRM + "\",\r\n    " +
+                 "\"DateOfBirth\": \"" + FechaCumple + "\",\r\n    " +
+                 "\"MaritalStatus\": \"" + EstadoCivilCRM + "\",\r\n    " +
+                 "\"MobileNumber\": \"" + txtTelefono.Text + "\",\r\n    " +
+                 "\"EmailAddress\": \"" + TxtCorreoPersonal.Text + "\",\r\n    " +
+                 "\"AddressElementAttribute3\": \"Zona " + txtDireccion3.Text + "\",\r\n    " +
+                 "\"AddressLine1\": \"" + txtDireccion.Text + "\",\r\n    " +
+                 "\"AddressLine2\": \"" + txtDireccion2.Text.TrimEnd() + "\",\r\n    " +
+                 "\"City\": \"" + MunicResidencia + "\",\r\n    " +
+                 "\"Country\": \"" + PaisResidencia + "\",\r\n    " +
+                 "\"County\": \"" + DeptoResidencia + "\",\r\n    " +
+                 "\"PersonDEO_TipoDeDocumentoDeIdentidad_c\": \"" + TipoDocumentoCRM + "\",\r\n    " +
+                 "\"PersonDEO_InformacionCarro_c\": \"" + TxtCarro.Text + "\",\r\n    " +
+                 "\"PersonDEO_TallaSudadero_c\": \"" + CmbTalla.SelectedValue + "\",\r\n    " +
+                 "\"PersonDEO_T1_PaisDeNacimiento_c\": \"" + CmbPaisNacimiento.Text + "\",\r\n    " +
+                 "\"PersonDEO_NumeroDeIdentificacionTributaria_c\": \"" + txtNit.Text + "\",\r\n    " +
+                 "\"PersonDEO_ContactoDeEmergencia1_c\": \"" + nombre1 + "\",\r\n    " +
+                 "\"PersonDEO_ContactoDeEmergencia2_c\": \"" + nombre2 + "\",\r\n    " +
+                 "\"PersonDEO_ParentescoContactoEmergencia1_c\":  " + parentesco1 + ",\r\n    " +
+                 "\"PersonDEO_ParentescoContactoEmergencia2_c\":  " + parentesco2 + ",\r\n    " +
+                 "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + telefono1 + "\",\r\n    " +
+                 "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + telefono2 + "\",\r\n    " +
+                 "\"PersonDEO_HospitalTraslado_c\": \"" + CmbHospital.SelectedItem + "\",\r\n    " +
+                 "\"PersonDEO_OtroHospital_c\": \"" + TxtOtroHospital.Text + "\",\r\n    " +
+                 "\"PersonDEO_ListaAlergias_c\": \"" + seleccionadosAlergia.Value + "\",\r\n    " +
+                 "\"PersonDEO_Alergias_c\": \"" + TxtOtrasAlergias.Text + "\",\r\n    " +
+                 "\"PersonDEO_Enfermedades_c\": \"" + seleccionadosAntecedentes.Value + "\",\r\n    " +
+                 "\"PersonDEO_AntecedentesMedicos_c\": \"" + TxtOtrosAntecedentesM.Text + "\",\r\n    " +
+                 "\"PersonDEO_TipoDeSangre_c\": \"" + CmbSangre.SelectedValue + "\",\r\n    " +
+                 "\"PersonDEO_SeguroMedico_c\": \"" + TxtSeguro.Text + "\",\r\n    " +
+                 "\"PersonDEO_NroDeAfiliacion_c\": \"" + TxtAfiliacion.Text + "\"\r\n    " +
+                 "}";
+             //Actualiza por medio del metodo PATCH
+             if (!String.IsNullOrEmpty(PartyNumber))
+                 updatePatch(body, PartyNumber);*/
+            //----
+            ////ACTUALIZACION CONTACTOS DE EMERGENCIA EN CAMPUS
+            //ContactoEmergenciaCampus(nombre1, parentesco1, telefono1, PrincipalC1, nombre2, parentesco2, telefono2, PrincipalC2);
+            //DatosMedicosCampus();
+            //string control = null;
             /*using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -4436,7 +4451,11 @@ namespace ReportesUnis
                 /*validarAcceso = ValidacionAccesoVista(txtEmplid.Value);
                 if (validarAcceso != null)
                 {*/
+
+                string getInfo = null;
                 mostrarInformación(txtEmplid.Value);
+                getInfo = consultaGet(txtDPI.Text);
+                CmbTalla.SelectedValue = getBetween(getInfo, "PersonDEO_TallaSudadero_c\" : \"", "\",");
                 if (txtNit.Text == "CF")
                 {
                     txtNit.Enabled = false;
@@ -4467,6 +4486,9 @@ namespace ReportesUnis
                         CmbMunicipioNIT.SelectedValue = " ";
                     }
                 }
+                llenadoDatosMedicos();
+                llenadoDatosAlergias();
+                llenadoDatosEnfermedades();
                 LoadDataContactos();
                 LlenadoContactosEmergencia();
                 LoadDataDocumentos();
@@ -4624,6 +4646,73 @@ namespace ReportesUnis
                 }
             }
         }
+        protected void LlenarHospital()
+        {
+            //string constr = TxtURL.Text;
+            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT ' ' DESC_HOSP FROM DUAL UNION SELECT DESC_HOSP FROM SYSADM.PS_XL_CAT_HOSPITAL ORDER BY 1 ASC";
+                    OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    adapter.Fill(ds);
+                    CmbHospital.DataSource = ds;
+                    CmbHospital.DataTextField = "DESC_HOSP";
+                    CmbHospital.DataValueField = "DESC_HOSP";
+                    CmbHospital.DataBind();
+                    con.Close();
+                }
+            }
+        }
+        protected void LlenarAntecedentes()
+        {
+            //string constr = TxtURL.Text;
+            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT ' ' FIELDNAME FROM DUAL UNION SELECT FIELDNAME FROM SYSADM.PS_XL_CAT_ENFER ORDER BY 1 ASC";
+                    OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    adapter.Fill(ds);
+                    CmbAntecedentes.DataSource = ds;
+                    CmbAntecedentes.DataTextField = "FIELDNAME";
+                    CmbAntecedentes.DataValueField = "FIELDNAME";
+                    CmbAntecedentes.DataBind();
+                    con.Close();
+                }
+            }
+        }
+        protected void LlenarAlergias()
+        {
+            //string constr = TxtURL.Text;
+            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    cmd.CommandText = "SELECT ' ' FIELDNAME FROM DUAL UNION SELECT FIELDNAME FROM SYSADM.PS_XL_CAT_ALERGIAS ORDER BY 1 ASC";
+                    OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    adapter.Fill(ds);
+                    CmbAlergias.DataSource = ds;
+                    CmbAlergias.DataTextField = "FIELDNAME";
+                    CmbAlergias.DataValueField = "FIELDNAME";
+                    CmbAlergias.DataBind();
+                    con.Close();
+                }
+            }
+            //CmbAlergias.SelectMethod = "Multiple";
+        }
 
         private void LlenadoContactosEmergencia()
         {
@@ -4668,8 +4757,330 @@ namespace ReportesUnis
                 }
             }
         }
+        protected void ContactoEmergenciaCampus(string nombre1, string parentesco1, string telefono1, string principal1, string nombre2, string parentesco2, string telefono2, string principal2)
+        {
+            string InsertContacto1 = "INSERT INTO SYSADM.PS_EMERGENCY_CNTCT (EMPLID, CONTACT_NAME, PHONE, PRIMARY_CONTACT, RELATIONSHIP, SAME_ADDRESS_EMPL,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,NUM1,NUM2,HOUSE_TYPE,ADDR_FIELD1,ADDR_FIELD2,ADDR_FIELD3,COUNTY,STATE,POSTAL,GEO_CODE,IN_CITY_LIMIT,COUNTRY_CODE,SAME_PHONE_EMPL,ADDRESS_TYPE,PHONE_TYPE,EXTENSION) " +
+            "VALUES ('" + txtEmplid.Value + "', '" + nombre1 + "', '" + telefono1 + "', '" + principal1 + "', '" + parentesco1 + "', 'N',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','N',' ',' ',' ')";
+
+            string UpdateContacto1 = "UPDATE SET SYSADM.PS_EMERGENCY_CNTCT " +
+                "CONTACT_NAME = '" + nombre1 + "', " +
+                "PRIMARY_CONTACT = '" + principal1 + "', " +
+                "PHONE = '" + telefono1 + "', " +
+                "RELATIONSHIP = '" + parentesco1 + "' " +
+                "WHERE EMPLID ='" + txtEmplid.Value + "'";
+
+            string InsertContacto2 = "INSERT INTO SYSADM.PS_EMERGENCY_CNTCT (EMPLID, CONTACT_NAME, PHONE, PRIMARY_CONTACT, RELATIONSHIP,SAME_ADDRESS_EMPL,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,NUM1,NUM2,HOUSE_TYPE,ADDR_FIELD1,ADDR_FIELD2,ADDR_FIELD3,COUNTY,STATE,POSTAL,GEO_CODE,IN_CITY_LIMIT,COUNTRY_CODE,SAME_PHONE_EMPL,ADDRESS_TYPE,PHONE_TYPE,EXTENSION) " +
+            "VALUES ('" + txtEmplid.Value + "', '" + nombre2 + "', '" + telefono2 + "', '" + principal2 + "', '" + parentesco2 + "', 'N', ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','N',' ',' ',' ')";
+
+            string UpdateContacto2 = "UPDATE SET SYSADM.PS_EMERGENCY_CNTCT " +
+                "CONTACT_NAME = '" + nombre2 + "', " +
+                "PRIMARY_CONTACT = '" + principal2 + "', " +
+                "PHONE = '" + telefono2 + "', " +
+                "RELATIONSHIP = '" + parentesco2 + "' " +
+                "WHERE EMPLID ='" + txtEmplid.Value + "'";
+
+            string constr = TxtURL.Text;
+            string control = "0";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    try
+                    {
+                        if (!String.IsNullOrEmpty(txtNombreE1_Inicial.Value) || txtNombreE1_Inicial.Value == "")
+                        {
+                            cmd.CommandText = InsertContacto1;
+                            cmd.ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            cmd.CommandText = UpdateContacto1;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch (Exception x)
+                    {
+                        control = x.ToString();
+                    }
+
+                    try
+                    {
+                        if (!String.IsNullOrEmpty(txtNombreE2_Inicial.Value) || txtNombreE2_Inicial.Value == "")
+                        {
+                            cmd.CommandText = InsertContacto2;
+                            cmd.ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            cmd.CommandText = UpdateContacto2;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch (Exception x)
+                    {
+                        control = x.ToString();
+                    }
+
+                    if (control == "0")
+                    {
+                        transaction.Commit();
+                    }
+                    else
+                    {
+                        transaction.Rollback();
+                    }
+                    con.Close();
+                }
+            }
+        }
+
+        private void llenadoDatosMedicos()
+        {
+            //string constr = TxtURL.Text;
+            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            EmplidAtencion.Value = null;
+
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.CommandText = "SELECT HOSPITAL_TRASLADO, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE, EMPLID, CARRO_CAMPUS " +
+                        "FROM SYSADM.PS_UNIS_ATEN_EMERG " +
+                    "WHERE EMPLID = '" + txtCarne.Text + "'";
+                    cmd.Connection = con;
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        CmbHospital.SelectedValue = reader["HOSPITAL_TRASLADO"].ToString();
+                        TxtAfiliacion.Text = reader["NRO_AFILIACION"].ToString();
+                        TxtCarro.Text = reader["CARRO_CAMPUS"].ToString();
+                        TxtSeguro.Text = reader["SEGURO_MEDICO"].ToString();
+                        CmbSangre.SelectedValue = reader["TIPO_SANGRE"].ToString();
+                        EmplidAtencion.Value = reader["EMPLID"].ToString();
+                    }
+
+                }
+            }
+        }
+
+        private void llenadoDatosAlergias()
+        {
+            //string constr = TxtURL.Text;
+            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            EmplidAtencion.Value = null;
+
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    // Concatenar valores de ALERGIAS
+                    cmd.CommandText = "SELECT DISTINCT(ALERGIAS) " +
+                                      "FROM SYSADM.PS_UNIS_RG_ALERGIA " +
+                                      "WHERE EMPLID = :emplid";
+                    cmd.Parameters.Add(new OracleParameter("emplid", txtCarne.Text));
+                    cmd.Connection = con;
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    StringBuilder sb = new StringBuilder();
+                    HashSet<string> uniqueValues = new HashSet<string>();
+
+                    while (reader.Read())
+                    {
+                        string value = reader["ALERGIAS"].ToString().Trim();
+                        if (!string.IsNullOrWhiteSpace(value) && uniqueValues.Add(value))
+                        {
+                            if (sb.Length > 0)
+                            {
+                                sb.Append(",");
+                            }
+                            sb.Append(value);
+                        }
+                    }
+                    reader.Close();
+
+                    // Concatenar valores de OTRA_ALERGIA
+                    cmd.CommandText = "SELECT DISTINCT(OTRA_ALERGIA) " +
+                                      "FROM SYSADM.PS_UNIS_RG_ALERGIA " +
+                                      "WHERE EMPLID = :emplid";
+                    reader = cmd.ExecuteReader();
+                    StringBuilder sb2 = new StringBuilder();
+                    uniqueValues.Clear(); // Limpiar el conjunto para el segundo conjunto de valores
+
+                    while (reader.Read())
+                    {
+                        string value = reader["OTRA_ALERGIA"].ToString().Trim();
+                        if (!string.IsNullOrWhiteSpace(value) && uniqueValues.Add(value))
+                        {
+                            if (sb2.Length > 0)
+                            {
+                                sb2.Append(",");
+                            }
+                            sb2.Append(value);
+                        }
+                    }
+                    reader.Close();
+
+                    string resultado = sb2.ToString();
+                    TxtOtrasAlergias.Text = resultado;
+                    seleccionadosInicialAlergia.Value = sb.ToString();
+                    seleccionadosInicialOtrosAlergia.Value = resultado;
+
+                    // Asignar valores a CmbAlergias
+                    SelectValuesInListBox(sb.ToString(), CmbAlergias);
+                }
+            }
+        }
+
+        private void llenadoDatosEnfermedades()
+        {
+            //string constr = TxtURL.Text;
+            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            EmplidAtencion.Value = null;
+
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    // Concatenar valores de ALERGIAS
+                    cmd.CommandText = "SELECT DISTINCT(ANTECEDENTES_MED) " +
+                                      "FROM SYSADM.PS_UNIS_RG_ANT_MED " +
+                                      "WHERE EMPLID = :emplid";
+                    cmd.Parameters.Add(new OracleParameter("emplid", txtCarne.Text));
+                    cmd.Connection = con;
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    StringBuilder sb = new StringBuilder();
+                    HashSet<string> uniqueValues = new HashSet<string>();
+
+                    while (reader.Read())
+                    {
+                        string value = reader["ANTECEDENTES_MED"].ToString().Trim();
+                        if (!string.IsNullOrWhiteSpace(value) && uniqueValues.Add(value))
+                        {
+                            if (sb.Length > 0)
+                            {
+                                sb.Append(",");
+                            }
+                            sb.Append(value);
+                        }
+                    }
+                    reader.Close();
+
+                    // Concatenar valores de OTRA_ALERGIA
+                    cmd.CommandText = "SELECT DISTINCT(OTRO_ANTECEDENTE) " +
+                                      "FROM SYSADM.PS_UNIS_RG_ANT_MED " +
+                                      "WHERE EMPLID = :emplid";
+                    reader = cmd.ExecuteReader();
+                    StringBuilder sb2 = new StringBuilder();
+                    uniqueValues.Clear(); // Limpiar el conjunto para el segundo conjunto de valores
+
+                    while (reader.Read())
+                    {
+                        string value = reader["OTRO_ANTECEDENTE"].ToString().Trim();
+                        if (!string.IsNullOrWhiteSpace(value) && uniqueValues.Add(value))
+                        {
+                            if (sb2.Length > 0)
+                            {
+                                sb2.Append(",");
+                            }
+                            sb2.Append(value);
+                        }
+                    }
+                    reader.Close();
+
+                    string resultado = sb2.ToString();
+                    TxtOtrosAntecedentesM.Text = resultado;
+                    seleccionadosInicialAntecedentes.Value = sb.ToString();
+                    seleccionadosInicialOtrosAntecedentes.Value = resultado;
+
+                    // Asignar valores a CmbAlergias
+                    SelectValuesInListBox(sb.ToString(), CmbAntecedentes);
+                }
+            }
+        }
+
+        private void SelectValuesInListBox(string values, ListBox listBox)
+        {
+            if (!string.IsNullOrWhiteSpace(values))
+            {
+                string[] items = values.Split(',');
+
+                foreach (string item in items)
+                {
+                    string trimmedItem = item.Trim();
+                    if (!string.IsNullOrWhiteSpace(trimmedItem))
+                    {
+                        ListItem listItem = listBox.Items.FindByText(trimmedItem);
+                        if (listItem != null)
+                        {
+                            listItem.Selected = true;
+                        }
+                    }
+                }
+            }
+        }
+        protected void DatosMedicosCampus()
+        {
+            string InsertEmergencia = "INSERT INTO SYSADM.PS_UNIS_ATEN_EMERG (EMPLID, HOSPITAL_TRASLADO, ANTECEDENTES_MED, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE) " +
+            "VALUES ('" + txtEmplid.Value + "', '" + CmbHospital.SelectedItem + "', '" + CmbAntecedentes.SelectedValue + "', '" + TxtAfiliacion.Text + "', '" + TxtSeguro.Text + "', '" + CmbSangre.SelectedItem + "')";
+
+            string UpdateEmergencia = "UPDATE SYSADM.PS_UNIS_ATEN_EMERG SET " +
+                "HOSPITAL_TRASLADO = '" + CmbHospital.SelectedItem + "', " +
+                "ANTECEDENTES_MED = '" + CmbAntecedentes.SelectedValue + "', " +
+                "NRO_AFILIACION = '" + TxtAfiliacion.Text + "', " +
+                "SEGURO_MEDICO = '" + TxtSeguro.Text + "', " +
+                "TIPO_SANGRE = '" + CmbSangre.SelectedItem + "' " +
+                "WHERE EMPLID ='" + txtEmplid.Value + "'";
+
+            //string constr = TxtURL.Text;
+            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+
+            string control = "0";
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    try
+                    {
+                        if (String.IsNullOrEmpty(EmplidAtencion.Value))
+                        {
+                            cmd.CommandText = InsertEmergencia;
+                            cmd.ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            cmd.CommandText = UpdateEmergencia;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    catch (Exception x)
+                    {
+                        control = x.ToString();
+                        control = "1";
+                    }
 
 
+                    if (control == "0")
+                    {
+                        transaction.Commit();
+                    }
+                    else
+                    {
+                        transaction.Rollback();
+                    }
+                    con.Close();
+                }
+            }
+        }
         protected void GridViewDocumentos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -5689,6 +6100,327 @@ namespace ReportesUnis
             return (UP_PROP_NID, UD_PROP_NID);
         }
 
+        protected string DatosAlergias()
+        {
+            List<string> selectedValues = new List<string>();
+            string seleccionados = null;
+
+            // Recorrer los items del DropDownList y agregar los seleccionados a la lista
+            foreach (ListItem item in CmbAlergias.Items)
+            {
+                if (item.Selected)
+                {
+                    selectedValues.Add(item.Value);
+                }
+            }
+            seleccionados = string.Join(",", selectedValues);
+            return seleccionados;
+        }
+
+        protected string DatosEnfermedades()
+        {
+            List<string> selectedValues = new List<string>();
+            string seleccionados = null;
+
+            // Recorrer los items del DropDownList y agregar los seleccionados a la lista
+            foreach (ListItem item in CmbAntecedentes.Items)
+            {
+                if (item.Selected)
+                {
+                    selectedValues.Add(item.Value);
+                }
+            }
+            seleccionados = string.Join(",", selectedValues);
+            return seleccionados;
+        }
+
+        protected string AlmacenarAlergiasCampus(string datos)
+        {
+
+            string[] valores = datos.Split(',');
+            string[] valoresAnteriores = seleccionadosInicialAlergia.Value.Split(',');
+            string[] valoresOtros = TxtOtrasAlergias.Text.Split(',');
+            string[] valoresOtrosAnteriores = seleccionadosInicialOtrosAlergia.Value.Split(',');
+            string constr = TxtURL.Text;
+            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            int control = 0;
+
+            // Encontrar diferencias entre valores y valoresAnteriores
+            var nuevasAlergias = valores.Except(valoresAnteriores).ToArray();
+            var alergiasEliminadas = valoresAnteriores.Except(valores).ToArray();
+
+            // Encontrar diferencias entre valoresOtros y valoresOtrosAnteriores
+            var nuevasOtrasAlergias = valoresOtros.Except(valoresOtrosAnteriores).ToArray();
+            var otrasAlergiasEliminadas = valoresOtrosAnteriores.Except(valoresOtros).ToArray();
+
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                foreach (string valor in nuevasAlergias)
+                {
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        cmd.Connection = con;
+
+                        if (valor != "Otra")
+                        {
+                            try
+                            {
+                                if (!seleccionadosInicialAlergia.Value.Contains(valor))
+                                {
+                                    cmd.CommandText = "INSERT INTO SYSADM.PS_UNIS_RG_ALERGIA (EMPLID,ALERGIAS, OTRA_ALERGIA) VALUES ('" + txtCarne.Text + "', '" + valor + "', ' ')";
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                control++;
+                            }
+                        }
+                        else
+                        {
+                            foreach (string Otrovalor in nuevasOtrasAlergias)
+                            {
+                                try
+                                {
+                                    if (!seleccionadosInicialOtrosAlergia.Value.Contains(Otrovalor))
+                                    {
+                                        cmd.CommandText = "INSERT INTO SYSADM.PS_UNIS_RG_ALERGIA (EMPLID,ALERGIAS,OTRA_ALERGIA) VALUES ('" + txtCarne.Text + "', '" + valor + "','" + Otrovalor + "')";
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    control++;
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+                foreach (string valor in alergiasEliminadas)
+                {
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        cmd.Connection = con;
+
+                        try
+                        {
+                            cmd.CommandText = "DELETE SYSADM.PS_UNIS_RG_ALERGIA WHERE EMPLID = '" + txtCarne.Text + "' AND ALERGIAS = '" + valor + "'";
+                            cmd.ExecuteNonQuery();
+                        }
+                        catch (Exception)
+                        {
+                            control++;
+                        }
+                    }
+                }
+
+                foreach (string Otrovalor in otrasAlergiasEliminadas)
+                {
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        cmd.Connection = con;
+
+                        if (!alergiasEliminadas.Contains("Otra"))
+                        {
+                            try
+                            {
+                                cmd.CommandText = "DELETE SYSADM.PS_UNIS_RG_ALERGIA WHERE EMPLID = '" + txtCarne.Text + "' AND  OTRA_ALERGIA = '" + Otrovalor + "'";
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (Exception)
+                            {
+                                control++;
+                            }
+                        }
+                    }
+                }
+
+                if (control == 0)
+                {
+                    transaction.Commit();
+                }
+                else
+                {
+                    transaction.Rollback();
+                }
+                con.Close();
+
+            }
+            return control.ToString();
+        }
+        protected string AlmacenarAntecedentesCampus(string datos)
+        {
+            string[] valores = datos.Split(',');
+            string[] valoresAnteriores = seleccionadosInicialAntecedentes.Value.Split(',');
+            string[] valoresOtros = TxtOtrosAntecedentesM.Text.Split(',');
+            string[] valoresOtrosAnteriores = seleccionadosInicialOtrosAntecedentes.Value.Split(',');
+            string constr = TxtURL.Text;
+            int control = 0;
+
+            // Encontrar diferencias entre valores y valoresAnteriores
+            var nuevasEnfermedades = valores.Except(valoresAnteriores).ToArray();
+            var enfermedadesEliminadas = valoresAnteriores.Except(valores).ToArray();
+
+            // Encontrar diferencias entre valoresOtros y valoresOtrosAnteriores
+            var nuevasOtrasEnfermedades = valoresOtros.Except(valoresOtrosAnteriores).ToArray();
+            var otrasEnfermedadesEliminadas = valoresOtrosAnteriores.Except(valoresOtros).ToArray();
+
+
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                foreach (string valor in nuevasEnfermedades)
+                {
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        cmd.Connection = con;
+                        if (valor != "Otra")
+                        {
+                            try
+                            {
+                                if (!seleccionadosInicialAntecedentes.ToString().Contains(valor))
+                                {
+                                    cmd.CommandText = "INSERT INTO SYSADM.PS_UNIS_RG_ANT_MED (EMPLID,ANTECEDENTES_MED, OTRO_ANTECEDENTE) VALUES ('" + txtCarne.Text + "', '" + valor + "', ' ')";
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                control++;
+                            }
+                        }
+                        else
+                        {
+                            foreach (string Otrovalor in nuevasOtrasEnfermedades)
+                            {
+                                try
+                                {
+                                    if (!seleccionadosInicialAntecedentes.ToString().Contains(valor))
+                                    {
+                                        cmd.CommandText = "INSERT INTO SYSADM.PS_UNIS_RG_ANT_MED (EMPLID,ANTECEDENTES_MED, OTRO_ANTECEDENTE) VALUES ('" + txtCarne.Text + "', '" + valor + "','" + Otrovalor + "')";
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    control++;
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+                foreach (string valor in enfermedadesEliminadas)
+                {
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        cmd.Connection = con;
+
+                        try
+                        {
+                            cmd.CommandText = "DELETE SYSADM.PS_UNIS_RG_ANT_MED WHERE EMPLID = '" + txtCarne.Text + "' AND ANTECEDENTES_MED = '" + valor + "'";
+                            cmd.ExecuteNonQuery();
+                        }
+                        catch (Exception)
+                        {
+                            control++;
+                        }
+                    }
+                }
+
+                foreach (string Otrovalor in otrasEnfermedadesEliminadas)
+                {
+                    using (OracleCommand cmd = new OracleCommand())
+                    {
+                        cmd.Transaction = transaction;
+                        cmd.Connection = con;
+
+                        if (!enfermedadesEliminadas.Contains("Otra"))
+                        {
+                            try
+                            {
+                                cmd.CommandText = "DELETE SYSADM.PS_UNIS_RG_ANT_MED WHERE EMPLID = '" + txtCarne.Text + "' AND  OTRO_ANTECEDENTE = '" + Otrovalor + "'";
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (Exception)
+                            {
+                                control++;
+                            }
+                        }
+                    }
+                }
+
+                if (control == 0)
+                {
+                    transaction.Commit();
+                }
+                else
+                {
+                    transaction.Rollback();
+                }
+                con.Close();
+
+            }
+            return control.ToString();
+        }
+
+        protected void AlmacenerEmergencias()
+        {
+            //string constr = TxtURL.Text;
+            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            EmplidAtencion.Value = null;
+            string registro = null;
+
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    // Concatenar valores de ALERGIAS
+                    cmd.CommandText = "SELECT COUNT(EMPLID) AS REGISTROS " +
+                                      "FROM SYSADM.PS_UNIS_ATEN_EMERG " +
+                                      "WHERE EMPLID = :emplid";
+                    cmd.Parameters.Add(new OracleParameter("emplid", txtCarne.Text));
+                    cmd.Connection = con;
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        registro = reader["REGISTROS"].ToString().Trim();
+                    }
+
+                    if (registro == "0")
+                    {
+                        cmd.CommandText = "INSERT INTO SYSADM.PS_UNIS_ATEN_EMERG (EMPLID, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE, CARRO_CAMPUS) " +
+                            "VALUES ('" + txtCarne.Text + "', '" + TxtAfiliacion.Text + "', ' " + TxtSeguro.Text + "','" + CmbSangre.SelectedItem + "', '" + TxtCarro.Text + "')";
+                        cmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        cmd.CommandText = "UPDATE SYSADM.PS_UNIS_ATEN_EMERG SET " +
+                                            "EMPLID= '" + txtCarne.Text + "', " +
+                                            "NRO_AFILIACION= '" + TxtAfiliacion.Text + "', " +
+                                            "SEGURO_MEDICO= '" + TxtSeguro.Text + "', " +
+                                            "TIPO_SANGRE= '" + CmbSangre.SelectedItem + "', " +
+                                            "CARRO_CAMPUS ='" + TxtCarro.Text+ "'";
+                        cmd.ExecuteNonQuery();
+                    }
+
+                }
+            }
+        }
 
         /*-------------------PARA CONSUMO DE SERVICIOS CRM-------------------*/
         private static void credencialesWS_CRM(string RutaConfiguracion, string strMetodo)
@@ -5779,87 +6511,6 @@ namespace ReportesUnis
             }
 
             return (depto, mun, pais);
-        }
-
-        protected void ContactoEmergenciaCampus(string nombre1, string parentesco1, string telefono1, string principal1, string nombre2, string parentesco2, string telefono2, string principal2)
-        {
-            string InsertContacto1 = "INSERT INTO SYSADM.PS_EMERGENCY_CNTCT (EMPLID, CONTACT_NAME, PHONE, PRIMARY_CONTACT, RELATIONSHIP, SAME_ADDRESS_EMPL,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,NUM1,NUM2,HOUSE_TYPE,ADDR_FIELD1,ADDR_FIELD2,ADDR_FIELD3,COUNTY,STATE,POSTAL,GEO_CODE,IN_CITY_LIMIT,COUNTRY_CODE,SAME_PHONE_EMPL,ADDRESS_TYPE,PHONE_TYPE,EXTENSION) " +
-            "VALUES ('" + txtEmplid.Value + "', '" + nombre1 + "', '" + telefono1 + "', '" + principal1 + "', '" + parentesco1 + "', 'N',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','N',' ',' ',' ')";
-
-            string UpdateContacto1 = "UPDATE SET SYSADM.PS_EMERGENCY_CNTCT " +
-                "CONTACT_NAME = '" + nombre1 + "', " +
-                "PRIMARY_CONTACT = '" + principal1 + "', " +
-                "PHONE = '" + telefono1 + "', " +
-                "RELATIONSHIP = '" + parentesco1 + "' " +
-                "WHERE EMPLID ='" + txtEmplid.Value + "'";
-
-            string InsertContacto2 = "INSERT INTO SYSADM.PS_EMERGENCY_CNTCT (EMPLID, CONTACT_NAME, PHONE, PRIMARY_CONTACT, RELATIONSHIP,SAME_ADDRESS_EMPL,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,NUM1,NUM2,HOUSE_TYPE,ADDR_FIELD1,ADDR_FIELD2,ADDR_FIELD3,COUNTY,STATE,POSTAL,GEO_CODE,IN_CITY_LIMIT,COUNTRY_CODE,SAME_PHONE_EMPL,ADDRESS_TYPE,PHONE_TYPE,EXTENSION) " +
-            "VALUES ('" + txtEmplid.Value + "', '" + nombre2 + "', '" + telefono2 + "', '" + principal2 + "', '" + parentesco2 + "', 'N', ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','N',' ',' ',' ')";
-
-            string UpdateContacto2 = "UPDATE SET SYSADM.PS_EMERGENCY_CNTCT " +
-                "CONTACT_NAME = '" + nombre2 + "', " +
-                "PRIMARY_CONTACT = '" + principal2 + "', " +
-                "PHONE = '" + telefono2 + "', " +
-                "RELATIONSHIP = '" + parentesco2 + "' " +
-                "WHERE EMPLID ='" + txtEmplid.Value + "'";
-
-            string constr = TxtURL.Text;
-            string control = "0";
-            using (OracleConnection con = new OracleConnection(constr))
-            {
-                con.Open();
-                OracleTransaction transaction;
-                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
-                using (OracleCommand cmd = new OracleCommand())
-                {
-                    cmd.Connection = con;
-                    try
-                    {
-                        if (!String.IsNullOrEmpty(txtNombreE1_Inicial.Value) || txtNombreE1_Inicial.Value == "")
-                        {
-                            cmd.CommandText = InsertContacto1;
-                            cmd.ExecuteNonQuery();
-                        }
-                        else
-                        {
-                            cmd.CommandText = UpdateContacto1;
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-                    catch (Exception x)
-                    {
-                        control = x.ToString();
-                    }
-
-                    try
-                    {
-                        if (!String.IsNullOrEmpty(txtNombreE2_Inicial.Value) || txtNombreE2_Inicial.Value == "")
-                        {
-                            cmd.CommandText = InsertContacto2;
-                            cmd.ExecuteNonQuery();
-                        }
-                        else
-                        {
-                            cmd.CommandText = UpdateContacto2;
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-                    catch (Exception x)
-                    {
-                        control = x.ToString();
-                    }
-
-                    if (control == "0")
-                    {
-                        transaction.Commit();
-                    }
-                    else
-                    {
-                        transaction.Rollback();
-                    }
-                    con.Close();
-                }
-            }
         }
     }
 
