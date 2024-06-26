@@ -163,6 +163,14 @@
                 <input type="hidden" id="UP_PERS_DATA_EFFDT" runat="server" />
                 <%-- TEXTBOX ALMACENA UP NOMBRE NIT--%>
                 <input type="hidden" id="UP_NAMES_NIT" runat="server" />
+                <%-- TEXTBOX ALMACENA UP NOMBRE PRF--%>
+                <input type="hidden" id="UP_NAMES_PRF" runat="server" />
+                <%-- TEXTBOX ALMACENA UP NOMBRE PRI--%>
+                <input type="hidden" id="UP_NAMES_PRI" runat="server" />
+                <%-- TEXTBOX ALMACENA UD NOMBRE PRF--%>
+                <input type="hidden" id="UD_NAMES_PRF" runat="server" />
+                <%-- TEXTBOX ALMACENA UD NOMBRE PRI--%>
+                <input type="hidden" id="UD_NAMES_PRI" runat="server" />
                 <%-- TEXTBOX ALMACENA UP DIRECCION NIT--%>
                 <input type="hidden" id="UP_ADDRESSES_NIT" runat="server" />
                 <%-- TEXTBOX ALMACENA UP DIRECCION--%>
@@ -254,6 +262,20 @@
                 <input type="hidden" id="txtContatoEP_Inicial" runat="server" />
                 <input type="hidden" id="txtContatoEP2_Inicial" runat="server" />
 
+                <%-- DATOS NUEVOS CONTACTOS DE EMERGENCIA--%>
+                <input type="hidden" id="CE_parentesco1" runat="server" />
+                <input type="hidden" id="CE_nombre1" runat="server" />
+                <input type="hidden" id="CE_telefono1" runat="server" />
+                <input type="hidden" id="CE_pais1" runat="server" />
+                <input type="hidden" id="CE_nroDocumento1" runat="server" />
+                <input type="hidden" id="CE_Principal1" runat="server" />
+                <input type="hidden" id="CE_parentesco2" runat="server" />
+                <input type="hidden" id="CE_nombre2" runat="server" />
+                <input type="hidden" id="CE_telefono2" runat="server" />
+                <input type="hidden" id="CE_pais2" runat="server" />
+                <input type="hidden" id="CE_nroDocumento2" runat="server" />
+                <input type="hidden" id="CE_Principal2" runat="server" />
+
                 <%-- DATOS INCIALES EMERGENCIAS--%>
                 <input type="hidden" id="EmplidAtencion" runat="server" />
                 <input type="hidden" id="seleccionadosAlergia" runat="server" />
@@ -262,6 +284,16 @@
                 <input type="hidden" id="seleccionadosInicialOtrosAlergia" runat="server" />
                 <input type="hidden" id="seleccionadosInicialAntecedentes" runat="server" />
                 <input type="hidden" id="seleccionadosInicialOtrosAntecedentes" runat="server" />
+
+                <%-- DATOS DOCUMENTOS IDENTIFICACION--%>
+                <input type="hidden" id="DOCUMENTO1_PRINCIPAL" runat="server" />
+                <input type="hidden" id="DOCUMENTO2_PRINCIPAL" runat="server" />
+                <input type="hidden" id="PAIS_DOCUMENTO1" runat="server" />
+                <input type="hidden" id="PAIS_DOCUMENTO2" runat="server" />
+                <input type="hidden" id="TIPO_DOCUMENTO1" runat="server" />
+                <input type="hidden" id="TIPO_DOCUMENTO2" runat="server" />
+                <input type="hidden" id="DOCUMENTO1" runat="server" />
+                <input type="hidden" id="DOCUMENTO2" runat="server" />
 
                 <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
                 <div class="container" id="tabla" runat="server">

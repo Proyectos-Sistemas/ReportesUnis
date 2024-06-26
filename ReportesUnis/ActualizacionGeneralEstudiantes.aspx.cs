@@ -2939,7 +2939,6 @@ namespace ReportesUnis
 
             }
 
-
             if (GridViewContactos.Rows.Count >= 2)
             {
                 // Obtener la primera fila
@@ -2977,9 +2976,9 @@ namespace ReportesUnis
                 }
                 nombre2 = txtNombre2.Text;
                 telefono2 = txtTelefono2.Text;
-
-                // Aquí puedes hacer lo que necesites con las variables obtenidas
             }
+
+
 
             if (!String.IsNullOrEmpty(txtNit.Text) || txtNit.Text == "")
                 txtNit.Text = "CF";
@@ -3017,6 +3016,19 @@ namespace ReportesUnis
                 PrincipalD2 = "Y";
             }
 
+            CE_nombre1.Value = nombre1;
+            CE_nombre2.Value = nombre2;
+            CE_nroDocumento1.Value = nroDocumento1;
+            CE_nroDocumento2.Value = nroDocumento2;
+            CE_pais1.Value = pais1;
+            CE_pais2.Value = pais2;
+            CE_parentesco1.Value = parentesco1.Replace("\"", "");
+            CE_parentesco2.Value = parentesco2.Replace("\"", "");
+            CE_telefono1.Value = telefono1;
+            CE_telefono2.Value = telefono2;
+            CE_Principal1.Value = PrincipalC1;
+            CE_Principal2.Value = PrincipalC2;
+
             if (CmbEstado.SelectedValue.Substring(0, 1).ToString().Equals("C"))
             {
                 EstadoCivilCRM = "M";
@@ -3025,20 +3037,21 @@ namespace ReportesUnis
             {
                 EstadoCivilCRM = "T";
             }
-            /* esto comentado ya funciona correctamente
-            //var respuestaDocumentos = RecorrerDocumentos();
-            //UP_IDENTIFICACION.Value = respuestaDocumentos.UP_Doc;
-            //UD_IDENTIFICACION.Value = respuestaDocumentos.UD_Doc;
-            //IngresoDatosGenerales();*/
-
-            //seleccionadosAlergia.Value = DatosAlergias();
-            //seleccionadosAntecedentes.Value = DatosEnfermedades();
-            //AlmacenarAlergiasCampus(seleccionadosAlergia.Value);
-            //AlmacenarAntecedentesCampus(seleccionadosAntecedentes.Value);
+            // esto comentado ya funciona correctamente
+            var respuestaDocumentos = RecorrerDocumentos();
+            UP_IDENTIFICACION.Value = respuestaDocumentos.UP_Doc;
+            UD_IDENTIFICACION.Value = respuestaDocumentos.UD_Doc;
+            IngresoDatosGenerales();
+            seleccionadosAlergia.Value = DatosAlergias();
+            seleccionadosAntecedentes.Value = DatosEnfermedades();
+            AlmacenarAlergiasCampus(seleccionadosAlergia.Value);
+            AlmacenarAntecedentesCampus(seleccionadosAntecedentes.Value);
             AlmacenerEmergencias();
+            AlmacenamientoApex();
+
+
             //ACTUALIZACION EN CRM
-            //SI FUNCIONA LO DE CRM ---
-            /* limpiarVariables();
+             limpiarVariables();
              getInfo = consultaGet(txtDPI.Text);
              PartyNumber = getBetween(getInfo, "PartyNumber\" : \"", "\",");
              string FechaCumple = Convert.ToDateTime(txtCumple.Text).ToString("yyyy-MM-dd");
@@ -3081,13 +3094,13 @@ namespace ReportesUnis
                  "}";
              //Actualiza por medio del metodo PATCH
              if (!String.IsNullOrEmpty(PartyNumber))
-                 updatePatch(body, PartyNumber);*/
+                 updatePatch(body, PartyNumber);
             //----
-            ////ACTUALIZACION CONTACTOS DE EMERGENCIA EN CAMPUS
-            //ContactoEmergenciaCampus(nombre1, parentesco1, telefono1, PrincipalC1, nombre2, parentesco2, telefono2, PrincipalC2);
-            //DatosMedicosCampus();
-            //string control = null;
-            /*using (OracleConnection con = new OracleConnection(constr))
+            //ACTUALIZACION CONTACTOS DE EMERGENCIA EN CAMPUS
+            ContactoEmergenciaCampus(nombre1, parentesco1, telefono1, PrincipalC1, nombre2, parentesco2, telefono2, PrincipalC2);
+            DatosMedicosCampus();
+            string control = null;
+            using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
                 OracleTransaction transaction;
@@ -3203,7 +3216,6 @@ namespace ReportesUnis
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
             }
-        */
         }
         protected void CmbPais_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -3847,7 +3859,7 @@ namespace ReportesUnis
         private void log(string ErrorLog)
         {
             string constr = TxtURL.Text;
-            using (OracleConnection con = new OracleConnection(constr))
+            /*using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
                 OracleTransaction transaction;
@@ -3862,7 +3874,7 @@ namespace ReportesUnis
                         cmd.CommandText = txtInsertBit.Text;
                         cmd.ExecuteNonQuery();
                         txtControlBit.Text = "1";
-                    }*/
+                    }
                     if (txtControlAR.Text == "0" && !txtUpdateAR.Text.IsNullOrWhiteSpace())
                     {
                         cmd.CommandText = txtUpdateAR.Text;
@@ -3879,7 +3891,7 @@ namespace ReportesUnis
                     transaction.Commit();
 
                 }
-            }
+            }*/
         }
 
         public void validarAccion()
@@ -4106,12 +4118,12 @@ namespace ReportesUnis
             if (auxConsulta == 0)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UP.V1";
-                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UP_NAMES_NIT.Value, UP_PERS_DATA_EFFDT.Value, UP_ADDRESSES_NIT.Value, UP_ADDRESSES.Value, UP_PERSONAL_PHONE.Value, UP_EMAIL_ADDRESSES.Value, UP_BIRTHCOUNTRY.Value, UP_BIRTHPLACE.Value, UP_BIRTHDATE.Value, UP_BIRTHSTATE.Value, UP_IDENTIFICACION.Value, VersionUP.Value);
+                CuerpoConsultaUP(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UP_NAMES_PRI.Value, UP_NAMES_PRF.Value, UP_NAMES_NIT.Value, UP_PERS_DATA_EFFDT.Value, UP_ADDRESSES_NIT.Value, UP_ADDRESSES.Value, UP_PERSONAL_PHONE.Value, UP_EMAIL_ADDRESSES.Value, UP_BIRTHCOUNTRY.Value, UP_BIRTHPLACE.Value, UP_BIRTHDATE.Value, UP_BIRTHSTATE.Value, UP_IDENTIFICACION.Value, VersionUP.Value);
             }
             else if (auxConsulta == 1)
             {
                 Variables.wsAction = "CI_CI_PERSONAL_DATA_UD.V1";
-                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UD_NAMES_NIT.Value, UD_PERS_DATA_EFFDT.Value, UD_ADDRESSES_NIT.Value, UD_ADDRESSES.Value, UD_PERSONAL_PHONE.Value, UD_EMAIL_ADDRESSES.Value, UD_BIRTHCOUNTRY.Value, UD_BIRTHPLACE.Value, UD_BIRTHDATE.Value, UD_BIRTHSTATE.Value, UD_IDENTIFICACION.Value, VersionUD.Value);
+                CuerpoConsultaUD(Variables.wsUsuario, Variables.wsPassword, txtCarne.Text, UD_NAMES_PRI.Value, UD_NAMES_PRF.Value, UD_NAMES_NIT.Value, UD_PERS_DATA_EFFDT.Value, UD_ADDRESSES_NIT.Value, UD_ADDRESSES.Value, UD_PERSONAL_PHONE.Value, UD_EMAIL_ADDRESSES.Value, UD_BIRTHCOUNTRY.Value, UD_BIRTHPLACE.Value, UD_BIRTHDATE.Value, UD_BIRTHSTATE.Value, UD_IDENTIFICACION.Value, VersionUD.Value);
             }
 
             //Crea un documento de respuesta Campus
@@ -4137,7 +4149,7 @@ namespace ReportesUnis
             return elemList[0].InnerText.ToString();
         }
 
-        private static void CuerpoConsultaUD(string Usuario, string Pass, string EMPLID, string COLL_NAMES, string COLL_PERS_DATA_EFFDT, string COLL_ADDRESSES_NIT, string COLL_ADDRESSES, string COLL_PERSONAL_PHONE,
+        private static void CuerpoConsultaUD(string Usuario, string Pass, string EMPLID, string COLL_NAMES_PRI, string COLL_NAMES_PRF, string COLL_NAMES_NIT, string COLL_PERS_DATA_EFFDT, string COLL_ADDRESSES_NIT, string COLL_ADDRESSES, string COLL_PERSONAL_PHONE,
             string COLL_EMAIL_ADDRESSES, string PROP_BIRTHCOUNTRY, string PROP_BIRTHPLACE, string PROP_BIRTHDATE, string PROP_BIRTHSTATE, string PROP_NID, string VersionUD)
         {
             //Crea el cuerpo que se utiliza para hacer PATCH en CAMPUS
@@ -4160,7 +4172,9 @@ namespace ReportesUnis
                                          " + PROP_BIRTHSTATE + @"
                                          " + PROP_NID + @"
                                          " + COLL_PERS_DATA_EFFDT + @"
-                                         " + COLL_NAMES + @"
+                                         " + COLL_NAMES_PRF + @"
+                                         " + COLL_NAMES_PRI + @"
+                                         " + COLL_NAMES_NIT + @"
                                          " + COLL_ADDRESSES + @"
                                          " + COLL_PERSONAL_PHONE + @"
                                          " + COLL_ADDRESSES_NIT + @"
@@ -4169,7 +4183,7 @@ namespace ReportesUnis
                                    </soapenv:Body>
                                 </soapenv:Envelope>";
         }
-        private static void CuerpoConsultaUP(string Usuario, string Pass, string EMPLID, string COLL_NAMES, string COLL_PERS_DATA_EFFDT, string COLL_ADDRESSES_NIT, string COLL_ADDRESSES, string COLL_PERSONAL_PHONE,
+        private static void CuerpoConsultaUP(string Usuario, string Pass, string EMPLID, string COLL_NAMES_PRF, string COLL_NAMES_PRI, string COLL_NAMES_NIT, string COLL_PERS_DATA_EFFDT, string COLL_ADDRESSES_NIT, string COLL_ADDRESSES, string COLL_PERSONAL_PHONE,
             string COLL_EMAIL_ADDRESSES, string PROP_BIRTHCOUNTRY, string PROP_BIRTHPLACE, string PROP_BIRTHDATE, string PROP_BIRTHSTATE, string PROP_NID, string VersionUP)
         {
             //Crea el cuerpo que se utiliza para hacer POST en CAMPUS
@@ -4192,7 +4206,9 @@ namespace ReportesUnis
                                          " + PROP_BIRTHSTATE + @"
                                          " + PROP_NID + @"
                                          " + COLL_PERS_DATA_EFFDT + @"
-                                         " + COLL_NAMES + @"
+                                         " + COLL_NAMES_PRF + @"
+                                         " + COLL_NAMES_PRI + @"
+                                         " + COLL_NAMES_NIT + @"
                                          " + COLL_ADDRESSES + @"
                                          " + COLL_PERSONAL_PHONE + @"
                                          " + COLL_ADDRESSES_NIT + @"
@@ -4624,8 +4640,8 @@ namespace ReportesUnis
         }
         protected void LlenarParentezco(DropDownList ddl)
         {
-            //string constr = TxtURL.Text;
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
+            // constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -4648,8 +4664,8 @@ namespace ReportesUnis
         }
         protected void LlenarHospital()
         {
-            //string constr = TxtURL.Text;
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
+            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -4670,8 +4686,8 @@ namespace ReportesUnis
         }
         protected void LlenarAntecedentes()
         {
-            //string constr = TxtURL.Text;
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
+            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -4692,8 +4708,8 @@ namespace ReportesUnis
         }
         protected void LlenarAlergias()
         {
-            //string constr = TxtURL.Text;
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
+            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -4840,8 +4856,8 @@ namespace ReportesUnis
 
         private void llenadoDatosMedicos()
         {
-            //string constr = TxtURL.Text;
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
+            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             EmplidAtencion.Value = null;
 
             using (OracleConnection con = new OracleConnection(constr))
@@ -4870,8 +4886,8 @@ namespace ReportesUnis
 
         private void llenadoDatosAlergias()
         {
-            //string constr = TxtURL.Text;
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
+            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             EmplidAtencion.Value = null;
 
             using (OracleConnection con = new OracleConnection(constr))
@@ -4938,8 +4954,8 @@ namespace ReportesUnis
 
         private void llenadoDatosEnfermedades()
         {
-            //string constr = TxtURL.Text;
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
+            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             EmplidAtencion.Value = null;
 
             using (OracleConnection con = new OracleConnection(constr))
@@ -5037,8 +5053,8 @@ namespace ReportesUnis
                 "TIPO_SANGRE = '" + CmbSangre.SelectedItem + "' " +
                 "WHERE EMPLID ='" + txtEmplid.Value + "'";
 
-            //string constr = TxtURL.Text;
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
+            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
 
             string control = "0";
             using (OracleConnection con = new OracleConnection(constr))
@@ -5965,6 +5981,310 @@ namespace ReportesUnis
                                 contadorUD = contadorUD + 1;
                             }
 
+                            //NOMBRES
+                            int ContadorNombre = 0;
+                            int ContadorDirecion = 0;
+                            int ContadorEffdtNombre = 0;
+                            string EffdtNombreUltimo = "";
+                            string vchrApellidosCompletos = (txtApellido + " " + txtCasada.Text).TrimEnd();
+
+                            string EFFDT_Name = "";
+
+                            if (txtCasada.Text.IsNullOrWhiteSpace())
+                            {
+                                txtCasada.Text = " ";
+                            }
+
+                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_NAMES WHERE NAME_TYPE != 'REC' AND EMPLID = '" + emplid + "' " +
+                                        " ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                            OracleDataReader reader1 = cmd.ExecuteReader();
+                            reader1 = cmd.ExecuteReader();
+                            while (reader1.Read())
+                            {
+                                EffdtNombreUltimo = (Convert.ToDateTime(reader1["EFFDT"]).ToString("yyyy-MM-dd")).ToString();
+                            }
+
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES WHERE" +
+                                " NAME = '" + vchrApellidosCompletos + "," + txtNombre.Text + "' " +
+                                "AND EFFDT ='" + Convert.ToDateTime(EffdtNombreUltimo).ToString("dd/MM/yyyy") + "' " +
+                                "AND NAME_TYPE != 'REC' AND EMPLID = '" + emplid + "'";
+                            reader1 = cmd.ExecuteReader();
+                            while (reader1.Read())
+                            {
+                                ContadorNombre = Convert.ToInt16(reader1["CONTADOR"]);
+                            }
+
+                            cmd.CommandText = "SELECT EFFDT FROM SYSADM.PS_NAMES WHERE NAME_TYPE !='REC' AND EMPLID = '" + emplid + "' ORDER BY 1 DESC FETCH FIRST 1 ROWS ONLY";
+                            reader1 = cmd.ExecuteReader();
+                            while (reader1.Read())
+                            {
+                                EFFDT_Name = reader1["EFFDT"].ToString().Substring(0, 10).TrimEnd();
+
+                                if (EFFDT_Name.Length == 9)
+                                {
+                                    EFFDT_Name = reader1["EFFDT"].ToString().Substring(5, 4).TrimEnd() + "-" + reader1["EFFDT"].ToString().Substring(2, 2).TrimEnd() + "-0" + reader1["EFFDT"].ToString().Substring(0, 1).TrimEnd();
+                                }
+                                else
+                                {
+                                    EFFDT_Name = reader1["EFFDT"].ToString().Substring(6, 4).TrimEnd() + "-" + reader1["EFFDT"].ToString().Substring(3, 2).TrimEnd() + "-" + reader1["EFFDT"].ToString().Substring(0, 2).TrimEnd();
+                                }
+                            }
+
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_ADDRESSES WHERE EFFDT LIKE (TO_CHAR(SYSDATE,'dd/MM/yy')) AND ADDRESS_TYPE = 'HOME' AND EMPLID = '" + emplid + "'";
+                            reader1 = cmd.ExecuteReader();
+                            while (reader1.Read())
+                            {
+                                ContadorDirecion = Convert.ToInt16(reader1["CONTADOR"]);
+                            }
+
+                            cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM SYSADM.PS_NAMES PN WHERE NAME_TYPE = 'PRI' AND PN.EMPLID = '" + emplid + "'" +
+                                                    "AND EFFDT ='" + HoyEffdt + "'";
+                            reader1 = cmd.ExecuteReader();
+                            while (reader1.Read())
+                            {
+                                ContadorEffdtNombre = Convert.ToInt16(reader1["CONTADOR"]);
+                            }
+                            if (EffdtNombreUltimo != Hoy && ContadorNombre == 0 && ContadorEffdtNombre == 0)
+                            {
+                                // INSERT
+                                if (!txtApellido.Text.IsNullOrWhiteSpace())
+                                {
+                                    if (!txtCasada.Text.IsNullOrWhiteSpace())
+                                    {
+                                        UP_NAMES_PRF.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + txtCasada.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+
+                                        UP_NAMES_PRI.Value = "<COLL_NAME_TYPE_VW> " +
+                                                            "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "        <COLL_NAMES>" +
+                                                            "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                            "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                            "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                            "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                            "          <PROP_SECOND_LAST_NAME>" + txtCasada.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                            "        </COLL_NAMES>" +
+                                                            "      </COLL_NAME_TYPE_VW>";
+                                    }
+                                    else
+                                    {
+                                        UP_NAMES_PRF.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+
+                                        UP_NAMES_PRI.Value = "<COLL_NAME_TYPE_VW> " +
+                                                            "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "        <COLL_NAMES>" +
+                                                            "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                            "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                            "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                            "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                            "        </COLL_NAMES>" +
+                                                            "      </COLL_NAME_TYPE_VW>";
+                                    }
+                                }
+                                else
+                                {
+                                    UP_NAMES_PRF.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+
+                                    UP_NAMES_PRI.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                contadorUP = contadorUP + 1;
+                            }
+                            else if (EffdtNombreUltimo == Hoy && ContadorNombre > 0 && ContadorEffdtNombre > 0)
+                            {
+                                if (!txtApellido.Text.IsNullOrWhiteSpace())
+                                {
+                                    if (!txtCasada.Text.IsNullOrWhiteSpace())
+                                    {
+                                        // ACTUALIZAR
+                                        UD_NAMES_PRF.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + txtCasada.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+
+                                        UD_NAMES_PRI.Value = "<COLL_NAME_TYPE_VW> " +
+                                                            "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "        <COLL_NAMES>" +
+                                                            "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                            "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                            "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                            "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                            "          <PROP_SECOND_LAST_NAME>" + txtCasada.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                            "        </COLL_NAMES>" +
+                                                            "      </COLL_NAME_TYPE_VW>";
+                                    }
+                                    else
+                                    {
+                                        UD_NAMES_PRF.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+
+                                        UD_NAMES_PRI.Value = "<COLL_NAME_TYPE_VW> " +
+                                                            "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "        <COLL_NAMES>" +
+                                                            "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                            "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                            "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                            "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                            "        </COLL_NAMES>" +
+                                                            "      </COLL_NAME_TYPE_VW>";
+                                    }
+                                }
+                                else
+                                {
+                                    UD_NAMES_PRF.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+
+                                    UD_NAMES_PRI.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + Hoy + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                contadorUD = contadorUD + 1;
+                            }
+                            else
+                            {
+                                // ACTUALIZAR
+                                if (!txtApellido.Text.IsNullOrWhiteSpace())
+                                {
+                                    if (!txtCasada.Text.IsNullOrWhiteSpace())
+                                    {
+                                        UD_NAMES_PRF.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "          <PROP_SECOND_LAST_NAME>" + txtCasada.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+
+                                        UD_NAMES_PRI.Value = "<COLL_NAME_TYPE_VW> " +
+                                                            "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "        <COLL_NAMES>" +
+                                                            "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                            "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                            "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                            "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                            "          <PROP_SECOND_LAST_NAME>" + txtCasada.Text + @"</PROP_SECOND_LAST_NAME>" +
+                                                            "        </COLL_NAMES>" +
+                                                            "      </COLL_NAME_TYPE_VW>";
+                                    }
+                                    else
+                                    {
+                                        UD_NAMES_PRF.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+
+                                        UD_NAMES_PRI.Value = "<COLL_NAME_TYPE_VW> " +
+                                                            "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "        <COLL_NAMES>" +
+                                                            "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                            "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                            "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                            "          <PROP_LAST_NAME>" + txtApellido.Text + @"</PROP_LAST_NAME>" +
+                                                            "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                            "        </COLL_NAMES>" +
+                                                            "      </COLL_NAME_TYPE_VW>";
+                                    }
+                                }
+                                else
+                                {
+                                    UD_NAMES_PRF.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRF</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+
+                                    UD_NAMES_PRI.Value = "<COLL_NAME_TYPE_VW> " +
+                                                        "        <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "        <COLL_NAMES>" +
+                                                        "          <KEYPROP_NAME_TYPE>PRI</KEYPROP_NAME_TYPE>" +
+                                                        "          <KEYPROP_EFFDT>" + EffdtNombreUltimo + @"</KEYPROP_EFFDT>" +
+                                                        "          <PROP_COUNTRY_NM_FORMAT>MEX</PROP_COUNTRY_NM_FORMAT>" +
+                                                        "          <PROP_FIRST_NAME>" + txtNombre.Text + @"</PROP_FIRST_NAME>" +
+                                                        "        </COLL_NAMES>" +
+                                                        "      </COLL_NAME_TYPE_VW>";
+                                }
+                                contadorUD = contadorUD + 1;
+                            }
+
 
                             auxConsulta = 0;
                             if (contadorUP > 0)
@@ -6063,6 +6383,11 @@ namespace ReportesUnis
                                     "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
                                     "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
                                     "</COLL_PERS_NID>\n " + UP_PROP_NID;
+
+                        DOCUMENTO1_PRINCIPAL.Value = Primaria;
+                        PAIS_DOCUMENTO1.Value = pais;
+                        TIPO_DOCUMENTO1.Value = tipoDocumento;
+                        DOCUMENTO1.Value = documento;
                     }
                     else if (tipoDocumento == "DPI")
                     {
@@ -6073,6 +6398,10 @@ namespace ReportesUnis
                                     "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
                                     "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
                                     "</COLL_PERS_NID>\n " + UD_PROP_NID;
+                        DOCUMENTO1_PRINCIPAL.Value = Primaria;
+                        PAIS_DOCUMENTO1.Value = pais;
+                        TIPO_DOCUMENTO1.Value = tipoDocumento;
+                        DOCUMENTO1.Value = documento;
                     }
                     if (ExistePasaporte.Value == "0" && tipoDocumento == "PAS")
                     {
@@ -6083,6 +6412,10 @@ namespace ReportesUnis
                                     "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
                                     "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
                                     "</COLL_PERS_NID>\n " + UP_PROP_NID;
+                        DOCUMENTO2_PRINCIPAL.Value = Primaria;
+                        PAIS_DOCUMENTO2.Value = pais;
+                        TIPO_DOCUMENTO2.Value = tipoDocumento;
+                        DOCUMENTO2.Value = documento;
                     }
                     else if (tipoDocumento == "PAS")
                     {
@@ -6093,6 +6426,10 @@ namespace ReportesUnis
                                     "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
                                     "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
                                     "</COLL_PERS_NID>\n " + UD_PROP_NID;
+                        DOCUMENTO2_PRINCIPAL.Value = Primaria;
+                        PAIS_DOCUMENTO2.Value = pais;
+                        TIPO_DOCUMENTO2.Value = tipoDocumento;
+                        DOCUMENTO2.Value = documento;
                     }
                 }
             }
@@ -6379,14 +6716,16 @@ namespace ReportesUnis
 
         protected void AlmacenerEmergencias()
         {
-            //string constr = TxtURL.Text;
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
+            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             EmplidAtencion.Value = null;
             string registro = null;
 
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     // Concatenar valores de ALERGIAS
@@ -6406,6 +6745,7 @@ namespace ReportesUnis
                         cmd.CommandText = "INSERT INTO SYSADM.PS_UNIS_ATEN_EMERG (EMPLID, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE, CARRO_CAMPUS) " +
                             "VALUES ('" + txtCarne.Text + "', '" + TxtAfiliacion.Text + "', ' " + TxtSeguro.Text + "','" + CmbSangre.SelectedItem + "', '" + TxtCarro.Text + "')";
                         cmd.ExecuteNonQuery();
+                        transaction.Commit();
                     }
                     else
                     {
@@ -6414,14 +6754,174 @@ namespace ReportesUnis
                                             "NRO_AFILIACION= '" + TxtAfiliacion.Text + "', " +
                                             "SEGURO_MEDICO= '" + TxtSeguro.Text + "', " +
                                             "TIPO_SANGRE= '" + CmbSangre.SelectedItem + "', " +
-                                            "CARRO_CAMPUS ='" + TxtCarro.Text+ "'";
+                                            "CARRO_CAMPUS ='" + TxtCarro.Text + "'";
                         cmd.ExecuteNonQuery();
+                        transaction.Commit();
                     }
 
                 }
             }
         }
 
+
+        protected void AlmacenamientoApex()
+        {
+            string constr = TxtURL.Text;
+            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            EmplidAtencion.Value = null;
+            string EstadoCivil = estadoCivil();
+            string query = "INSERT INTO UNIS_INTERFACES.TBL_ACTUALIZACION_ALUMNOS (" +
+                                                        " CARNET, " +
+                                                        " FACULTAD, " +
+                                                        " CARRERA, " +
+                                                        " CORREO_INSTITUCIONAL, " +
+                                                        " FECHA_NACIMIENTO, " +
+                                                        " LUGAR_NACIMIENTO, " +
+                                                        " PAIS_NACIMIENTO, " +
+                                                        " DEPTO_NACIMIENTO, " +
+                                                        " MUNCIP_NACIMIENTO, " +
+                                                        " STATE_NACIMIENTO, " +
+                                                        " NOMBRES, " +
+                                                        " APELLIDOS, " +
+                                                        " APELLIDO_CASADA, " +
+                                                        " DIRECCION1, " +
+                                                        " DIRECCION2, " +
+                                                        " ZONA, " +
+                                                        " PAIS, " +
+                                                        " DEPARTAMENTO, " +
+                                                        " MUNICIPIO, " +
+                                                        " STATE, " +
+                                                        " TELEFONO, " +
+                                                        " CORREO_PERSONAL, " +
+                                                        " ESTADO_CIVIL, " +
+                                                        " NIT, " +
+                                                        " NOMBRE1_NIT, " +
+                                                        " NOMBRE2_NIT, " +
+                                                        " NOMBRE3_NIT, " +
+                                                        " DIRECCION1_NIT, " +
+                                                        " DIRECCION2_NIT, " +
+                                                        " DIRECCION3_NIT, " +
+                                                        " PAIS_NIT, " +
+                                                        " DEPTO_NIT, " +
+                                                        " MUNCIP_NIT, " +
+                                                        " STATE_NIT, " +
+                                                        " DOCUMENTO1_PRINCIPAL, " +
+                                                        " PAIS_DOCUMENTO1, " +
+                                                        " TIPO_DOCUMENTO1, " +
+                                                        " DOCUMENTO1, " +
+                                                        " DOCUMENTO2_PRINCIPAL, " +
+                                                        " PAIS_DOCUMENTO2, " +
+                                                        " TIPO_DOCUMENTO2, " +
+                                                        " DOCUMENTO2, " +
+                                                        " SEGURO_MEDIGO, " +
+                                                        " NRO_AFILIACION, " +
+                                                        " TIPO_SANGRE, " +
+                                                        " HOSPITAL_TRASLADO, " +
+                                                        " OTRO_HOSPITAL, " +
+                                                        " ANTECEDENTES, " +
+                                                        " OTROS_ANTECEDENTES, " +
+                                                        " ALERGIAS, " +
+                                                        " OTRAS_ALERGIAS, " +
+                                                        " CONTACTO1_PRINCIPAL, " +
+                                                        " PARENTESCO_CONTACTO1, " +
+                                                        " NOMBRE_CONTACTO1, " +
+                                                        " TELEFONO_CONTACTO1, " +
+                                                        " CONTACTO2_PRINCIPAL, " +
+                                                        " PARENTESCO_CONTACTO2, " +
+                                                        " NOMBRE_CONTACTO2, " +
+                                                        " TELEFONO_CONTACTO2, " +
+                                                        " TALLA_SUDADERO, " +
+                                                        " DATOS_CARRO, " +
+                                                        " FECHA_REGISTRO, " +
+                                                        " USUARIO_MODIFICO) " +
+                                                        "VALUES( " +
+                                                        "'" + txtCarne.Text + "' , " +
+                                                        "'" + txtFacultad.Text + "' , " +
+                                                        "'" + txtCarrera.Text + "' , " +
+                                                        "'" + EmailUnis.Text + "' , " +
+                                                        "'" + Convert.ToDateTime(txtCumple.Text).ToString("MM/dd/yyyy") + "' , " +
+                                                        "'" + TxtLugarNac.Text + "' , " +
+                                                        "'" + CmbPaisNacimiento.SelectedValue + "' , " +
+                                                        "'" + CmbDeptoNacimiento.SelectedValue + "' , " +
+                                                        "'" + CmbMuncNacimiento.SelectedValue + "' , " +
+                                                        "'" + StateNacimiento.Value + "' , " +
+                                                        "'" + txtNombre.Text + "' , " +
+                                                        "'" + txtApellido.Text + "' , " +
+                                                        "'" + txtCasada.Text + "' , " +
+                                                        "'" + txtDireccion.Text + "' , " +
+                                                        "'" + txtDireccion2.Text + "' , " +
+                                                        "'" + txtDireccion3.Text + "' , " +
+                                                        "'" + CmbPais.SelectedValue + "' , " +
+                                                        "'" + CmbDepartamento.SelectedValue + "' , " +
+                                                        "'" + CmbMunicipio.SelectedValue + "' , " +
+                                                        "'" + State.Text + "' , " +
+                                                        "'" + txtTelefono.Text + "' , " +
+                                                        "'" + TxtCorreoPersonal.Text + "' , " +
+                                                        "'" + EstadoCivil + "' , " +
+                                                        "'" + txtNit.Text + "' , " +
+                                                        "'" + TxtNombreR.Text + "' , " +
+                                                        "'" + TxtApellidoR.Text + "' , " +
+                                                        "'" + TxtCasadaR.Text + "' , " +
+                                                        "'" + TxtDiRe1.Text + "' , " +
+                                                        "'" + TxtDiRe2.Text + "' , " +
+                                                        "'" + TxtDiRe3.Text + "' , " +
+                                                        "'" + CmbPaisNIT.SelectedValue + "' , " +
+                                                        "'" + CmbDepartamentoNIT.SelectedValue + "' , " +
+                                                        "'" + CmbMunicipioNIT.SelectedValue + "' , " +
+                                                        "'" + StateNIT.Text + "' , " +
+                                                        "'" + DOCUMENTO1_PRINCIPAL.Value + "' , " +
+                                                        "'" + PAIS_DOCUMENTO1.Value + "' , " +
+                                                        "'" + TIPO_DOCUMENTO1.Value + "' , " +
+                                                        "'" + DOCUMENTO1.Value + "' , " +
+                                                        "'" + DOCUMENTO2_PRINCIPAL.Value + "' , " +
+                                                        "'" + PAIS_DOCUMENTO2.Value + "' , " +
+                                                        "'" + TIPO_DOCUMENTO2.Value + "' , " +
+                                                        "'" + DOCUMENTO2.Value + "' , " +
+                                                        "'" + TxtSeguro.Text + "' , " +
+                                                        "'" + TxtAfiliacion.Text + "' , " +
+                                                        "'" + CmbSangre.SelectedItem + "' , " +
+                                                        "'" + CmbHospital.SelectedItem + "' , " +
+                                                        "'" + TxtOtroHospital.Text + "' , " +
+                                                        "'" + seleccionadosAntecedentes.Value + "' , " +
+                                                        "'" + TxtOtrosAntecedentesM.Text + "' , " +
+                                                        "'" + seleccionadosAlergia.Value + "' , " +
+                                                        "'" + TxtOtrasAlergias.Text + "' , " +
+                                                        "'" + CE_Principal1.Value + "' , " +
+                                                        "'" + CE_parentesco1.Value + "' , " +
+                                                        "'" + CE_nombre1.Value + "' , " +
+                                                        "'" + CE_telefono1.Value + "' , " +
+                                                        "'" + CE_Principal2.Value + "' , " +
+                                                        "'" + CE_parentesco2.Value + "' , " +
+                                                        "'" + CE_nombre2.Value + "' , " +
+                                                        "'" + CE_telefono2.Value + "' , " +
+                                                        "'" + CmbTalla.SelectedItem + "' , " +
+                                                        "'" + TxtCarro.Text + "' , " +
+                                                        "SYSDATE , " +
+                                                        "'" + TextUser.Text + "'" +
+                                                        ") ";
+
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    try
+                    {
+                        cmd.CommandText = query;
+                        cmd.ExecuteNonQuery();
+                        transaction.Commit();
+                    }
+                    catch (Exception X)
+                    {
+                        transaction.Rollback();
+                    }
+
+                }
+            }
+        }
         /*-------------------PARA CONSUMO DE SERVICIOS CRM-------------------*/
         private static void credencialesWS_CRM(string RutaConfiguracion, string strMetodo)
         {
