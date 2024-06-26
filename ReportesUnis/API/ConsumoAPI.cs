@@ -205,7 +205,7 @@ namespace ReportesUnis.API
         }
 
 
-        public int Patch_CRM(string url, string user, string pass, string info)
+        public (int respuesta, string mensaje) Patch_CRM(string url, string user, string pass, string info)
         {
             string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(user + ":" + pass));
 
@@ -223,13 +223,13 @@ namespace ReportesUnis.API
 
                 //dynamic datos = JsonConvert.DeserializeObject(response.Content).ToString();
                 if (response.StatusCode.ToString() == "OK")
-                    return 0;
+                    return (0, response.StatusCode.ToString());
                 else
-                    return 1;
+                    return (1, response.StatusCode.ToString());
             }
-            catch (Exception)
+            catch (Exception x)
             {
-                return 1;
+                return (1, x.Message);
             }
         }
     }
