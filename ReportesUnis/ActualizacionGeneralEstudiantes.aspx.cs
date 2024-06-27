@@ -4073,8 +4073,21 @@ namespace ReportesUnis
 
             if (resultados == "0")
             {
+                string texto;
                 seleccionadosAlergia.Value = DatosAlergias();
                 seleccionadosAntecedentes.Value = DatosEnfermedades();
+                texto = seleccionadosAlergia.Value.Trim();
+                if (texto.EndsWith(","))
+                {
+                    seleccionadosAlergia.Value = texto.Substring(0, texto.Length - 1);
+                }
+                texto = seleccionadosAntecedentes.Value.Trim();
+
+                if (texto.EndsWith(","))
+                {
+                    seleccionadosAntecedentes.Value = texto.Substring(0, texto.Length - 1);
+                }
+
                 resultados = AlmacenarAlergiasCampus(seleccionadosAlergia.Value);
 
                 if (resultados == "0")
@@ -4603,13 +4616,7 @@ namespace ReportesUnis
                     ddlPais.SelectedValue = pais;
                 }
 
-                // Reemplazar DropDownList de TipoDocumento por un Label
-                /*Label lblTipoDocumento = new Label();
-                string tipoDocumento = DataBinder.Eval(e.Row.DataItem, "TipoDocumento").ToString();
-                lblTipoDocumento.Text = tipoDocumento;
-
-                e.Row.Cells[2].Controls.Clear();
-                e.Row.Cells[2].Controls.Add(lblTipoDocumento);*/
+                ScriptManager.RegisterStartupScript(this, GetType(), "updatePrincipalRadioButton", "updatePrincipalRadioButton();", true);
             }
         }
         protected void GridViewContactos_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -4635,6 +4642,10 @@ namespace ReportesUnis
             }
         }
 
+        protected void GridViewDocumentos_DataBound(object sender, EventArgs e)
+        {
+            
+        }
 
         //revisar para eliminar        
         protected void BtnDownload_Click(object sender, EventArgs e)

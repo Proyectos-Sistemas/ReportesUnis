@@ -305,11 +305,11 @@
                                         <%-- GRIDVIEW DONDE SE MUESTRA LA INFORMACION DEL REPORTE --%>
                                         <div class="containerGV">
                                             <asp:GridView ID="GridViewDocumentos" runat="server" AutoGenerateColumns="false"
-                                                CssClass="table table-condensed table-bordered" OnRowDataBound="GridViewDocumentos_RowDataBound">
+                                                CssClass="table table-condensed table-bordered" OnRowDataBound="GridViewDocumentos_RowDataBound" OnDataBound="GridViewDocumentos_DataBound">
                                                 <Columns>
                                                     <asp:TemplateField HeaderText="Principal" ItemStyle-HorizontalAlign="Center">
                                                         <ItemTemplate>
-                                                            <asp:RadioButton ID="RBDocPrincipal" runat="server" GroupName="DocumentosIdentificacion" Checked='<%# Eval("PRIMARY_NID").ToString() == "Y" %>' OnClick="selectOnlyThisDoc(this)" />
+                                                            <asp:RadioButton ID="RBDocPrincipal" runat="server" GroupName="DocumentosIdentificacion" Enabled="false" />
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="País">
@@ -321,7 +321,7 @@
                                                     <asp:BoundField DataField="TipoDocumento" HeaderText="Tipo de Documento de Identidad" />
                                                     <asp:TemplateField HeaderText="Documento" ItemStyle-CssClass="nowrap">
                                                         <ItemTemplate>
-                                                            <asp:TextBox ID="TxtNroDocumento" runat="server" Text='<%# Eval("Documento") %>'></asp:TextBox>
+                                                            <asp:TextBox ID="TxtNroDocumento" runat="server" Text='<%# Eval("Documento") %>' onchange="updatePrincipalRadioButton()" MaxLength="20" />
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:BoundField DataField="PRIMARY_NID" HeaderText="PRIMARY_NID" Visible="false" />
@@ -460,7 +460,7 @@
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Teléfono*:</asp:Label>
                                         <br />
-                                        <asp:TextBox ID="txtTelefono" runat="server" MaxLength="24" CssClass="form-control" Width="275px" onblur="validarTelefono(this.value)"></asp:TextBox>
+                                        <asp:TextBox ID="txtTelefono" runat="server" MaxLength="21" CssClass="form-control" Width="275px" onblur="validarTelefono(this.value)"></asp:TextBox>
                                         <span id="errorTelefono" style="color: red; font-size: small"></span>
                                     </div>
 
@@ -532,7 +532,7 @@
                                         </div>
 
                                         <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
-                                            <asp:TextBox ID="txtNit" runat="server" Width="275px" CssClass="form-control"></asp:TextBox>
+                                            <asp:TextBox ID="txtNit" runat="server" Width="275px" CssClass="form-control" MaxLength="20"></asp:TextBox>
                                         </div>
 
                                         <div class="col-md-4 mx-auto text-center">
@@ -677,13 +677,13 @@
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Seguro Médico</asp:Label>
                                                 <br />
-                                                <asp:TextBox ID="TxtSeguro" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="TxtSeguro" runat="server" Enabled="true" MaxLength="150" Width="275px" CssClass="form-control"></asp:TextBox>
                                                 <br />
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Número de Afiliación</asp:Label>
                                                 <br />
-                                                <asp:TextBox ID="TxtAfiliacion" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="TxtAfiliacion" runat="server" Enabled="true" MaxLength="150" Width="275px" CssClass="form-control"></asp:TextBox>
                                                 <br />
                                             </div>
                                             <div class="form-group col-md-4">
@@ -711,7 +711,7 @@
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Otro Hospital para traslado:</asp:Label>
                                                 <br />
-                                                <asp:TextBox ID="TxtOtroHospital" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="TxtOtroHospital" runat="server" Enabled="true" MaxLength="75" Width="500px" CssClass="form-control"></asp:TextBox>
                                                 <br />
                                             </div>
 
@@ -723,7 +723,7 @@
 
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Otros antecedentes médicos</asp:Label>
-                                                <asp:TextBox ID="TxtOtrosAntecedentesM" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="TxtOtrosAntecedentesM" runat="server" Enabled="true" MaxLength="150" Width="500px" CssClass="form-control"></asp:TextBox>
                                                 <asp:Label runat="server" Font-Bold="true" Font-Size="X-Small">Si ingresa más de uno, separarlos por comas (,)</asp:Label>
                                                 <br />
                                             </div>
@@ -735,7 +735,7 @@
                                             </div>
                                             <div class="form-group col-md-6">
                                                 <asp:Label runat="server" Font-Bold="true">Otras alergias:</asp:Label>
-                                                <asp:TextBox ID="TxtOtrasAlergias" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                                <asp:TextBox ID="TxtOtrasAlergias" runat="server" Enabled="true" MaxLength="150" Width="500px" CssClass="form-control"></asp:TextBox>
                                                 <asp:Label runat="server" Font-Bold="true" Font-Size="X-Small">Si ingresa más de uno, separarlos por comas (,)</asp:Label>
                                                 <br />
                                             </div>
@@ -777,12 +777,12 @@
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Nombre" ItemStyle-CssClass="nowrap">
                                                     <ItemTemplate>
-                                                        <asp:TextBox ID="TxtNombreE" runat="server" Text='<%# Eval("Nombre") %>'></asp:TextBox>
+                                                        <asp:TextBox ID="TxtNombreE" runat="server" Text='<%# Eval("Nombre") %>' MaxLength="50"></asp:TextBox>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Teléfono" ItemStyle-CssClass="nowrap">
                                                     <ItemTemplate>
-                                                        <asp:TextBox ID="TxtTelefonoE" runat="server" Text='<%# Eval("Teléfono") %>'></asp:TextBox>
+                                                        <asp:TextBox ID="TxtTelefonoE" runat="server" Text='<%# Eval("Teléfono") %>' MaxLength="24"></asp:TextBox>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:BoundField DataField="PRIMARY_CONTACT" HeaderText="PRIMARY_CONTACT" Visible="false" />
@@ -821,7 +821,7 @@
 
                                     <div class="form-group col-md-6">
                                         <asp:Label runat="server" Font-Bold="true">Información de carro en campus:</asp:Label>
-                                        <asp:TextBox ID="TxtCarro" runat="server" Enabled="true" MaxLength="30" Width="500px" CssClass="form-control"></asp:TextBox>
+                                        <asp:TextBox ID="TxtCarro" runat="server" Enabled="true" MaxLength="150" Width="500px" CssClass="form-control"></asp:TextBox>
                                         <br />
                                     </div>
 
@@ -1102,14 +1102,13 @@
     </div>
 
 
-
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
 
-    </div>
     <script>
         var userAgent = navigator.userAgent;
 
@@ -1624,6 +1623,7 @@
                 window.location.href = "ActualizacionGeneralEstudiantes.aspx";
             }, 4000); // 4000 milisegundos =  segundos
         }
+        
 
         //evitar enter y letras, permite ingresar solo numeros
         function evitarEnteryNumeros(e) {
@@ -1648,36 +1648,6 @@
 
             return false;
         }
-
-
-        document.addEventListener("DOMContentLoaded", function () {
-            // Get the modal
-            var modal = document.getElementById("myModalAlumno");
-
-            // Get the button that opens the modal
-            var btn = document.getElementById("openModalBtn"); // Assuming you have a button with this ID
-
-            // Get the <span> element that closes the modal
-            var span = document.getElementsByClassName("closeAlumno")[0];
-
-            // When the user clicks on the button, open the modal
-            btn.onclick = function () {
-                modal.style.display = "flex";
-            }
-
-            // When the user clicks on <span> (x), close the modal
-            span.onclick = function () {
-                modal.style.display = "none";
-            }
-
-            // When the user clicks anywhere outside of the modal, close it
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
-        });
-
 
         function Busqueda() {
             $('#myModalBusquedaMultiple').css('display', 'block');
@@ -1720,6 +1690,8 @@
                 }
             });
         });
+
+
     </script>
 
     <script type="text/javascript">
@@ -1734,11 +1706,91 @@
         });
     </script>
 
+    <script type="text/javascript">
+        function updatePrincipalRadioButton() {
+            // Obtener referencia al GridView
+            var grid = document.getElementById('<%= GridViewDocumentos.ClientID %>');
+
+            // Obtener todas las filas del GridView
+            var rows = grid.getElementsByTagName('tr');
+
+            // Verificar que hay al menos dos filas (la primera es el encabezado)
+            if (rows.length > 1) {
+                // Obtener referencias a los elementos en la primera fila de datos
+                var firstRow = rows[1];
+                var firstRb = firstRow.cells[0].querySelector('input[type="radio"]');
+                var firstTxt = firstRow.cells[3].querySelector('input[type="text"]');
+
+                console.log('First RadioButton:', firstRb);
+                console.log('First TextBox:', firstTxt);
+
+                // Verificar si el primer TextBox tiene algún valor
+                if (firstTxt && firstTxt.value.trim() !== "") {
+                    // Marcar el primer RadioButton como seleccionado
+                    firstRb.checked = true;
+
+                    // Desmarcar otros RadioButtons si es necesario
+                    for (var i = 2; i < rows.length; i++) {
+                        var rb = rows[i].cells[0].querySelector('input[type="radio"]');
+                        if (rb) {
+                            rb.checked = false;
+                        }
+                    }
+
+                    console.log('First RadioButton checked');
+                } else {
+                    // Si el primer TextBox está vacío, verificar el siguiente
+                    for (var j = 2; j < rows.length; j++) {
+                        var row = rows[j];
+                        var txt = row.cells[3].querySelector('input[type="text"]');
+                        var rb = row.cells[0].querySelector('input[type="radio"]');
+                
+                        console.log('RadioButton:', rb);
+                        console.log('TextBox:', txt);
+
+                        if (txt && txt.value.trim() !== "") {
+                            // Marcar el RadioButton correspondiente como seleccionado
+                            rb.checked = true;
+
+                            // Desmarcar otros RadioButtons si es necesario
+                            for (var k = 1; k < rows.length; k++) {
+                                if (k !== j) {
+                                    var otherRb = rows[k].cells[0].querySelector('input[type="radio"]');
+                                    if (otherRb) {
+                                        otherRb.checked = false;
+                                    }
+                                }
+                            }
+
+                            console.log('RadioButton checked');
+                            return; // Salir del bucle una vez que se encuentre y marque el RadioButton correcto
+                        } else {
+                            // Si no se encuentra ningún valor en los TextBox, desmarcar todos los RadioButtons
+                            if (rb) {
+                                rb.checked = false;
+                            }
+                        }
+                    }
+
+                    console.log('No RadioButton checked');
+                }
+            }
+        }
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updatePrincipalRadioButton(); // Check initial state
+            var grid = document.getElementById('<%= GridViewDocumentos.ClientID %>');
+            var textBoxes = grid.querySelectorAll('[id$="TxtNroDocumento"]');
+            textBoxes.forEach(function (textBox) {
+                textBox.addEventListener('change', updatePrincipalRadioButton);
+            });
+        });
+    </script>
+
 
     <script src="Scripts/UNIS/Unis.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>
 
