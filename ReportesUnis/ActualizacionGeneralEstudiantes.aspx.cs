@@ -1467,8 +1467,7 @@ namespace ReportesUnis
         }
         protected void LlenarParentezco(DropDownList ddl)
         {
-            //string constr = TxtURL.Text;
-            string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
+            string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -1492,7 +1491,6 @@ namespace ReportesUnis
         protected void LlenarHospital()
         {
             string constr = TxtURL.Text;
-            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -1514,7 +1512,6 @@ namespace ReportesUnis
         protected void LlenarAntecedentes()
         {
             string constr = TxtURL.Text;
-            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -1536,7 +1533,6 @@ namespace ReportesUnis
         protected void LlenarAlergias()
         {
             string constr = TxtURL.Text;
-            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -1717,7 +1713,6 @@ namespace ReportesUnis
         private void llenadoDatosMedicos()
         {
             string constr = TxtURL.Text;
-            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             EmplidAtencion.Value = null;
 
             using (OracleConnection con = new OracleConnection(constr))
@@ -1746,7 +1741,6 @@ namespace ReportesUnis
         private void llenadoDatosAlergias()
         {
             string constr = TxtURL.Text;
-            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             EmplidAtencion.Value = null;
 
             using (OracleConnection con = new OracleConnection(constr))
@@ -1813,7 +1807,6 @@ namespace ReportesUnis
         private void llenadoDatosEnfermedades()
         {
             string constr = TxtURL.Text;
-            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             EmplidAtencion.Value = null;
 
             using (OracleConnection con = new OracleConnection(constr))
@@ -1912,7 +1905,6 @@ namespace ReportesUnis
                 "WHERE EMPLID ='" + txtEmplid.Value + "'";
 
             string constr = TxtURL.Text;
-            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
 
             string control = "0";
             using (OracleConnection con = new OracleConnection(constr))
@@ -4925,7 +4917,6 @@ namespace ReportesUnis
         private (string Departamento, string Municipio, string País) datosResidencia()
         {
             string constr = TxtURL.Text;
-            //string constr = "User ID =DESA_PTRES;Password=D3s@_PmT22;Data Source=129.213.95.39/DBCSDESA_PDB1.subnet1.vcnpruebas.oraclevcn.com";
             string depto = null;
             string mun = null;
             string pais = null;
