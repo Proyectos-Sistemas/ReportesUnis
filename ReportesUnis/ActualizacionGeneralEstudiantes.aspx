@@ -1181,7 +1181,7 @@
             var ddlPaisNacimiento = document.getElementById('<%= CmbPaisNacimiento.ClientID %>').value.trim();
             var grid = document.getElementById('<%= GridViewDocumentos.ClientID %>');
             var firstTxt = grid.getElementsByTagName('tr')[1].cells[3].querySelector('input[type="text"]');
-            console.log("ddlPaisNacimiento: -", ddlPaisNacimiento, "-");
+
             if (TrueNit !== nit && nit !== "CF") {
                 // Realiza las acciones necesarias si el valor es diferente de cero
                 alert("El NIT ha cambiado, es necesario validar.");
@@ -1768,9 +1768,6 @@
                 var firstRb = firstRow.cells[0].querySelector('input[type="radio"]');
                 var firstTxt = firstRow.cells[3].querySelector('input[type="text"]');
 
-                console.log('First RadioButton:', firstRb);
-                console.log('First TextBox:', firstTxt);
-
                 // Verificar si el primer TextBox tiene algún valor
                 if (firstTxt && firstTxt.value.trim() !== "") {
                     // Marcar el primer RadioButton como seleccionado
@@ -1787,16 +1784,12 @@
                         }
                     }
 
-                    console.log('First RadioButton checked');
                 } else {
                     // Si el primer TextBox está vacío, verificar el siguiente
                     for (var j = 2; j < rows.length; j++) {
                         var row = rows[j];
                         var txt = row.cells[3].querySelector('input[type="text"]');
                         var rb = row.cells[0].querySelector('input[type="radio"]');
-
-                        console.log('RadioButton:', rb);
-                        console.log('TextBox:', txt);
 
                         if (txt && txt.value.trim() !== "") {
                             // Marcar el RadioButton correspondiente como seleccionado
@@ -1814,7 +1807,6 @@
                                 }
                             }
 
-                            console.log('RadioButton checked');
                             return; // Salir del bucle una vez que se encuentre y marque el RadioButton correcto
                         } else {
                             // Si no se encuentra ningún valor en los TextBox, desmarcar todos los RadioButtons
@@ -1825,8 +1817,6 @@
                             }
                         }
                     }
-
-                    console.log('No RadioButton checked');
                 }
             }
         }
