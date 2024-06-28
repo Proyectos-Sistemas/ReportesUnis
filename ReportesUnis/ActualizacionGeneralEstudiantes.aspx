@@ -358,7 +358,8 @@
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Fecha de nacimiento:</asp:Label>
                                         <br />
-                                        <asp:TextBox ID="txtCumple" runat="server" Enabled="true" Width="275px" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                        <asp:TextBox ID="txtCumple" runat="server" Enabled="true" Width="275px" CssClass="form-control" TextMode="Date" onchange="validateDate(this)"></asp:TextBox>
+                                        <span id="errorCumple" style="color: red; font-size: small"></span>
                                     </div>
 
                                     <div class="form-group col-md-4">
@@ -1624,7 +1625,7 @@
                 window.location.href = "ActualizacionGeneralEstudiantes.aspx";
             }, 4000); // 4000 milisegundos =  segundos
         }
-        
+
 
         //evitar enter y letras, permite ingresar solo numeros
         function evitarEnteryNumeros(e) {
@@ -1658,6 +1659,22 @@
             }
 
             return false; // Evitar la tecla
+        }
+        function validateDate(dateField) {
+            var inputDate = new Date(dateField.value);
+            var today = new Date();
+            var twelveYearsAgo = new Date();
+            twelveYearsAgo.setFullYear(today.getFullYear() - 12);
+
+            var errorSpan = document.getElementById('errorCumple');
+            if (inputDate > twelveYearsAgo) {
+                errorSpan.textContent = "Debe tener al menos 12 años.";
+                dateField.value = ''; // Limpiar el campo de texto
+                return false;
+            } else {
+                errorSpan.textContent = ''; // Limpiar el mensaje de error
+            }
+            return true;
         }
 
         function Busqueda() {
@@ -1758,7 +1775,7 @@
                         var row = rows[j];
                         var txt = row.cells[3].querySelector('input[type="text"]');
                         var rb = row.cells[0].querySelector('input[type="radio"]');
-                
+
                         console.log('RadioButton:', rb);
                         console.log('TextBox:', txt);
 
@@ -1794,8 +1811,6 @@
                 }
             }
         }
-
-
 
         document.addEventListener('DOMContentLoaded', function () {
             updatePrincipalRadioButton(); // Check initial state

@@ -1603,6 +1603,7 @@ namespace ReportesUnis
                         "WHERE EMPLID ='" + txtEmplid.Value + "'";
 
                     try
+                    
                     {
                         if (String.IsNullOrEmpty(txtNombreE1_Inicial.Value) || txtNombreE1_Inicial.Value == "")
                         {
@@ -1666,7 +1667,7 @@ namespace ReportesUnis
                 con.Open();
                 using (OracleCommand cmd = new OracleCommand())
                 {
-                    cmd.CommandText = "SELECT HOSPITAL_TRASLADO, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE, EMPLID, CARRO_CAMPUS " +
+                    cmd.CommandText = "SELECT HOSPITAL_TRASLADO, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE, EMPLID, CARRO_CAMPUS, OTRO_HOSPITAL " +
                         "FROM SYSADM.PS_UNIS_ATEN_EMERG " +
                     "WHERE EMPLID = '" + txtCarne.Text + "'";
                     cmd.Connection = con;
@@ -1679,6 +1680,7 @@ namespace ReportesUnis
                         TxtSeguro.Text = reader["SEGURO_MEDICO"].ToString();
                         CmbSangre.SelectedItem.Text = reader["TIPO_SANGRE"].ToString();
                         EmplidAtencion.Value = reader["EMPLID"].ToString();
+                        TxtOtroHospital.Text = reader["OTRO_HOSPITAL"].ToString();
                     }
 
                 }
@@ -3070,7 +3072,6 @@ namespace ReportesUnis
         {
             string UP_PROP_NID = "";
             string UD_PROP_NID = "";
-            string Primaria = "";
             foreach (GridViewRow row in GridViewDocumentos.Rows)
             {
                 // Accede a los controles de la fila actual
