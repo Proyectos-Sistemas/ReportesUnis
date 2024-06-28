@@ -3092,10 +3092,6 @@ namespace ReportesUnis
                 if (tipoDocumento == "Pasaporte")
                     tipoDocumento = "PAS";
 
-                //if (isPrincipal)
-                //    Primaria = "Y";
-                //else
-                //    Primaria = "N";
                 if (!String.IsNullOrEmpty(documento))
                 {
                     if (ExisteDPI.Value == "0" && tipoDocumento == "DPI")

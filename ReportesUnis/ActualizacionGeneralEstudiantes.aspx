@@ -848,7 +848,7 @@
                 <div class="col-md-4 mx-auto text-center">
                 </div>
                 <div class="col-md-4 mx-auto text-center">
-                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="false" OnClientClick="return mostrarAlerta();"/>
+                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="false" OnClientClick="return mostrarAlerta();" />
                 </div>
                 <div class="col-md-4 mx-auto text-center">
                 </div>
@@ -1178,8 +1178,10 @@
             var twelveYearsAgo = new Date();
             twelveYearsAgo.setFullYear(today.getFullYear() - 12);
 
-            var Documento1 = $('#<%= DOCUMENTO1.ClientID %>').val().trim();entos.ClientID %>').getElementsByTagName('tr')[1];
-            console.log("Documento1 " || Documento1);
+            var ddlPaisNacimiento = document.getElementById('<%= CmbPaisNacimiento.ClientID %>').value.trim();
+            var grid = document.getElementById('<%= GridViewDocumentos.ClientID %>');
+            var firstTxt = grid.getElementsByTagName('tr')[1].cells[3].querySelector('input[type="text"]');
+            console.log("ddlPaisNacimiento: -", ddlPaisNacimiento, "-");
             if (TrueNit !== nit && nit !== "CF") {
                 // Realiza las acciones necesarias si el valor es diferente de cero
                 alert("El NIT ha cambiado, es necesario validar.");
@@ -1187,6 +1189,15 @@
             } else {
                 if (inputDate > twelveYearsAgo) {
                     mensaje = "-Revisa la fecha de nacimiento.";
+                }
+
+
+                if (ddlPaisNacimiento === 'GTM') { // Suponiendo que el valor para Guatemala es 'GTM'
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
+                    } else {
+                        mensaje = mensaje + "\n-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
+                    }
                 }
 
                 if (nombre.trim() === "") {
@@ -1828,6 +1839,44 @@
                 textBox.addEventListener('change', updatePrincipalRadioButton);
             });
         });
+
+        function checkGuatemalaSelection() {
+            var ddlPaisNacimiento = document.getElementById('<%= CmbPaisNacimiento.ClientID %>');
+            var grid = document.getElementById('<%= GridViewDocumentos.ClientID %>');
+            var firstTxt = grid.getElementsByTagName('tr')[1].cells[3].querySelector('input[type="text"]');
+
+            if (ddlPaisNacimiento.value === 'GTM') { // Suponiendo que el valor para Guatemala es 'GTM'
+                firstTxt.setAttribute('required', 'required');
+            } else {
+                firstTxt.removeAttribute('required');
+            }
+        }
+
+        function validarPais() {
+            var ddlPaisNacimiento = document.getElementById('<%= CmbPaisNacimiento.ClientID %>').value
+            var grid = document.getElementById('<%= GridViewDocumentos.ClientID %>').value;
+
+            // Verificar si Guatemala está seleccionado
+            if (ddlPaisNacimiento.value === "GTM") {
+                // Obtener la primera fila del GridView
+                var rows = grid.getElementsByTagName('tr');
+                if (rows.length > 1) {
+                    var firstRow = rows[1];
+                    var txtNroDocumento = firstRow.querySelector('input[id$="TxtNroDocumento"]');
+                    var faltaID = document.getElementById('errorDocumento' + (firstRow.rowIndex - 1));
+
+                    // Validar si el campo TxtNroDocumento está vacío
+                    if (txtNroDocumento.value.trim() === "") {
+                        faltaID.textContent = "El campo Número de Documento es requerido.";
+                        txtNroDocumento.focus();
+                        return false;
+                    } else {
+                        faltaID.textContent = ""; // Limpiar el mensaje de error si el campo tiene valor
+                    }
+                }
+            }
+            return true;
+        }
     </script>
 
 
