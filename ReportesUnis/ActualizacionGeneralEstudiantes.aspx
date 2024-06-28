@@ -287,13 +287,17 @@
 
                 <%-- DATOS DOCUMENTOS IDENTIFICACION--%>
                 <input type="hidden" id="DOCUMENTO1_PRINCIPAL" runat="server" />
+                <input type="hidden" id="DOCUMENTO1_PRINCIPAL_INICIAL" runat="server" />
                 <input type="hidden" id="DOCUMENTO2_PRINCIPAL" runat="server" />
+                <input type="hidden" id="DOCUMENTO2_PRINCIPAL_INICIAL" runat="server" />
                 <input type="hidden" id="PAIS_DOCUMENTO1" runat="server" />
                 <input type="hidden" id="PAIS_DOCUMENTO2" runat="server" />
                 <input type="hidden" id="TIPO_DOCUMENTO1" runat="server" />
                 <input type="hidden" id="TIPO_DOCUMENTO2" runat="server" />
                 <input type="hidden" id="DOCUMENTO1" runat="server" />
                 <input type="hidden" id="DOCUMENTO2" runat="server" />
+                <input type="hidden" id="DOCUMENTO1_INICIAL" runat="server" />
+                <input type="hidden" id="DOCUMENTO2_INCIAL" runat="server" />
 
                 <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
                 <div class="container" id="tabla" runat="server">
@@ -844,7 +848,7 @@
                 <div class="col-md-4 mx-auto text-center">
                 </div>
                 <div class="col-md-4 mx-auto text-center">
-                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
+                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="false" OnClientClick="return mostrarAlerta();"/>
                 </div>
                 <div class="col-md-4 mx-auto text-center">
                 </div>
@@ -1167,17 +1171,22 @@
             var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
             var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
             var modal = document.getElementById("myModalActualizacion");
-            var divCombos = $('#<%= Combos.ClientID %>');
-            var files = fileUpload.files;
 
+            //Validacion fecha de nacimiento
+            var inputDate = new Date($('#<%= txtCumple.ClientID %>').val().trim());
+            var today = new Date();
+            var twelveYearsAgo = new Date();
+            twelveYearsAgo.setFullYear(today.getFullYear() - 12);
 
+            var Documento1 = $('#<%= DOCUMENTO1.ClientID %>').val().trim();entos.ClientID %>').getElementsByTagName('tr')[1];
+            console.log("Documento1 " || Documento1);
             if (TrueNit !== nit && nit !== "CF") {
                 // Realiza las acciones necesarias si el valor es diferente de cero
                 alert("El NIT ha cambiado, es necesario validar.");
                 return false;
             } else {
-                if (apellido.trim() === "") {
-                    mensaje = "-Los Apellidos son requerido.";
+                if (inputDate > twelveYearsAgo) {
+                    mensaje = "-Revisa la fecha de nacimiento.";
                 }
 
                 if (nombre.trim() === "") {
@@ -1669,7 +1678,6 @@
             var errorSpan = document.getElementById('errorCumple');
             if (inputDate > twelveYearsAgo) {
                 errorSpan.textContent = "Debe tener al menos 12 años.";
-                dateField.value = ''; // Limpiar el campo de texto
                 return false;
             } else {
                 errorSpan.textContent = ''; // Limpiar el mensaje de error

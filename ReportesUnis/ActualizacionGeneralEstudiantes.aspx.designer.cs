@@ -1212,6 +1212,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden DOCUMENTO1_PRINCIPAL;
 
         /// <summary>
+        /// Control DOCUMENTO1_PRINCIPAL_INICIAL.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden DOCUMENTO1_PRINCIPAL_INICIAL;
+
+        /// <summary>
         /// Control DOCUMENTO2_PRINCIPAL.
         /// </summary>
         /// <remarks>
@@ -1219,6 +1228,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden DOCUMENTO2_PRINCIPAL;
+
+        /// <summary>
+        /// Control DOCUMENTO2_PRINCIPAL_INICIAL.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden DOCUMENTO2_PRINCIPAL_INICIAL;
 
         /// <summary>
         /// Control PAIS_DOCUMENTO1.
@@ -1273,6 +1291,24 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden DOCUMENTO2;
+
+        /// <summary>
+        /// Control DOCUMENTO1_INICIAL.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden DOCUMENTO1_INICIAL;
+
+        /// <summary>
+        /// Control DOCUMENTO2_INCIAL.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden DOCUMENTO2_INCIAL;
 
         /// <summary>
         /// Control tabla.

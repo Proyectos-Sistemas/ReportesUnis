@@ -1371,14 +1371,18 @@ namespace ReportesUnis
                             {
                                 dt.Rows[0]["País"] = reader["Pais"].ToString();
                                 dt.Rows[0]["Documento"] = reader["Documento"].ToString();
+                                DOCUMENTO1_INICIAL.Value= reader["Documento"].ToString();
                                 dt.Rows[0]["PRIMARY_NID"] = reader["PRIMARY_NID"].ToString();
+                                DOCUMENTO1_PRINCIPAL_INICIAL.Value = reader["PRIMARY_NID"].ToString();
                                 ExisteDPI.Value = "1";
                             }
                             else if (tipoDocumento == "PAS")
                             {
                                 dt.Rows[1]["País"] = reader["Pais"].ToString();
                                 dt.Rows[1]["Documento"] = reader["Documento"].ToString();
+                                DOCUMENTO2_INCIAL.Value = reader["Documento"].ToString();
                                 dt.Rows[1]["PRIMARY_NID"] = reader["PRIMARY_NID"].ToString();
+                                DOCUMENTO2_PRINCIPAL_INICIAL.Value= reader["PRIMARY_NID"].ToString();
                                 ExistePasaporte.Value = "1";
                             }
                         }
@@ -4471,6 +4475,7 @@ namespace ReportesUnis
                 {*/
 
                 string getInfo = null;
+                BtnActualizar.Enabled = true;
                 mostrarInformación(txtEmplid.Value);
                 getInfo = consultaGet(txtDPI.Text);
                 CmbTalla.SelectedValue = getBetween(getInfo, "PersonDEO_TallaSudadero_c\" : \"", "\",");
