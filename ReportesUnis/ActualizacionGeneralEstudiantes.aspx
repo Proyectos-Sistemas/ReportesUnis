@@ -1627,26 +1627,36 @@
 
         //evitar enter y letras, permite ingresar solo numeros
         function evitarEnteryNumeros(e) {
-            var charCode = (e.which) ? e.which : event.keyCode;
 
-            // Verifica si la tecla presionada es un número y no es Enter
-            if ((charCode >= 48 && charCode <= 57) && charCode !== 13) {
-                return true;
+            // Obtener el código de la tecla
+            var key = e.key || e.keyCode || e.which;
+
+            // Permitir solo números (códigos 48-57)
+            if (key >= "0" && key <= "9") {
+                return true; // Permitir la tecla
             }
 
+            // Permitir teclas de control como Backspace (código 8) y flechas (códigos 37-40)
+            if (key === "Backspace" || (key >= "ArrowLeft" && key <= "ArrowDown")) {
+                return true; // Permitir la tecla
+            }
+
+            // Evitar todas las demás teclas
             return false;
+
         }
 
-
         function evitarEnter(e) {
-            var charCode = (e.which) ? e.which : event.keyCode;
 
-            // Verifica si la tecla presionada es un número y no es Enter
-            if (charCode !== 13) {
-                return true;
+            // Obtener el código de la tecla
+            var key = e.key || e.keyCode || e.which;
+
+            // Permitir Enter (código 13) y no permitir números (códigos 48-57)
+            if (key !== "Enter") {
+                return true; // Permitir la tecla
             }
 
-            return false;
+            return false; // Evitar la tecla
         }
 
         function Busqueda() {

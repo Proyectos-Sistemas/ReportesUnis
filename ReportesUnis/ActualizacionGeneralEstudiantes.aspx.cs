@@ -30,16 +30,11 @@ namespace ReportesUnis
     {
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
         public static string archivoWS = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConfigWS.dat");
-        int controlPantalla;
-        int controlRenovacion = 0;
-        int controlRenovacionFecha = 0;
-        string emplid;
         int auxConsulta = 0;
         int contadorUP = 0;
         int contadorUD = 0;
         int respuestaPatch = 0;
         string respuestaMensajePatch = "";
-        string CONFIRMACION = "1000";
         ConsumoAPI api = new ConsumoAPI();
         public static string archivoConfiguraciones = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConfigCampus.dat");
         string Hoy = DateTime.Now.ToString("yyyy-MM-dd").Substring(0, 10).TrimEnd();
@@ -54,38 +49,28 @@ namespace ReportesUnis
             LeerPathApex();
             LeerCredencialesNIT();
             LeerVersionesSOAPCampus();
-            controlPantalla = PantallaHabilitada("Carnetización Masiva");
-            txtExiste.Text = controlPantalla.ToString();
-            if (controlPantalla >= 1)
-            {
-                TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
-                if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
-                {
-                    Response.Redirect(@"~/Default.aspx");
-                }
-                if (!IsPostBack)
-                {
-                    LeerInfoTxtSQL();
-                    llenadoPais();
-                    llenadoDepartamento();
-                    llenadoState();
-                    llenadoPaisNacimiento();
-                    txtControlBit.Text = "0";
-                    txtControlNR.Text = "0";
-                    txtControlAR.Text = "0";
-                    LlenarHospital();
-                    LoadDataDocumentos();
-                    LoadDataContactos();
-                    LlenarAlergias();
-                    LlenarAntecedentes();
-                }
+            TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
+
+            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
+            {
+                Response.Redirect(@"~/Default.aspx");
             }
-
-            else
+            if (!IsPostBack)
             {
-                lblActualizacion.Text = "¡IMPORTANTE! Esta página no está disponible, ¡Permanece atento a nuevas fechas para actualizar tus datos!";
-                controlCamposVisibles(false);
+                LeerInfoTxtSQL();
+                llenadoPais();
+                llenadoDepartamento();
+                llenadoState();
+                llenadoPaisNacimiento();
+                txtControlBit.Text = "0";
+                txtControlNR.Text = "0";
+                txtControlAR.Text = "0";
+                LlenarHospital();
+                LoadDataDocumentos();
+                LoadDataContactos();
+                LlenarAlergias();
+                LlenarAntecedentes();
             }
         }
 
@@ -156,7 +141,6 @@ namespace ReportesUnis
             tabla.Visible = Condicion;
             tbactualizar.Visible = Condicion;
             InfePersonal.Visible = Condicion;
-            //divActividad.Visible = Condicion;
         }
         private string mostrarInformación(string emplid)
         {
@@ -354,7 +338,6 @@ namespace ReportesUnis
                         {
                             CmbPaisNacimiento.SelectedValue = reader["BIRTHCOUNTRY"].ToString();
                             llenadoDepartamentoNac();
-                            //if (!String.IsNullOrEmpty(reader["DEPARTAMENTO_NAC"].ToString()))
                             CmbDeptoNacimiento.SelectedValue = reader["DEPARTAMENTO_NAC"].ToString();
                             llenadoMunicipioNacimiento();
                             if (!String.IsNullOrEmpty(reader["MUNICIPIO_NAC"].ToString()))
@@ -983,43 +966,7 @@ namespace ReportesUnis
             }
             return VALOR;
         }
-        protected int PantallaHabilitada(string PANTALLA)
-        {
-            txtExiste2.Text = "SELECT COUNT(*) AS CONTADOR " +
-                        "FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE " +
-                        "WHERE TO_CHAR(SYSDATE,'YYYY-MM-DD') " +
-                        "BETWEEN FECHA_INICIO AND FECHA_FIN " +
-                        "AND PANTALLA ='" + PANTALLA + "'";
-            string constr = TxtURL.Text;
-            string control = "0";
-            using (OracleConnection con = new OracleConnection(constr))
-            {
-                con.Open();
-                using (OracleCommand cmd = new OracleCommand())
-                {
-                    try
-                    {
-                        cmd.Connection = con;
-                        cmd.CommandText = "SELECT COUNT(*) AS CONTADOR " +
-                        "FROM UNIS_INTERFACES.TBL_PANTALLA_CARNE " +
-                        "WHERE TO_CHAR(SYSDATE,'YYYY-MM-DD') " +
-                        "BETWEEN FECHA_INICIO AND FECHA_FIN " +
-                        "AND PANTALLA ='" + PANTALLA + "'";
-                        OracleDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            control = reader["CONTADOR"].ToString();
-                        }
-                        con.Close();
-                    }
-                    catch (Exception x)
-                    {
-                        control = x.ToString();
-                    }
-                }
-            }
-            return Convert.ToInt32(control);
-        }
+
         public void EnvioCorreo()
         {
             string htmlBody = LeerBodyEmail("bodyIngresoEstudiante-Operador.txt");
@@ -1550,7 +1497,6 @@ namespace ReportesUnis
                     con.Close();
                 }
             }
-            //CmbAlergias.SelectMethod = "Multiple";
         }
         private void LlenadoContactosEmergencia()
         {
@@ -1814,7 +1760,7 @@ namespace ReportesUnis
                 con.Open();
                 using (OracleCommand cmd = new OracleCommand())
                 {
-                    // Concatenar valores de ALERGIAS
+                    // Concatenar valores de ANTECEDENTES
                     cmd.CommandText = "SELECT DISTINCT(ANTECEDENTES_MED) " +
                                       "FROM SYSADM.PS_UNIS_RG_ANT_MED " +
                                       "WHERE EMPLID = :emplid";
@@ -1838,7 +1784,7 @@ namespace ReportesUnis
                     }
                     reader.Close();
 
-                    // Concatenar valores de OTRA_ALERGIA
+                    // Concatenar valores de OTRO ANTECEDENTE
                     cmd.CommandText = "SELECT DISTINCT(OTRO_ANTECEDENTE) " +
                                       "FROM SYSADM.PS_UNIS_RG_ANT_MED " +
                                       "WHERE EMPLID = :emplid";
@@ -1930,7 +1876,7 @@ namespace ReportesUnis
                     }
                     catch (Exception x)
                     {
-                        Errores = x.Message; 
+                        Errores = x.Message;
                         control = "1";
                     }
 
@@ -1942,7 +1888,7 @@ namespace ReportesUnis
                     }
                     else
                     {
-                        transaction.Rollback(); 
+                        transaction.Rollback();
                         log("Función DatosMedicosCampus", "Error", Errores, "DatosMedicosCampus");
                     }
                     con.Close();
@@ -4057,7 +4003,7 @@ namespace ReportesUnis
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
                 MunicipioNit.Text = CmbMunicipio.SelectedValue;
             }
-            // esto comentado ya funciona correctamente
+
             var respuestaDocumentos = RecorrerDocumentos();
             UP_IDENTIFICACION.Value = respuestaDocumentos.UP_Doc;
             UD_IDENTIFICACION.Value = respuestaDocumentos.UD_Doc;
@@ -4520,8 +4466,8 @@ namespace ReportesUnis
 
             if (radioButtonSelected is true)
             {
-                /*validarAcceso = ValidacionAccesoVista(txtEmplid.Value);
-                if (validarAcceso != null)
+                validarAcceso = ValidacionAccesoVista(txtEmplid.Value);
+                /*if (validarAcceso != null)
                 {*/
 
                 string getInfo = null;
@@ -4636,7 +4582,7 @@ namespace ReportesUnis
 
         protected void GridViewDocumentos_DataBound(object sender, EventArgs e)
         {
-            
+
         }
 
         //revisar para eliminar        
@@ -4869,7 +4815,6 @@ namespace ReportesUnis
 
             }
             XmlNodeList elemList = xmlDocumentoRespuestaCampus.GetElementsByTagName("notification");
-            //return elemList[0].InnerText.ToString();
             return elemList[0].InnerText.ToString();
         }
 
@@ -4920,7 +4865,6 @@ namespace ReportesUnis
             string depto = null;
             string mun = null;
             string pais = null;
-            string paisN = null;
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
