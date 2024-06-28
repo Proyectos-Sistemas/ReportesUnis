@@ -689,6 +689,7 @@
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Tipo de Sangre*:</asp:Label>
                                                 <asp:DropDownList ID="CmbSangre" runat="server" Width="275px" CssClass="form-control">
+                                                    <asp:ListItem Text="Desconocido" Value="-"></asp:ListItem>
                                                     <asp:ListItem Text="O+" Value="OP"></asp:ListItem>
                                                     <asp:ListItem Text="O-" Value="ON"></asp:ListItem>
                                                     <asp:ListItem Text="A+" Value="AP"></asp:ListItem>
@@ -1738,6 +1739,9 @@
                 if (firstTxt && firstTxt.value.trim() !== "") {
                     // Marcar el primer RadioButton como seleccionado
                     firstRb.checked = true;
+                    //Asignar como principal
+                    $('#<%= DOCUMENTO1_PRINCIPAL.ClientID %>').val('Y');
+                    $('#<%= DOCUMENTO2_PRINCIPAL.ClientID %>').val('N');
 
                     // Desmarcar otros RadioButtons si es necesario
                     for (var i = 2; i < rows.length; i++) {
@@ -1761,6 +1765,8 @@
                         if (txt && txt.value.trim() !== "") {
                             // Marcar el RadioButton correspondiente como seleccionado
                             rb.checked = true;
+                            $('#<%= DOCUMENTO1_PRINCIPAL.ClientID %>').val('N');
+                            $('#<%= DOCUMENTO2_PRINCIPAL.ClientID %>').val('Y');
 
                             // Desmarcar otros RadioButtons si es necesario
                             for (var k = 1; k < rows.length; k++) {
@@ -1778,6 +1784,8 @@
                             // Si no se encuentra ningún valor en los TextBox, desmarcar todos los RadioButtons
                             if (rb) {
                                 rb.checked = false;
+                                $('#<%= DOCUMENTO1_PRINCIPAL.ClientID %>').val('N');
+                                $('#<%= DOCUMENTO2_PRINCIPAL.ClientID %>').val('N');
                             }
                         }
                     }

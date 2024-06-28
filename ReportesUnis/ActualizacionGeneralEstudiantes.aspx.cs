@@ -1677,7 +1677,7 @@ namespace ReportesUnis
                         TxtAfiliacion.Text = reader["NRO_AFILIACION"].ToString();
                         TxtCarro.Text = reader["CARRO_CAMPUS"].ToString();
                         TxtSeguro.Text = reader["SEGURO_MEDICO"].ToString();
-                        CmbSangre.SelectedValue = reader["TIPO_SANGRE"].ToString();
+                        CmbSangre.SelectedItem.Text = reader["TIPO_SANGRE"].ToString();
                         EmplidAtencion.Value = reader["EMPLID"].ToString();
                     }
 
@@ -3074,12 +3074,12 @@ namespace ReportesUnis
             foreach (GridViewRow row in GridViewDocumentos.Rows)
             {
                 // Accede a los controles de la fila actual
-                RadioButton RBDocPrincipal = (RadioButton)row.FindControl("RBDocPrincipal");
+                //RadioButton RBDocPrincipal = (RadioButton)row.FindControl("RBDocPrincipal");
                 DropDownList DDLPais = (DropDownList)row.FindControl("DDLPais");
                 TextBox TxtNroDocumento = (TextBox)row.FindControl("TxtNroDocumento");
 
                 // Accede a los valores de los controles
-                bool isPrincipal = RBDocPrincipal.Checked;
+                //bool isPrincipal = RBDocPrincipal.Checked;
                 string pais = DDLPais.SelectedValue;
                 string tipoDocumento = row.Cells[2].Text;
                 string documento = TxtNroDocumento.Text;
@@ -3087,23 +3087,22 @@ namespace ReportesUnis
                 if (tipoDocumento == "Pasaporte")
                     tipoDocumento = "PAS";
 
-                if (isPrincipal)
-                    Primaria = "Y";
-                else
-                    Primaria = "N";
+                //if (isPrincipal)
+                //    Primaria = "Y";
+                //else
+                //    Primaria = "N";
                 if (!String.IsNullOrEmpty(documento))
                 {
                     if (ExisteDPI.Value == "0" && tipoDocumento == "DPI")
                     {
-                        UP_PROP_NID = "<COLL_PERS_NID>\n" +
+                        UP_PROP_NID ="<COLL_PERS_NID>\n" +
                                     "   <KEYPROP_COUNTRY>" + pais + "</KEYPROP_COUNTRY> \n" +
                                     "   <KEYPROP_NATIONAL_ID_TYPE>" + tipoDocumento + "</KEYPROP_NATIONAL_ID_TYPE> \n" +
-                                    "   <PROP_PRIMARY_NID>" + Primaria + "</PROP_PRIMARY_NID>\n " +
+                                    "   <PROP_PRIMARY_NID>" + DOCUMENTO1_PRINCIPAL.Value + "</PROP_PRIMARY_NID>\n " +
                                     "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
                                     "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
                                     "</COLL_PERS_NID>\n " + UP_PROP_NID;
 
-                        DOCUMENTO1_PRINCIPAL.Value = Primaria;
                         PAIS_DOCUMENTO1.Value = pais;
                         TIPO_DOCUMENTO1.Value = tipoDocumento;
                         DOCUMENTO1.Value = documento;
@@ -3113,11 +3112,11 @@ namespace ReportesUnis
                         UD_PROP_NID = "<COLL_PERS_NID>\n" +
                                     "   <KEYPROP_COUNTRY>" + pais + "</KEYPROP_COUNTRY> \n" +
                                     "   <KEYPROP_NATIONAL_ID_TYPE>" + tipoDocumento + "</KEYPROP_NATIONAL_ID_TYPE> \n" +
-                                    "   <PROP_PRIMARY_NID>" + Primaria + "</PROP_PRIMARY_NID>\n " +
+                                    "   <PROP_PRIMARY_NID>" + DOCUMENTO1_PRINCIPAL.Value + "</PROP_PRIMARY_NID>\n " +
                                     "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
                                     "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
                                     "</COLL_PERS_NID>\n " + UD_PROP_NID;
-                        DOCUMENTO1_PRINCIPAL.Value = Primaria;
+                        
                         PAIS_DOCUMENTO1.Value = pais;
                         TIPO_DOCUMENTO1.Value = tipoDocumento;
                         DOCUMENTO1.Value = documento;
@@ -3127,11 +3126,11 @@ namespace ReportesUnis
                         UP_PROP_NID = "<COLL_PERS_NID>\n" +
                                     "   <KEYPROP_COUNTRY>" + pais + "</KEYPROP_COUNTRY> \n" +
                                     "   <KEYPROP_NATIONAL_ID_TYPE>" + tipoDocumento + "</KEYPROP_NATIONAL_ID_TYPE> \n" +
-                                    "   <PROP_PRIMARY_NID>" + Primaria + "</PROP_PRIMARY_NID>\n " +
+                                    "   <PROP_PRIMARY_NID>" + DOCUMENTO2_PRINCIPAL.Value + "</PROP_PRIMARY_NID>\n " +
                                     "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
                                     "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
                                     "</COLL_PERS_NID>\n " + UP_PROP_NID;
-                        DOCUMENTO2_PRINCIPAL.Value = Primaria;
+
                         PAIS_DOCUMENTO2.Value = pais;
                         TIPO_DOCUMENTO2.Value = tipoDocumento;
                         DOCUMENTO2.Value = documento;
@@ -3141,11 +3140,11 @@ namespace ReportesUnis
                         UD_PROP_NID = "<COLL_PERS_NID>\n" +
                                     "   <KEYPROP_COUNTRY>" + pais + "</KEYPROP_COUNTRY> \n" +
                                     "   <KEYPROP_NATIONAL_ID_TYPE>" + tipoDocumento + "</KEYPROP_NATIONAL_ID_TYPE> \n" +
-                                    "   <PROP_PRIMARY_NID>" + Primaria + "</PROP_PRIMARY_NID>\n " +
+                                    "   <PROP_PRIMARY_NID>" + DOCUMENTO2_PRINCIPAL.Value + "</PROP_PRIMARY_NID>\n " +
                                     "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
                                     "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
                                     "</COLL_PERS_NID>\n " + UD_PROP_NID;
-                        DOCUMENTO2_PRINCIPAL.Value = Primaria;
+
                         PAIS_DOCUMENTO2.Value = pais;
                         TIPO_DOCUMENTO2.Value = tipoDocumento;
                         DOCUMENTO2.Value = documento;
@@ -3429,7 +3428,7 @@ namespace ReportesUnis
                 if (control == 0)
                 {
                     transaction.Commit();
-                    log("Función AlmacenarAntecedentesCampus", "Correcto", "Los antecedentes fueron almacenados de forma coorrecta", "AlmacenarAntecedentesCampus");
+                    log("Función AlmacenarAntecedentesCampus", "Correcto", "Los antecedentes fueron almacenados de forma correcta", "AlmacenarAntecedentesCampus");
 
                 }
                 else
@@ -4609,7 +4608,7 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     try
                     {
-                        cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_UPDATE_ALUMNO (PROCESO, ESTADO, DESCRIPCION_ESTADO, UBICACION_ERROR, FECHA_EJECUCION, EMPLID_ALUMNO, EMPLID_USUARIO) VALUES ('" + PROCESO + "','" + ESTADO + "','" + DESCRIPCION + "','" + UBICACION + "',SYSDATE,'" + txtCarne.Text + "','" + TextUser.Text + "')";
+                        cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_UPDATE_ALUMNO (PROCESO, ESTADO, DESCRIPCION_ESTADO, UBICACION_ERROR, FECHA_EJECUCION, EMPLID_ALUMNO, ID_USUARIO) VALUES ('" + PROCESO + "','" + ESTADO + "','" + DESCRIPCION + "','" + UBICACION + "',SYSDATE,'" + txtCarne.Text + "','" + TextUser.Text + "')";
                         cmd.ExecuteNonQuery();
                         transaction.Commit();
                     }
