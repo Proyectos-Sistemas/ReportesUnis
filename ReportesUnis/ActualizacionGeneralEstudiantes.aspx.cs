@@ -52,7 +52,7 @@ namespace ReportesUnis
 
             TextUser.Text = Context.User.Identity.Name.Replace("@unis.edu.gt", "");
 
-            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAlumnos") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
+            if (Session["Grupos"] is null || (!((List<string>)Session["Grupos"]).Contains("RLI_VistaAdmisiones") && !((List<string>)Session["Grupos"]).Contains("RLI_Admin")))
             {
                 Response.Redirect(@"~/Default.aspx");
             }
@@ -3078,13 +3078,11 @@ namespace ReportesUnis
             string UD_PROP_NID = "";
             foreach (GridViewRow row in GridViewDocumentos.Rows)
             {
-                // Accede a los controles de la fila actual
-                //RadioButton RBDocPrincipal = (RadioButton)row.FindControl("RBDocPrincipal");
+                // Accede a los controles de la fila actual                
                 DropDownList DDLPais = (DropDownList)row.FindControl("DDLPais");
                 TextBox TxtNroDocumento = (TextBox)row.FindControl("TxtNroDocumento");
 
                 // Accede a los valores de los controles
-                //bool isPrincipal = RBDocPrincipal.Checked;
                 string pais = DDLPais.SelectedValue;
                 string tipoDocumento = row.Cells[2].Text;
                 string documento = TxtNroDocumento.Text;
@@ -4220,7 +4218,7 @@ namespace ReportesUnis
                     using (OracleCommand cmd = new OracleCommand())
                     {
                         cmd.Transaction = transaction;
-                        //Obtener fotografia
+                        //Obtener nit pendiene
                         cmd.Connection = con;
                         cmd.CommandText = "SELECT COUNT(*) AS CONTADOR FROM UNIS_INTERFACES.TBL_NIT_PENDIENTE_ST WHERE EMPLID = '" + UserEmplid.Text + "'";
                         OracleDataReader reader = cmd.ExecuteReader();

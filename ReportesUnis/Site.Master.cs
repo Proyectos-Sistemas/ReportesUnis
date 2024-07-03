@@ -51,10 +51,18 @@ namespace ReportesUnis
                     RepCamarasEst.Visible = respuesta.Contains(RepCamarasEst.ValidationGroup);
                     //RepCamarasEmp.Visible = respuesta.Contains(RepCamarasEmp.ValidationGroup); DESCOMENTAR EN LA FASE 2
                 }
+                if (respuesta.Contains("RLI_VistaAdmisiones"))
+                {
+                    ActualizacionGeneralEstudiantes.Visible = true;
+                }
+                else
+                {
+                    ActualizacionGeneralEstudiantes.Visible = respuesta.Contains(ActualizacionGeneralEstudiantes.ValidationGroup);
+                }
 
                 if (respuesta.Contains("ACCESO_CARNETIZACION"))
                 {
-                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = GestionesEmpleados.Visible = ConfirmacionEmpleados.Visible = ActualizacionGeneralEstudiantes.Visible = true;
+                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = GestionesEmpleados.Visible = ConfirmacionEmpleados.Visible = true;
                 }
                 else
                 {
@@ -62,7 +70,6 @@ namespace ReportesUnis
                     GestionesEstudiantes.Visible = respuesta.Contains(GestionesEstudiantes.ValidationGroup);
                     GestionesEmpleados.Visible = respuesta.Contains(GestionesEmpleados.ValidationGroup);
                     Confirmacion.Visible = respuesta.Contains(Confirmacion.ValidationGroup);
-                    ActualizacionGeneralEstudiantes.Visible = respuesta.Contains(ActualizacionGeneralEstudiantes.ValidationGroup);
                 }
             }
             catch (Exception)

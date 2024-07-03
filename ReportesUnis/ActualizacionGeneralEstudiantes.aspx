@@ -1159,6 +1159,7 @@
             var deptoN = document.getElementById('<%= CmbDepartamentoNIT.ClientID %>').value;
             var muniN = document.getElementById('<%= CmbMunicipioNIT.ClientID %>').value;
             var Correo = document.getElementById('<%= TxtCorreoPersonal.ClientID %>').value;
+            var paisCumple = document.getElementById('<%= CmbPaisNacimiento.ClientID %>').value;
 
             // Obtener el valor del <textarea>
             var ValidacionNit = $('#<%= ValidacionNit.ClientID %>').val().trim();
@@ -1191,6 +1192,13 @@
                     mensaje = "-Revisa la fecha de nacimiento.";
                 }
 
+                if (paisCumple.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El país de nacimiento es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El país de nacimiento es requerido.";
+                    }
+                }
 
                 if (ddlPaisNacimiento === 'GTM') { // Suponiendo que el valor para Guatemala es 'GTM'
                     if (mensaje.trim() == "") {
