@@ -967,17 +967,53 @@ namespace ReportesUnis
             return VALOR;
         }
 
-        public void EnvioCorreo()
+        public string EnvioCorreo(string nombre, string dpiViejo, string dpiNuevo, string pasViejo, string pasNuevo, string dpiPrincipalNuevo, string dpiPrincipalAnterior, string passPrincipalNuevo, string passPrincipalAnterior)
         {
-            string htmlBody = LeerBodyEmail("bodyIngresoEstudiante-Operador.txt");
-            string[] datos = LeerInfoEmail("datosIngresoEstudiante-Operador.txt");
+            string htmlBody = LeerBodyEmail("bodyCambioDocumentoIdentificacion.txt");
+            string[] datos = LeerInfoEmail("datosCambioDocumentoIdentificacion.txt");
             string[] credenciales = LeerCredencialesMail();
+            string control = "0";
             var email = new MimeMessage();
 
-            email.From.Add(new MailboxAddress("Actualización Alumnos", credenciales[3]));
+            email.From.Add(new MailboxAddress("Actualización Documento de Identificación", credenciales[3]));
             email.To.Add(new MailboxAddress(credenciales[0], credenciales[3]));
-
             email.Subject = datos[0];
+
+            htmlBody = htmlBody.Replace("{nombre}", nombre);
+            //Se valida que exista cambio en el DPI, siendo el DPI el principal
+            if (!String.IsNullOrEmpty(dpiViejo.Trim()) && !String.IsNullOrEmpty(dpiNuevo.Trim()) && (dpiPrincipalAnterior == "Y" && dpiPrincipalNuevo == "Y"))
+            {
+                htmlBody = htmlBody.Replace("{dpi}", "Modificación de DPI: <br>DPI anterior: <strong>" + dpiViejo + "</strong>. <br> DPI nuevo: <strong>" + dpiNuevo + "</strong> .");
+            }
+            else
+            {
+                htmlBody = htmlBody.Replace("{dpi}", "");
+            }
+            //Se valida que exista cambio en el Pasaporte , siendo el Pasaporte el principal
+            if (!String.IsNullOrEmpty(pasViejo.Trim()) && !String.IsNullOrEmpty(pasNuevo.Trim()) && (passPrincipalAnterior == "Y" && passPrincipalNuevo == "Y"))
+            {
+                htmlBody = htmlBody.Replace("{pasaporte}", "Modificación de Pasaporte: <br>Pasaporte anterior: <strong>" + pasViejo + "</strong>. <br> Pasaporte nuevo: <strong>" + pasNuevo + " </strong> .");
+            }
+            else
+            {
+                htmlBody = htmlBody.Replace("{pasaporte}", "");
+            }
+
+            //Se valida un cambio en el pasaporte
+            if (dpiPrincipalAnterior != dpiPrincipalNuevo && passPrincipalAnterior != passPrincipalNuevo && dpiNuevo == dpiViejo && pasViejo == pasNuevo)
+            {
+                htmlBody = htmlBody.Replace("{principal}", " El documento principal ha cambiado por lo que el usuario debe de modificarse con los datos del DPI <br> Los datos son los siguientes : <br>DPI: <strong>" + dpiNuevo + "</strong> <br>Pasaporte : <strong>" + pasNuevo + " </strong> .");
+            }
+
+            if (dpiPrincipalAnterior != dpiPrincipalNuevo && passPrincipalAnterior != passPrincipalNuevo && dpiNuevo != dpiViejo && pasViejo == pasNuevo)
+            {
+                htmlBody = htmlBody.Replace("{principal}", " El documento principal ha cambiado por lo que el usuario debe de modificarse con los datos del DPI <br> Los datos son los siguientes : <br>DPI anterior: <strong>" + dpiViejo + "</strong> <br>DPI nuevo: <strong>" + dpiNuevo + "</strong> <br>Pasaporte : <strong>" + pasNuevo + " </strong> .");
+            }
+            if (dpiPrincipalAnterior != dpiPrincipalNuevo && passPrincipalAnterior != passPrincipalNuevo && dpiNuevo != dpiViejo && pasViejo != pasNuevo)
+            {
+                htmlBody = htmlBody.Replace("{principal}", " El documento principal ha cambiado por lo que el usuario debe de modificarse con los datos del DPI <br> Los datos son los siguientes : <br>DPI anterior: <strong>" + dpiViejo + "</strong> <br>DPI nuevo: <strong>" + dpiNuevo + "</strong> <br>Pasaporte : <strong>" + pasViejo + " </strong> .");
+            }
+
             email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
                 Text = htmlBody
@@ -995,56 +1031,21 @@ namespace ReportesUnis
                     smtp.Send(email);
                     smtp.Disconnect(true);
 
+                    log("Envío de Correo", "Correcto", "El Correo fue enviado con exito.", "Envio de correo para informar modificacion de documento de identificación.");
                 }
                 catch (Exception ex)
                 {
-                    //log("ERROR - Envio de correo para operador");
+                    log("Envío de Correo", "Error", ex.Message, "Envio de correo para informar modificacion de documento de identificación.");
                     lblActualizacion.Text = ex.ToString();
+                    control = "1";
                 }
             }
-
+            return control;
         }
-        public void EnvioCorreoEmpleado()
-        {
-            string htmlBody = LeerBodyEmail("bodyIngresoEstudiante.txt");
-            string[] datos = LeerInfoEmail("datosIngresoEstudiante.txt");
-            string[] credenciales = LeerCredencialesMail();
-            var email = new MimeMessage();
-            var para = txtNombre.Text + " " + txtPrimerApellido.Text;
 
-
-            email.From.Add(new MailboxAddress(credenciales[0], credenciales[3]));
-            email.To.Add(new MailboxAddress(para, EmailUnis.Text));
-
-            email.Subject = datos[0];
-            email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
-            {
-                Text = htmlBody
-            };
-
-            using (var smtp = new SmtpClient())
-            {
-                try
-                {
-                    smtp.Connect("smtp.gmail.com", 465, SecureSocketOptions.SslOnConnect);
-
-                    // Note: only needed if the SMTP server requires authentication
-                    smtp.Authenticate(credenciales[1], credenciales[2]);
-
-                    smtp.Send(email);
-                    smtp.Disconnect(true);
-
-                }
-                catch (Exception ex)
-                {
-                    //log("ERROR - Envio de correo para " + EmailUnis.Text);
-                    lblActualizacion.Text = ex.ToString();
-                }
-            }
-        }
         public string LeerBodyEmail(string archivo)
         {
-            string rutaCompleta = CurrentDirectory + "/Emails/Estudiantes/" + archivo;
+            string rutaCompleta = CurrentDirectory + "/Emails/ActualizacionGeneral/" + archivo;
             string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
             {
@@ -1055,7 +1056,7 @@ namespace ReportesUnis
         }
         public string[] LeerInfoEmail(string archivo)
         {
-            string rutaCompleta = CurrentDirectory + "/Emails/Estudiantes/" + archivo;
+            string rutaCompleta = CurrentDirectory + "/Emails/ActualizacionGeneral/" + archivo;
             string[] datos;
             string subjet = "";
             string to = "";
@@ -1371,7 +1372,7 @@ namespace ReportesUnis
                             {
                                 dt.Rows[0]["País"] = reader["Pais"].ToString();
                                 dt.Rows[0]["Documento"] = reader["Documento"].ToString();
-                                DOCUMENTO1_INICIAL.Value= reader["Documento"].ToString();
+                                DOCUMENTO1_INICIAL.Value = reader["Documento"].ToString();
                                 dt.Rows[0]["PRIMARY_NID"] = reader["PRIMARY_NID"].ToString();
                                 DOCUMENTO1_PRINCIPAL_INICIAL.Value = reader["PRIMARY_NID"].ToString();
                                 ExisteDPI.Value = "1";
@@ -1382,7 +1383,7 @@ namespace ReportesUnis
                                 dt.Rows[1]["Documento"] = reader["Documento"].ToString();
                                 DOCUMENTO2_INCIAL.Value = reader["Documento"].ToString();
                                 dt.Rows[1]["PRIMARY_NID"] = reader["PRIMARY_NID"].ToString();
-                                DOCUMENTO2_PRINCIPAL_INICIAL.Value= reader["PRIMARY_NID"].ToString();
+                                DOCUMENTO2_PRINCIPAL_INICIAL.Value = reader["PRIMARY_NID"].ToString();
                                 ExistePasaporte.Value = "1";
                             }
                         }
@@ -1607,7 +1608,7 @@ namespace ReportesUnis
                         "WHERE EMPLID ='" + txtEmplid.Value + "'";
 
                     try
-                    
+
                     {
                         if (String.IsNullOrEmpty(txtNombreE1_Inicial.Value) || txtNombreE1_Inicial.Value == "")
                         {
@@ -1842,7 +1843,7 @@ namespace ReportesUnis
                 }
             }
         }
-        protected void DatosMedicosCampus()
+        protected string DatosMedicosCampus()
         {
             string Errores = null;
             string InsertEmergencia = "INSERT INTO SYSADM.PS_UNIS_ATEN_EMERG (EMPLID, HOSPITAL_TRASLADO, ANTECEDENTES_MED, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE) " +
@@ -1900,6 +1901,7 @@ namespace ReportesUnis
                     con.Close();
                 }
             }
+            return control;
         }
         protected string IngresoDatosGenerales()
         {
@@ -3094,7 +3096,7 @@ namespace ReportesUnis
                 {
                     if (ExisteDPI.Value == "0" && tipoDocumento == "DPI")
                     {
-                        UP_PROP_NID ="<COLL_PERS_NID>\n" +
+                        UP_PROP_NID = "<COLL_PERS_NID>\n" +
                                     "   <KEYPROP_COUNTRY>" + pais + "</KEYPROP_COUNTRY> \n" +
                                     "   <KEYPROP_NATIONAL_ID_TYPE>" + tipoDocumento + "</KEYPROP_NATIONAL_ID_TYPE> \n" +
                                     "   <PROP_PRIMARY_NID>" + DOCUMENTO1_PRINCIPAL.Value + "</PROP_PRIMARY_NID>\n " +
@@ -3115,7 +3117,7 @@ namespace ReportesUnis
                                     "   <PROP_TAX_REF_ID_SGP>N</PROP_TAX_REF_ID_SGP>\n " +
                                     "   <PROP_NATIONAL_ID>" + documento + "</PROP_NATIONAL_ID>\n " +
                                     "</COLL_PERS_NID>\n " + UD_PROP_NID;
-                        
+
                         PAIS_DOCUMENTO1.Value = pais;
                         TIPO_DOCUMENTO1.Value = tipoDocumento;
                         DOCUMENTO1.Value = documento;
@@ -3301,11 +3303,13 @@ namespace ReportesUnis
                 {
                     transaction.Commit();
                     log("Función AlmacenarAlergiasCampus", "Correcto", "Las alergias fueron almacenadas de forma correcta", "AlmacenarAlergiasCampus");
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                 }
                 else
                 {
                     transaction.Rollback();
                     log("Función AlmacenarAlergiasCampus", "Error", Errores, "AlmacenarAlergiasCampus");
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
                 con.Close();
 
@@ -3428,12 +3432,13 @@ namespace ReportesUnis
                 {
                     transaction.Commit();
                     log("Función AlmacenarAntecedentesCampus", "Correcto", "Los antecedentes fueron almacenados de forma correcta", "AlmacenarAntecedentesCampus");
-
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                 }
                 else
                 {
                     transaction.Rollback();
                     log("Función AlmacenarAntecedentesCampus", "Error", Errores, "AlmacenarAntecedentesCampus");
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
                 con.Close();
 
@@ -3494,11 +3499,13 @@ namespace ReportesUnis
                             cmd.ExecuteNonQuery();
                             transaction.Commit();
                             log("Función AlmacenarEmergencias", "Correcto", "Los datos fueron almacenados correctamente", "AlmacenarEmergencias");
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                         }
                         catch (Exception x)
                         {
                             transaction.Rollback();
                             control++; log("Función AlmacenarEmergencias", "Error", x.Message, "AlmacenarEmergencias");
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                         }
                     }
                 }
@@ -3656,12 +3663,14 @@ namespace ReportesUnis
                         cmd.ExecuteNonQuery();
                         transaction.Commit();
                         log("Función AlmacenamientoApex", "Correcto", "La informacioón fue almacenada de forma correcta", "AlmacenamientoApex");
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                     }
                     catch (Exception X)
                     {
                         transaction.Rollback();
                         log("Función AlmacenamientoApex", "Error", X.Message, "AlmacenamientoApex");
                         control++;
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                     }
 
                 }
@@ -4005,7 +4014,9 @@ namespace ReportesUnis
             var respuestaDocumentos = RecorrerDocumentos();
             UP_IDENTIFICACION.Value = respuestaDocumentos.UP_Doc;
             UD_IDENTIFICACION.Value = respuestaDocumentos.UD_Doc;
-            resultados = IngresoDatosGenerales();
+            //resultados = IngresoDatosGenerales();
+            resultados = EnvioCorreo(txtNombre.Text + " " + txtApellido.Text, DOCUMENTO1_INICIAL.Value, DOCUMENTO1.Value, DOCUMENTO2_INCIAL.Value, DOCUMENTO2.Value, DOCUMENTO1_PRINCIPAL.Value, DOCUMENTO1_PRINCIPAL_INICIAL.Value, DOCUMENTO2_PRINCIPAL.Value, DOCUMENTO2_PRINCIPAL_INICIAL.Value);
+
 
             if (resultados == "0")
             {
@@ -4041,7 +4052,10 @@ namespace ReportesUnis
                             {
                                 //ACTUALIZACION EN CRM
                                 limpiarVariables();
-                                getInfo = consultaGet(txtDPI.Text);
+                                if (!String.IsNullOrEmpty(DOCUMENTO1_INICIAL.Value))
+                                    getInfo = consultaGet(DOCUMENTO1_INICIAL.Value);
+                                else
+                                    getInfo = consultaGet(DOCUMENTO2_INCIAL.Value);
                                 PartyNumber = getBetween(getInfo, "PartyNumber\" : \"", "\",");
                                 string FechaCumple = Convert.ToDateTime(txtCumple.Text).ToString("yyyy-MM-dd");
                                 body = "{\r\n    " +
@@ -4081,6 +4095,8 @@ namespace ReportesUnis
                                     "\"PersonDEO_SeguroMedico_c\": \"" + TxtSeguro.Text + "\",\r\n    " +
                                     "\"PersonDEO_NroDeAfiliacion_c\": \"" + TxtAfiliacion.Text + "\"\r\n    " +
                                     "}";
+                                // resultados = EnvioCorreo(txtNombre.Text + " " + txtApellido.Text, DOCUMENTO1_INICIAL.Value, DOCUMENTO1.Value, DOCUMENTO2_INCIAL.Value, DOCUMENTO2.Value,, DOCUMENTO1_PRINCIPAL.Value, DOCUMENTO1_PRINCIPAL_INICIAL.Value, DOCUMENTO2_PRINCIPAL.Value, DOCUMENTO2_PRINCIPAL_INICIAL.Value);
+
                                 //Actualiza por medio del metodo PATCH
                                 if (!String.IsNullOrEmpty(PartyNumber))
                                     updatePatch(body, PartyNumber);
@@ -4091,12 +4107,31 @@ namespace ReportesUnis
                                     resultados = ContactoEmergenciaCampus(nombre1, CE_parentesco1.Value, telefono1, PrincipalC1, nombre2, CE_parentesco2.Value, telefono2, PrincipalC2);
                                     if (resultados == "0")
                                     {
-                                        DatosMedicosCampus();
+                                        resultados = DatosMedicosCampus();
+                                        if (resultados == "0")
+                                        {
+                                            if (DOCUMENTO1_PRINCIPAL.Value != PrincipalD1 || DOCUMENTO1_INICIAL.Value != DOCUMENTO1.Value || DOCUMENTO2_PRINCIPAL.Value != PrincipalD2 || DOCUMENTO2_INCIAL.Value != DOCUMENTO2.Value)
+                                            {
+                                                //resultados = EnvioCorreo(txtNombre.Text + " " + txtApellido.Text, DOCUMENTO1_INICIAL.Value, DOCUMENTO1.Value, DOCUMENTO2_INCIAL.Value, DOCUMENTO2.Value,, DOCUMENTO1_PRINCIPAL.Value, DOCUMENTO1_PRINCIPAL_INICIAL.Value, DOCUMENTO2_PRINCIPAL.Value, DOCUMENTO2_PRINCIPAL_INICIAL.Value);
+
+                                                if (resultados == "0")
+                                                {
+                                                    log("Actualizacion General de información", "Correcto", "El proceso finalizó correctamente", "Actualizacion General de información");
+                                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                log("Actualizacion General de información", "Correcto", "El proceso finalizó correctamente", "Actualizacion General de información");
+                                                ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
+                                            }
+                                        }
                                     }
                                 }
                                 else
                                 {
                                     log("Actualización en CRM", "Error", respuestaMensajePatch, "Actualización información de contacto en CRM");
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                 }
                             }
                         }

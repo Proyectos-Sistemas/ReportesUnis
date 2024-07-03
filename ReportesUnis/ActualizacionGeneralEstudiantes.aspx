@@ -848,7 +848,7 @@
                 <div class="col-md-4 mx-auto text-center">
                 </div>
                 <div class="col-md-4 mx-auto text-center">
-                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="false" OnClientClick="return mostrarAlerta();" />
+                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="false" OnClientClick="return mostrarAlerta();"  OnClick="BtnActualizar_Click"/>
                 </div>
                 <div class="col-md-4 mx-auto text-center">
                 </div>
@@ -1200,13 +1200,13 @@
                     }
                 }
 
-                if (ddlPaisNacimiento === 'GTM') { // Suponiendo que el valor para Guatemala es 'GTM'
-                    if (mensaje.trim() == "") {
-                        mensaje = "-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
-                    } else {
-                        mensaje = mensaje + "\n-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
-                    }
-                }
+                //if (ddlPaisNacimiento === 'GTM') { // Suponiendo que el valor para Guatemala es 'GTM'
+                //    if (mensaje.trim() == "") {
+                //        mensaje = "-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
+                //    } else {
+                //        mensaje = mensaje + "\n-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
+                //    }
+                //}
 
                 if (nombre.trim() === "") {
                     if (mensaje.trim() == "") {

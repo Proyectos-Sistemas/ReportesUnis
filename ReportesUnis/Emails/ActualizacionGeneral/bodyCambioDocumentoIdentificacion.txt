@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<body>
+    <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
+        <div style="background-color: #ffffff; max-width: 600px; margin: 0 auto; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #000;">Actualización Documento de Identificación</h3>
+            <p style="color: #000;">Se ha realizado un cambio en los documentos de identificación del alumno <strong>{nombre}</strong> por lo que se adjunta la siguiente información para las actualizaciones correspondientes.</p>
+            <p style="color: #000;"></p>
+            <p style="color: #000;">{dpi}</p>
+            <p style="color: #000;"></p>
+            <p style="color: #000;">{pasaporte}</p>
+            <p style="color: #000;"></p>
+            <p style="color: #000;">{principal}</p>
+            <p style="color: #000;"></p>
+            <p style="color: #000;">Recuerde que el DPI lleva prioridad ante el pasaporte.</p>
+            <p style="color: #000;">Saludos cordiales.</p>
+        </div>
+    </div>
+</body>
+</html>

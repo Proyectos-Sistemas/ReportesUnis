@@ -424,6 +424,8 @@
     <Content Include="Cargarfotografia.aspx" />
     <Content Include="CargarFotografiaEmpleados.aspx" />
     <Content Include="ComboDinamicoaspx.aspx" />
+    <Content Include="Emails\ActualizacionGeneral\bodyCambioDocumentoIdentificacion.txt" />
+    <Content Include="Emails\ActualizacionGeneral\datosCambioDocumentoIdentificacion.txt" />
     <Content Include="Tabs.aspx" />
     <Content Include="VersionesCampus.txt" />
     <Content Include="ConfirmacionDeFotografias.aspx" />
