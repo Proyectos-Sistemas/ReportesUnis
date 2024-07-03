@@ -984,6 +984,7 @@ namespace ReportesUnis
             if (!String.IsNullOrEmpty(dpiViejo.Trim()) && !String.IsNullOrEmpty(dpiNuevo.Trim()) && (dpiPrincipalAnterior == "Y" && dpiPrincipalNuevo == "Y"))
             {
                 htmlBody = htmlBody.Replace("{dpi}", "Modificación de DPI: <br>DPI anterior: <strong>" + dpiViejo + "</strong>. <br> DPI nuevo: <strong>" + dpiNuevo + "</strong> .");
+                htmlBody = htmlBody.Replace("{principal}", "");
             }
             else
             {
@@ -993,6 +994,7 @@ namespace ReportesUnis
             if (!String.IsNullOrEmpty(pasViejo.Trim()) && !String.IsNullOrEmpty(pasNuevo.Trim()) && (passPrincipalAnterior == "Y" && passPrincipalNuevo == "Y"))
             {
                 htmlBody = htmlBody.Replace("{pasaporte}", "Modificación de Pasaporte: <br>Pasaporte anterior: <strong>" + pasViejo + "</strong>. <br> Pasaporte nuevo: <strong>" + pasNuevo + " </strong> .");
+                htmlBody = htmlBody.Replace("{principal}", "");
             }
             else
             {
@@ -4015,7 +4017,7 @@ namespace ReportesUnis
             UP_IDENTIFICACION.Value = respuestaDocumentos.UP_Doc;
             UD_IDENTIFICACION.Value = respuestaDocumentos.UD_Doc;
             //resultados = IngresoDatosGenerales();
-            resultados = EnvioCorreo(txtNombre.Text + " " + txtApellido.Text, DOCUMENTO1_INICIAL.Value, DOCUMENTO1.Value, DOCUMENTO2_INCIAL.Value, DOCUMENTO2.Value, DOCUMENTO1_PRINCIPAL.Value, DOCUMENTO1_PRINCIPAL_INICIAL.Value, DOCUMENTO2_PRINCIPAL.Value, DOCUMENTO2_PRINCIPAL_INICIAL.Value);
+            //resultados = EnvioCorreo(txtNombre.Text + " " + txtApellido.Text, DOCUMENTO1_INICIAL.Value, DOCUMENTO1.Value, DOCUMENTO2_INCIAL.Value, DOCUMENTO2.Value, DOCUMENTO1_PRINCIPAL.Value, DOCUMENTO1_PRINCIPAL_INICIAL.Value, DOCUMENTO2_PRINCIPAL.Value, DOCUMENTO2_PRINCIPAL_INICIAL.Value);
 
 
             if (resultados == "0")
@@ -4112,7 +4114,7 @@ namespace ReportesUnis
                                         {
                                             if (DOCUMENTO1_PRINCIPAL.Value != PrincipalD1 || DOCUMENTO1_INICIAL.Value != DOCUMENTO1.Value || DOCUMENTO2_PRINCIPAL.Value != PrincipalD2 || DOCUMENTO2_INCIAL.Value != DOCUMENTO2.Value)
                                             {
-                                                //resultados = EnvioCorreo(txtNombre.Text + " " + txtApellido.Text, DOCUMENTO1_INICIAL.Value, DOCUMENTO1.Value, DOCUMENTO2_INCIAL.Value, DOCUMENTO2.Value,, DOCUMENTO1_PRINCIPAL.Value, DOCUMENTO1_PRINCIPAL_INICIAL.Value, DOCUMENTO2_PRINCIPAL.Value, DOCUMENTO2_PRINCIPAL_INICIAL.Value);
+                                                resultados = EnvioCorreo(txtNombre.Text + " " + txtApellido.Text, DOCUMENTO1_INICIAL.Value, DOCUMENTO1.Value, DOCUMENTO2_INCIAL.Value, DOCUMENTO2.Value, DOCUMENTO1_PRINCIPAL.Value, DOCUMENTO1_PRINCIPAL_INICIAL.Value, DOCUMENTO2_PRINCIPAL.Value, DOCUMENTO2_PRINCIPAL_INICIAL.Value);
 
                                                 if (resultados == "0")
                                                 {
