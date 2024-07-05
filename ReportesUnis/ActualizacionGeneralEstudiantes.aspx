@@ -313,7 +313,7 @@
                                                 <Columns>
                                                     <asp:TemplateField HeaderText="Principal" ItemStyle-HorizontalAlign="Center">
                                                         <ItemTemplate>
-                                                            <asp:RadioButton ID="RBDocPrincipal" runat="server" GroupName="DocumentosIdentificacion" Enabled="false" />
+                                                            <asp:RadioButton ID="RBDocPrincipal" runat="server" GroupName="DocumentosIdentificacion" Enabled="true" OnClick="checkPrincipalRow()"/>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="País">
@@ -1731,6 +1731,32 @@
             radioButton.checked = true;
         }
 
+        function checkPrincipalRow() {
+            // Obtener referencia al GridView
+            var grid = document.getElementById('<%= GridViewDocumentos.ClientID %>');
+
+            // Obtener todas las filas del GridView
+            var rows = grid.getElementsByTagName('tr');
+
+            // Verificar que hay al menos dos filas (la primera es el encabezado)
+            if (rows.length > 1) {
+                // Obtener referencias a los elementos en la primera fila de datos
+                var firstRow = rows[1];
+                var firstTxt = firstRow.cells[3].querySelector('input[type="text"]');
+
+                // Verificar si el primer TextBox tiene algún valor
+                if (firstTxt && firstTxt.value.trim() !== "") {
+                    // La fila 0 tiene información, evitar que se seleccionen otros RadioButtons
+                    alert("El DPI ingresado es el documento principal. Para seleccionar otro documento como principal, debes primero eliminar el DPI o asegurarte de que no haya un DPI ingresado.");
+                    event.preventDefault();
+                } else {
+                    // Si el primer TextBox está vacío, permitir la selección del RadioButton
+                    updatePrincipalRadioButton();
+                }
+            }
+        }
+
+
         function selectOnlyThisContact(radioButton) {
             var allRadios = document.querySelectorAll('[id*="RBContPrincipal"]');
             allRadios.forEach(function (radio) {
@@ -1782,6 +1808,7 @@
                 if (firstTxt && firstTxt.value.trim() !== "") {
                     // Marcar el primer RadioButton como seleccionado
                     firstRb.checked = true;
+
                     //Asignar como principal
                     $('#<%= DOCUMENTO1_PRINCIPAL.ClientID %>').val('Y');
                     $('#<%= DOCUMENTO2_PRINCIPAL.ClientID %>').val('N');
@@ -1812,7 +1839,7 @@
                                 if (k !== j) {
                                     var otherRb = rows[k].cells[0].querySelector('input[type="radio"]');
                                     if (otherRb) {
-                                        otherRb.checked = false;
+                                        otherRb.checked = false
                                     }
                                 }
                             }
