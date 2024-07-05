@@ -415,6 +415,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="AccesosFacultad_ActulizacionGeneral.aspx" />
     <Content Include="Account\SignOut.aspx" />
     <Content Include="ActualizacionEstudiantes.aspx" />
     <Content Include="ActualizacionGeneralEstudiantes.aspx" />
@@ -599,6 +600,13 @@
     <Content Include="Bundle.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccesosFacultad_ActulizacionGeneral.aspx.cs">
+      <DependentUpon>AccesosFacultad_ActulizacionGeneral.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AccesosFacultad_ActulizacionGeneral.aspx.designer.cs">
+      <DependentUpon>AccesosFacultad_ActulizacionGeneral.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Account\SignOut.aspx.cs">
       <DependentUpon>SignOut.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

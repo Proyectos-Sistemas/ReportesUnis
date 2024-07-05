@@ -1550,7 +1550,7 @@ namespace ReportesUnis
                 }
             }
         }
-        protected string ContactoEmergenciaCampus(string nombre1, string parentesco1, string telefono1, string principal1, string nombre2, string parentesco2, string telefono2, string principal2)
+        protected string ContactoEmergenciaCampus(string nombre1, string parentesco1, string telefono1, string principal1, string nombre2, string parentesco2, string telefono2, string principal2, string nombre1_a, string nombre2_a)
         {
             string parentesco1_campus = null;
             string parentesco2_campus = null;
@@ -1597,7 +1597,8 @@ namespace ReportesUnis
                         "PRIMARY_CONTACT = '" + principal1 + "', " +
                         "PHONE = '" + telefono1 + "', " +
                         "RELATIONSHIP = '" + parentesco1_campus + "' " +
-                        "WHERE EMPLID ='" + txtEmplid.Value + "'";
+                        "WHERE EMPLID ='" + txtEmplid.Value + "'" +
+                        "AND CONTACT_NAME = '"+nombre1_a+"'";
 
                     string InsertContacto2 = "INSERT INTO SYSADM.PS_EMERGENCY_CNTCT (EMPLID, CONTACT_NAME, PHONE, PRIMARY_CONTACT, RELATIONSHIP,SAME_ADDRESS_EMPL,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,NUM1,NUM2,HOUSE_TYPE,ADDR_FIELD1,ADDR_FIELD2,ADDR_FIELD3,COUNTY,STATE,POSTAL,GEO_CODE,IN_CITY_LIMIT,COUNTRY_CODE,SAME_PHONE_EMPL,ADDRESS_TYPE,PHONE_TYPE,EXTENSION) " +
                     "VALUES ('" + txtEmplid.Value + "', '" + nombre2 + "', '" + telefono2 + "', '" + principal2 + "', '" + parentesco2_campus + "', 'N', ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','N',' ',' ',' ')";
@@ -1607,7 +1608,8 @@ namespace ReportesUnis
                         "PRIMARY_CONTACT = '" + principal2 + "', " +
                         "PHONE = '" + telefono2 + "', " +
                         "RELATIONSHIP = '" + parentesco2_campus + "' " +
-                        "WHERE EMPLID ='" + txtEmplid.Value + "'";
+                        "WHERE EMPLID ='" + txtEmplid.Value + "'" +
+                        "AND CONTACT_NAME = '" + nombre2_a + "'";
 
                     try
 
@@ -1696,7 +1698,6 @@ namespace ReportesUnis
         private void llenadoDatosAlergias()
         {
             string constr = TxtURL.Text;
-            EmplidAtencion.Value = null;
 
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -1762,7 +1763,7 @@ namespace ReportesUnis
         private void llenadoDatosEnfermedades()
         {
             string constr = TxtURL.Text;
-            EmplidAtencion.Value = null;
+            //EmplidAtencion.Value = null;
 
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -1848,15 +1849,17 @@ namespace ReportesUnis
         protected string DatosMedicosCampus()
         {
             string Errores = null;
-            string InsertEmergencia = "INSERT INTO SYSADM.PS_UNIS_ATEN_EMERG (EMPLID, HOSPITAL_TRASLADO, ANTECEDENTES_MED, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE) " +
-            "VALUES ('" + txtEmplid.Value + "', '" + CmbHospital.SelectedItem + "', '" + CmbAntecedentes.SelectedValue + "', '" + TxtAfiliacion.Text + "', '" + TxtSeguro.Text + "', '" + CmbSangre.SelectedItem + "')";
+            string InsertEmergencia = "INSERT INTO SYSADM.PS_UNIS_ATEN_EMERG (EMPLID, HOSPITAL_TRASLADO, ANTECEDENTES_MED, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE, OTRO_HOSPITAL, CARRO_CAMPUS) " +
+            "VALUES ('" + txtEmplid.Value + "', '" + CmbHospital.SelectedItem + "', '" + CmbAntecedentes.SelectedValue + "', '" + TxtAfiliacion.Text + "', '" + TxtSeguro.Text + "', '" + CmbSangre.SelectedItem + "', '"+TxtOtroHospital.Text+"', '"+TxtCarro.Text+"')";
 
             string UpdateEmergencia = "UPDATE SYSADM.PS_UNIS_ATEN_EMERG SET " +
                 "HOSPITAL_TRASLADO = '" + CmbHospital.SelectedItem + "', " +
                 "ANTECEDENTES_MED = '" + CmbAntecedentes.SelectedValue + "', " +
                 "NRO_AFILIACION = '" + TxtAfiliacion.Text + "', " +
                 "SEGURO_MEDICO = '" + TxtSeguro.Text + "', " +
-                "TIPO_SANGRE = '" + CmbSangre.SelectedItem + "' " +
+                "TIPO_SANGRE = '" + CmbSangre.SelectedItem + "', " +
+                "CARRO_CAMPUS = '" + TxtCarro.Text+ "', " +
+                "OTRO_HOSPITAL = '" + TxtOtroHospital.Text + "' " +
                 "WHERE EMPLID ='" + txtEmplid.Value + "'";
 
             string constr = TxtURL.Text;
@@ -3450,7 +3453,7 @@ namespace ReportesUnis
         protected string AlmacenarEmergencias()
         {
             string constr = TxtURL.Text;
-            EmplidAtencion.Value = null;
+            //EmplidAtencion.Value = null;
             string registro = null;
             int control = 0;
 
@@ -3518,7 +3521,7 @@ namespace ReportesUnis
         protected string AlmacenamientoApex()
         {
             string constr = TxtURL.Text;
-            EmplidAtencion.Value = null;
+            //EmplidAtencion.Value = null;
             string EstadoCivil = estadoCivil();
             int control = 0;
             string query = "INSERT INTO UNIS_INTERFACES.TBL_ACTUALIZACION_ALUMNOS (" +
@@ -4016,10 +4019,8 @@ namespace ReportesUnis
             var respuestaDocumentos = RecorrerDocumentos();
             UP_IDENTIFICACION.Value = respuestaDocumentos.UP_Doc;
             UD_IDENTIFICACION.Value = respuestaDocumentos.UD_Doc;
-            //resultados = IngresoDatosGenerales();
-            //resultados = EnvioCorreo(txtNombre.Text + " " + txtApellido.Text, DOCUMENTO1_INICIAL.Value, DOCUMENTO1.Value, DOCUMENTO2_INCIAL.Value, DOCUMENTO2.Value, DOCUMENTO1_PRINCIPAL.Value, DOCUMENTO1_PRINCIPAL_INICIAL.Value, DOCUMENTO2_PRINCIPAL.Value, DOCUMENTO2_PRINCIPAL_INICIAL.Value);
-
-
+            resultados = IngresoDatosGenerales();
+            
             if (resultados == "0")
             {
                 string texto;
@@ -4060,6 +4061,43 @@ namespace ReportesUnis
                                     getInfo = consultaGet(DOCUMENTO2_INCIAL.Value);
                                 PartyNumber = getBetween(getInfo, "PartyNumber\" : \"", "\",");
                                 string FechaCumple = Convert.ToDateTime(txtCumple.Text).ToString("yyyy-MM-dd");
+                                string parentesco1_crm = null;
+                                string parentesco2_crm = null;
+
+                                string SelectParentesco1 = "SELECT ID_CRM " +
+                                            "FROM UNIS_INTERFACES.TBL_RELACIONES_FAMILIARES " +
+                                        "WHERE PARENTESCO = '" + parentesco1.Replace("\"","") + "'";
+
+                                string SelectParentesco2 = "SELECT ID_CRM " +
+                                            "FROM UNIS_INTERFACES.TBL_RELACIONES_FAMILIARES " +
+                                        "WHERE PARENTESCO = '" + parentesco2.Replace("\"", "") + "'";
+
+                                using (OracleConnection con = new OracleConnection(constr))
+                                {
+                                    con.Open();
+                                    OracleTransaction transaction;
+                                    transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                                    using (OracleCommand cmd = new OracleCommand())
+                                    {
+                                        cmd.Connection = con;
+
+                                        cmd.CommandText = SelectParentesco1;
+                                        OracleDataReader reader2 = cmd.ExecuteReader();
+                                        while (reader2.Read())
+                                        {
+                                            parentesco1_crm = reader2["ID_CRM"].ToString();
+                                        }
+
+                                        cmd.CommandText = SelectParentesco2;
+                                        reader2 = cmd.ExecuteReader();
+                                        while (reader2.Read())
+                                        {
+                                            parentesco2_crm = reader2["ID_CRM"].ToString();
+                                        }
+
+                                        con.Close();
+                                    }
+                                }
                                 body = "{\r\n    " +
                                     "\"FirstName\": \"" + txtNombre.Text + "\",\r\n    " +
                                     "\"LastName\": \"" + txtApellido.Text + "\",\r\n    " +
@@ -4083,8 +4121,8 @@ namespace ReportesUnis
                                     "\"PersonDEO_NumeroDeIdentificacionTributaria_c\": \"" + txtNit.Text + "\",\r\n    " +
                                     "\"PersonDEO_ContactoDeEmergencia1_c\": \"" + nombre1 + "\",\r\n    " +
                                     "\"PersonDEO_ContactoDeEmergencia2_c\": \"" + nombre2 + "\",\r\n    " +
-                                    "\"PersonDEO_ParentescoContactoEmergencia1_c\":  " + parentesco1 + ",\r\n    " +
-                                    "\"PersonDEO_ParentescoContactoEmergencia2_c\":  " + parentesco2 + ",\r\n    " +
+                                    "\"PersonDEO_ParentescoContactoEmergencia1_c\": \"" + parentesco1_crm + "\",\r\n    " +
+                                    "\"PersonDEO_ParentescoContactoEmergencia2_c\": \"" + parentesco2_crm + "\",\r\n    " +
                                     "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + telefono1 + "\",\r\n    " +
                                     "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + telefono2 + "\",\r\n    " +
                                     "\"PersonDEO_HospitalTraslado_c\": \"" + CmbHospital.SelectedItem + "\",\r\n    " +
@@ -4106,7 +4144,7 @@ namespace ReportesUnis
                                 {
                                     log("Actualización en CRM", "Correcto", "La información se actualizo correctamente", "Actualización información de contacto en CRM");
                                     //ACTUALIZACION CONTACTOS DE EMERGENCIA EN CAMPUS
-                                    resultados = ContactoEmergenciaCampus(nombre1, CE_parentesco1.Value, telefono1, PrincipalC1, nombre2, CE_parentesco2.Value, telefono2, PrincipalC2);
+                                    resultados = ContactoEmergenciaCampus(nombre1, CE_parentesco1.Value, telefono1, PrincipalC1, nombre2, CE_parentesco2.Value, telefono2, PrincipalC2, txtNombreE1_Inicial.Value, txtNombreE2_Inicial.Value);
                                     if (resultados == "0")
                                     {
                                         resultados = DatosMedicosCampus();
@@ -4128,6 +4166,14 @@ namespace ReportesUnis
                                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                                             }
                                         }
+                                        else
+                                        {
+                                            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                     }
                                 }
                                 else
@@ -4136,8 +4182,24 @@ namespace ReportesUnis
                                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                 }
                             }
+                            else
+                            {
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
+                            }
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                         }
                     }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
+                    }
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
             }
         }

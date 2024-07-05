@@ -848,7 +848,7 @@
                 <div class="col-md-4 mx-auto text-center">
                 </div>
                 <div class="col-md-4 mx-auto text-center">
-                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="false" OnClientClick="return mostrarAlerta();"  OnClick="BtnActualizar_Click"/>
+                    <asp:Button ID="BtnActualizar" runat="server" Text="Actualizar" CssClass="btn-danger-unis" Enabled="false" OnClientClick="return mostrarAlerta();" OnClick="BtnActualizar_Click" />
                 </div>
                 <div class="col-md-4 mx-auto text-center">
                 </div>
@@ -1180,8 +1180,10 @@
             twelveYearsAgo.setFullYear(today.getFullYear() - 12);
 
             var ddlPaisNacimiento = document.getElementById('<%= CmbPaisNacimiento.ClientID %>').value.trim();
+            console.log('-' + ddlPaisNacimiento + '-');
             var grid = document.getElementById('<%= GridViewDocumentos.ClientID %>');
-            var firstTxt = grid.getElementsByTagName('tr')[1].cells[3].querySelector('input[type="text"]');
+            var firstTxtNroDocumento = grid.getElementsByTagName('tr')[1].cells[3].querySelector('input[type="text"]');
+            console.log('-' + firstTxtNroDocumento + '-');
 
             if (TrueNit !== nit && nit !== "CF") {
                 // Realiza las acciones necesarias si el valor es diferente de cero
@@ -1200,13 +1202,13 @@
                     }
                 }
 
-                //if (ddlPaisNacimiento === 'GTM') { // Suponiendo que el valor para Guatemala es 'GTM'
-                //    if (mensaje.trim() == "") {
-                //        mensaje = "-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
-                //    } else {
-                //        mensaje = mensaje + "\n-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
-                //    }
-                //}
+                if (ddlPaisNacimiento === 'GTM' && firstTxtNroDocumento.value.trim() === "") { // Suponiendo que el valor para Guatemala es 'GTM'
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
+                    } else {
+                        mensaje = mensaje + "\n-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
+                    }
+                }
 
                 if (nombre.trim() === "") {
                     if (mensaje.trim() == "") {

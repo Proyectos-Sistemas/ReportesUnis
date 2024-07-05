@@ -225,7 +225,7 @@ namespace ReportesUnis.API
                 if (response.StatusCode.ToString() == "OK")
                     return (0, response.StatusCode.ToString());
                 else
-                    return (1, response.StatusCode.ToString());
+                    return (1, response.StatusCode.ToString()+"-"+response.Content.ToString());
             }
             catch (Exception x)
             {
