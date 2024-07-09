@@ -29,22 +29,22 @@ namespace ReportesUnis
     public partial class ActualizacionGeneralEstudiantes : System.Web.UI.Page
     {
         string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        ConsumoAPI api = new ConsumoAPI();
+        string Hoy = DateTime.Now.ToString("yyyy-MM-dd").Substring(0, 10).TrimEnd();
+        string HoyEffdt = DateTime.Now.ToString("dd-MM-yyyy").Substring(0, 10).TrimEnd();
         public static string archivoWS = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConfigWS.dat");
         int auxConsulta = 0;
         int contadorUP = 0;
         int contadorUD = 0;
         int respuestaPatch = 0;
         string respuestaMensajePatch = "";
-        ConsumoAPI api = new ConsumoAPI();
         public static string archivoConfiguraciones = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConfigCampus.dat");
-        string Hoy = DateTime.Now.ToString("yyyy-MM-dd").Substring(0, 10).TrimEnd();
-        string HoyEffdt = DateTime.Now.ToString("dd-MM-yyyy").Substring(0, 10).TrimEnd();
 
         protected void Page_Load(object sender, EventArgs e)
         {
             banderaSESSION.Value = "0";
             ISESSION.Value = "0";
-            controlCamposVisibles(true);
+            ControlCamposVisibles(true);
             LeerInfoTxt();
             LeerPathApex();
             LeerCredencialesNIT();
@@ -59,10 +59,10 @@ namespace ReportesUnis
             if (!IsPostBack)
             {
                 LeerInfoTxtSQL();
-                llenadoPais();
-                llenadoDepartamento();
-                llenadoState();
-                llenadoPaisNacimiento();
+                LlenadoPais();
+                LlenadoDepartamento();
+                LlenadoState();
+                LlenadoPaisNacimiento();
                 txtControlBit.Text = "0";
                 txtControlNR.Text = "0";
                 txtControlAR.Text = "0";
@@ -78,10 +78,10 @@ namespace ReportesUnis
         void LeerInfoTxt()
         {
             string rutaCompleta = CurrentDirectory + "conexion.txt";
-            string line = "";
+            //string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
             {
-                line = file.ReadToEnd();
+                string line = file.ReadToEnd();
                 TxtURL.Text = line;
                 file.Close();
             }
@@ -116,10 +116,10 @@ namespace ReportesUnis
         void LeerPathApex()
         {
             string rutaCompleta = CurrentDirectory + "urlApex.txt";
-            string line = "";
+            //string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
             {
-                line = file.ReadToEnd();
+                string line = file.ReadToEnd();
                 txtApex.Text = line;
                 file.Close();
             }
@@ -127,22 +127,22 @@ namespace ReportesUnis
         void LeerInfoTxtSQL()
         {
             string rutaCompleta = CurrentDirectory + "conexionSQL.txt";
-            string line = "";
+            //string line = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
             {
-                line = file.ReadToEnd();
+                string line = file.ReadToEnd();
                 TxtURLSql.Text = line;
                 file.Close();
             }
         }
-        public void controlCamposVisibles(bool Condicion)
+        public void ControlCamposVisibles(bool Condicion)
         {
             Informacion.Visible = Condicion;
             tabla.Visible = Condicion;
             tbactualizar.Visible = Condicion;
             InfePersonal.Visible = Condicion;
         }
-        private string mostrarInformación(string emplid)
+        private string MostrarInformación(string emplid)
         {
             string constr = TxtURL.Text;
             var apellidoEx = "0";
@@ -169,7 +169,11 @@ namespace ReportesUnis
                     cmd.CommandText = "SELECT APELLIDO_NIT, NOMBRE_NIT, CASADA_NIT, NIT, PAIS, EMPLID,FIRST_NAME,LAST_NAME,CARNE,PHONE,DPI,CARRERA,FACULTAD,STATUS,BIRTHDATE,DIRECCION,DIRECCION2,DIRECCION3,MUNICIPIO, \r\n" +
                                         "DEPARTAMENTO, SECOND_LAST_NAME, DIRECCION1_NIT, DIRECCION2_NIT, DIRECCION3_NIT, MUNICIPIO_NIT, DEPARTAMENTO_NIT, STATE_NIT, PAIS_NIT, STATE, EMAILUNIS,EMAILPERSONAL, BIRTHCOUNTRY, MUNICIPIO_NAC, DEPARTAMENTO_NAC, BIRTHPLACE, BIRTHSTATE FROM ( \r\n" +
                                         "SELECT PD.EMPLID, PN.NATIONAL_ID CARNE,  PD.FIRST_NAME, \r\n" +
-                                        "PD.LAST_NAME, PD.SECOND_LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, PP.PHONE , \r\n" +
+                                        "PD.LAST_NAME, PD.SECOND_LAST_NAME, PN.NATIONAL_ID DPI, PN.NATIONAL_ID_TYPE, \r\n " +
+                                        "COALESCE(" +
+                                        "        (SELECT PP.PHONE FROM SYSADM.PS_PERSONAL_PHONE PP WHERE PP.EMPLID = PD.EMPLID AND PP.PHONE_TYPE = 'HOME' FETCH FIRST 1 ROWS ONLY), \r\n " +
+                                        "        (SELECT PP.PHONE FROM SYSADM.PS_PERSONAL_PHONE PP WHERE PP.EMPLID = PD.EMPLID AND PP.PHONE_TYPE = 'CEL1' FETCH FIRST 1 ROWS ONLY) \r\n" +
+                                        "   ) AS PHONE, \r\n" +
                                         "TO_CHAR(PD.BIRTHDATE,'YYYY-MM-DD') BIRTHDATE, PD.BIRTHPLACE, PD.BIRTHSTATE, \r\n" +
                                         "(SELECT BIRTHCOUNTRY FROM SYSADM.PS_PERS_DATA_SA_VW WHERE EMPLID ='" + emplid + "') BIRTHCOUNTRY, \r\n" +
                                         "APD.DESCR CARRERA, AGT.DESCR FACULTAD, \r\n" +
@@ -190,7 +194,7 @@ namespace ReportesUnis
                                         "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = '" + emplid + "' AND UPPER(EMAIL.EMAIL_ADDR) LIKE '%UNIS.EDU.GT%' ORDER BY CASE WHEN EMAIL.PREF_EMAIL_FLAG = 'Y' THEN 1 ELSE 2 END, EMAIL.EMAIL_ADDR FETCH FIRST 1 ROWS ONLY) EMAILUNIS , \r\n" +
                                         "(SELECT EMAIL.EMAIL_ADDR FROM SYSADM.PS_EMAIL_ADDRESSES EMAIL WHERE EMAIL.EMPLID = '" + emplid + "' AND EMAIL.E_ADDR_TYPE IN ('HOM1') FETCH FIRST 1 ROWS ONLY) EMAILPERSONAL , \r\n" +
                                         "A.ADDRESS1 DIRECCION, A.ADDRESS2 DIRECCION2, A.ADDRESS3 DIRECCION3, \r\n" +
-                                        "REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO, ST.STATE, \r\n" +
+                                        "NVL(REGEXP_SUBSTR(ST.DESCR, '[^-]+'), ' ') AS MUNICIPIO , NVL(SUBSTR(ST.DESCR, (INSTR(ST.DESCR, '-') + 1)), ' ') DEPARTAMENTO, ST.STATE,  \r\n" +
                                         "TT.TERM_BEGIN_DT, C.DESCR PAIS \r\n" +
                                         "FROM SYSADM.PS_PERS_DATA_SA_VW PD \r\n" +
                                         "LEFT JOIN SYSADM.PS_PERS_NID PN ON PD.EMPLID = PN.EMPLID \r\n" +
@@ -215,8 +219,8 @@ namespace ReportesUnis
                                         "LEFT JOIN SYSADM.PS_TERM_TBL TT ON CT.STRM = TT.STRM \r\n" +
                                         "AND CT.INSTITUTION = TT.INSTITUTION \r\n" +
                                         "AND (SYSDATE BETWEEN TT.TERM_BEGIN_DT AND TT.TERM_END_DT) \r\n" +
-                                        "LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID \r\n" +
-                                        "AND PP.PHONE_TYPE = 'HOME' \r\n" +
+                                        //"LEFT JOIN SYSADM.PS_PERSONAL_PHONE PP ON PD.EMPLID = PP.EMPLID \r\n" +
+                                        //"AND PP.PHONE_TYPE = 'HOME' \r\n" +
                                         "LEFT JOIN SYSADM.PS_COUNTRY_TBL C ON A.COUNTRY = C.COUNTRY \r\n" +
                                         "WHERE PN.NATIONAL_ID ='" + DPI + "' \r\n" +
                                         "ORDER BY CT.FULLY_ENRL_DT DESC \r\n" +
@@ -277,7 +281,7 @@ namespace ReportesUnis
                             posicion = reader["LAST_NAME"].ToString().IndexOf(" ");
                             if (posicion > 0)
                             {
-                                apellidoEx = divisionApellidos(reader["LAST_NAME"].ToString().Substring(0, posicion));
+                                apellidoEx = DivisionApellidos(reader["LAST_NAME"].ToString().Substring(0, posicion));
                                 txtContaador.Text = apellidoEx.ToString();
                                 excepcionApellido = apellidoEx.ToString().IndexOf("    }");
                                 txtContaador.Text = apellidoEx.ToString().Substring(excepcionApellido - 3, 1);
@@ -290,7 +294,7 @@ namespace ReportesUnis
                             }
                             if (txtPrimerApellido.Text.IsNullOrWhiteSpace())
                             {
-                                txtPrimerApellido.Text = getBetween(txtApellido.Text, "", " ");
+                                txtPrimerApellido.Text = GetBetween(txtApellido.Text, "", " ");
                             }
                         }
 
@@ -321,9 +325,9 @@ namespace ReportesUnis
                         if (!String.IsNullOrEmpty(reader["PAIS"].ToString()))
                         {
                             CmbPais.SelectedValue = reader["PAIS"].ToString();
-                            llenadoDepartamento();
+                            LlenadoDepartamento();
                             CmbDepartamento.SelectedValue = reader["DEPARTAMENTO"].ToString();
-                            llenadoMunicipio();
+                            LlenadoMunicipio();
                             CmbMunicipio.SelectedValue = reader["MUNICIPIO"].ToString();
                         }
                         else
@@ -332,14 +336,14 @@ namespace ReportesUnis
                         }
                         PaisNacimiento.Value = reader["BIRTHCOUNTRY"].ToString();
                         LugarNacimiento.Value = reader["BIRTHPLACE"].ToString();
-                        StateNacimiento.Value = reader["BIRTHSTATE"].ToString();
+                        StateNacimiento.Value = reader["BIRTHSTATE"].ToString().Trim();
 
                         if (!String.IsNullOrEmpty(reader["BIRTHCOUNTRY"].ToString()))
                         {
                             CmbPaisNacimiento.SelectedValue = reader["BIRTHCOUNTRY"].ToString();
-                            llenadoDepartamentoNac();
+                            LlenadoDepartamentoNac();
                             CmbDeptoNacimiento.SelectedValue = reader["DEPARTAMENTO_NAC"].ToString();
-                            llenadoMunicipioNacimiento();
+                            LlenadoMunicipioNacimiento();
                             if (!String.IsNullOrEmpty(reader["MUNICIPIO_NAC"].ToString()))
                                 CmbMuncNacimiento.SelectedValue = reader["MUNICIPIO_NAC"].ToString();
                         }
@@ -350,32 +354,32 @@ namespace ReportesUnis
 
                         if (!String.IsNullOrEmpty(reader["PAIS_NIT"].ToString()))
                         {
-                            llenadoPaisnit();
+                            LlenadoPaisnit();
                             CmbPaisNIT.SelectedValue = reader["PAIS_NIT"].ToString();
                             PaisNit.Text = reader["PAIS_NIT"].ToString();
-                            llenadoDepartamentoNit();
+                            LlenadoDepartamentoNit();
                             CmbDepartamentoNIT.SelectedValue = reader["DEPARTAMENTO_NIT"].ToString();
                             DepartamentoNit.Text = reader["DEPARTAMENTO_NIT"].ToString();
-                            llenadoMunicipioNIT();
+                            LlenadoMunicipioNIT();
                             MunicipioNit.Text = reader["MUNICIPIO_NIT"].ToString();
                         }
                         else if (RadioButtonNombreSi.Checked)
                         {
-                            llenadoPaisnit();
+                            LlenadoPaisnit();
                             if (!String.IsNullOrEmpty(reader["PAIS"].ToString()))
                                 CmbPaisNIT.SelectedValue = reader["PAIS"].ToString();
                             else
                                 CmbPaisNIT.SelectedValue = "";
-                            llenadoDepartamentoNit();
+                            LlenadoDepartamentoNit();
                             CmbDepartamentoNIT.SelectedValue = reader["DEPARTAMENTO"].ToString();
-                            llenadoMunicipioNIT();
+                            LlenadoMunicipioNIT();
                             CmbMunicipioNIT.SelectedValue = reader["MUNICIPIO"].ToString();
                         }
                         else
                         {
-                            llenadoPaisnit();
-                            llenadoDepartamentoNit();
-                            llenadoMunicipioNIT();
+                            LlenadoPaisnit();
+                            LlenadoDepartamentoNit();
+                            LlenadoMunicipioNIT();
                         }
                         txtTelefono.Text = reader["PHONE"].ToString();
                         TruePhone.Text = reader["PHONE"].ToString();
@@ -502,21 +506,32 @@ namespace ReportesUnis
             }
             return emplid;
         }
-        protected void llenadoDepartamento()
+        protected void LlenadoDepartamento()
         {
             banderaSESSION.Value = "1";
             ISESSION.Value = "0";
             string constr = TxtURL.Text;
+            CmbDepartamento.Items.Clear();
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
-                    "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
-                    "WHERE CT.DESCR ='" + CmbPais.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL  " +
-                    "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+                    if (CmbPais.Text != "Guatemala")
+                    {
+                        cmd.CommandText = "SELECT ' ' AS DEPARTAMENTO FROM DUAL UNION SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
+                        "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
+                        "WHERE CT.DESCR ='" + CmbPais.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL AND STATE LIKE '%-%' " +
+                        "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+                    }
+                    else
+                    {
+                        cmd.CommandText = "SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
+                        "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
+                        "WHERE CT.DESCR ='" + CmbPais.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL " +
+                        "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+                    }
 
                     try
                     {
@@ -539,21 +554,32 @@ namespace ReportesUnis
             ISESSION.Value = "0";
             banderaSESSION.Value = "1";
         }
-        public void llenadoDepartamentoNit()
+        public void LlenadoDepartamentoNit()
         {
             banderaSESSION.Value = "1";
             ISESSION.Value = "0";
             string constr = TxtURL.Text;
+            CmbDepartamentoNIT.Items.Clear();
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
-                    "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
-                    "WHERE CT.DESCR ='" + CmbPaisNIT.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL  " +
-                    "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+                    if (CmbPaisNIT.Text != "Guatemala")
+                    {
+                        cmd.CommandText = "SELECT ' ' AS DEPARTAMENTO FROM DUAL UNION SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
+                        "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
+                        "WHERE CT.DESCR ='" + CmbPaisNIT.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL  AND STATE LIKE '%-%' " +
+                        "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+                    }
+                    else
+                    {
+                        cmd.CommandText = "SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
+                        "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
+                        "WHERE CT.DESCR ='" + CmbPaisNIT.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL " +
+                        "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+                    }
 
                     try
                     {
@@ -576,22 +602,33 @@ namespace ReportesUnis
             ISESSION.Value = "0";
             banderaSESSION.Value = "1";
         }
-        public void llenadoDepartamentoNac()
+        public void LlenadoDepartamentoNac()
         {
             banderaSESSION.Value = "1";
             ISESSION.Value = "0";
             string constr = TxtURL.Text;
+            CmbDeptoNacimiento.Items.Clear();
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT ' ' AS DEPARTAMENTO FROM DUAL UNION " +
-                        "SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
-                        "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
-                        "WHERE CT.COUNTRY ='" + CmbPaisNacimiento.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL  " +
-                        "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+                    if (CmbPaisNacimiento.Text != "Guatemala")
+                    {
+                        cmd.CommandText = "SELECT ' ' AS DEPARTAMENTO FROM DUAL UNION " +
+                            "SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
+                            "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
+                            "WHERE CT.COUNTRY ='" + CmbPaisNacimiento.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL  AND STATE LIKE '%-%' " +
+                            "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+                    }
+                    else
+                    {
+                        cmd.CommandText = "SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
+                            "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
+                            "WHERE CT.COUNTRY ='" + CmbPaisNacimiento.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL " +
+                            "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
+                    }
 
                     try
                     {
@@ -614,9 +651,10 @@ namespace ReportesUnis
             ISESSION.Value = "0";
             banderaSESSION.Value = "1";
         }
-        public void llenadoMunicipioNIT()
+        public void LlenadoMunicipioNIT()
         {
             string constr = TxtURL.Text;
+            CmbMunicipioNIT.Items.Clear();
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -627,9 +665,18 @@ namespace ReportesUnis
                         if (!String.IsNullOrEmpty(CmbDepartamentoNIT.SelectedValue.ToString()))
                         {
                             cmd.Connection = con;
-                            cmd.CommandText = "SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
-                            "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamentoNIT.SelectedValue + "') " +
-                            "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
+                            if (CmbPaisNIT.Text != "Guatemala")
+                            {
+                                cmd.CommandText = "SELECT ' ' AS MUNICIPIO , ' ' AS STATE  FROM DUAL UNION SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
+                                "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamentoNIT.SelectedValue + "') AND STATE LIKE '%-%' " +
+                                "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
+                            }
+                            else
+                            {
+                                cmd.CommandText = "SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
+                                "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamentoNIT.SelectedValue + "') " +
+                                "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
+                            }
                             OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                             DataSet ds = new DataSet();
                             adapter.Fill(ds);
@@ -664,11 +711,12 @@ namespace ReportesUnis
             banderaSESSION.Value = "0";
             ISESSION.Value = "0";
         }
-        protected void llenadoMunicipioNacimiento()
+        protected void LlenadoMunicipioNacimiento()
         {
             banderaSESSION.Value = "0";
             ISESSION.Value = "0";
             string constr = TxtURL.Text;
+            CmbMuncNacimiento.Items.Clear();
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -676,19 +724,36 @@ namespace ReportesUnis
                 {
                     try
                     {
-                        cmd.Connection = con;
-                        cmd.CommandText = "SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
-                        "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDeptoNacimiento.SelectedValue + "') " +
-                        // "AND ST.DESCR = '"+ CmbPaisNacimiento.Text + "'" +
-                        "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
-                        OracleDataAdapter adapter = new OracleDataAdapter(cmd);
-                        DataSet ds = new DataSet();
-                        adapter.Fill(ds);
-                        CmbMuncNacimiento.DataSource = ds;
-                        CmbMuncNacimiento.DataTextField = "MUNICIPIO";
-                        CmbMuncNacimiento.DataValueField = "MUNICIPIO";
-                        CmbMuncNacimiento.DataBind();
-                        con.Close();
+                        if (!String.IsNullOrEmpty(CmbDeptoNacimiento.SelectedValue) && CmbDeptoNacimiento.SelectedValue != " ")
+                        {
+                            cmd.Connection = con;
+                            if (CmbPaisNacimiento.Text != "GTM")
+                            {
+                                cmd.CommandText = "SELECT ' ' AS MUNICIPIO , ' ' AS STATE  FROM DUAL UNION SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
+                                "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDeptoNacimiento.SelectedValue + "') AND STATE LIKE '%-%' " +
+                                "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
+                            }
+                            else
+                            {
+                                cmd.CommandText = "SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
+                                "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDeptoNacimiento.SelectedValue + "') " +
+                                "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
+                            }
+                            OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+                            DataSet ds = new DataSet();
+                            adapter.Fill(ds);
+                            CmbMuncNacimiento.DataSource = ds;
+                            CmbMuncNacimiento.DataTextField = "MUNICIPIO";
+                            CmbMuncNacimiento.DataValueField = "MUNICIPIO";
+                            CmbMuncNacimiento.DataBind();
+                            con.Close();
+                        }
+                        else
+                        {
+                            CmbMuncNacimiento.DataSource = " ";
+                            CmbMuncNacimiento.DataTextField = " ";
+                            CmbMuncNacimiento.DataValueField = " ";
+                        }
                     }
                     catch (Exception)
                     {
@@ -701,11 +766,12 @@ namespace ReportesUnis
             banderaSESSION.Value = "0";
             ISESSION.Value = "0";
         }
-        protected void llenadoMunicipio()
+        protected void LlenadoMunicipio()
         {
             banderaSESSION.Value = "0";
             ISESSION.Value = "0";
             string constr = TxtURL.Text;
+            CmbMunicipio.Items.Clear();
             using (OracleConnection con = new OracleConnection(constr))
             {
                 con.Open();
@@ -714,9 +780,18 @@ namespace ReportesUnis
                     try
                     {
                         cmd.Connection = con;
-                        cmd.CommandText = "SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
-                        "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamento.SelectedValue + "') " +
-                        "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
+                        if (CmbPais.Text != "Guatemala")
+                        {
+                            cmd.CommandText = "SELECT ' ' AS MUNICIPIO, ' ' AS STATE FROM DUAL UNION SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
+                            "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamento.SelectedValue + "') AND STATE LIKE '%-%' " +
+                            "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
+                        }
+                        else
+                        {
+                            cmd.CommandText = "SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
+                            "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamento.SelectedValue + "') " +
+                            "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
+                        }
                         OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                         DataSet ds = new DataSet();
                         adapter.Fill(ds);
@@ -737,7 +812,7 @@ namespace ReportesUnis
             banderaSESSION.Value = "0";
             ISESSION.Value = "0";
         }
-        protected void llenadoPais()
+        protected void LlenadoPais()
         {
             banderaSESSION.Value = "1";
             ISESSION.Value = "0";
@@ -765,7 +840,7 @@ namespace ReportesUnis
             banderaSESSION.Value = "1";
             ISESSION.Value = "0";
         }
-        public void llenadoPaisnit()
+        public void LlenadoPaisnit()
         {
             banderaSESSION.Value = "1";
             string where = "";
@@ -789,7 +864,7 @@ namespace ReportesUnis
             }
             banderaSESSION.Value = "1";
         }
-        protected void llenadoPaisNacimiento()
+        protected void LlenadoPaisNacimiento()
         {
             banderaSESSION.Value = "1";
             ISESSION.Value = "0";
@@ -817,7 +892,7 @@ namespace ReportesUnis
             banderaSESSION.Value = "1";
             ISESSION.Value = "0";
         }
-        protected void llenadoState()
+        protected void LlenadoState()
         {
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -861,7 +936,7 @@ namespace ReportesUnis
                 }
             }
         }
-        protected void llenadoStateNIT()
+        protected void LlenadoStateNIT()
         {
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -905,7 +980,7 @@ namespace ReportesUnis
                 }
             }
         }
-        protected void llenadoStateNac()
+        protected void LlenadoStateNac()
         {
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -934,7 +1009,7 @@ namespace ReportesUnis
                         }
                         con.Close();
                     }
-                    else
+                    else if (!String.IsNullOrEmpty(StateNacimiento.Value))
                     {
                         cmd.Connection = con;
                         cmd.CommandText = "SELECT STATE FROM SYSADM.PS_STATE_TBL " +
@@ -949,7 +1024,7 @@ namespace ReportesUnis
                 }
             }
         }
-        protected string estadoCivil()
+        protected string EstadoCivil()
         {
             var VALOR = CmbEstado.SelectedValue.Substring(0, 1).ToString();
             if (VALOR.Equals("S"))
@@ -966,7 +1041,6 @@ namespace ReportesUnis
             }
             return VALOR;
         }
-
         public string EnvioCorreo(string nombre, string dpiViejo, string dpiNuevo, string pasViejo, string pasNuevo, string dpiPrincipalNuevo, string dpiPrincipalAnterior, string passPrincipalNuevo, string passPrincipalAnterior)
         {
             string htmlBody = LeerBodyEmail("bodyCambioDocumentoIdentificacion.txt");
@@ -1044,7 +1118,6 @@ namespace ReportesUnis
             }
             return control;
         }
-
         public string LeerBodyEmail(string archivo)
         {
             string rutaCompleta = CurrentDirectory + "/Emails/ActualizacionGeneral/" + archivo;
@@ -1060,16 +1133,14 @@ namespace ReportesUnis
         {
             string rutaCompleta = CurrentDirectory + "/Emails/ActualizacionGeneral/" + archivo;
             string[] datos;
-            string subjet = "";
-            string to = "";
             using (StreamReader file = new StreamReader(rutaCompleta))
             {
                 string linea1 = file.ReadLine();
                 string linea2 = file.ReadLine();
                 string linea3 = file.ReadLine();
                 string linea4 = file.ReadLine();
-                subjet = linea2;
-                to = linea4;
+                string subjet = linea2;
+                string to = linea4;
                 file.Close();
 
                 // Corrección: Inicializa un nuevo array y asigna los valores
@@ -1106,7 +1177,7 @@ namespace ReportesUnis
             }
             return datos;
         }
-        public string divisionApellidos(string apellido)
+        public string DivisionApellidos(string apellido)
         {
             WebClient _clientW = new WebClient();
             _clientW.Headers.Add(HttpRequestHeader.ContentType, "application/json; charset=utf-8");
@@ -1115,7 +1186,7 @@ namespace ReportesUnis
             dynamic respuesta = JsonConvert.DeserializeObject(json).ToString();
             return respuesta;
         }
-        public static string getBetween(string strSource, string strStart, string strEnd)
+        public static string GetBetween(string strSource, string strStart, string strEnd)
         {
             int Start, End;
             if (strSource.Contains(strStart) && strSource.Contains(strEnd))
@@ -1129,7 +1200,7 @@ namespace ReportesUnis
                 return "";
             }
         }
-        private string consultaNit(string nit)
+        private string ConsultaNit(string nit)
         {
             var body = "{\"Credenciales\" : \"" + CREDENCIALES_NIT.Value + "\",\"NIT\":\"" + nit + "\"}";
             string respuesta = api.PostNit(URL_NIT.Value, body);
@@ -1157,7 +1228,7 @@ namespace ReportesUnis
             string[] arrayDePalabras = cadena.Split(' ');
             return arrayDePalabras;
         }
-        public void consultaNombre(string NombreBusqueda)
+        public void ConsultaNombre(string NombreBusqueda)
         {
             NombreBusqueda = NombreBusqueda.Replace(" ", "%");
             string constr = TxtURL.Text;
@@ -1183,7 +1254,7 @@ namespace ReportesUnis
                 }
             }
         }
-        public void consultarDocumento(string Documento)
+        public void ConsultarDocumento(string Documento)
         {
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -1210,7 +1281,7 @@ namespace ReportesUnis
                 }
             }
         }
-        public void consultarId(string Id)
+        public void ConsultarId(string Id)
         {
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
@@ -1472,12 +1543,12 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT ' ' FIELDNAME FROM DUAL UNION SELECT FIELDNAME FROM SYSADM.PS_XL_CAT_ENFER ORDER BY 1 ASC";
+                    cmd.CommandText = "SELECT ' ' FIELDNAME, ' ' XLATLONGNAME FROM DUAL UNION SELECT FIELDNAME, XLATLONGNAME FROM SYSADM.PS_XL_CAT_ENFER ORDER BY 1 ASC";
                     OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                     DataSet ds = new DataSet();
                     adapter.Fill(ds);
                     CmbAntecedentes.DataSource = ds;
-                    CmbAntecedentes.DataTextField = "FIELDNAME";
+                    CmbAntecedentes.DataTextField = "XLATLONGNAME";
                     CmbAntecedentes.DataValueField = "FIELDNAME";
                     CmbAntecedentes.DataBind();
                     con.Close();
@@ -1589,6 +1660,11 @@ namespace ReportesUnis
                         parentesco2_campus = reader["ID_CAMPUS"].ToString();
                     }
 
+                    if (principal1 == "N" && principal2 == "Y")
+                    {
+                        principal1 = "Y";
+                    }
+
                     string InsertContacto1 = "INSERT INTO SYSADM.PS_EMERGENCY_CNTCT (EMPLID, CONTACT_NAME, PHONE, PRIMARY_CONTACT, RELATIONSHIP, SAME_ADDRESS_EMPL,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,NUM1,NUM2,HOUSE_TYPE,ADDR_FIELD1,ADDR_FIELD2,ADDR_FIELD3,COUNTY,STATE,POSTAL,GEO_CODE,IN_CITY_LIMIT,COUNTRY_CODE,SAME_PHONE_EMPL,ADDRESS_TYPE,PHONE_TYPE,EXTENSION) " +
                     "VALUES ('" + txtEmplid.Value + "', '" + nombre1 + "', '" + telefono1 + "', '" + principal1 + "', '" + parentesco1_campus + "', 'N',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','N',' ',' ',' ')";
 
@@ -1598,7 +1674,7 @@ namespace ReportesUnis
                         "PHONE = '" + telefono1 + "', " +
                         "RELATIONSHIP = '" + parentesco1_campus + "' " +
                         "WHERE EMPLID ='" + txtEmplid.Value + "'" +
-                        "AND CONTACT_NAME = '"+nombre1_a+"'";
+                        "AND CONTACT_NAME = '" + nombre1_a + "'";
 
                     string InsertContacto2 = "INSERT INTO SYSADM.PS_EMERGENCY_CNTCT (EMPLID, CONTACT_NAME, PHONE, PRIMARY_CONTACT, RELATIONSHIP,SAME_ADDRESS_EMPL,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,NUM1,NUM2,HOUSE_TYPE,ADDR_FIELD1,ADDR_FIELD2,ADDR_FIELD3,COUNTY,STATE,POSTAL,GEO_CODE,IN_CITY_LIMIT,COUNTRY_CODE,SAME_PHONE_EMPL,ADDRESS_TYPE,PHONE_TYPE,EXTENSION) " +
                     "VALUES ('" + txtEmplid.Value + "', '" + nombre2 + "', '" + telefono2 + "', '" + principal2 + "', '" + parentesco2_campus + "', 'N', ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','N',' ',' ',' ')";
@@ -1666,10 +1742,23 @@ namespace ReportesUnis
             }
             return control.ToString();
         }
-        private void llenadoDatosMedicos()
+        private void LlenadoDatosMedicos()
         {
             string constr = TxtURL.Text;
             EmplidAtencion.Value = null;
+
+            //Diccionario de datos para hacer coincidir los valores de la lista del tipo de sangre
+            var bloodTypeMapping = new Dictionary<string, string>
+            {
+                { "O+", "OP" },
+                { "O-", "ON" },
+                { "A+", "AP" },
+                { "A-", "AN" },
+                { "B+", "BP" },
+                { "B-", "BN" },
+                { "AB+", "ABP" },
+                { "AB-", "ABN" }
+            };
 
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -1687,7 +1776,12 @@ namespace ReportesUnis
                         TxtAfiliacion.Text = reader["NRO_AFILIACION"].ToString();
                         TxtCarro.Text = reader["CARRO_CAMPUS"].ToString();
                         TxtSeguro.Text = reader["SEGURO_MEDICO"].ToString();
-                        CmbSangre.SelectedItem.Text = reader["TIPO_SANGRE"].ToString();
+                        string tipoSangre = reader["TIPO_SANGRE"].ToString();
+
+                        if (bloodTypeMapping.ContainsKey(tipoSangre))
+                        {
+                            CmbSangre.SelectedValue = bloodTypeMapping[tipoSangre];
+                        }
                         EmplidAtencion.Value = reader["EMPLID"].ToString();
                         TxtOtroHospital.Text = reader["OTRO_HOSPITAL"].ToString();
                     }
@@ -1695,7 +1789,7 @@ namespace ReportesUnis
                 }
             }
         }
-        private void llenadoDatosAlergias()
+        private void LlenadoDatosAlergias()
         {
             string constr = TxtURL.Text;
 
@@ -1760,7 +1854,7 @@ namespace ReportesUnis
                 }
             }
         }
-        private void llenadoDatosEnfermedades()
+        private void LlenadoDatosEnfermedades()
         {
             string constr = TxtURL.Text;
             //EmplidAtencion.Value = null;
@@ -1846,11 +1940,11 @@ namespace ReportesUnis
                 }
             }
         }
-        protected string DatosMedicosCampus()
+        /*protected string DatosMedicosCampus()
         {
             string Errores = null;
             string InsertEmergencia = "INSERT INTO SYSADM.PS_UNIS_ATEN_EMERG (EMPLID, HOSPITAL_TRASLADO, ANTECEDENTES_MED, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE, OTRO_HOSPITAL, CARRO_CAMPUS) " +
-            "VALUES ('" + txtEmplid.Value + "', '" + CmbHospital.SelectedItem + "', '" + CmbAntecedentes.SelectedValue + "', '" + TxtAfiliacion.Text + "', '" + TxtSeguro.Text + "', '" + CmbSangre.SelectedItem + "', '"+TxtOtroHospital.Text+"', '"+TxtCarro.Text+"')";
+            "VALUES ('" + txtEmplid.Value + "', '" + CmbHospital.SelectedItem + "', '" + CmbAntecedentes.SelectedValue + "', '" + TxtAfiliacion.Text + "', '" + TxtSeguro.Text + "', '" + CmbSangre.SelectedItem + "', '" + TxtOtroHospital.Text + "', '" + TxtCarro.Text + "')";
 
             string UpdateEmergencia = "UPDATE SYSADM.PS_UNIS_ATEN_EMERG SET " +
                 "HOSPITAL_TRASLADO = '" + CmbHospital.SelectedItem + "', " +
@@ -1858,7 +1952,7 @@ namespace ReportesUnis
                 "NRO_AFILIACION = '" + TxtAfiliacion.Text + "', " +
                 "SEGURO_MEDICO = '" + TxtSeguro.Text + "', " +
                 "TIPO_SANGRE = '" + CmbSangre.SelectedItem + "', " +
-                "CARRO_CAMPUS = '" + TxtCarro.Text+ "', " +
+                "CARRO_CAMPUS = '" + TxtCarro.Text + "', " +
                 "OTRO_HOSPITAL = '" + TxtOtroHospital.Text + "' " +
                 "WHERE EMPLID ='" + txtEmplid.Value + "'";
 
@@ -1907,14 +2001,14 @@ namespace ReportesUnis
                 }
             }
             return control;
-        }
+        }*/
         protected string IngresoDatosGenerales()
         {
             txtNombreAPEX.Text = null;
             string constr = TxtURL.Text;
             string codPais = "";
             string codPaisNIT = "";
-            string ec = estadoCivil();
+            string ec = EstadoCivil();
             int largoApellido = txtApellido.Text.Length;
             int espaciosApellido = ContarEspacios(txtApellido.Text);
             int espaciosNombre = ContarEspacios(txtNombre.Text);
@@ -2021,10 +2115,19 @@ namespace ReportesUnis
                     cmd.Connection = con;
                     string consultaUP = "1";
                     string consultaUD = "1";
+                    int contarTelefono = 0;
                     try
                     {
+                        //contador telefonos HOME
+                        cmd.Connection = con;
+                        cmd.CommandText = "SELECT COUNT (*) CONTADOR FROM SYSADM.PS_PERSONAL_PHONE WHERE EMPLID = '" + txtCarne.Text + "' AND PHONE_TYPE ='HOME'";
+                        reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            contarTelefono = Convert.ToInt16(reader["CONTADOR"].ToString());
+                        }
                         //Numero de Telefono
-                        if (!String.IsNullOrEmpty(TruePhone.Text))
+                        if (!String.IsNullOrEmpty(TruePhone.Text) && contarTelefono > 0)
                         { //UPDATE
                             UD_PERSONAL_PHONE.Value = "<COLL_PERSONAL_PHONE> \n" +
                                                         "                                            <EMPLID>" + txtCarne.Text + @"</EMPLID>" +
@@ -2034,7 +2137,7 @@ namespace ReportesUnis
                                                         "\n" +
                                                         "                                            <PROP_PREF_PHONE_FLAG>Y</PROP_PREF_PHONE_FLAG> \n" +
                                                      "                                         </COLL_PERSONAL_PHONE> \n";
-                            contadorUD = contadorUD + 1;
+                            contadorUD++;
                         }
                         else
                         {//INSERT
@@ -2046,7 +2149,7 @@ namespace ReportesUnis
                                                         "\n" +
                                                         "                                            <PROP_PREF_PHONE_FLAG>Y</PROP_PREF_PHONE_FLAG> \n" +
                                                      "                                         </COLL_PERSONAL_PHONE> \n";
-                            contadorUP = contadorUP + 1;
+                            contadorUP++;
                         }
 
                         //EMAIL PERSONAL
@@ -2059,7 +2162,7 @@ namespace ReportesUnis
                                                             "\n" +
                                                             "                                            <PROP_PREF_EMAIL_FLAG>N</PROP_PREF_EMAIL_FLAG> \n" +
                                                          "                                         </COLL_EMAIL_ADDRESSES> \n";
-                            contadorUD = contadorUD + 1;
+                            contadorUD++;
                         }
                         else
                         {//INSERT
@@ -2069,7 +2172,7 @@ namespace ReportesUnis
                                                             "\n" +
                                                             "                                            <PROP_PREF_EMAIL_FLAG>N</PROP_PREF_EMAIL_FLAG> \n" +
                                                          "                                         </COLL_EMAIL_ADDRESSES> \n";
-                            contadorUP = contadorUP + 1;
+                            contadorUP++;
                         }
 
                         //Direccion
@@ -2133,7 +2236,7 @@ namespace ReportesUnis
                                                       "\n" +
                                                     "                                            </COLL_ADDRESSES> \n" +
                                                  "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUP = contadorUP + 1;
+                            contadorUP++;
                         }
                         else if (EffdtDireccionUltimo == Hoy && ContadorDirecciones > 0 && ContadorEffdtDirecciones > 0)
                         {
@@ -2156,7 +2259,7 @@ namespace ReportesUnis
                                                       "\n" +
                                                     "                                            </COLL_ADDRESSES> \n" +
                                                  "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUD = contadorUD + 1;
+                            contadorUD++;
                         }
                         else
                         {
@@ -2179,7 +2282,7 @@ namespace ReportesUnis
                                                       "\n" +
                                                     "                                            </COLL_ADDRESSES> \n" +
                                                  "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                            contadorUD = contadorUD + 1;
+                            contadorUD++;
                         }
 
                         //Estado Civil
@@ -2200,7 +2303,7 @@ namespace ReportesUnis
                                                      "                                            <PROP_FT_STUDENT>" + FT_STUDENT.Value + "</PROP_FT_STUDENT>" +
                                                     "\n" +
                                                     "                                            </COLL_PERS_DATA_EFFDT>";
-                                contadorUP = contadorUP + 1;
+                                contadorUP++;
                             }
                             else
                             {
@@ -2208,7 +2311,7 @@ namespace ReportesUnis
                                                     " <KEYPROP_EFFDT>" + EFFDT_EC.Value + @"</KEYPROP_EFFDT>" +
                                                     " <PROP_MAR_STATUS>" + ec + @"</PROP_MAR_STATUS>" +
                                                      "</COLL_PERS_DATA_EFFDT>";
-                                contadorUD = contadorUD + 1;
+                                contadorUD++;
                             }
                         }
 
@@ -2434,7 +2537,7 @@ namespace ReportesUnis
                                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                         }
                                     }
-                                    contadorUP = contadorUP + 1;
+                                    contadorUP++;
                                 }
                                 else if (EffdtNombreNitUltimo == Hoy && ContadorNombreNit > 0 && ContadorEffdtNombreNit > 0)
                                 {//UPDATE
@@ -2507,7 +2610,7 @@ namespace ReportesUnis
                                         }
                                     }
 
-                                    contadorUD = contadorUD + 1;
+                                    contadorUD++;
                                 }
                                 else
                                 {
@@ -2580,7 +2683,7 @@ namespace ReportesUnis
                                                     "AND PN.EFFDT ='" + Convert.ToDateTime(EffdtNombreNitUltimo).ToString("dd/MM/yyyy") + "'";
                                         }
                                     }
-                                    contadorUD = contadorUD + 1;
+                                    contadorUD++;
                                 }
 
                                 if (EffdtNitUltimo != HoyEffdt && ContadorNit == 0)
@@ -2635,7 +2738,7 @@ namespace ReportesUnis
                                                       "\n" +
                                                     "                                            </COLL_ADDRESSES> \n" +
                                                  "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                                    contadorUP = contadorUP + 1;
+                                    contadorUP++;
                                 }
                                 else if (EffdtDireccionNitUltimo == Hoy && ContadorDirecionNit > 0 && ContadorEffdtDirecionNit > 0)
                                 {//ACTUALIZA
@@ -2657,7 +2760,7 @@ namespace ReportesUnis
                                                       "\n" +
                                                     "                                            </COLL_ADDRESSES> \n" +
                                                  "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                                    contadorUD = contadorUD + 1;
+                                    contadorUD++;
                                 }
                                 else
                                 {//UPDATE
@@ -2679,12 +2782,12 @@ namespace ReportesUnis
                                                           "\n" +
                                                         "                                            </COLL_ADDRESSES> \n" +
                                                      "                                        </COLL_ADDRESS_TYPE_VW> \n";
-                                    contadorUD = contadorUD + 1;
+                                    contadorUD++;
                                 }
                             }
                             else
                             {
-                                llenadoPaisnit();
+                                LlenadoPaisnit();
                             }
                         }
 
@@ -2692,49 +2795,50 @@ namespace ReportesUnis
                         if (String.IsNullOrEmpty(LugarNacimiento.Value))
                         {
                             UP_BIRTHPLACE.Value = "<PROP_BIRTHPLACE>" + TxtLugarNac.Text + "</PROP_BIRTHPLACE>";
-                            contadorUP = contadorUP + 1;
+                            contadorUP++;
                         }
                         else
                         {
                             UD_BIRTHPLACE.Value = "<PROP_BIRTHPLACE>" + TxtLugarNac.Text + "</PROP_BIRTHPLACE>";
-                            contadorUD = contadorUD + 1;
+                            contadorUD++;
                         }
 
                         //PAIS DE NACIMIENTO
                         if (String.IsNullOrEmpty(PaisNacimiento.Value))
                         {
                             UP_BIRTHCOUNTRY.Value = "<PROP_BIRTHCOUNTRY>" + CmbPaisNacimiento.SelectedValue + "</PROP_BIRTHCOUNTRY>";
-                            contadorUP = contadorUP + 1;
+                            contadorUP++;
                         }
                         else
                         {
                             UD_BIRTHCOUNTRY.Value = "<PROP_BIRTHCOUNTRY>" + CmbPaisNacimiento.SelectedValue + "</PROP_BIRTHCOUNTRY>";
-                            contadorUD = contadorUD + 1;
+                            contadorUD++;
                         }
 
                         //STATE NACIMIENTO
-                        llenadoStateNac();
-                        if (String.IsNullOrEmpty(StateNacimiento.Value))
+                        LlenadoStateNac();
+
+                        if (String.IsNullOrEmpty(StateNacimiento.Value) && !String.IsNullOrEmpty(CmbMuncNacimiento.SelectedValue))
                         {
                             UP_BIRTHSTATE.Value = "<PROP_BIRTHSTATE>" + StateNacimiento.Value + "</PROP_BIRTHSTATE>";
-                            contadorUP = contadorUP + 1;
+                            contadorUP++;
                         }
-                        else
+                        else if (!String.IsNullOrEmpty(StateNacimiento.Value))
                         {
                             UD_BIRTHSTATE.Value = "<PROP_BIRTHSTATE>" + StateNacimiento.Value + "</PROP_BIRTHSTATE>";
-                            contadorUD = contadorUD + 1;
+                            contadorUD++;
                         }
 
                         //FECHA NACIMIENTO
                         if (String.IsNullOrEmpty(txtCumple.Text))
                         {
                             UP_BIRTHDATE.Value = "<PROP_BIRTHDATE>" + txtCumple.Text + "</PROP_BIRTHDATE>";
-                            contadorUP = contadorUP + 1;
+                            contadorUP++;
                         }
                         else
                         {
                             UD_BIRTHDATE.Value = "<PROP_BIRTHDATE>" + txtCumple.Text + "</PROP_BIRTHDATE>";
-                            contadorUD = contadorUD + 1;
+                            contadorUD++;
                         }
 
                         //NOMBRES
@@ -2878,7 +2982,7 @@ namespace ReportesUnis
                                                     "        </COLL_NAMES>" +
                                                     "      </COLL_NAME_TYPE_VW>";
                             }
-                            contadorUP = contadorUP + 1;
+                            contadorUP++;
                         }
                         else if (EffdtNombreUltimo == Hoy && ContadorNombre > 0 && ContadorEffdtNombre > 0)
                         {
@@ -2958,7 +3062,7 @@ namespace ReportesUnis
                                                     "        </COLL_NAMES>" +
                                                     "      </COLL_NAME_TYPE_VW>";
                             }
-                            contadorUD = contadorUD + 1;
+                            contadorUD++;
                         }
                         else
                         {
@@ -3038,7 +3142,7 @@ namespace ReportesUnis
                                                     "        </COLL_NAMES>" +
                                                     "      </COLL_NAME_TYPE_VW>";
                             }
-                            contadorUD = contadorUD + 1;
+                            contadorUD++;
                         }
 
 
@@ -3112,6 +3216,7 @@ namespace ReportesUnis
                         PAIS_DOCUMENTO1.Value = pais;
                         TIPO_DOCUMENTO1.Value = tipoDocumento;
                         DOCUMENTO1.Value = documento;
+                        contadorUP++;
                     }
                     else if (tipoDocumento == "DPI")
                     {
@@ -3126,6 +3231,7 @@ namespace ReportesUnis
                         PAIS_DOCUMENTO1.Value = pais;
                         TIPO_DOCUMENTO1.Value = tipoDocumento;
                         DOCUMENTO1.Value = documento;
+                        contadorUD++;
                     }
                     if (ExistePasaporte.Value == "0" && tipoDocumento == "PAS")
                     {
@@ -3140,6 +3246,7 @@ namespace ReportesUnis
                         PAIS_DOCUMENTO2.Value = pais;
                         TIPO_DOCUMENTO2.Value = tipoDocumento;
                         DOCUMENTO2.Value = documento;
+                        contadorUP++;
                     }
                     else if (tipoDocumento == "PAS")
                     {
@@ -3154,43 +3261,52 @@ namespace ReportesUnis
                         PAIS_DOCUMENTO2.Value = pais;
                         TIPO_DOCUMENTO2.Value = tipoDocumento;
                         DOCUMENTO2.Value = documento;
+                        contadorUD++;
                     }
                 }
             }
 
             return (UP_PROP_NID, UD_PROP_NID);
         }
-        protected string DatosAlergias()
+        protected (string seleccionadosCRM, string seleccionadosCampus) DatosAlergias()
         {
-            List<string> selectedValues = new List<string>();
-            string seleccionados = null;
+            List<string> selectedValuesCRM = new List<string>();
+            List<string> selectedValuesCampus = new List<string>();
+            string CRMseleccionados = null;
+            string Campusseleccionados = null;
 
             // Recorrer los items del DropDownList y agregar los seleccionados a la lista
             foreach (ListItem item in CmbAlergias.Items)
             {
                 if (item.Selected)
                 {
-                    selectedValues.Add(item.Value);
+                    selectedValuesCRM.Add(item.Text);
+                    selectedValuesCampus.Add(item.Value);
                 }
             }
-            seleccionados = string.Join(",", selectedValues);
-            return seleccionados;
+            CRMseleccionados = string.Join(",", selectedValuesCRM);
+            Campusseleccionados = string.Join(",", selectedValuesCampus);
+            return (CRMseleccionados, Campusseleccionados);
         }
-        protected string DatosEnfermedades()
+        protected (string seleccionadosCRM, string seleccionadosCampus) DatosEnfermedades()
         {
-            List<string> selectedValues = new List<string>();
-            string seleccionados = null;
+            List<string> selectedValuesCRM = new List<string>();
+            List<string> selectedValuesCampus = new List<string>();
+            string CRMseleccionados = null;
+            string Campusseleccionados = null;
 
             // Recorrer los items del DropDownList y agregar los seleccionados a la lista
             foreach (ListItem item in CmbAntecedentes.Items)
             {
                 if (item.Selected)
                 {
-                    selectedValues.Add(item.Value);
+                    selectedValuesCRM.Add(item.Text);
+                    selectedValuesCampus.Add(item.Value);
                 }
             }
-            seleccionados = string.Join(",", selectedValues);
-            return seleccionados;
+            CRMseleccionados = string.Join(",", selectedValuesCRM);
+            Campusseleccionados = string.Join(",", selectedValuesCampus);
+            return (CRMseleccionados, Campusseleccionados);
         }
         protected string AlmacenarAlergiasCampus(string datos)
         {
@@ -3476,12 +3592,17 @@ namespace ReportesUnis
                         registro = reader["REGISTROS"].ToString().Trim();
                     }
 
+                    string afiliacion = string.IsNullOrEmpty(TxtAfiliacion.Text) ? " " : TxtAfiliacion.Text;
+                    string seguro = string.IsNullOrEmpty(TxtSeguro.Text) ? " " : TxtSeguro.Text;
+                    string carro = string.IsNullOrEmpty(TxtCarro.Text) ? " " : TxtCarro.Text;
+                    string otroHospital = string.IsNullOrEmpty(TxtOtroHospital.Text) ? " " : TxtOtroHospital.Text;
+
                     if (registro == "0")
                     {
                         try
                         {
-                            cmd.CommandText = "INSERT INTO SYSADM.PS_UNIS_ATEN_EMERG (EMPLID, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE, CARRO_CAMPUS) " +
-                                                "VALUES ('" + txtCarne.Text + "', '" + TxtAfiliacion.Text + "', ' " + TxtSeguro.Text + "','" + CmbSangre.SelectedItem + "', '" + TxtCarro.Text + "')";
+                            cmd.CommandText = "INSERT INTO SYSADM.PS_UNIS_ATEN_EMERG (EMPLID, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE, CARRO_CAMPUS, ANTECEDENTES_MED, HOSPITAL_TRASLADO, OTRO_HOSPITAL) " +
+                                                "VALUES ('" + txtCarne.Text + "', '" + afiliacion + "', ' " + seguro + "','" + CmbSangre.SelectedItem + "', '" + carro + "', ' ', '" + CmbHospital.SelectedItem + "', '"+otroHospital+"')";
                             cmd.ExecuteNonQuery();
                             transaction.Commit();
                         }
@@ -3496,11 +3617,13 @@ namespace ReportesUnis
                         try
                         {
                             cmd.CommandText = "UPDATE SYSADM.PS_UNIS_ATEN_EMERG SET " +
-                                                                "EMPLID= '" + txtCarne.Text + "', " +
-                                                                "NRO_AFILIACION= '" + TxtAfiliacion.Text + "', " +
-                                                                "SEGURO_MEDICO= '" + TxtSeguro.Text + "', " +
+                                                                "NRO_AFILIACION= '" + afiliacion + "', " +
+                                                                "SEGURO_MEDICO= '" + seguro + "', " +
                                                                 "TIPO_SANGRE= '" + CmbSangre.SelectedItem + "', " +
-                                                                "CARRO_CAMPUS ='" + TxtCarro.Text + "'";
+                                                                "CARRO_CAMPUS ='" + carro + "', " +
+                                                                "OTRO_HOSPITAL ='" + otroHospital + "', " +
+                                                                "HOSPITAL_TRASLADO ='" + CmbHospital.SelectedItem + "' " +
+                                                                "WHERE EMPLID= '" + txtCarne.Text + "'";
                             cmd.ExecuteNonQuery();
                             transaction.Commit();
                             log("Función AlmacenarEmergencias", "Correcto", "Los datos fueron almacenados correctamente", "AlmacenarEmergencias");
@@ -3522,7 +3645,7 @@ namespace ReportesUnis
         {
             string constr = TxtURL.Text;
             //EmplidAtencion.Value = null;
-            string EstadoCivil = estadoCivil();
+            string Estadoc = EstadoCivil();
             int control = 0;
             string query = "INSERT INTO UNIS_INTERFACES.TBL_ACTUALIZACION_ALUMNOS (" +
                                                         " CARNET, " +
@@ -3593,7 +3716,7 @@ namespace ReportesUnis
                                                         "'" + txtFacultad.Text + "' , " +
                                                         "'" + txtCarrera.Text + "' , " +
                                                         "'" + EmailUnis.Text + "' , " +
-                                                        "'" + Convert.ToDateTime(txtCumple.Text).ToString("MM/dd/yyyy") + "' , " +
+                                                        "'" + Convert.ToDateTime(txtCumple.Text).ToString("dd/MM/yyy") + "' , " +
                                                         "'" + TxtLugarNac.Text + "' , " +
                                                         "'" + CmbPaisNacimiento.SelectedValue + "' , " +
                                                         "'" + CmbDeptoNacimiento.SelectedValue + "' , " +
@@ -3611,7 +3734,7 @@ namespace ReportesUnis
                                                         "'" + State.Text + "' , " +
                                                         "'" + txtTelefono.Text + "' , " +
                                                         "'" + TxtCorreoPersonal.Text + "' , " +
-                                                        "'" + EstadoCivil + "' , " +
+                                                        "'" + Estadoc + "' , " +
                                                         "'" + txtNit.Text + "' , " +
                                                         "'" + TxtNombreR.Text + "' , " +
                                                         "'" + TxtApellidoR.Text + "' , " +
@@ -3636,9 +3759,9 @@ namespace ReportesUnis
                                                         "'" + CmbSangre.SelectedItem + "' , " +
                                                         "'" + CmbHospital.SelectedItem + "' , " +
                                                         "'" + TxtOtroHospital.Text + "' , " +
-                                                        "'" + seleccionadosAntecedentes.Value + "' , " +
+                                                        "'" + seleccionadosAntecedentes_CRM.Value + "' , " +
                                                         "'" + TxtOtrosAntecedentesM.Text + "' , " +
-                                                        "'" + seleccionadosAlergia.Value + "' , " +
+                                                        "'" + seleccionadosAlergia_CRM.Value + "' , " +
                                                         "'" + TxtOtrasAlergias.Text + "' , " +
                                                         "'" + CE_Principal1.Value + "' , " +
                                                         "'" + CE_parentesco1.Value + "' , " +
@@ -3749,11 +3872,83 @@ namespace ReportesUnis
                                    </soapenv:Body>
                                 </soapenv:Envelope>";
         }
+        private void log(string PROCESO, string ESTADO, string DESCRIPCION, string UBICACION)
+        {
+            string constr = TxtURL.Text;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                OracleTransaction transaction;
+                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = con;
+                    try
+                    {
+                        cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_UPDATE_ALUMNO (PROCESO, ESTADO, DESCRIPCION_ESTADO, UBICACION_ERROR, FECHA_EJECUCION, EMPLID_ALUMNO, ID_USUARIO) VALUES ('" + PROCESO + "','" + ESTADO + "','" + DESCRIPCION + "','" + UBICACION + "',SYSDATE,'" + txtCarne.Text + "','" + TextUser.Text + "')";
+                        cmd.ExecuteNonQuery();
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                    }
+
+                }
+            }
+        }
+        private (string Departamento, string Municipio, string País) DatosResidencia()
+        {
+            string constr = TxtURL.Text;
+            string depto = null;
+            string mun = null;
+            string pais = null;
+            using (OracleConnection con = new OracleConnection(constr))
+            {
+                con.Open();
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.CommandText = "SELECT GEOGRAPHY_NAME_CRM " +
+                        "FROM UNIS_INTERFACES.OPT_CONTACT_CATALOG_DEPT " +
+                        "WHERE GEOGRAPHY_NAME_CRM ='" + CmbDepartamento.SelectedValue + "'  ";
+                    cmd.Connection = con;
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        depto = reader["GEOGRAPHY_NAME_CRM"].ToString();
+                    }
+
+                    cmd.CommandText = "SELECT GEOGRAPHY_NAME_CRM " +
+                        "FROM UNIS_INTERFACES.OPT_CONTACT_CATALOG_MUNICP " +
+                        "WHERE STATE_CAMPUS ='" + State.Text + "'  ";
+                    cmd.Connection = con;
+                    OracleDataReader reader2 = cmd.ExecuteReader();
+                    while (reader2.Read())
+                    {
+                        mun = reader2["GEOGRAPHY_NAME_CRM"].ToString();
+                    }
+
+
+                    cmd.CommandText = "SELECT GEOGRAPHY_CODE_CRM " +
+                        "FROM UNIS_INTERFACES.OPT_CONTACT_CATALOG_PAIS " +
+                        "WHERE DESCRIPCION_CAMPUS ='" + CmbPais.Text + "'  ";
+                    cmd.Connection = con;
+                    OracleDataReader reader3 = cmd.ExecuteReader();
+                    while (reader3.Read())
+                    {
+                        pais = reader3["GEOGRAPHY_CODE_CRM"].ToString();
+                    }
+
+                }
+            }
+
+            return (depto, mun, pais);
+        }
 
         //EVENTOS       
         protected void CmbMunicipio_SelectedIndexChanged(object sender, EventArgs e)
         {
-            llenadoState();
+            LlenadoState();
             if (RadioButtonNombreSi.Checked && ControlCF.Value != "CF")
             {
                 txtNit.Text = "CF";
@@ -3797,13 +3992,13 @@ namespace ReportesUnis
         }
         protected void CmbMunicipioNIT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            llenadoStateNIT();
+            LlenadoStateNIT();
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
         protected void CmbDepartamento_SelectedIndexChanged(object sender, EventArgs e)
         {
-            llenadoMunicipio();
-            llenadoState();
+            LlenadoMunicipio();
+            LlenadoState();
             if (RadioButtonNombreSi.Checked && ControlCF.Value != "CF")
             {
                 txtNit.Text = "CF";
@@ -3825,7 +4020,7 @@ namespace ReportesUnis
         }
         protected void CmbDepartamentoNac_SelectedIndexChanged(object sender, EventArgs e)
         {
-            llenadoMunicipioNacimiento();
+            LlenadoMunicipioNacimiento();
             if (RadioButtonNombreSi.Checked && ControlCF.Value != "CF")
             {
                 txtNit.Text = "CF";
@@ -3847,7 +4042,7 @@ namespace ReportesUnis
         }
         protected void CmbDepartamentoNIT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            llenadoMunicipioNacimiento();
+            LlenadoMunicipioNacimiento();
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
         protected void BtnActualizar_Click(object sender, EventArgs e)
@@ -3856,7 +4051,7 @@ namespace ReportesUnis
             string PartyNumber = null;
             string getInfo = null;
             string body = null;
-            var Residencia = datosResidencia();
+            var Residencia = DatosResidencia();
             string DeptoResidencia = Residencia.Departamento;
             string MunicResidencia = Residencia.Municipio;
             string PaisResidencia = Residencia.País;
@@ -3986,18 +4181,18 @@ namespace ReportesUnis
                 PrincipalD2 = "Y";
             }
 
-            CE_nombre1.Value = nombre1;
-            CE_nombre2.Value = nombre2;
-            CE_nroDocumento1.Value = nroDocumento1;
-            CE_nroDocumento2.Value = nroDocumento2;
-            CE_pais1.Value = pais1;
-            CE_pais2.Value = pais2;
-            CE_parentesco1.Value = parentesco1.Replace("\"", "");
-            CE_parentesco2.Value = parentesco2.Replace("\"", "");
-            CE_telefono1.Value = telefono1;
-            CE_telefono2.Value = telefono2;
-            CE_Principal1.Value = PrincipalC1;
-            CE_Principal2.Value = PrincipalC2;
+            CE_nombre1.Value = string.IsNullOrEmpty(nombre1) ? " " : nombre1;
+            CE_nombre2.Value = string.IsNullOrEmpty(nombre2) ? " " : nombre2;
+            CE_nroDocumento1.Value = string.IsNullOrEmpty(nroDocumento1) ? " " : nroDocumento1;
+            CE_nroDocumento2.Value = string.IsNullOrEmpty(nroDocumento2) ? " " : nroDocumento2;
+            CE_pais1.Value = string.IsNullOrEmpty(pais1) ? " " : pais1;
+            CE_pais2.Value = string.IsNullOrEmpty(pais2) ? " " : pais2;
+            CE_parentesco1.Value = string.IsNullOrEmpty(parentesco1) ? " " : parentesco1.Replace("\"", "");
+            CE_parentesco2.Value = string.IsNullOrEmpty(parentesco2) ? " " : parentesco2.Replace("\"", "");
+            CE_telefono1.Value = string.IsNullOrEmpty(telefono1) ? " " : telefono1;
+            CE_telefono2.Value = string.IsNullOrEmpty(telefono2) ? " " : telefono2;
+            CE_Principal1.Value = string.IsNullOrEmpty(PrincipalC1) ? " " : PrincipalC1;
+            CE_Principal2.Value = string.IsNullOrEmpty(PrincipalC2) ? " " : PrincipalC2;
 
             if (CmbEstado.SelectedValue.Substring(0, 1).ToString().Equals("C"))
             {
@@ -4020,29 +4215,35 @@ namespace ReportesUnis
             UP_IDENTIFICACION.Value = respuestaDocumentos.UP_Doc;
             UD_IDENTIFICACION.Value = respuestaDocumentos.UD_Doc;
             resultados = IngresoDatosGenerales();
-            
+
             if (resultados == "0")
             {
                 string texto;
-                seleccionadosAlergia.Value = DatosAlergias();
-                seleccionadosAntecedentes.Value = DatosEnfermedades();
-                texto = seleccionadosAlergia.Value.Trim();
+                seleccionadosAlergia_Campus.Value = DatosAlergias().seleccionadosCampus;
+                seleccionadosAlergia_CRM.Value = DatosAlergias().seleccionadosCRM;
+                seleccionadosAntecedentes_CRM.Value = DatosEnfermedades().seleccionadosCRM;
+                seleccionadosAntecedentes_Campus.Value = DatosEnfermedades().seleccionadosCampus;
+                texto = seleccionadosAlergia_CRM.Value.Trim();
                 if (texto.EndsWith(","))
                 {
-                    seleccionadosAlergia.Value = texto.Substring(0, texto.Length - 1);
+                    seleccionadosAlergia_CRM.Value = texto.Substring(0, texto.Length - 1);
+                    seleccionadosAlergia_Campus.Value = texto.Substring(0, texto.Length - 1);
                 }
-                texto = seleccionadosAntecedentes.Value.Trim();
+                texto = seleccionadosAntecedentes_CRM.Value.Trim();
 
                 if (texto.EndsWith(","))
                 {
-                    seleccionadosAntecedentes.Value = texto.Substring(0, texto.Length - 1);
+                    seleccionadosAntecedentes_CRM.Value = texto.Substring(0, texto.Length - 1);
+                    seleccionadosAntecedentes_Campus.Value = texto.Substring(0, texto.Length - 1);
                 }
 
-                resultados = AlmacenarAlergiasCampus(seleccionadosAlergia.Value);
+                if (!String.IsNullOrEmpty(seleccionadosAlergia_Campus.Value))
+                    resultados = AlmacenarAlergiasCampus(seleccionadosAlergia_Campus.Value);
 
                 if (resultados == "0")
                 {
-                    resultados = AlmacenarAntecedentesCampus(seleccionadosAntecedentes.Value);
+                    if (!String.IsNullOrEmpty(seleccionadosAntecedentes_Campus.Value))
+                        resultados = AlmacenarAntecedentesCampus(seleccionadosAntecedentes_Campus.Value);
 
                     if (resultados == "0")
                     {
@@ -4054,50 +4255,72 @@ namespace ReportesUnis
                             if (resultados == "0")
                             {
                                 //ACTUALIZACION EN CRM
-                                limpiarVariables();
+                                LimpiarVariables();
                                 if (!String.IsNullOrEmpty(DOCUMENTO1_INICIAL.Value))
-                                    getInfo = consultaGet(DOCUMENTO1_INICIAL.Value);
+                                    getInfo = ConsultaGet(DOCUMENTO1_INICIAL.Value);
                                 else
-                                    getInfo = consultaGet(DOCUMENTO2_INCIAL.Value);
-                                PartyNumber = getBetween(getInfo, "PartyNumber\" : \"", "\",");
+                                    getInfo = ConsultaGet(DOCUMENTO2_INCIAL.Value);
+                                PartyNumber = GetBetween(getInfo, "PartyNumber\" : \"", "\",");
                                 string FechaCumple = Convert.ToDateTime(txtCumple.Text).ToString("yyyy-MM-dd");
-                                string parentesco1_crm = null;
-                                string parentesco2_crm = null;
+                                string parentesco1_crm = "-";
+                                string parentesco2_crm = "-";
 
-                                string SelectParentesco1 = "SELECT ID_CRM " +
-                                            "FROM UNIS_INTERFACES.TBL_RELACIONES_FAMILIARES " +
-                                        "WHERE PARENTESCO = '" + parentesco1.Replace("\"","") + "'";
-
-                                string SelectParentesco2 = "SELECT ID_CRM " +
-                                            "FROM UNIS_INTERFACES.TBL_RELACIONES_FAMILIARES " +
-                                        "WHERE PARENTESCO = '" + parentesco2.Replace("\"", "") + "'";
-
-                                using (OracleConnection con = new OracleConnection(constr))
+                                if (!String.IsNullOrEmpty(parentesco1))
                                 {
-                                    con.Open();
-                                    OracleTransaction transaction;
-                                    transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
-                                    using (OracleCommand cmd = new OracleCommand())
+                                    string SelectParentesco1 = "SELECT ID_CRM " +
+                                                "FROM UNIS_INTERFACES.TBL_RELACIONES_FAMILIARES " +
+                                            "WHERE PARENTESCO = '" + parentesco1.Replace("\"", "") + "'";
+
+                                    string SelectParentesco2 = "SELECT ID_CRM " +
+                                                "FROM UNIS_INTERFACES.TBL_RELACIONES_FAMILIARES " +
+                                            "WHERE PARENTESCO = '" + parentesco2.Replace("\"", "") + "'";
+
+                                    using (OracleConnection con = new OracleConnection(constr))
                                     {
-                                        cmd.Connection = con;
-
-                                        cmd.CommandText = SelectParentesco1;
-                                        OracleDataReader reader2 = cmd.ExecuteReader();
-                                        while (reader2.Read())
+                                        con.Open();
+                                        OracleTransaction transaction;
+                                        transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
+                                        using (OracleCommand cmd = new OracleCommand())
                                         {
-                                            parentesco1_crm = reader2["ID_CRM"].ToString();
-                                        }
+                                            cmd.Connection = con;
 
-                                        cmd.CommandText = SelectParentesco2;
-                                        reader2 = cmd.ExecuteReader();
-                                        while (reader2.Read())
-                                        {
-                                            parentesco2_crm = reader2["ID_CRM"].ToString();
-                                        }
+                                            cmd.CommandText = SelectParentesco1;
+                                            OracleDataReader reader2 = cmd.ExecuteReader();
+                                            while (reader2.Read())
+                                            {
+                                                parentesco1_crm = reader2["ID_CRM"].ToString();
+                                            }
 
-                                        con.Close();
+                                            cmd.CommandText = SelectParentesco2;
+                                            reader2 = cmd.ExecuteReader();
+                                            while (reader2.Read())
+                                            {
+                                                parentesco2_crm = reader2["ID_CRM"].ToString();
+                                            }
+
+                                            con.Close();
+                                        }
                                     }
                                 }
+
+                                string talla = " ";
+                                if (String.IsNullOrEmpty(CmbTalla.SelectedValue))
+                                    talla = "-";
+                                else
+                                    talla = CmbTalla.SelectedValue;
+
+                                string hospital = " ";
+                                if (String.IsNullOrEmpty(CmbHospital.SelectedItem.Value) || CmbHospital.SelectedItem.Value == " ")
+                                    hospital = "-";
+                                else
+                                    hospital = CmbHospital.SelectedItem.Value;
+
+                                if (String.IsNullOrEmpty(seleccionadosAlergia_CRM.Value))
+                                    seleccionadosAlergia_CRM.Value = "-";
+
+                                if (String.IsNullOrEmpty(seleccionadosAntecedentes_CRM.Value))
+                                    seleccionadosAntecedentes_CRM.Value = "-";
+
                                 body = "{\r\n    " +
                                     "\"FirstName\": \"" + txtNombre.Text + "\",\r\n    " +
                                     "\"LastName\": \"" + txtApellido.Text + "\",\r\n    " +
@@ -4114,9 +4337,10 @@ namespace ReportesUnis
                                     "\"City\": \"" + MunicResidencia + "\",\r\n    " +
                                     "\"Country\": \"" + PaisResidencia + "\",\r\n    " +
                                     "\"County\": \"" + DeptoResidencia + "\",\r\n    " +
+                                    "\"PostalCode\": null,\r\n    " +
                                     "\"PersonDEO_TipoDeDocumentoDeIdentidad_c\": \"" + TipoDocumentoCRM + "\",\r\n    " +
                                     "\"PersonDEO_InformacionCarro_c\": \"" + TxtCarro.Text + "\",\r\n    " +
-                                    "\"PersonDEO_TallaSudadero_c\": \"" + CmbTalla.SelectedValue + "\",\r\n    " +
+                                    "\"PersonDEO_TallaSudadero_c\": \"" + talla + "\",\r\n    " +
                                     "\"PersonDEO_T1_PaisDeNacimiento_c\": \"" + CmbPaisNacimiento.Text + "\",\r\n    " +
                                     "\"PersonDEO_NumeroDeIdentificacionTributaria_c\": \"" + txtNit.Text + "\",\r\n    " +
                                     "\"PersonDEO_ContactoDeEmergencia1_c\": \"" + nombre1 + "\",\r\n    " +
@@ -4125,11 +4349,11 @@ namespace ReportesUnis
                                     "\"PersonDEO_ParentescoContactoEmergencia2_c\": \"" + parentesco2_crm + "\",\r\n    " +
                                     "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + telefono1 + "\",\r\n    " +
                                     "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + telefono2 + "\",\r\n    " +
-                                    "\"PersonDEO_HospitalTraslado_c\": \"" + CmbHospital.SelectedItem + "\",\r\n    " +
+                                    "\"PersonDEO_HospitalTraslado_c\": \"" + hospital + "\",\r\n    " +
                                     "\"PersonDEO_OtroHospital_c\": \"" + TxtOtroHospital.Text + "\",\r\n    " +
-                                    "\"PersonDEO_ListaAlergias_c\": \"" + seleccionadosAlergia.Value + "\",\r\n    " +
+                                    "\"PersonDEO_ListaAlergias_c\": \"" + seleccionadosAlergia_CRM.Value + "\",\r\n    " +
                                     "\"PersonDEO_Alergias_c\": \"" + TxtOtrasAlergias.Text + "\",\r\n    " +
-                                    "\"PersonDEO_Enfermedades_c\": \"" + seleccionadosAntecedentes.Value + "\",\r\n    " +
+                                    "\"PersonDEO_Enfermedades_c\": \"" + seleccionadosAntecedentes_CRM.Value + "\",\r\n    " +
                                     "\"PersonDEO_AntecedentesMedicos_c\": \"" + TxtOtrosAntecedentesM.Text + "\",\r\n    " +
                                     "\"PersonDEO_TipoDeSangre_c\": \"" + CmbSangre.SelectedValue + "\",\r\n    " +
                                     "\"PersonDEO_SeguroMedico_c\": \"" + TxtSeguro.Text + "\",\r\n    " +
@@ -4139,15 +4363,16 @@ namespace ReportesUnis
 
                                 //Actualiza por medio del metodo PATCH
                                 if (!String.IsNullOrEmpty(PartyNumber))
-                                    updatePatch(body, PartyNumber);
+                                    UpdatePatch(body, PartyNumber);
                                 if (respuestaPatch == 0)
                                 {
                                     log("Actualización en CRM", "Correcto", "La información se actualizo correctamente", "Actualización información de contacto en CRM");
                                     //ACTUALIZACION CONTACTOS DE EMERGENCIA EN CAMPUS
-                                    resultados = ContactoEmergenciaCampus(nombre1, CE_parentesco1.Value, telefono1, PrincipalC1, nombre2, CE_parentesco2.Value, telefono2, PrincipalC2, txtNombreE1_Inicial.Value, txtNombreE2_Inicial.Value);
+                                    if (!String.IsNullOrEmpty(nombre1))
+                                        resultados = ContactoEmergenciaCampus(nombre1, CE_parentesco1.Value, telefono1, PrincipalC1, nombre2, CE_parentesco2.Value, telefono2, PrincipalC2, txtNombreE1_Inicial.Value, txtNombreE2_Inicial.Value);
                                     if (resultados == "0")
                                     {
-                                        resultados = DatosMedicosCampus();
+
                                         if (resultados == "0")
                                         {
                                             if (DOCUMENTO1_PRINCIPAL.Value != PrincipalD1 || DOCUMENTO1_INICIAL.Value != DOCUMENTO1.Value || DOCUMENTO2_PRINCIPAL.Value != PrincipalD2 || DOCUMENTO2_INCIAL.Value != DOCUMENTO2.Value)
@@ -4165,10 +4390,6 @@ namespace ReportesUnis
                                                 log("Actualizacion General de información", "Correcto", "El proceso finalizó correctamente", "Actualizacion General de información");
                                                 ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "mostrarModalCorrecto();", true);
                                             }
-                                        }
-                                        else
-                                        {
-                                            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                                         }
                                     }
                                     else
@@ -4205,9 +4426,9 @@ namespace ReportesUnis
         }
         protected void CmbPais_SelectedIndexChanged(object sender, EventArgs e)
         {
-            llenadoDepartamento();
-            llenadoMunicipio();
-            llenadoState();
+            LlenadoDepartamento();
+            LlenadoMunicipio();
+            LlenadoState();
             if (RadioButtonNombreSi.Checked && ControlCF.Value != "CF")
             {
                 txtNit.Text = "CF";
@@ -4238,8 +4459,8 @@ namespace ReportesUnis
         }
         protected void CmbPaisNac_SelectedIndexChanged(object sender, EventArgs e)
         {
-            llenadoDepartamentoNac();
-            llenadoMunicipioNacimiento();
+            LlenadoDepartamentoNac();
+            LlenadoMunicipioNacimiento();
             if (RadioButtonNombreSi.Checked && ControlCF.Value != "CF")
             {
                 txtNit.Text = "CF";
@@ -4272,12 +4493,12 @@ namespace ReportesUnis
         {
             if (CmbPaisNIT.SelectedValue != " ")
             {
-                llenadoDepartamentoNit();
-                llenadoMunicipioNIT();
-                llenadoStateNIT();
+                LlenadoDepartamentoNit();
+                LlenadoMunicipioNIT();
+                LlenadoStateNIT();
             }
         }
-        protected void txtNit_TextChanged(object sender, EventArgs e)
+        protected void TxtNit_TextChanged(object sender, EventArgs e)
         {
             TxtNombreR.Text = "";
             TxtApellidoR.Text = "";
@@ -4287,7 +4508,7 @@ namespace ReportesUnis
             TxtDiRe3.Text = "";
             string respuesta;
             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
-            respuesta = consultaNit(txtNit.Text);
+            respuesta = ConsultaNit(txtNit.Text);
             string constr = TxtURL.Text;
 
             if (respuesta.Equals("BadRequest") || respuesta.Equals("1"))
@@ -4295,11 +4516,11 @@ namespace ReportesUnis
                 TxtNombreR.Text = null;
                 TxtApellidoR.Text = null;
                 TxtCasadaR.Text = null;
-                llenadoPaisnit();
+                LlenadoPaisnit();
                 CmbPaisNIT.SelectedValue = " ";
-                llenadoDepartamentoNit();
+                LlenadoDepartamentoNit();
                 CmbDepartamentoNIT.SelectedValue = " ";
-                llenadoMunicipioNIT();
+                LlenadoMunicipioNIT();
                 CmbMunicipioNIT.Text = " ";
                 CmbMunicipioNIT.Enabled = false;
                 CmbDepartamentoNIT.Enabled = false;
@@ -4358,8 +4579,8 @@ namespace ReportesUnis
             }
             else if (respuesta != "1" && respuesta != "BadRequest")
             {
-                string NIT = getBetween(respuesta, "\"NIT\": \"", "\",");
-                string Direccion = getBetween(respuesta, "\"Direccion\": \"", "\",");
+                string NIT = GetBetween(respuesta, "\"NIT\": \"", "\",");
+                string Direccion = GetBetween(respuesta, "\"Direccion\": \"", "\",");
                 string apellido1;
                 string apellido2;
                 string apellidoCasada;
@@ -4368,24 +4589,24 @@ namespace ReportesUnis
                 int largo;
                 if (NIT != "CF")
                 {
-                    string nombreRespuesta = getBetween(respuesta, "\"NOMBRE\": \"", "\",") + ",";
+                    string nombreRespuesta = GetBetween(respuesta, "\"NOMBRE\": \"", "\",") + ",";
                     string cadena = nombreRespuesta;
                     TxtDiRe1.Text = Direccion;
                     TxtDiRe2.Text = "";
                     TxtDiRe3.Text = "";
-                    llenadoPaisnit();
+                    LlenadoPaisnit();
                     CmbPaisNIT.SelectedValue = " ";
-                    llenadoDepartamentoNit();
+                    LlenadoDepartamentoNit();
                     CmbDepartamentoNIT.SelectedValue = " ";
-                    llenadoMunicipioNIT();
+                    LlenadoMunicipioNIT();
                     int contadorComas = cadena.Count(c => c == ',');
                     if (contadorComas >= 5)
                     {
-                        apellido1 = getBetween(nombreRespuesta, "", ",");
-                        apellido2 = getBetween(nombreRespuesta, apellido1 + ",", ",");
-                        apellidoCasada = getBetween(nombreRespuesta, apellido2 + ",", ",");
-                        nombre1 = getBetween(nombreRespuesta, apellido1 + "," + apellido2 + "," + apellidoCasada + ",", ",");
-                        nombre2 = getBetween(nombreRespuesta, nombre1 + ",", ",");
+                        apellido1 = GetBetween(nombreRespuesta, "", ",");
+                        apellido2 = GetBetween(nombreRespuesta, apellido1 + ",", ",");
+                        apellidoCasada = GetBetween(nombreRespuesta, apellido2 + ",", ",");
+                        nombre1 = GetBetween(nombreRespuesta, apellido1 + "," + apellido2 + "," + apellidoCasada + ",", ",");
+                        nombre2 = GetBetween(nombreRespuesta, nombre1 + ",", ",");
                         TxtNombreR.Text = textInfo.ToTitleCase(nombre1 + " " + nombre2);
                         TxtApellidoR.Text = apellido1 + " " + apellido2;
                         TxtCasadaR.Text = apellidoCasada;
@@ -4467,7 +4688,7 @@ namespace ReportesUnis
                     TxtDiRe2.Text = "";
                     ValidarNIT.Enabled = true;
                     txtNit.Enabled = true;
-                    llenadoPaisnit();
+                    LlenadoPaisnit();
                     CmbPaisNIT.SelectedValue = " ";
                     string script = "<script>NoExisteNit();</script>";
                     ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
@@ -4485,7 +4706,7 @@ namespace ReportesUnis
             if (CmbBusqueda.Text.Equals("Nombre"))
             {
                 LoadData();
-                consultaNombre(TxtBusqueda.Text);
+                ConsultaNombre(TxtBusqueda.Text);
                 if (ExisteBusqueda.Value == "1")
                 {
                     string script = "<script>Busqueda();</script>";
@@ -4502,7 +4723,7 @@ namespace ReportesUnis
             if (CmbBusqueda.Text.Equals("Documento de Identificación"))
             {
                 LoadData();
-                consultarDocumento(TxtBusqueda.Text);
+                ConsultarDocumento(TxtBusqueda.Text);
                 if (ExisteBusqueda.Value == "1")
                 {
                     string script = "<script>Busqueda();</script>";
@@ -4518,7 +4739,7 @@ namespace ReportesUnis
             if (CmbBusqueda.Text.Equals("Carnet"))
             {
                 LoadData();
-                consultarId(TxtBusqueda.Text);
+                ConsultarId(TxtBusqueda.Text);
                 if (ExisteBusqueda.Value == "1")
                 {
                     string script = "<script>Busqueda();</script>";
@@ -4538,7 +4759,6 @@ namespace ReportesUnis
         protected void BtnAceptarBusqueda_Click(object sender, EventArgs e)
         {
             bool radioButtonSelected = false;
-            string validarAcceso = null;
             foreach (GridViewRow row in GridViewBusqueda.Rows)
             {
                 RadioButton rb = (RadioButton)row.FindControl("RBBusqueda");
@@ -4563,15 +4783,15 @@ namespace ReportesUnis
 
             if (radioButtonSelected is true)
             {
-                validarAcceso = ValidacionAccesoVista(txtEmplid.Value);
+                string validarAcceso = ValidacionAccesoVista(txtEmplid.Value);
                 /*if (validarAcceso != null)
                 {*/
 
                 string getInfo = null;
                 BtnActualizar.Enabled = true;
-                mostrarInformación(txtEmplid.Value);
-                getInfo = consultaGet(txtDPI.Text);
-                CmbTalla.SelectedValue = getBetween(getInfo, "PersonDEO_TallaSudadero_c\" : \"", "\",");
+                MostrarInformación(txtEmplid.Value);
+                getInfo = ConsultaGet(txtDPI.Text);
+                CmbTalla.SelectedValue = GetBetween(getInfo, "PersonDEO_TallaSudadero_c\" : \"", "\",");
                 if (txtNit.Text == "CF")
                 {
                     txtNit.Enabled = false;
@@ -4598,13 +4818,13 @@ namespace ReportesUnis
                     if (txtNit.Text.IsNullOrWhiteSpace())
                     {
                         CmbPaisNIT.SelectedValue = " ";
-                        CmbDepartamentoNIT.SelectedValue = " ";
-                        CmbMunicipioNIT.SelectedValue = " ";
+                        //CmbDepartamentoNIT.SelectedValue = " ";
+                        //CmbMunicipioNIT.SelectedValue = " ";
                     }
                 }
-                llenadoDatosMedicos();
-                llenadoDatosAlergias();
-                llenadoDatosEnfermedades();
+                LlenadoDatosMedicos();
+                LlenadoDatosAlergias();
+                LlenadoDatosEnfermedades();
                 LoadDataContactos();
                 LlenadoContactosEmergencia();
                 LoadDataDocumentos();
@@ -4652,6 +4872,16 @@ namespace ReportesUnis
                     ddlPais.SelectedValue = pais;
                 }
 
+                TextBox txtNroDocumento = (TextBox)e.Row.FindControl("TxtNroDocumento");
+                if (txtNroDocumento != null)
+                {
+                    // Verificar si es la primera fila
+                    if (e.Row.RowIndex == 0)
+                    {
+                        txtNroDocumento.MaxLength = 13;
+                    }
+                }
+
                 ScriptManager.RegisterStartupScript(this, GetType(), "updatePrincipalRadioButton", "updatePrincipalRadioButton();", true);
             }
         }
@@ -4677,12 +4907,10 @@ namespace ReportesUnis
                 }
             }
         }
-
         protected void GridViewDocumentos_DataBound(object sender, EventArgs e)
         {
 
         }
-
         //revisar para eliminar        
         protected void BtnDownload_Click(object sender, EventArgs e)
         {
@@ -4694,35 +4922,10 @@ namespace ReportesUnis
             Response.WriteFile(archivoDescarga);
             Response.End();
         }
-        private void log(string PROCESO, string ESTADO, string DESCRIPCION, string UBICACION)
-        {
-            string constr = TxtURL.Text;
-            using (OracleConnection con = new OracleConnection(constr))
-            {
-                con.Open();
-                OracleTransaction transaction;
-                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
-                using (OracleCommand cmd = new OracleCommand())
-                {
-                    cmd.Connection = con;
-                    try
-                    {
-                        cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_UPDATE_ALUMNO (PROCESO, ESTADO, DESCRIPCION_ESTADO, UBICACION_ERROR, FECHA_EJECUCION, EMPLID_ALUMNO, ID_USUARIO) VALUES ('" + PROCESO + "','" + ESTADO + "','" + DESCRIPCION + "','" + UBICACION + "',SYSDATE,'" + txtCarne.Text + "','" + TextUser.Text + "')";
-                        cmd.ExecuteNonQuery();
-                        transaction.Commit();
-                    }
-                    catch (Exception)
-                    {
-                        transaction.Rollback();
-                    }
-
-                }
-            }
-        }
 
         /*-------------------------------------------INICIAN FUNCIONES PARA METODO SOAP-------------------------------------------*/
         //Función para limpiar variables
-        private static void limpiarVariables()
+        private static void LimpiarVariables()
         {
             //Cuerpo del servicio web (enviar información) 
             Variables.soapBody = "";
@@ -4749,7 +4952,7 @@ namespace ReportesUnis
             public static string wsAction = "";
         }
         //Función para obtener información de acceso al servicio de Campus
-        private static void credencialesEndPoint(string RutaConfiguracion, string strMetodo)
+        private static void CredencialesEndPoint(string RutaConfiguracion)
         {
             int cont = 0;
             foreach (var line in File.ReadLines(RutaConfiguracion))
@@ -4878,10 +5081,10 @@ namespace ReportesUnis
         public string Consultar()
         {
             //Se limpian variables para guardar la nueva información
-            limpiarVariables();
+            LimpiarVariables();
 
             //Obtiene información del servicio (URL y credenciales)
-            credencialesEndPoint(archivoConfiguraciones, "Consultar");
+            CredencialesEndPoint(archivoConfiguraciones);
 
             if (auxConsulta == 0)
             {
@@ -4918,7 +5121,7 @@ namespace ReportesUnis
 
 
         /*-------------------PARA CONSUMO DE SERVICIOS CRM-------------------*/
-        private static void credencialesWS_CRM(string RutaConfiguracion, string strMetodo)
+        private static void CredencialesWS_CRM(string RutaConfiguracion)
         {
             //Función para obtener información de acceso al servicio de HCM
             int cont = 0;
@@ -4935,9 +5138,9 @@ namespace ReportesUnis
             }
         }
 
-        private void updatePatch(string info, string PartyNumber)
+        private void UpdatePatch(string info, string PartyNumber)
         {
-            credencialesWS_CRM(archivoWS, "Consultar");
+            CredencialesWS_CRM(archivoWS);
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
@@ -4946,9 +5149,9 @@ namespace ReportesUnis
             respuestaMensajePatch = respuesta.mensaje;
         }
 
-        private string consultaGet(string identificacion)
+        private string ConsultaGet(string identificacion)
         {
-            credencialesWS_CRM(archivoWS, "Consultar");
+            CredencialesWS_CRM(archivoWS);
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
@@ -4957,53 +5160,6 @@ namespace ReportesUnis
             return respuesta;
         }
 
-        private (string Departamento, string Municipio, string País) datosResidencia()
-        {
-            string constr = TxtURL.Text;
-            string depto = null;
-            string mun = null;
-            string pais = null;
-            using (OracleConnection con = new OracleConnection(constr))
-            {
-                con.Open();
-                using (OracleCommand cmd = new OracleCommand())
-                {
-                    cmd.CommandText = "SELECT GEOGRAPHY_NAME_CRM " +
-                        "FROM UNIS_INTERFACES.OPT_CONTACT_CATALOG_DEPT " +
-                        "WHERE STATE_CAMPUS ='" + State.Text + "'  ";
-                    cmd.Connection = con;
-                    OracleDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        depto = reader["GEOGRAPHY_NAME_CRM"].ToString();
-                    }
-
-                    cmd.CommandText = "SELECT GEOGRAPHY_NAME_CRM " +
-                        "FROM UNIS_INTERFACES.OPT_CONTACT_CATALOG_MUNICP " +
-                        "WHERE STATE_CAMPUS ='" + State.Text + "'  ";
-                    cmd.Connection = con;
-                    OracleDataReader reader2 = cmd.ExecuteReader();
-                    while (reader2.Read())
-                    {
-                        mun = reader2["GEOGRAPHY_NAME_CRM"].ToString();
-                    }
-
-
-                    cmd.CommandText = "SELECT GEOGRAPHY_CODE_CRM " +
-                        "FROM UNIS_INTERFACES.OPT_CONTACT_CATALOG_PAIS " +
-                        "WHERE DESCRIPCION_CAMPUS ='" + CmbPais.Text + "'  ";
-                    cmd.Connection = con;
-                    OracleDataReader reader3 = cmd.ExecuteReader();
-                    while (reader3.Read())
-                    {
-                        pais = reader3["GEOGRAPHY_CODE_CRM"].ToString();
-                    }
-
-                }
-            }
-
-            return (depto, mun, pais);
-        }
     }
 
 }

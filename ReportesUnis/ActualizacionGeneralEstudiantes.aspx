@@ -278,8 +278,10 @@
 
                 <%-- DATOS INCIALES EMERGENCIAS--%>
                 <input type="hidden" id="EmplidAtencion" runat="server" />
-                <input type="hidden" id="seleccionadosAlergia" runat="server" />
-                <input type="hidden" id="seleccionadosAntecedentes" runat="server" />
+                <input type="hidden" id="seleccionadosAlergia_CRM" runat="server" />
+                <input type="hidden" id="seleccionadosAlergia_Campus" runat="server" />
+                <input type="hidden" id="seleccionadosAntecedentes_CRM" runat="server" />
+                <input type="hidden" id="seleccionadosAntecedentes_Campus" runat="server" />
                 <input type="hidden" id="seleccionadosInicialAlergia" runat="server" />
                 <input type="hidden" id="seleccionadosInicialOtrosAlergia" runat="server" />
                 <input type="hidden" id="seleccionadosInicialAntecedentes" runat="server" />
@@ -360,7 +362,7 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Fecha de nacimiento:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Fecha de nacimiento*:</asp:Label>
                                         <br />
                                         <asp:TextBox ID="txtCumple" runat="server" Enabled="true" Width="275px" CssClass="form-control" TextMode="Date" onchange="validateDate(this)"></asp:TextBox>
                                         <span id="errorCumple" style="color: red; font-size: small"></span>
@@ -382,14 +384,14 @@
 
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Departamento de Nacimiento*:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Departamento de Nacimiento:</asp:Label>
                                         <asp:DropDownList ID="CmbDeptoNacimiento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamentoNac_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                         </asp:DropDownList>
                                         <br />
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Municipio de Nacimiento*:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Municipio de Nacimiento:</asp:Label>
                                         <asp:DropDownList ID="CmbMuncNacimiento" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipioNac_SelectedIndexChanged" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                         </asp:DropDownList>
                                         <br />
@@ -561,7 +563,7 @@
                                         <div class="col-md-4 mx-auto text-center">
                                         </div>
                                         <div class="col-md-4 mx-auto text-center">
-                                            <asp:Button ID="ValidarNIT" runat="server" Text="Validar Nit" CssClass="btn-danger-unis" Enabled="true" OnClick="txtNit_TextChanged" CausesValidation="false" />
+                                            <asp:Button ID="ValidarNIT" runat="server" Text="Validar Nit" CssClass="btn-danger-unis" Enabled="true" OnClick="TxtNit_TextChanged" CausesValidation="false" />
                                         </div>
                                         <div class="col-md-4 mx-auto text-center">
                                         </div>
@@ -692,7 +694,7 @@
                                                 <br />
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <asp:Label runat="server" Font-Bold="true">Tipo de Sangre*:</asp:Label>
+                                                <asp:Label runat="server" Font-Bold="true">Tipo de Sangre:</asp:Label>
                                                 <asp:DropDownList ID="CmbSangre" runat="server" Width="275px" CssClass="form-control">
                                                     <asp:ListItem Text="Desconocido" Value="-"></asp:ListItem>
                                                     <asp:ListItem Text="O+" Value="OP"></asp:ListItem>
@@ -973,7 +975,7 @@
                 <div class="row">
                     <div class="col-md-12 mx-auto text-center">
                         <div style="margin-bottom: 20px;"></div>
-                        <div class="modal-messageCarne">Su información fue actualizada correctamente.</div>
+                        <div class="modal-messageCarne">La información fue actualizada correctamente.</div>
                         <div style="margin-bottom: 20px;"></div>
                     </div>
                 </div>
@@ -1179,12 +1181,29 @@
             var twelveYearsAgo = new Date();
             twelveYearsAgo.setFullYear(today.getFullYear() - 12);
 
+            // Obtener el valor del campo de fecha de nacimiento
+            var cumple = $('#<%= txtCumple.ClientID %>').val().trim();
+
+            //Validación pais de nacimiento y dpi
             var ddlPaisNacimiento = document.getElementById('<%= CmbPaisNacimiento.ClientID %>').value.trim();
-            console.log('-' + ddlPaisNacimiento + '-');
             var grid = document.getElementById('<%= GridViewDocumentos.ClientID %>');
             var firstTxtNroDocumento = grid.getElementsByTagName('tr')[1].cells[3].querySelector('input[type="text"]');
-            console.log('-' + firstTxtNroDocumento + '-');
 
+            // Validación de alergias
+            var seleccionadosAlergia = $('#<%= CmbAlergias.ClientID %>').val();
+            var TxtOtrasAlergias = document.getElementById('<%= TxtOtrasAlergias.ClientID %>').value.trim();
+
+            // Validación de enfermedades
+            var seleccionadosAntecedentes = $('#<%= CmbAntecedentes.ClientID %>').val();
+            var TxtOtrosAntecedentes = document.getElementById('<%= TxtOtrosAntecedentesM.ClientID %>').value.trim();
+
+            // Validación de hospital
+            var CmbHospital = document.getElementById('<%= CmbHospital.ClientID %>').value;
+            var TxtOtroHospital = document.getElementById('<%= TxtOtroHospital.ClientID %>').value.trim();
+
+            console.log('-'+seleccionadosAlergia);
+            console.log('-'+seleccionadosAntecedentes);
+            console.log('-'+CmbHospital);
             if (TrueNit !== nit && nit !== "CF") {
                 // Realiza las acciones necesarias si el valor es diferente de cero
                 alert("El NIT ha cambiado, es necesario validar.");
@@ -1192,6 +1211,14 @@
             } else {
                 if (inputDate > twelveYearsAgo) {
                     mensaje = "-Revisa la fecha de nacimiento.";
+                }
+
+                if (cumple.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-La fecha de nacimiento es requerida.";
+                    } else {
+                        mensaje = mensaje + "\n-La fecha de nacimiento es requerida.";
+                    }
                 }
 
                 if (paisCumple.trim() === "") {
@@ -1202,11 +1229,19 @@
                     }
                 }
 
-                if (ddlPaisNacimiento === 'GTM' && firstTxtNroDocumento.value.trim() === "") { // Suponiendo que el valor para Guatemala es 'GTM'
-                    if (mensaje.trim() == "") {
-                        mensaje = "-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
-                    } else {
-                        mensaje = mensaje + "\n-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
+                if (ddlPaisNacimiento === 'GTM') {
+                    if (firstTxtNroDocumento.value.trim() === "") {
+                        if (mensaje.trim() == "") {
+                            mensaje = "-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
+                        } else {
+                            mensaje = mensaje + "\n-Al ser guatemalteco de nacimiento, es necesario ingresar el DPI/CUI";
+                        }
+                    } else if (firstTxtNroDocumento.value.length !== 13) {
+                        if (mensaje.trim() == "") {
+                            mensaje = "-El DPI/CUI debe tener exactamente 13 caracteres.";
+                        } else {
+                            mensaje = mensaje + "\n-El DPI/CUI debe tener exactamente 13 caracteres.";
+                        }
                     }
                 }
 
@@ -1215,6 +1250,15 @@
                         mensaje = "-Los Nombres son requeridos.";
                     } else {
                         mensaje = mensaje + "\n-Los Nombres son requeridos.";
+                    }
+                }
+
+
+                if (apellido.trim() === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Los Apellidos son requeridos.";
+                    } else {
+                        mensaje = mensaje + "\n-Los Apellidos son requeridos.";
                     }
                 }
 
@@ -1275,7 +1319,6 @@
 
                 }
 
-
                 if (nit.trim() === "") {
                     if (mensaje.trim() == "") {
                         mensaje = "-El NIT para el recibo es requerido.";
@@ -1284,14 +1327,13 @@
                     }
                 }
 
-                if (direccionR1.trim() === "" && nombreR.trim() !== "") {
+                if ((direccionR1.trim() === "" && nombreR.trim() !== "") || (direccionR1.trim() === "")) {
                     if (mensaje.trim() == "") {
                         mensaje = "-La Dirección 1 para el recibo es requerida.";
                     } else {
                         mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
                     }
                 }
-
 
 
                 if (paisN.trim() === "" && ControlCF2.trim() === "2") {
@@ -1318,11 +1360,43 @@
                     }
                 }
 
+                if (muniN.trim() === "" && ControlCF2.trim() === "2") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-El municipio para el recibo es requerido.";
+                    } else {
+                        mensaje = mensaje + "\n-El municipio para el recibo es requerido.";
+                    }
+                }
+
+                if (seleccionadosAlergia.includes('Otra') && TxtOtrasAlergias === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Es necesario indicar qué otra alergia posee.";
+                    } else {
+                        mensaje = mensaje + "\n-Es necesario indicar qué otra alergia posee.";
+                    }
+                }
+
+                if (seleccionadosAntecedentes.includes('Otra') && TxtOtrosAntecedentes === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Es necesario indicar qué otro antecedente médico posee.";
+                    } else {
+                        mensaje = mensaje + "\n-Es necesario indicar qué otro antecedente médico posee.";
+                    }
+                }
+
+                if (CmbHospital === 'Otro' && TxtOtroHospital === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Es necesario indicar qué otro hospital desea para traslado.";
+                    } else {
+                        mensaje = mensaje + "\n-Es necesario indicar qué otro hospital desea para traslado.";
+                    }
+                }
+
                 if (mensaje.trim() !== "") {
                     mensaje = mensaje.replace("/\n/g", "<br>");
                     alert(mensaje);
                     return false;
-                } else if (confirm("¿Está seguro de que su información es correcta?")) {
+                } else if (confirm("¿Está seguro de que la información es correcta?")) {
                     $('#myModalActualizacion').css('display', 'block');
                     __doPostBack('<%= BtnActualizar.ClientID %>', '');
                     return true; // Permite continuar con la acción del botón
@@ -1354,14 +1428,14 @@
         }
 
         function ConfirmacionActualizacionSensible() {
-            mensaje = "Su información fue almacenada correctamente. \nLa información ingresada debe ser aprobada antes de ser confirmada.\nActualmente, solo se muestran los datos que han sido previamente confirmados.";
+            mensaje = "La información fue almacenada correctamente. \nLa información ingresada debe ser aprobada antes de ser confirmada.\nActualmente, solo se muestran los datos que han sido previamente confirmados.";
             mensaje = mensaje.replace("/\n/g", "<br>");
             alert(mensaje);
             window.location.href = "ActualizacionGeneralEstudiantes.aspx";
         }
 
         function ConfirmacionActualizacion() {
-            mensaje = "Su información fue actualizada correctamente.";
+            mensaje = "La información fue actualizada correctamente.";
             mensaje = mensaje.replace("/\n/g", "<br>");
             alert(mensaje);
             window.location.href = "ActualizacionGeneralEstudiantes.aspx";

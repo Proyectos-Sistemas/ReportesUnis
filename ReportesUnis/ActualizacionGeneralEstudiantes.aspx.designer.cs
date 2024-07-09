@@ -1149,22 +1149,40 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden EmplidAtencion;
 
         /// <summary>
-        /// Control seleccionadosAlergia.
+        /// Control seleccionadosAlergia_CRM.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosAlergia;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosAlergia_CRM;
 
         /// <summary>
-        /// Control seleccionadosAntecedentes.
+        /// Control seleccionadosAlergia_Campus.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosAntecedentes;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosAlergia_Campus;
+
+        /// <summary>
+        /// Control seleccionadosAntecedentes_CRM.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosAntecedentes_CRM;
+
+        /// <summary>
+        /// Control seleccionadosAntecedentes_Campus.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden seleccionadosAntecedentes_Campus;
 
         /// <summary>
         /// Control seleccionadosInicialAlergia.
