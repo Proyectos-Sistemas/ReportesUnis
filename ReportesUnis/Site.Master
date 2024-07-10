@@ -162,6 +162,8 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a id="RepCamarasEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicas">Reportes Cámaras Térmicas de Estudiantes</a>
+                            <a id="AccesosFacultad" runat="server" validationgroup="ACCESO_CARNETIZACION" class="dropdown-item" href="~/AccesosFacultad_ActulizacionGeneral">Gestion Accesos Actualización General</a>
+                            <a id="MantPantallas" runat="server" validationgroup="ACCESO_CARNETIZACION" class="dropdown-item" href="~/MantenimientoPantallas">Tiempo Pantallas</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown" id="liNavbarCarnet">
@@ -169,7 +171,6 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a id="Actualizacion" runat="server" class="dropdown-item" href="~/UnificacionActualización">Actualización de información</a>
-                            <a id="MantPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Tiempo Pantallas</a>
                             <a id="GestionesEstudiantes" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónDeCarne">Gestión Estudiantes</a>
                             <a id="GestionesEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónCarneEmpleados">Gestión Empleados</a>
                             <a id="Confirmacion" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografias">Confirmar Fotografías Estudiantes</a>                            

@@ -33,74 +33,7 @@
     <asp:HiddenField ID="cameraPermissionsGranted" runat="server" ClientIDMode="Static" />
     <div id="CargaFotografia" runat="server" style="display: none">
         <hr />
-        <div class="container">
-            <div class="row">
-                <div class="form-group  col-md">
-                    <h5 style="text-align: center;">Toma de Fografía *</h5>
-                </div>
-            </div>
-        </div>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-1 mx-auto text-center">
-                </div>
-                <div class="col-md-10 mx-auto">
-                    <h6>Recomendaciones:</h6>
-                    <ul>
-                        <li>Ret&iacute;rate cualquier accesorio que pueda interferir con la fotograf&iacute;a. Por ejemplo: mascarillas, lentes de sol, gorras o headset.</li>
-                        <li>Ub&iacute;quese en un entorno con fondo uniforme (de preferencia una pared o fondo color blanco). Recuerde que el carn&eacute; es un documento formal.</li>
-                    </ul>
-                </div>
-                <div class="col-md-1 mx-auto text-center">
-                </div>
-            </div>
-        </div>
-
-        <br />
-
-        <div class="container">
-            <div class="row">
-                <div>
-                </div>
-
-                <div class="form-group  col-md-5" style="align-content: center; justify-content: center; display: flex;">
-                    <video id="videoElement" width="375" height="275" autoplay playsinline="true"></video>
-                </div>
-
-
-                <div class="form-group  col-md-2">
-                </div>
-
-                <div class="form-group  col-md-5" style="align-content: center; justify-content: center; display: flex;">
-                    <asp:Image ID="ImgBase" runat="server" Visible="true" Style="max-width: 375px; max-height: 275px;" />
-                </div>
-
-                <div>
-                </div>
-            </div>
-        </div>
-
-        <%-- Campos para el control de la toma de fotografias  --%>
-        <input type="hidden" id="urlPath2" runat="server" />
-        <input type="hidden" id="urlPathControl2" runat="server" />
-
-        <canvas id="canvas" style="max-width: 375px; max-height: 275px; display: none"></canvas>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                </div>
-
-                <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
-                    <button id="captureBtn" name="captureBtn" class="btn-danger-unis">Capturar imagen</button>
-                </div>
-
-                <div class="col-md-4">
-                </div>
-            </div>
-        </div>
-        <br />
-        <hr />
 
         <div class="container" id="CargaDPI" runat="server" style="display: none">
             <div>
@@ -504,6 +437,7 @@
                                     </asp:DropDownList>
                                     <br />
                                 </div>
+                                <hr />
 
                                 <div id="recibos" style="display: none" runat="server">
                                     <hr />
@@ -666,6 +600,76 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <hr />
+                                <div class="container">
+                                    <hr />
+                                    <div class="row">
+                                        <div class="form-group  col-md">
+                                            <h5 style="text-align: center;">Toma de Fografía *</h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-1 mx-auto text-center">
+                                        </div>
+                                        <div class="col-md-10 mx-auto">
+                                            <h6>Recomendaciones:</h6>
+                                            <ul>
+                                                <li>Ret&iacute;rate cualquier accesorio que pueda interferir con la fotograf&iacute;a. Por ejemplo: mascarillas, lentes de sol, gorras o headset.</li>
+                                                <li>Ub&iacute;quese en un entorno con fondo uniforme (de preferencia una pared o fondo color blanco). Recuerde que el carn&eacute; es un documento formal.</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-1 mx-auto text-center">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="container">
+                                    <div class="row">
+                                        <div>
+                                        </div>
+
+                                        <div class="form-group  col-md-5" style="align-content: center; justify-content: center; display: flex;">
+                                            <video id="videoElement" width="375" height="275" autoplay playsinline="true"></video>
+                                        </div>
+
+
+                                        <div class="form-group  col-md-2">
+                                        </div>
+
+                                        <div class="form-group  col-md-5" style="align-content: center; justify-content: center; display: flex;">
+                                            <asp:Image ID="ImgBase" runat="server" Visible="true" Style="max-width: 375px; max-height: 275px;" />
+                                        </div>
+
+                                        <div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <%-- Campos para el control de la toma de fotografias  --%>
+                                <input type="hidden" id="urlPath2" runat="server" />
+                                <input type="hidden" id="urlPathControl2" runat="server" />
+
+                                <canvas id="canvas" style="max-width: 375px; max-height: 275px; display: none"></canvas>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                        </div>
+
+                                        <div class="col-md-4 mx-auto text-center d-flex align-items-center justify-content-center">
+                                            <button id="captureBtn" name="captureBtn" class="btn-danger-unis">Capturar imagen</button>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
                             </div>
                         </div>
                     </div>
@@ -674,7 +678,7 @@
         </div>
         <br />
 
-
+        <hr />
         <div class="container" id="tbactualizar" runat="server" style="display: none">
             <div class="row">
                 <div class="col-md-4 mx-auto text-center">

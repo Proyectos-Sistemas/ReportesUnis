@@ -96,13 +96,13 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlAnchor RepCamarasEst;
 
         /// <summary>
-        /// Control Actualizacion.
+        /// Control AccesosFacultad.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor Actualizacion;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor AccesosFacultad;
 
         /// <summary>
         /// Control MantPantallas.
@@ -112,6 +112,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlAnchor MantPantallas;
+
+        /// <summary>
+        /// Control Actualizacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor Actualizacion;
 
         /// <summary>
         /// Control GestionesEstudiantes.

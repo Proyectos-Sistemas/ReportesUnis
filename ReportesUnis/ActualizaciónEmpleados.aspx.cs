@@ -175,7 +175,7 @@ namespace ReportesUnis
                         ControlCF.Value = "CF";
                         ControlCF2.Value = "1";
                         ValidarNIT.Enabled = false;
-                        if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value) && ChangeNIT.Value == "1")
+                        if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value.Trim() != TxtCasadaR.Text.Trim() || String.IsNullOrEmpty(InicialNR1.Value) && ChangeNIT.Value == "1")
                         {
                             PaisNit.Text = cMBpAIS.SelectedValue;
                             DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -2000,7 +2000,7 @@ namespace ReportesUnis
                                         }
 
                                         llenadoState();
-                                        if (txtNit.Text == "CF" && (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value)))
+                                        if (txtNit.Text == "CF" && (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value.Trim() != TxtCasadaR.Text.Trim() || String.IsNullOrEmpty(InicialNR1.Value)))
                                         {
                                             StateNIT.Text = State.Text;
                                         }
@@ -3076,7 +3076,7 @@ namespace ReportesUnis
 
                     if (RadioButtonNombreSi.Checked)
                     {
-                        if (RadioButtonNombreSi.Checked && (InicialNR1.Value != txtNombre1.Text + " " + txtNombre2.Text || InicialNR2.Value != txtApellido1.Text + " " + txtApellido2.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value) || ControlCF.Value != "CF"))
+                        if (RadioButtonNombreSi.Checked && (InicialNR1.Value != txtNombre1.Text + " " + txtNombre2.Text || InicialNR2.Value != txtApellido1.Text + " " + txtApellido2.Text || InicialNR3.Value.Trim() != TxtCasadaR.Text.Trim() || String.IsNullOrEmpty(InicialNR1.Value) || ControlCF.Value != "CF"))
                         {
                             TxtNombreR.Text = txtNombre1.Text + " " + txtNombre2.Text;
                             TxtApellidoR.Text = txtApellido1.Text + " " + txtApellido2.Text;
@@ -3168,7 +3168,7 @@ namespace ReportesUnis
 
                     if (Convert.ToInt16(Estudiante.Value) > 0)
                     {
-                        if (RadioButtonNombreSi.Checked && (InicialNR1.Value != txtNombre1.Text + " " + txtNombre2.Text || InicialNR2.Value != txtApellido1.Text + " " + txtApellido2.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value) || ControlCF.Value != "CF"))
+                        if (RadioButtonNombreSi.Checked && (InicialNR1.Value != txtNombre1.Text + " " + txtNombre2.Text || InicialNR2.Value != txtApellido1.Text + " " + txtApellido2.Text || InicialNR3.Value.Trim() != TxtCasadaR.Text.Trim() || String.IsNullOrEmpty(InicialNR1.Value) || ControlCF.Value != "CF"))
                         {
                             TxtNombreR.Text = txtNombre1.Text + " " + txtNombre2.Text;
                             TxtApellidoR.Text = txtApellido1.Text + " " + txtApellido2.Text;

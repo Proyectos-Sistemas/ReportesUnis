@@ -947,7 +947,7 @@ namespace ReportesUnis
                     if (!String.IsNullOrEmpty(CmbMunicipioNIT.SelectedValue))
                     {
                         string descrip = "";
-                        if (CmbPais.SelectedValue == "Guatemala")
+                        if (CmbPaisNIT.SelectedValue == "Guatemala")
                         {
                             descrip = CmbMunicipioNIT.SelectedValue + "-" + CmbDepartamentoNIT.SelectedValue;
                         }
@@ -2034,7 +2034,7 @@ namespace ReportesUnis
                 txtNit.Text = "CF";
             }
 
-            if (RadioButtonNombreSi.Checked && (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value) || ControlCF.Value != "CF"))
+            if (RadioButtonNombreSi.Checked && (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value.Trim() != TxtCasadaR.Text.Trim() || String.IsNullOrEmpty(InicialNR1.Value) || ControlCF.Value != "CF"))
             {
                 TxtNombreR.Text = txtNombre.Text;
                 TxtApellidoR.Text = txtApellido.Text;
@@ -2097,7 +2097,7 @@ namespace ReportesUnis
                         StateNIT.Text = State.Text;
 
 
-                    if (RadioButtonNombreSi.Checked && ((InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text) || String.IsNullOrEmpty(InicialNR1.Value)))
+                    if (RadioButtonNombreSi.Checked && ((InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value.Trim() != TxtCasadaR.Text.Trim()) || String.IsNullOrEmpty(InicialNR1.Value)))
                     {
                         TxtNombreR.Text = txtNombre.Text;
                         TxtApellidoR.Text = txtApellido.Text;
@@ -2211,7 +2211,7 @@ namespace ReportesUnis
                             ContadorDirecciones = 0;
                         }
 
-                        if (txtNit.Text == "CF" && (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value)))
+                        if (txtNit.Text == "CF" && (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value.Trim() != TxtCasadaR.Text.Trim() || String.IsNullOrEmpty(InicialNR1.Value)))
                         {
                             StateNIT.Text = State.Text;
                         }
@@ -4145,7 +4145,7 @@ namespace ReportesUnis
 
 
 
-            if (!String.IsNullOrEmpty(txtNit.Text) || txtNit.Text == "")
+            if (String.IsNullOrEmpty(txtNit.Text) || txtNit.Text == "")
                 txtNit.Text = "CF";
 
             if (!String.IsNullOrEmpty(nroDocumento1.Trim()))
@@ -4204,7 +4204,7 @@ namespace ReportesUnis
             }
 
 
-            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
+            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value.Trim() != TxtCasadaR.Text.Trim() || String.IsNullOrEmpty(InicialNR1.Value))
             {
                 PaisNit.Text = CmbPais.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -4447,7 +4447,7 @@ namespace ReportesUnis
                 TxtCasadaR.Text = txtCasada.Text;
             }
 
-            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
+            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value.Trim() != TxtCasadaR.Text.Trim() || String.IsNullOrEmpty(InicialNR1.Value))
             {
                 PaisNit.Text = CmbPais.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -4479,7 +4479,7 @@ namespace ReportesUnis
                 TxtCasadaR.Text = txtCasada.Text;
             }
 
-            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
+            if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value.Trim() != TxtCasadaR.Text.Trim() || String.IsNullOrEmpty(InicialNR1.Value))
             {
                 PaisNit.Text = CmbPais.SelectedValue;
                 DepartamentoNit.Text = CmbDepartamento.SelectedValue;
@@ -4799,7 +4799,7 @@ namespace ReportesUnis
                     ControlCF2.Value = "1";
                     ControlCF.Value = "CF";
                     ValidarNIT.Enabled = false;
-                    if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value != TxtCasadaR.Text || String.IsNullOrEmpty(InicialNR1.Value))
+                    if (InicialNR1.Value != TxtNombreR.Text || InicialNR2.Value != TxtApellidoR.Text || InicialNR3.Value.Trim() != TxtCasadaR.Text.Trim() || String.IsNullOrEmpty(InicialNR1.Value))
                     {
                         PaisNit.Text = CmbPais.SelectedValue;
                         DepartamentoNit.Text = CmbDepartamento.SelectedValue;

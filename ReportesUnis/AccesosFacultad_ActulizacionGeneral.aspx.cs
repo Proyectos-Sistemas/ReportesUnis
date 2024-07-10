@@ -170,7 +170,8 @@ namespace ReportesUnis
                             "FROM SYSADM.PS_PERS_NID PN " +
                             "INNER JOIN SYSADM.PS_PERSONAL_VW PV ON PN.EMPLID = PV.EMPLID " +
                             "WHERE PN.NATIONAL_ID_TYPE IN ('DPI','PAS') " +
-                            "AND NAME LIKE '%" + NombreBusqueda + "%'";
+                            "AND PN.NATIONAL_ID !=' ' " +
+                            "AND UPPER(NAME) LIKE UPPER('%" + NombreBusqueda + "%')";
                     cmd.Connection = con;
                     OracleDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows)
@@ -284,7 +285,7 @@ namespace ReportesUnis
         public string eliminarRegistro()
         {
             string constr = TxtURL.Text;
-            string resultado = null;
+            string resultado = "2";
 
             foreach (GridViewRow row in GridViewInformación.Rows)
             {
@@ -341,6 +342,13 @@ namespace ReportesUnis
                         BtnLimpiarBusqueda.Enabled = false;
                         BtnBuscar.Enabled = true;
                     }
+                    else
+                    {
+                        BtnBuscar.Enabled = false;
+                        TxtBusqueda.Enabled = false;
+                        BtnLimpiarBusqueda.Enabled = true;
+                        CmbBusqueda.Enabled = false;
+                    }
                 }
 
                 if (CmbBusqueda.Text.Equals("Documento de Identificación"))
@@ -352,6 +360,13 @@ namespace ReportesUnis
                         ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                         BtnLimpiarBusqueda.Enabled = false;
                         BtnBuscar.Enabled = true;
+                    }
+                    else
+                    {
+                        BtnBuscar.Enabled = false;
+                        TxtBusqueda.Enabled = false;
+                        BtnLimpiarBusqueda.Enabled = true;
+                        CmbBusqueda.Enabled = false;
                     }
                 }
 
@@ -365,22 +380,28 @@ namespace ReportesUnis
                         BtnLimpiarBusqueda.Enabled = false;
                         BtnBuscar.Enabled = true;
                     }
-                }
+                    else
+                    {
+                        BtnBuscar.Enabled = false;
+                        TxtBusqueda.Enabled = false;
+                        BtnLimpiarBusqueda.Enabled = true;
+                        CmbBusqueda.Enabled = false;
+                    }
+                }                
             }
             else
             {
                 ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Por favor, ingrese un dato para realizar la busqueda');", true);
+                BtnBuscar.Enabled = true;
+                TxtBusqueda.Enabled = true;
+                CmbBusqueda.Enabled = true;
+                BtnLimpiarBusqueda.Enabled = false;
             }
-
-            BtnBuscar.Enabled = false;
-            TxtBusqueda.Enabled = false;
-            BtnLimpiarBusqueda.Enabled = true;
+            
         }
         protected void BtnLimpiarBusqueda_Click(object sender, EventArgs e)
         {
-            BtnLimpiarBusqueda.Enabled = false;
-            BtnBuscar.Enabled = true;
-            TxtBusqueda.Text = "";
+            Response.Redirect(@"~/AccesosFacultad_ActulizacionGeneral.aspx");
         }
         protected void BtnNuevo_Click(object sender, EventArgs e)
         {
@@ -424,6 +445,9 @@ namespace ReportesUnis
             else
             {
                 ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Es necesario ingresar datos para generar un nuevo registro.');", true);
+                BtnBuscar.Enabled = true;
+                TxtBusqueda.Enabled = true;
+                BtnLimpiarBusqueda.Enabled = false;
             }
         }
         protected void BtnEliminar_Click(object sender, EventArgs e)
@@ -435,9 +459,14 @@ namespace ReportesUnis
                 string script = "<script>Eliminado();</script>";
                 ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
             }
-            else
+            else if (resultado == "1")
             {
                 string script = "<script>mostrarModalError();</script>";
+                ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+            }
+            else
+            {
+                string script = "<script>mostrarModalEliminar();</script>";
                 ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
             }
         }
@@ -466,16 +495,24 @@ namespace ReportesUnis
                 }
             }
 
-            resultado = agregarRegistro(facultad, dpi, nombre);
-
-            if (resultado == "0")
+            if (radioButtonSelected)
             {
-                string script = "<script>Agregado();</script>";
-                ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                resultado = agregarRegistro(facultad, dpi, nombre);
+
+                if (resultado == "0")
+                {
+                    string script = "<script>Agregado();</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                }
+                else
+                {
+                    string script = "<script>mostrarModalError();</script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                }
             }
             else
             {
-                string script = "<script>mostrarModalError();</script>";
+                string script = "<script>mostrarRequerido();</script>";
                 ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
             }
 

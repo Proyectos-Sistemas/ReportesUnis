@@ -177,6 +177,34 @@
         </div>
     </div>
 
+    <div class="modal" id="myModalEliminar" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div style="margin-bottom: 20px;"></div>
+                        <div class="modal-messageCarne">Es necesario seleccionar los registros que desea eliminar.</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="myModalRequerido" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div style="margin-bottom: 20px;"></div>
+                        <div class="modal-messageCarne">Es necesario seleccionar la información del permiso a otorgar.</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     
     <div id="myModalAgregado" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; justify-content: center; align-items: center; z-index: 9999;">
         <div class="modal-dialog" role="document" style="display: flex; flex-direction: column; align-items: center;">
@@ -230,6 +258,23 @@
             setTimeout(function () {
                 modal.style.display = "none"; // Oculta el modal después de 10 segundos
                 window.location.href = "AccesosFacultad_ActulizacionGeneral.aspx";
+            }, 4000); // 4000 milisegundos =  segundos
+        }
+
+        function mostrarModalEliminar() {
+            var modal = document.getElementById("myModalEliminar");
+            modal.style.display = "block";
+
+            setTimeout(function () {
+                modal.style.display = "none"; // Oculta el modal después de 10 segundos
+            }, 4000); // 4000 milisegundos =  segundos
+        }
+        function mostrarRequerido() {
+            var modal = document.getElementById("myModalRequerido");
+            modal.style.display = "block";
+
+            setTimeout(function () {
+                modal.style.display = "none"; // Oculta el modal después de 10 segundos
             }, 4000); // 4000 milisegundos =  segundos
         }
 
