@@ -420,11 +420,6 @@
     <Content Include="ActualizacionEstudiantes.aspx" />
     <Content Include="ActualizacionGeneralEstudiantes.aspx" />
     <Content Include="ActualizaciónEmpleados.aspx" />
-    <Content Include="BusquedaModal.aspx" />
-    <Content Include="CapturaFoto.aspx" />
-    <Content Include="Cargarfotografia.aspx" />
-    <Content Include="CargarFotografiaEmpleados.aspx" />
-    <Content Include="ComboDinamicoaspx.aspx" />
     <Content Include="Emails\ActualizacionGeneral\bodyCambioDocumentoIdentificacion.txt" />
     <Content Include="Emails\ActualizacionGeneral\datosCambioDocumentoIdentificacion.txt" />
     <Content Include="Tabs.aspx" />
@@ -646,41 +641,6 @@
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StartupAuth.cs" />
-    <Compile Include="BusquedaModal.aspx.cs">
-      <DependentUpon>BusquedaModal.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="BusquedaModal.aspx.designer.cs">
-      <DependentUpon>BusquedaModal.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="CapturaFoto.aspx.cs">
-      <DependentUpon>CapturaFoto.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="CapturaFoto.aspx.designer.cs">
-      <DependentUpon>CapturaFoto.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Cargarfotografia.aspx.cs">
-      <DependentUpon>Cargarfotografia.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Cargarfotografia.aspx.designer.cs">
-      <DependentUpon>Cargarfotografia.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="CargarFotografiaEmpleados.aspx.cs">
-      <DependentUpon>CargarFotografiaEmpleados.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="CargarFotografiaEmpleados.aspx.designer.cs">
-      <DependentUpon>CargarFotografiaEmpleados.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ComboDinamicoaspx.aspx.cs">
-      <DependentUpon>ComboDinamicoaspx.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ComboDinamicoaspx.aspx.designer.cs">
-      <DependentUpon>ComboDinamicoaspx.aspx</DependentUpon>
-    </Compile>
     <Compile Include="ConfirmacionDeFotografias.aspx.cs">
       <DependentUpon>ConfirmacionDeFotografias.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

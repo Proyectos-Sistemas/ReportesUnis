@@ -522,7 +522,7 @@ namespace ReportesUnis
                     {
                         cmd.CommandText = "SELECT ' ' AS DEPARTAMENTO FROM DUAL UNION SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
                         "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
-                        "WHERE CT.DESCR ='" + CmbPais.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL AND STATE LIKE '%-%' " +
+                        "WHERE CT.DESCR ='" + CmbPais.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL " +
                         "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
                     }
                     else
@@ -570,7 +570,7 @@ namespace ReportesUnis
                     {
                         cmd.CommandText = "SELECT ' ' AS DEPARTAMENTO FROM DUAL UNION SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
                         "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
-                        "WHERE CT.DESCR ='" + CmbPaisNIT.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL  AND STATE LIKE '%-%' " +
+                        "WHERE CT.DESCR ='" + CmbPaisNIT.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL " +
                         "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
                     }
                     else
@@ -619,7 +619,7 @@ namespace ReportesUnis
                         cmd.CommandText = "SELECT ' ' AS DEPARTAMENTO FROM DUAL UNION " +
                             "SELECT SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) DEPARTAMENTO FROM SYSADM.PS_STATE_TBL ST  " +
                             "JOIN SYSADM.PS_COUNTRY_TBL CT ON ST.COUNTRY = CT.COUNTRY " +
-                            "WHERE CT.COUNTRY ='" + CmbPaisNacimiento.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL  AND STATE LIKE '%-%' " +
+                            "WHERE CT.COUNTRY ='" + CmbPaisNacimiento.Text + "' AND SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) IS NOT NULL " +
                             "GROUP BY SUBSTR(ST.DESCR,(INSTR(ST.DESCR,'-')+1)) ORDER BY DEPARTAMENTO";
                     }
                     else
@@ -668,7 +668,7 @@ namespace ReportesUnis
                             if (CmbPaisNIT.Text != "Guatemala")
                             {
                                 cmd.CommandText = "SELECT ' ' AS MUNICIPIO , ' ' AS STATE  FROM DUAL UNION SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
-                                "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamentoNIT.SelectedValue + "') AND STATE LIKE '%-%' " +
+                                "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamentoNIT.SelectedValue + "') " +
                                 "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
                             }
                             else
@@ -730,7 +730,7 @@ namespace ReportesUnis
                             if (CmbPaisNacimiento.Text != "GTM")
                             {
                                 cmd.CommandText = "SELECT ' ' AS MUNICIPIO , ' ' AS STATE  FROM DUAL UNION SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
-                                "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDeptoNacimiento.SelectedValue + "') AND STATE LIKE '%-%' " +
+                                "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDeptoNacimiento.SelectedValue + "') " +
                                 "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
                             }
                             else
@@ -783,7 +783,7 @@ namespace ReportesUnis
                         if (CmbPais.Text != "Guatemala")
                         {
                             cmd.CommandText = "SELECT ' ' AS MUNICIPIO, ' ' AS STATE FROM DUAL UNION SELECT REGEXP_SUBSTR(ST.DESCR,'[^-]+') MUNICIPIO, ST.STATE STATE FROM SYSADM.PS_STATE_TBL ST " +
-                            "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamento.SelectedValue + "') AND STATE LIKE '%-%' " +
+                            "WHERE REGEXP_SUBSTR(ST.DESCR,'[^-]+') IS NOT NULL AND DESCR LIKE ('%" + CmbDepartamento.SelectedValue + "') " +
                             "GROUP BY REGEXP_SUBSTR(ST.DESCR,'[^-]+'), ST.STATE ORDER BY MUNICIPIO";
                         }
                         else
