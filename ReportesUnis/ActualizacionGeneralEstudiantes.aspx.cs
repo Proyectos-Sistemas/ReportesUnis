@@ -4723,9 +4723,7 @@ namespace ReportesUnis
 
                 string getInfo = null;
                 BtnActualizar.Enabled = true;
-                MostrarInformación(txtEmplid.Value);
-                getInfo = ConsultaGet(txtDPI.Text);
-                CmbTalla.SelectedValue = GetBetween(getInfo, "PersonDEO_TallaSudadero_c\" : \"", "\",");
+                MostrarInformación(txtEmplid.Value);                
                 if (txtNit.Text == "CF")
                 {
                     txtNit.Enabled = false;
@@ -4763,6 +4761,17 @@ namespace ReportesUnis
                 LlenadoContactosEmergencia();
                 LoadDataDocumentos();
                 LlenadoGridDocumentos();
+                if (!String.IsNullOrEmpty(DOCUMENTO1_INICIAL.Value))
+                    getInfo = ConsultaGet(DOCUMENTO1_INICIAL.Value);
+                else
+                    getInfo = ConsultaGet(DOCUMENTO2_INCIAL.Value);
+
+                string PartyNumber = GetBetween(getInfo, "PartyNumber\" : \"", "\",");
+
+                if (PartyNumber == "")
+                    getInfo = ConsultaGet(DOCUMENTO2_INCIAL.Value);
+
+                CmbTalla.SelectedValue = GetBetween(getInfo, "PersonDEO_TallaSudadero_c\" : \"", "\",");
                 if (String.IsNullOrEmpty(txtCarne.Text))
                 {
                     string script = "<script>NoExisteAlumno();</script>";
