@@ -327,7 +327,7 @@
                                                     <asp:BoundField DataField="TipoDocumento" HeaderText="Tipo de Documento de Identidad" />
                                                     <asp:TemplateField HeaderText="Documento" ItemStyle-CssClass="nowrap">
                                                         <ItemTemplate>
-                                                            <asp:TextBox ID="TxtNroDocumento" runat="server" Text='<%# Eval("Documento") %>' onchange="updatePrincipalRadioButton()" MaxLength="20" />
+                                                            <asp:TextBox ID="TxtNroDocumento" runat="server" Text='<%# Eval("Documento") %>' onchange="updatePrincipalRadioButton(); updateCountryOnDocumentChange(this);" onkeypress="return allowOnlyNumbers(event);" MaxLength="20" />
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:BoundField DataField="PRIMARY_NID" HeaderText="PRIMARY_NID" Visible="false" />
@@ -1201,9 +1201,6 @@
             var CmbHospital = document.getElementById('<%= CmbHospital.ClientID %>').value;
             var TxtOtroHospital = document.getElementById('<%= TxtOtroHospital.ClientID %>').value.trim();
 
-            console.log('-'+seleccionadosAlergia);
-            console.log('-'+seleccionadosAntecedentes);
-            console.log('-'+CmbHospital);
             if (TrueNit !== nit && nit !== "CF") {
                 // Realiza las acciones necesarias si el valor es diferente de cero
                 alert("El NIT ha cambiado, es necesario validar.");
@@ -1978,6 +1975,27 @@
             }
             return true;
         }
+
+        function updateCountryOnDocumentChange(textbox) {
+            var grid = document.getElementById('<%= GridViewDocumentos.ClientID %>');
+            var firstRow = grid.getElementsByTagName('tr')[1];
+            var firstDDLPais = firstRow.cells[1].querySelector('select');
+
+            if (textbox.value.trim() !== "") {
+                firstDDLPais.value = "GTM"; // Asegúrate de que "GTM" sea el valor correspondiente a Guatemala en el DropDownList
+            } else {
+                firstDDLPais.value = "";
+            }
+        }
+
+        function allowOnlyNumbers(event) {
+            var charCode = event.which ? event.which : event.keyCode;
+            if (charCode < 48 || charCode > 57) {
+                return false;
+            }
+            return true;
+        }
+        
     </script>
 
 

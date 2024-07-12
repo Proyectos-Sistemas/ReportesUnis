@@ -318,7 +318,12 @@ namespace ReportesUnis
                         txtDireccion.Text = reader["DIRECCION"].ToString().Length > 54 ? reader["DIRECCION"].ToString().Substring(0, 54) : reader["DIRECCION"].ToString();
                         TrueDir.Text = reader["DIRECCION"].ToString().Length > 54 ? reader["DIRECCION"].ToString().Substring(0, 54) : reader["DIRECCION"].ToString();
                         txtDireccion2.Text = reader["DIRECCION2"].ToString();
-                        txtDireccion3.Text = reader["DIRECCION3"].ToString();
+                        string direccion3 = reader["DIRECCION3"].ToString();
+                        if (direccion3.Contains("Zona"))
+                        {
+                            direccion3 = direccion3.Replace("Zona", "");
+                        }
+                        txtDireccion3.Text = direccion3;
                         TxtDiRe1.Text = reader["DIRECCION1_NIT"].ToString().Length > 54 ? reader["DIRECCION1_NIT"].ToString().Substring(0, 54) : reader["DIRECCION1_NIT"].ToString();
                         TxtDiRe2.Text = reader["DIRECCION2_NIT"].ToString().Length > 54 ? reader["DIRECCION2_NIT"].ToString().Substring(0, 54) : reader["DIRECCION2_NIT"].ToString();
                         TxtDiRe3.Text = reader["DIRECCION3_NIT"].ToString().Length > 54 ? reader["DIRECCION3_NIT"].ToString().Substring(0, 54) : reader["DIRECCION3_NIT"].ToString();
@@ -1773,9 +1778,9 @@ namespace ReportesUnis
                     while (reader.Read())
                     {
                         CmbHospital.SelectedValue = reader["HOSPITAL_TRASLADO"].ToString();
-                        TxtAfiliacion.Text = reader["NRO_AFILIACION"].ToString();
-                        TxtCarro.Text = reader["CARRO_CAMPUS"].ToString();
-                        TxtSeguro.Text = reader["SEGURO_MEDICO"].ToString();
+                        TxtAfiliacion.Text = reader["NRO_AFILIACION"].ToString().TrimEnd();
+                        TxtCarro.Text = reader["CARRO_CAMPUS"].ToString().Trim();
+                        TxtSeguro.Text = reader["SEGURO_MEDICO"].ToString().Trim();
                         string tipoSangre = reader["TIPO_SANGRE"].ToString();
 
                         if (bloodTypeMapping.ContainsKey(tipoSangre))
@@ -1783,7 +1788,7 @@ namespace ReportesUnis
                             CmbSangre.SelectedValue = bloodTypeMapping[tipoSangre];
                         }
                         EmplidAtencion.Value = reader["EMPLID"].ToString();
-                        TxtOtroHospital.Text = reader["OTRO_HOSPITAL"].ToString();
+                        TxtOtroHospital.Text = reader["OTRO_HOSPITAL"].ToString().Trim();
                     }
 
                 }
@@ -1845,7 +1850,7 @@ namespace ReportesUnis
                     reader.Close();
 
                     string resultado = sb2.ToString();
-                    TxtOtrasAlergias.Text = resultado;
+                    TxtOtrasAlergias.Text = resultado.Trim();
                     seleccionadosInicialAlergia.Value = sb.ToString();
                     seleccionadosInicialOtrosAlergia.Value = resultado;
 
@@ -1911,7 +1916,7 @@ namespace ReportesUnis
                     reader.Close();
 
                     string resultado = sb2.ToString();
-                    TxtOtrosAntecedentesM.Text = resultado;
+                    TxtOtrosAntecedentesM.Text = resultado.Trim();
                     seleccionadosInicialAntecedentes.Value = sb.ToString();
                     seleccionadosInicialOtrosAntecedentes.Value = resultado;
 
@@ -1940,68 +1945,7 @@ namespace ReportesUnis
                 }
             }
         }
-        /*protected string DatosMedicosCampus()
-        {
-            string Errores = null;
-            string InsertEmergencia = "INSERT INTO SYSADM.PS_UNIS_ATEN_EMERG (EMPLID, HOSPITAL_TRASLADO, ANTECEDENTES_MED, NRO_AFILIACION, SEGURO_MEDICO, TIPO_SANGRE, OTRO_HOSPITAL, CARRO_CAMPUS) " +
-            "VALUES ('" + txtEmplid.Value + "', '" + CmbHospital.SelectedItem + "', '" + CmbAntecedentes.SelectedValue + "', '" + TxtAfiliacion.Text + "', '" + TxtSeguro.Text + "', '" + CmbSangre.SelectedItem + "', '" + TxtOtroHospital.Text + "', '" + TxtCarro.Text + "')";
-
-            string UpdateEmergencia = "UPDATE SYSADM.PS_UNIS_ATEN_EMERG SET " +
-                "HOSPITAL_TRASLADO = '" + CmbHospital.SelectedItem + "', " +
-                "ANTECEDENTES_MED = '" + CmbAntecedentes.SelectedValue + "', " +
-                "NRO_AFILIACION = '" + TxtAfiliacion.Text + "', " +
-                "SEGURO_MEDICO = '" + TxtSeguro.Text + "', " +
-                "TIPO_SANGRE = '" + CmbSangre.SelectedItem + "', " +
-                "CARRO_CAMPUS = '" + TxtCarro.Text + "', " +
-                "OTRO_HOSPITAL = '" + TxtOtroHospital.Text + "' " +
-                "WHERE EMPLID ='" + txtEmplid.Value + "'";
-
-            string constr = TxtURL.Text;
-
-            string control = "0";
-            using (OracleConnection con = new OracleConnection(constr))
-            {
-                con.Open();
-                OracleTransaction transaction;
-                transaction = con.BeginTransaction(IsolationLevel.ReadCommitted);
-                using (OracleCommand cmd = new OracleCommand())
-                {
-                    cmd.Connection = con;
-                    try
-                    {
-                        if (String.IsNullOrEmpty(EmplidAtencion.Value))
-                        {
-                            cmd.CommandText = InsertEmergencia;
-                            cmd.ExecuteNonQuery();
-                        }
-                        else
-                        {
-                            cmd.CommandText = UpdateEmergencia;
-                            cmd.ExecuteNonQuery();
-                        }
-                    }
-                    catch (Exception x)
-                    {
-                        Errores = x.Message;
-                        control = "1";
-                    }
-
-
-                    if (control == "0")
-                    {
-                        transaction.Commit();
-                        log("Función DatosMedicosCampus", "Correcto", "La informaición fue almacenada de forma correcta", "DatosMedicosCampus");
-                    }
-                    else
-                    {
-                        transaction.Rollback();
-                        log("Función DatosMedicosCampus", "Error", Errores, "DatosMedicosCampus");
-                    }
-                    con.Close();
-                }
-            }
-            return control;
-        }*/
+        
         protected string IngresoDatosGenerales()
         {
             txtNombreAPEX.Text = null;
@@ -2076,23 +2020,7 @@ namespace ReportesUnis
 
                     cmd.Transaction = transaction;
                     txtExiste3.Text = txtPrimerApellido.Text + " insert";
-                    if (espaciosApellido > 0)
-                    {
-                        if (txtApellido.Text.Length - txtPrimerApellido.Text.Length - 1 > 0)
-                        {
-                            txtApellidoAPEX.Text = txtApellido.Text.Substring((txtPrimerApellido.Text.Length + 1), (txtApellido.Text.Length - txtPrimerApellido.Text.Length - 1));
-                        }
-                        else
-                        {
-                            txtApellidoAPEX.Text = " ";
-                        }
-                    }
-                    else
-                    {
-                        txtPrimerApellido.Text = txtApellido.Text;
-                        txtApellidoAPEX.Text = " ";
-                    }
-
+                    
                     if (String.IsNullOrEmpty(StateNIT.Text))
                         StateNIT.Text = State.Text;
 
@@ -3176,7 +3104,7 @@ namespace ReportesUnis
                     catch (Exception x)
                     {
                         transaction.Rollback();
-                        log("Función IngresoDatosGenerales", "ERROR", x.Message, "IngresoDatosGenerales");
+                        log("Función IngresoDatosGenerales", "ERROR", x.Message +"-" + Variables.soapBody, "IngresoDatosGenerales");
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                     }
                 }
@@ -4260,6 +4188,12 @@ namespace ReportesUnis
                                     getInfo = ConsultaGet(DOCUMENTO1_INICIAL.Value);
                                 else
                                     getInfo = ConsultaGet(DOCUMENTO2_INCIAL.Value);
+                                
+                                PartyNumber = GetBetween(getInfo, "PartyNumber\" : \"", "\",");
+                                
+                                if (PartyNumber == "")
+                                    getInfo = ConsultaGet(DOCUMENTO2_INCIAL.Value);
+
                                 PartyNumber = GetBetween(getInfo, "PartyNumber\" : \"", "\",");
                                 string FechaCumple = Convert.ToDateTime(txtCumple.Text).ToString("yyyy-MM-dd");
                                 string parentesco1_crm = "-";

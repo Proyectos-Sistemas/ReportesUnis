@@ -205,7 +205,37 @@
         </div>
     </div>
 
-    
+
+    <div id="myModalFacultadRequerida" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="text-align: center; color: darkred;"><strong>Alerta</strong></h5>
+                    <span class="closeNoFacultad" style="cursor: pointer;">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <contenttemplate>
+                        <div class="container emp-profile">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="profile-head">
+                                        <div class="row">
+                                            <div class="form-group col-md">
+                                                <asp:Label ID="Label1" runat="server" ForeColor="Black">Es necesario seleccionar la facultad.</asp:Label>
+                                                <br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </contenttemplate>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div id="myModalAgregado" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; justify-content: center; align-items: center; z-index: 9999;">
         <div class="modal-dialog" role="document" style="display: flex; flex-direction: column; align-items: center;">
             <div class="modal-content">
@@ -239,6 +269,17 @@
 
         $('.closeNoExiste').click(function () {
             $('#myModalNoExiste').css('display', 'none');
+        });
+
+
+        function mostrarFacultadRequerida() {
+            $('#myModalFacultadRequerida').css('display', 'block');
+            $('#myModalNuevoRegistro').css('display', 'block');
+        }
+
+        $('.closeNoFacultad').click(function () {
+            $('#myModalFacultadRequerida').css('display', 'none');
+
         });
 
         function Eliminado() {
@@ -277,6 +318,7 @@
                 modal.style.display = "none"; // Oculta el modal después de 10 segundos
             }, 4000); // 4000 milisegundos =  segundos
         }
+
 
         function Agregado() {
             var modal = document.getElementById("myModalAgregado");

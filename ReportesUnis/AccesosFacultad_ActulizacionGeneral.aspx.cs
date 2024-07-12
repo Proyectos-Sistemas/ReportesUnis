@@ -387,7 +387,7 @@ namespace ReportesUnis
                         BtnLimpiarBusqueda.Enabled = true;
                         CmbBusqueda.Enabled = false;
                     }
-                }                
+                }
             }
             else
             {
@@ -397,7 +397,7 @@ namespace ReportesUnis
                 CmbBusqueda.Enabled = true;
                 BtnLimpiarBusqueda.Enabled = false;
             }
-            
+
         }
         protected void BtnLimpiarBusqueda_Click(object sender, EventArgs e)
         {
@@ -497,16 +497,24 @@ namespace ReportesUnis
 
             if (radioButtonSelected)
             {
-                resultado = agregarRegistro(facultad, dpi, nombre);
-
-                if (resultado == "0")
+                if (!String.IsNullOrEmpty(facultad))
                 {
-                    string script = "<script>Agregado();</script>";
-                    ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                    resultado = agregarRegistro(facultad, dpi, nombre);
+
+                    if (resultado == "0")
+                    {
+                        string script = "<script>Agregado();</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                    }
+                    else
+                    {
+                        string script = "<script>mostrarModalError();</script>";
+                        ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
+                    }
                 }
                 else
                 {
-                    string script = "<script>mostrarModalError();</script>";
+                    string script = "<script>mostrarFacultadRequerida();</script>";
                     ClientScript.RegisterStartupScript(this.GetType(), "FuncionJavaScript", script);
                 }
             }
