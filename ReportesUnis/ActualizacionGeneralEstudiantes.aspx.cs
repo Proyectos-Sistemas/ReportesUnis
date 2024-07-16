@@ -4191,7 +4191,7 @@ namespace ReportesUnis
                                 
                                 PartyNumber = GetBetween(getInfo, "PartyNumber\" : \"", "\",");
                                 
-                                if (PartyNumber == "")
+                                if (PartyNumber == "" && DOCUMENTO2_INCIAL.Value != "")
                                     getInfo = ConsultaGet(DOCUMENTO2_INCIAL.Value);
 
                                 PartyNumber = GetBetween(getInfo, "PartyNumber\" : \"", "\",");
@@ -4309,7 +4309,7 @@ namespace ReportesUnis
 
                                         if (resultados == "0")
                                         {
-                                            if (DOCUMENTO1_PRINCIPAL.Value != PrincipalD1 || DOCUMENTO1_INICIAL.Value != DOCUMENTO1.Value || DOCUMENTO2_PRINCIPAL.Value != PrincipalD2 || DOCUMENTO2_INCIAL.Value != DOCUMENTO2.Value)
+                                            if ((DOCUMENTO1_PRINCIPAL.Value != PrincipalD1 || DOCUMENTO1_INICIAL.Value != DOCUMENTO1.Value || DOCUMENTO2_PRINCIPAL.Value != PrincipalD2 || DOCUMENTO2_INCIAL.Value != DOCUMENTO2.Value) && !EmailUnis.Text.IsNullOrWhiteSpace())// != "" || EmailUnis.Text != " "))
                                             {
                                                 resultados = EnvioCorreo(txtNombre.Text + " " + txtApellido.Text, DOCUMENTO1_INICIAL.Value, DOCUMENTO1.Value, DOCUMENTO2_INCIAL.Value, DOCUMENTO2.Value, DOCUMENTO1_PRINCIPAL.Value, DOCUMENTO1_PRINCIPAL_INICIAL.Value, DOCUMENTO2_PRINCIPAL.Value, DOCUMENTO2_PRINCIPAL_INICIAL.Value);
 
@@ -4717,7 +4717,7 @@ namespace ReportesUnis
 
             if (radioButtonSelected is true)
             {
-                string validarAcceso = ValidacionAccesoVista(txtEmplid.Value);
+                //string validarAcceso = ValidacionAccesoVista(txtEmplid.Value);
                 /*if (validarAcceso != null)
                 {*/
 
@@ -4768,7 +4768,7 @@ namespace ReportesUnis
 
                 string PartyNumber = GetBetween(getInfo, "PartyNumber\" : \"", "\",");
 
-                if (PartyNumber == "")
+                if (PartyNumber == "" && DOCUMENTO2_INCIAL.Value != "")
                     getInfo = ConsultaGet(DOCUMENTO2_INCIAL.Value);
 
                 CmbTalla.SelectedValue = GetBetween(getInfo, "PersonDEO_TallaSudadero_c\" : \"", "\",");
