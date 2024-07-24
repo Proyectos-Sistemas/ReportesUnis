@@ -1235,7 +1235,9 @@ namespace ReportesUnis
         }
         public void ConsultaNombre(string NombreBusqueda)
         {
-            NombreBusqueda = NombreBusqueda.Replace(" ", "%");
+            // Generar el patrón de búsqueda para cubrir tanto con tilde como sin tilde
+            string pattern = GenerarPatron(NombreBusqueda);
+
             string constr = TxtURL.Text;
             using (OracleConnection con = new OracleConnection(constr))
             {
@@ -1243,7 +1245,7 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.CommandText = "SELECT EMPLID, NAME FROM SYSADM.PS_PERSONAL_VW " +
-                    "WHERE NAME LIKE '%" + NombreBusqueda + "%'";
+                    "WHERE REGEXP_LIKE(NAME, '" + pattern + "', 'i')";
                     cmd.Connection = con;
                     OracleDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows)
@@ -1259,6 +1261,57 @@ namespace ReportesUnis
                 }
             }
         }
+
+        // Método para generar el patrón de búsqueda que cubre variaciones con y sin tilde
+        private string GenerarPatron(string nombre)
+        {
+            StringBuilder pattern = new StringBuilder();
+            pattern.Append(".*");
+
+            foreach (char c in nombre)
+            {
+                switch (char.ToLower(c))
+                {
+                    case 'a':
+                        pattern.Append("[aá]");
+                        break;
+                    case 'e':
+                        pattern.Append("[eé]");
+                        break;
+                    case 'i':
+                        pattern.Append("[ií]");
+                        break;
+                    case 'o':
+                        pattern.Append("[oó]");
+                        break;
+                    case 'u':
+                        pattern.Append("[uú]");
+                        break;
+                    case 'á':
+                        pattern.Append("[aá]");
+                        break;
+                    case 'é':
+                        pattern.Append("[eé]");
+                        break;
+                    case 'í':
+                        pattern.Append("[ií]");
+                        break;
+                    case 'ó':
+                        pattern.Append("[oó]");
+                        break;
+                    case 'ú':
+                        pattern.Append("[uú]");
+                        break;
+                    default:
+                        pattern.Append("[" + char.ToUpper(c) + char.ToLower(c) + "]");
+                        break;
+                }
+            }
+
+            pattern.Append(".*");
+            return pattern.ToString();
+        }
+
         public void ConsultarDocumento(string Documento)
         {
             string constr = TxtURL.Text;

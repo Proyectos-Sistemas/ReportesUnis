@@ -20,7 +20,7 @@
                                 <br />
                                 <asp:DropDownList ID="CmbBusqueda" runat="server" Width="275px" CssClass="form-control mx-auto">
                                     <asp:ListItem>Documento de Identificación</asp:ListItem>
-                                    <asp:ListItem>Carnet</asp:ListItem>
+                                    <asp:ListItem>ID Campus</asp:ListItem>
                                     <asp:ListItem>Nombre</asp:ListItem>
                                 </asp:DropDownList>
                             </div>
@@ -338,7 +338,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Carné:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Carné/ID Campus:</asp:Label>
                                         <br />
                                         <asp:Label ID="txtCarne" runat="server" Enabled="false"></asp:Label>
                                     </div>
@@ -828,8 +828,9 @@
                                     </div>
 
                                     <div class="form-group col-md-6">
-                                        <asp:Label runat="server" Font-Bold="true">Información de carro en campus:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Información de vehpiculo en el campus universitario:</asp:Label>
                                         <asp:TextBox ID="TxtCarro" runat="server" Enabled="true" MaxLength="150" Width="500px" CssClass="form-control"></asp:TextBox>
+                                        <asp:Label runat="server" Font-Bold="true" Font-Size="X-Small">Indicar el número de placa, color y marca.</asp:Label>
                                         <br />
                                     </div>
 
