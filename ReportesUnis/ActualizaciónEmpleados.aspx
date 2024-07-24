@@ -619,7 +619,7 @@
                                             <h6>Recomendaciones:</h6>
                                             <ul>
                                                 <li>Ret&iacute;rate cualquier accesorio que pueda interferir con la fotograf&iacute;a. Por ejemplo: mascarillas, lentes de sol, gorras o headset.</li>
-                                                <li>Ub&iacute;quese en un entorno con fondo uniforme (de preferencia una pared o fondo color blanco). Recuerde que el carn&eacute; es un documento formal.</li>
+                                                <li>Ub&iacute;cate en un entorno con fondo uniforme (de preferencia una pared o fondo color blanco). Recuerda que el carn&eacute; es un documento formal.</li>
                                             </ul>
                                         </div>
                                         <div class="col-md-1 mx-auto text-center">
