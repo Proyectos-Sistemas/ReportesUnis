@@ -362,7 +362,7 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Fecha de nacimiento*:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Fecha de nacimiento<span style="color: red">*</span>:</asp:Label>
                                         <br />
                                         <asp:TextBox ID="txtCumple" runat="server" Enabled="true" Width="275px" CssClass="form-control" TextMode="Date" onchange="validateDate(this)"></asp:TextBox>
                                         <span id="errorCumple" style="color: red; font-size: small"></span>
@@ -371,12 +371,13 @@
                                     <div class="form-group col-md-4">
                                         <asp:Label runat="server" Font-Bold="true">Lugar de Nacimiento:</asp:Label>
                                         <br />
-                                        <asp:TextBox ID="TxtLugarNac" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
+                                        <asp:TextBox ID="TxtLugarNac" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control" onblur="validarLugarNacimiento(this.value)"></asp:TextBox>
+                                        <span id="errorLugarElement" style="color: red; font-size: small"></span>
                                     </div>
 
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">País de Nacimiento*:</asp:Label><br />
+                                        <asp:Label runat="server" Font-Bold="true">País de Nacimiento<span style="color: red">*</span>:</asp:Label><br />
                                         <asp:DropDownList ID="CmbPaisNacimiento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPaisNac_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                         </asp:DropDownList>
                                         <br />
@@ -398,14 +399,14 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Nombres*:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Nombres<span style="color: red">*</span>:</asp:Label>
                                         <br />
                                         <asp:TextBox ID="txtNombre" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtNombre" ErrorMessage="Ingrese su nombre." ForeColor="Red"> </asp:RequiredFieldValidator>
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Apellidos*:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Apellidos<span style="color: red">*</span>:</asp:Label>
                                         <br />
                                         <asp:TextBox ID="txtApellido" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="txtApellido" ErrorMessage="Ingrese su apellido." ForeColor="Red"> </asp:RequiredFieldValidator>
@@ -421,7 +422,7 @@
 
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Dirección 1<span style="color: red">*</span>:</asp:Label>
                                         <br />
                                         <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtDireccion" ErrorMessage="Ingrese su dirección." ForeColor="Red"> </asp:RequiredFieldValidator>
@@ -442,21 +443,21 @@
 
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">País*:</asp:Label><br />
+                                        <asp:Label runat="server" Font-Bold="true">País<span style="color: red">*</span>:</asp:Label><br />
                                         <asp:DropDownList ID="CmbPais" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPais_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                         </asp:DropDownList>
                                         <br />
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Departamento<span style="color: red">*</span>:</asp:Label>
                                         <asp:DropDownList ID="CmbDepartamento" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamento_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                         </asp:DropDownList>
                                         <br />
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Municipio<span style="color: red">*</span>:</asp:Label>
                                         <asp:DropDownList ID="CmbMunicipio" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipio_SelectedIndexChanged" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();">
                                         </asp:DropDownList>
                                         <br />
@@ -465,14 +466,14 @@
 
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Teléfono*:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Teléfono<span style="color: red">*</span>:</asp:Label>
                                         <br />
                                         <asp:TextBox ID="txtTelefono" runat="server" MaxLength="21" CssClass="form-control" Width="275px" onblur="validarTelefono(this.value)"></asp:TextBox>
                                         <span id="errorTelefono" style="color: red; font-size: small"></span>
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Correo personal*:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Correo personal<span style="color: red">*</span>:</asp:Label>
                                         <br />
                                         <asp:TextBox ID="TxtCorreoPersonal" runat="server" MaxLength="70" CssClass="form-control" Width="275px" onblur="validarCorreo(this.value)"></asp:TextBox>
                                         <span id="errorCorreo" style="color: red; font-size: small"></span>
@@ -528,7 +529,7 @@
                                         </div>
 
                                         <div class="col-md-4 mx-auto text-center">
-                                            <asp:Label runat="server" Font-Bold="true">NIT*:</asp:Label>
+                                            <asp:Label runat="server" Font-Bold="true">NIT<span style="color: red">*</span>:</asp:Label>
                                         </div>
 
                                         <div class="col-md-4 mx-auto text-center">
@@ -573,7 +574,7 @@
                                 <div class="container">
                                     <div class="row">
                                         <div class="form-group col-md-4">
-                                            <asp:Label runat="server" Font-Bold="true">Nombre 1*:</asp:Label>
+                                            <asp:Label runat="server" Font-Bold="true">Nombre 1<span style="color: red">*</span>:</asp:Label>
                                             <br />
                                             <asp:TextBox ID="TxtNombreR" runat="server" Enabled="false" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
                                             <br />
@@ -594,7 +595,7 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            <asp:Label runat="server" Font-Bold="true">Dirección 1*:</asp:Label>
+                                            <asp:Label runat="server" Font-Bold="true">Dirección 1<span style="color: red">*</span>:</asp:Label>
                                             <asp:TextBox ID="TxtDiRe1" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                             <br />
                                         </div>
@@ -614,21 +615,21 @@
                                         <div class="container" id="Combos" runat="server" style="display: none;">
                                             <div class="row">
                                                 <div class="form-group col-md-4">
-                                                    <asp:Label runat="server" Font-Bold="true">País*:</asp:Label>
+                                                    <asp:Label runat="server" Font-Bold="true">País<span style="color: red">*</span>:</asp:Label>
                                                     <br />
                                                     <asp:DropDownList ID="CmbPaisNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbPaisNIT_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
                                                     <br />
                                                 </div>
 
                                                 <div class="form-group col-md-4">
-                                                    <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label>
+                                                    <asp:Label runat="server" Font-Bold="true">Departamento<span style="color: red">*</span>:</asp:Label>
                                                     <br />
                                                     <asp:DropDownList ID="CmbDepartamentoNIT" runat="server" AutoPostBack="true" OnSelectedIndexChanged="CmbDepartamentoNIT_SelectedIndexChanged" EnableViewState="true" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
                                                     <br />
                                                 </div>
 
                                                 <div class="form-group col-md-4">
-                                                    <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label>
+                                                    <asp:Label runat="server" Font-Bold="true">Municipio<span style="color: red">*</span>:</asp:Label>
                                                     <br />
                                                     <asp:DropDownList ID="CmbMunicipioNIT" runat="server" AutoPostBack="true" EnableViewState="true" OnSelectedIndexChanged="CmbMunicipioNIT_SelectedIndexChanged" Width="275px" CssClass="form-control" onchange="mostrarModalEspera();"></asp:DropDownList>
                                                     <br />
@@ -638,21 +639,21 @@
                                         <div class="container" id="sustituirCombos" runat="server" style="display: none;">
                                             <div class="row">
                                                 <div class="form-group col-md-4">
-                                                    <asp:Label runat="server" Font-Bold="true">País*:</asp:Label>
+                                                    <asp:Label runat="server" Font-Bold="true">País<span style="color: red">*</span>:</asp:Label>
                                                     <br />
                                                     <asp:TextBox ID="PaisNit" runat="server" Enabled="false" Width="275px" CssClass="form-control"></asp:TextBox>
                                                     <br />
                                                 </div>
 
                                                 <div class="form-group col-md-4">
-                                                    <asp:Label runat="server" Font-Bold="true">Departamento*:</asp:Label>
+                                                    <asp:Label runat="server" Font-Bold="true">Departamento<span style="color: red">*</span>:</asp:Label>
                                                     <br />
                                                     <asp:TextBox ID="DepartamentoNit" runat="server" Enabled="false" Width="275px" CssClass="form-control"></asp:TextBox>
                                                     <br />
                                                 </div>
 
                                                 <div class="form-group col-md-4">
-                                                    <asp:Label runat="server" Font-Bold="true">Municipio*:</asp:Label>
+                                                    <asp:Label runat="server" Font-Bold="true">Municipio<span style="color: red">*</span>:</asp:Label>
                                                     <br />
                                                     <asp:TextBox ID="MunicipioNit" runat="server" Enabled="false" Width="275px" CssClass="form-control"></asp:TextBox>
                                                     <br />
@@ -684,7 +685,7 @@
                                             <div class="form-group col-md-4">
                                                 <asp:Label runat="server" Font-Bold="true">Seguro Médico</asp:Label>
                                                 <br />
-                                                <asp:TextBox ID="TxtSeguro" runat="server" Enabled="true" MaxLength="150" Width="275px" CssClass="form-control"></asp:TextBox>
+                                                <asp:Label ID="TxtSeguro" runat="server" >SOMIT-GYT</asp:Label>
                                                 <br />
                                             </div>
                                             <div class="form-group col-md-4">
@@ -694,7 +695,7 @@
                                                 <br />
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <asp:Label runat="server" Font-Bold="true">Tipo de Sangre:</asp:Label>
+                                                <asp:Label runat="server" Font-Bold="true">Tipo de Sangre<span style="color: red">*</span>:</asp:Label>
                                                 <asp:DropDownList ID="CmbSangre" runat="server" Width="275px" CssClass="form-control">
                                                     <asp:ListItem Text="Desconocido" Value="-"></asp:ListItem>
                                                     <asp:ListItem Text="O+" Value="OP"></asp:ListItem>
@@ -710,7 +711,7 @@
                                             </div>
 
                                             <div class="form-group col-md-6">
-                                                <asp:Label runat="server" Font-Bold="true">Hospital para traslado:</asp:Label>
+                                                <asp:Label runat="server" Font-Bold="true">Hospital para traslado<span style="color: red">*</span>:</asp:Label>
                                                 <br />
                                                 <asp:DropDownList ID="CmbHospital" runat="server" Width="500px" CssClass="form-control"></asp:DropDownList>
                                                 <br />
@@ -724,7 +725,7 @@
                                             </div>
 
                                             <div class="form-group col-md-6">
-                                                <asp:Label runat="server" Font-Bold="true">Antecedentes Médicos:</asp:Label>
+                                                <asp:Label runat="server" Font-Bold="true">Antecedentes Médicos<span style="color: red">*</span>:</asp:Label>
                                                 <asp:ListBox ID="CmbAntecedentes" runat="server" Width="500px" CssClass="chosen-select form-control" Multiple="true" SelectionMode="Multiple"></asp:ListBox>
                                                 <br />
                                             </div>
@@ -737,7 +738,7 @@
                                             </div>
 
                                             <div class="form-group col-md-6">
-                                                <asp:Label runat="server" Font-Bold="true">Alergias:</asp:Label>
+                                                <asp:Label runat="server" Font-Bold="true">Alergias<span style="color: red">*</span>:</asp:Label>
                                                 <asp:ListBox ID="CmbAlergias" runat="server" Width="500px" CssClass="chosen-select form-control" Multiple="true" SelectionMode="Multiple"></asp:ListBox>
                                                 <br />
                                             </div>
@@ -815,7 +816,7 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="form-group col-md-6">
-                                        <asp:Label runat="server" Font-Bold="true">Talla Sudadero</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Talla Sudadero<span style="color: red">*</span>: <br></asp:Label>
                                         <br />
                                         <asp:DropDownList ID="CmbTalla" runat="server" Width="500px" CssClass="form-control">
                                             <asp:ListItem Selected="False" Value=""></asp:ListItem>
@@ -828,7 +829,7 @@
                                     </div>
 
                                     <div class="form-group col-md-6">
-                                        <asp:Label runat="server" Font-Bold="true">Información de vehpiculo en el campus universitario:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Datos del vehículo que permanerá en la universidad en caso de emergencia:</asp:Label>
                                         <asp:TextBox ID="TxtCarro" runat="server" Enabled="true" MaxLength="150" Width="500px" CssClass="form-control"></asp:TextBox>
                                         <asp:Label runat="server" Font-Bold="true" Font-Size="X-Small">Indicar el número de placa, color y marca.</asp:Label>
                                         <br />
@@ -1146,6 +1147,16 @@
             }
         }
 
+        function validarLugarNacimiento(Lugar) {
+            var errorLugarElement = document.getElementById("errorLugarElement");
+
+            if (Lugar.length <= 7) {
+                errorLugarElement.textContent = "El lugar de nacimiento debe de tener al menos 8 caracteres";
+            } else {
+                errorLugarElement.textContent = "";
+            }
+        }
+
         function mostrarAlerta() {
             var mensaje = "";
             var apellido = document.getElementById('<%= txtApellido.ClientID %>').value;
@@ -1202,6 +1213,9 @@
             var CmbHospital = document.getElementById('<%= CmbHospital.ClientID %>').value;
             var TxtOtroHospital = document.getElementById('<%= TxtOtroHospital.ClientID %>').value.trim();
 
+            //Validación talla sudadero
+            var tallaSeleccionada = document.getElementById('<%= CmbTalla.ClientID %>').value;
+
             if (TrueNit !== nit && nit !== "CF") {
                 // Realiza las acciones necesarias si el valor es diferente de cero
                 alert("El NIT ha cambiado, es necesario validar.");
@@ -1245,26 +1259,26 @@
 
                 if (nombre.trim() === "") {
                     if (mensaje.trim() == "") {
-                        mensaje = "-Los Nombres son requeridos.";
+                        mensaje = "-Los nombres son requeridos.";
                     } else {
-                        mensaje = mensaje + "\n-Los Nombres son requeridos.";
+                        mensaje = mensaje + "\n-Los nombres son requeridos.";
                     }
                 }
 
 
                 if (apellido.trim() === "") {
                     if (mensaje.trim() == "") {
-                        mensaje = "-Los Apellidos son requeridos.";
+                        mensaje = "-Los apellidos son requeridos.";
                     } else {
-                        mensaje = mensaje + "\n-Los Apellidos son requeridos.";
+                        mensaje = mensaje + "\n-Los apellidos son requeridos.";
                     }
                 }
 
                 if (direccion1.trim() === "") {
                     if (mensaje.trim() == "") {
-                        mensaje = "-La Dirección 1 es requerida.";
+                        mensaje = "-La dirección 1 es requerida.";
                     } else {
-                        mensaje = mensaje + "\n-La Dirección 1 es requerida.";
+                        mensaje = mensaje + "\n-La dirección 1 es requerida.";
                     }
                 }
 
@@ -1294,25 +1308,25 @@
 
                 if (Correo.trim() === "") {
                     if (mensaje.trim() == "") {
-                        mensaje = "-El Correo Personal es requerido.";
+                        mensaje = "-El correo personal es requerido.";
                     } else {
-                        mensaje = mensaje + "\n-El Correo Personal es requerido.";
+                        mensaje = mensaje + "\n-El correo personal es requerido.";
                     }
                 }
 
                 if (telefono.length > 0 && telefono.length <= 7) {
                     if (mensaje.trim() == "") {
-                        mensaje = "-El Teléfono debe de tener 8 carácteres.";
+                        mensaje = "-El teléfono debe de tener 8 carácteres.";
                     } else {
-                        mensaje = mensaje + "\n-El Teléfono debe de tener 8 carácteres.";
+                        mensaje = mensaje + "\n-El teléfono debe de tener 8 carácteres.";
                     }
                 }
 
                 if (telefono.trim() === "") {
                     if (mensaje.trim() == "") {
-                        mensaje = "-El Teléfono es requerido.";
+                        mensaje = "-El teléfono es requerido.";
                     } else {
-                        mensaje = mensaje + "\n-El Teléfono es requerido.";
+                        mensaje = mensaje + "\n-El teléfono es requerido.";
                     }
 
                 }
@@ -1327,9 +1341,9 @@
 
                 if ((direccionR1.trim() === "" && nombreR.trim() !== "") || (direccionR1.trim() === "")) {
                     if (mensaje.trim() == "") {
-                        mensaje = "-La Dirección 1 para el recibo es requerida.";
+                        mensaje = "-La dirección 1 para el recibo es requerida.";
                     } else {
-                        mensaje = mensaje + "\n-La Dirección 1 para el recibo es requerida.";
+                        mensaje = mensaje + "\n-La dirección 1 para el recibo es requerida.";
                     }
                 }
 
@@ -1366,11 +1380,34 @@
                     }
                 }
 
+                if (CmbHospital === 'Otro' && TxtOtroHospital === "") {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Es necesario indicar qué otro hospital desea para traslado.";
+                    } else {
+                        mensaje = mensaje + "\n-Es necesario indicar qué otro hospital desea para traslado.";
+                    }
+                }
+                if (CmbHospital === ' ') {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Es necesario indicar que hospital desea para traslado.";
+                    } else {
+                        mensaje = mensaje + "\n-Es necesario indicar qué hospital desea para traslado.";
+                    }
+                }
+
                 if (seleccionadosAlergia.includes('Otra') && TxtOtrasAlergias === "") {
                     if (mensaje.trim() == "") {
                         mensaje = "-Es necesario indicar qué otra alergia posee.";
                     } else {
                         mensaje = mensaje + "\n-Es necesario indicar qué otra alergia posee.";
+                    }
+                }
+
+                if (seleccionadosAlergia.length === 0) {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Es necesario indicar qué alergia posee, si no posee ninguno seleccione -NO APLICA-";
+                    } else {
+                        mensaje = mensaje + "\n-Es necesario indicar qué alergia posee, si no posee ninguno seleccione -NO APLICA-";
                     }
                 }
 
@@ -1382,13 +1419,51 @@
                     }
                 }
 
-                if (CmbHospital === 'Otro' && TxtOtroHospital === "") {
+                if (seleccionadosAntecedentes.length === 0) {
                     if (mensaje.trim() == "") {
-                        mensaje = "-Es necesario indicar qué otro hospital desea para traslado.";
+                        mensaje = "-Es necesario indicar qué antecedente médico posee, si no posee ninguno seleccione -NO APLICA-";
                     } else {
-                        mensaje = mensaje + "\n-Es necesario indicar qué otro hospital desea para traslado.";
+                        mensaje = mensaje + "\n-Es necesario indicar qué antecedente médico posee, si no posee ninguno seleccione -NO APLICA-";
                     }
                 }
+
+                if (tallaSeleccionada.length === 0) {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Es necesario indicar la talla";
+                    } else {
+                        mensaje = mensaje + "\n-Es necesario indicar la talla";
+                    }
+                }
+
+                // Verificar si al menos un contacto ha sido agregado
+                var gridViewContactos = document.getElementById('<%= GridViewContactos.ClientID %>');
+                var rows = gridViewContactos.rows;
+                var contactoAdded = false;
+
+                for (var i = 0; i < rows.length; i++) {
+                    var row = rows[i];
+                    var inputNombreC = row.cells[2].getElementsByTagName('input')[0];
+                    var inputTelefonoC = row.cells[3].getElementsByTagName('input')[0];
+
+                    if (inputNombreC && inputTelefonoC) {
+                        var nombreC = inputNombreC.value;
+                        var telefonoC = inputTelefonoC.value;
+
+                        if (nombreC.trim() !== "" && telefonoC.trim() !== "") {
+                            contactoAdded = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!contactoAdded) {
+                    if (mensaje.trim() == "") {
+                        mensaje = "-Debe agregar al menos un contacto de emergencia.";
+                    } else {
+                        mensaje = mensaje + "\n-Debe agregar al menos un contacto de emergencia.";
+                    }
+                }
+                                
 
                 if (mensaje.trim() !== "") {
                     mensaje = mensaje.replace("/\n/g", "<br>");
@@ -1423,13 +1498,6 @@
 
         function NoExisteNit() {
             alert("El NIT no existe. Intente de nuevo");
-        }
-
-        function ConfirmacionActualizacionSensible() {
-            mensaje = "La información fue almacenada correctamente. \nLa información ingresada debe ser aprobada antes de ser confirmada.\nActualmente, solo se muestran los datos que han sido previamente confirmados.";
-            mensaje = mensaje.replace("/\n/g", "<br>");
-            alert(mensaje);
-            window.location.href = "ActualizacionGeneralEstudiantes.aspx";
         }
 
         function ConfirmacionActualizacion() {
@@ -1762,6 +1830,7 @@
 
             return false; // Evitar la tecla
         }
+
         function validateDate(dateField) {
             var inputDate = new Date(dateField.value);
             var today = new Date();
@@ -1983,7 +2052,7 @@
             var firstDDLPais = firstRow.cells[1].querySelector('select');
 
             if (textbox.value.trim() !== "") {
-                firstDDLPais.value = "GTM"; // Asegúrate de que "GTM" sea el valor correspondiente a Guatemala en el DropDownList
+                firstDDLPais.value = "GTM"; 
             } else {
                 firstDDLPais.value = "";
             }

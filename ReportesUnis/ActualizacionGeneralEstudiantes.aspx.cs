@@ -1601,7 +1601,17 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT ' ' FIELDNAME, ' ' XLATLONGNAME FROM DUAL UNION SELECT FIELDNAME, XLATLONGNAME FROM SYSADM.PS_XL_CAT_ENFER ORDER BY 1 ASC";
+                    cmd.CommandText = "SELECT FIELDNAME, XLATLONGNAME " +
+                                      "FROM ( " +
+                                      "  SELECT FIELDNAME, XLATLONGNAME, " +
+                                      "         ROW_NUMBER() OVER (ORDER BY FIELDNAME) AS ORDEN " +
+                                      "  FROM ( " +
+                                      "    SELECT ' ' FIELDNAME, ' ' XLATLONGNAME FROM DUAL " +
+                                      "    UNION " +
+                                      "    SELECT FIELDNAME, XLATLONGNAME FROM SYSADM.PS_XL_CAT_ENFER " +
+                                      "  ) " +
+                                      ") " +
+                                      "ORDER BY CASE WHEN ORDEN = 1 THEN 1 WHEN FIELDNAME = 'No Aplica' THEN 2 ELSE 3 END, FIELDNAME ASC";
                     OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                     DataSet ds = new DataSet();
                     adapter.Fill(ds);
@@ -1622,7 +1632,17 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "SELECT ' ' FIELDNAME FROM DUAL UNION SELECT FIELDNAME FROM SYSADM.PS_XL_CAT_ALERGIAS ORDER BY 1 ASC";
+                    cmd.CommandText = "SELECT FIELDNAME, XLATLONGNAME " +
+                                      "FROM ( " +
+                                      "  SELECT FIELDNAME, XLATLONGNAME, " +
+                                      "         ROW_NUMBER() OVER (ORDER BY FIELDNAME) AS ORDEN " +
+                                      "  FROM ( " +
+                                      "    SELECT ' ' FIELDNAME, ' ' XLATLONGNAME FROM DUAL " +
+                                      "    UNION " +
+                                      "    SELECT FIELDNAME, XLATLONGNAME FROM SYSADM.PS_XL_CAT_ALERGIAS " +
+                                      "  ) " +
+                                      ") " +
+                                      "ORDER BY CASE WHEN ORDEN = 1 THEN 1 WHEN FIELDNAME = 'No Aplica' THEN 2 ELSE 3 END, FIELDNAME ASC";
                     OracleDataAdapter adapter = new OracleDataAdapter(cmd);
                     DataSet ds = new DataSet();
                     adapter.Fill(ds);
@@ -1748,15 +1768,18 @@ namespace ReportesUnis
                     try
 
                     {
-                        if (String.IsNullOrEmpty(txtNombreE1_Inicial.Value) || txtNombreE1_Inicial.Value == "")
+                        if (!String.IsNullOrEmpty(nombre1))
                         {
-                            cmd.CommandText = InsertContacto1;
-                            cmd.ExecuteNonQuery();
-                        }
-                        else
-                        {
-                            cmd.CommandText = UpdateContacto1;
-                            cmd.ExecuteNonQuery();
+                            if (String.IsNullOrEmpty(txtNombreE1_Inicial.Value) || txtNombreE1_Inicial.Value == "")
+                            {
+                                cmd.CommandText = InsertContacto1;
+                                cmd.ExecuteNonQuery();
+                            }
+                            else
+                            {
+                                cmd.CommandText = UpdateContacto1;
+                                cmd.ExecuteNonQuery();
+                            }
                         }
                     }
                     catch (Exception x)
@@ -1767,15 +1790,18 @@ namespace ReportesUnis
 
                     try
                     {
-                        if (String.IsNullOrEmpty(txtNombreE2_Inicial.Value) || txtNombreE2_Inicial.Value == "")
+                        if (!String.IsNullOrEmpty(nombre2))
                         {
-                            cmd.CommandText = InsertContacto2;
-                            cmd.ExecuteNonQuery();
-                        }
-                        else
-                        {
-                            cmd.CommandText = UpdateContacto2;
-                            cmd.ExecuteNonQuery();
+                            if (String.IsNullOrEmpty(txtNombreE2_Inicial.Value) || txtNombreE2_Inicial.Value == "")
+                            {
+                                cmd.CommandText = InsertContacto2;
+                                cmd.ExecuteNonQuery();
+                            }
+                            else
+                            {
+                                cmd.CommandText = UpdateContacto2;
+                                cmd.ExecuteNonQuery();
+                            }
                         }
                     }
                     catch (Exception x)
@@ -1833,7 +1859,7 @@ namespace ReportesUnis
                         CmbHospital.SelectedValue = reader["HOSPITAL_TRASLADO"].ToString();
                         TxtAfiliacion.Text = reader["NRO_AFILIACION"].ToString().TrimEnd();
                         TxtCarro.Text = reader["CARRO_CAMPUS"].ToString().Trim();
-                        TxtSeguro.Text = reader["SEGURO_MEDICO"].ToString().Trim();
+                        //TxtSeguro.Text = reader["SEGURO_MEDICO"].ToString().Trim();
                         string tipoSangre = reader["TIPO_SANGRE"].ToString();
 
                         if (bloodTypeMapping.ContainsKey(tipoSangre))
@@ -3574,7 +3600,7 @@ namespace ReportesUnis
                     }
 
                     string afiliacion = string.IsNullOrEmpty(TxtAfiliacion.Text) ? " " : TxtAfiliacion.Text;
-                    string seguro = string.IsNullOrEmpty(TxtSeguro.Text) ? " " : TxtSeguro.Text;
+                    string seguro = "SOMIT-GYT";// string.IsNullOrEmpty(TxtSeguro.Text) ? " " : TxtSeguro.Text;
                     string carro = string.IsNullOrEmpty(TxtCarro.Text) ? " " : TxtCarro.Text;
                     string otroHospital = string.IsNullOrEmpty(TxtOtroHospital.Text) ? " " : TxtOtroHospital.Text;
 
@@ -3735,7 +3761,7 @@ namespace ReportesUnis
                                                         "'" + PAIS_DOCUMENTO2.Value + "' , " +
                                                         "'" + TIPO_DOCUMENTO2.Value + "' , " +
                                                         "'" + DOCUMENTO2.Value + "' , " +
-                                                        "'" + TxtSeguro.Text + "' , " +
+                                                        "'SOMIT-GYT' , " +
                                                         "'" + TxtAfiliacion.Text + "' , " +
                                                         "'" + CmbSangre.SelectedItem + "' , " +
                                                         "'" + CmbHospital.SelectedItem + "' , " +
@@ -3951,7 +3977,7 @@ namespace ReportesUnis
         }
         protected void CmbMunicipioNac_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            //LlenadoStateNac();
             if (RadioButtonNombreSi.Checked && ControlCF.Value != "CF")
             {
                 txtNit.Text = "CF";
@@ -4023,7 +4049,7 @@ namespace ReportesUnis
         }
         protected void CmbDepartamentoNIT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LlenadoMunicipioNacimiento();
+            LlenadoMunicipioNIT();
             ScriptManager.RegisterStartupScript(this, GetType(), "OcultarModal", "ocultarModalEspera();", true);
         }
         protected void BtnActualizar_Click(object sender, EventArgs e)
@@ -4303,10 +4329,10 @@ namespace ReportesUnis
                                     hospital = CmbHospital.SelectedItem.Value;
 
                                 if (String.IsNullOrEmpty(seleccionadosAlergia_CRM.Value))
-                                    seleccionadosAlergia_CRM.Value = "-";
+                                    seleccionadosAlergia_CRM.Value = "No Aplica";
 
                                 if (String.IsNullOrEmpty(seleccionadosAntecedentes_CRM.Value))
-                                    seleccionadosAntecedentes_CRM.Value = "-";
+                                    seleccionadosAntecedentes_CRM.Value = "No Aplica";
 
                                 body = "{\r\n    " +
                                     "\"FirstName\": \"" + txtNombre.Text + "\",\r\n    " +
@@ -4343,7 +4369,7 @@ namespace ReportesUnis
                                     "\"PersonDEO_Enfermedades_c\": \"" + seleccionadosAntecedentes_CRM.Value + "\",\r\n    " +
                                     "\"PersonDEO_AntecedentesMedicos_c\": \"" + TxtOtrosAntecedentesM.Text + "\",\r\n    " +
                                     "\"PersonDEO_TipoDeSangre_c\": \"" + CmbSangre.SelectedValue + "\",\r\n    " +
-                                    "\"PersonDEO_SeguroMedico_c\": \"" + TxtSeguro.Text + "\",\r\n    " +
+                                    "\"PersonDEO_SeguroMedico_c\": \"SOMIT-GYT\",\r\n    " +
                                     "\"PersonDEO_NroDeAfiliacion_c\": \"" + TxtAfiliacion.Text + "\"\r\n    " +
                                     "}";
                                 // resultados = EnvioCorreo(txtNombre.Text + " " + txtApellido.Text, DOCUMENTO1_INICIAL.Value, DOCUMENTO1.Value, DOCUMENTO2_INCIAL.Value, DOCUMENTO2.Value,, DOCUMENTO1_PRINCIPAL.Value, DOCUMENTO1_PRINCIPAL_INICIAL.Value, DOCUMENTO2_PRINCIPAL.Value, DOCUMENTO2_PRINCIPAL_INICIAL.Value);
@@ -4355,7 +4381,7 @@ namespace ReportesUnis
                                 {
                                     log("Actualización en CRM", "Correcto", "La información se actualizo correctamente", "Actualización información de contacto en CRM");
                                     //ACTUALIZACION CONTACTOS DE EMERGENCIA EN CAMPUS
-                                    if (!String.IsNullOrEmpty(nombre1))
+                                    if (!String.IsNullOrEmpty(nombre1) || !String.IsNullOrEmpty(nombre2))
                                         resultados = ContactoEmergenciaCampus(nombre1, CE_parentesco1.Value, telefono1, PrincipalC1, nombre2, CE_parentesco2.Value, telefono2, PrincipalC2, txtNombreE1_Inicial.Value, txtNombreE2_Inicial.Value);
                                     if (resultados == "0")
                                     {
