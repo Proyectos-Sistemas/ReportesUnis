@@ -331,9 +331,11 @@ namespace ReportesUnis
                         {
                             CmbPais.SelectedValue = reader["PAIS"].ToString();
                             LlenadoDepartamento();
-                            CmbDepartamento.SelectedValue = reader["DEPARTAMENTO"].ToString();
+                            if(reader["DEPARTAMENTO"].ToString() != " ")
+                                CmbDepartamento.SelectedValue = reader["DEPARTAMENTO"].ToString();
                             LlenadoMunicipio();
-                            CmbMunicipio.SelectedValue = reader["MUNICIPIO"].ToString();
+                            if (reader["MUNICIPIO"].ToString() != " ")
+                                CmbMunicipio.SelectedValue = reader["MUNICIPIO"].ToString();
                         }
                         else
                         {
