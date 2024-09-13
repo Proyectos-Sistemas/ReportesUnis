@@ -829,7 +829,7 @@
                                     </div>
 
                                     <div class="form-group col-md-6">
-                                        <asp:Label runat="server" Font-Bold="true">Datos del vehículo que permanerá en la universidad en caso de emergencia:</asp:Label>
+                                        <asp:Label runat="server" Font-Bold="true">Datos del vehículo que permanecería en la universidad en caso de emergencia:</asp:Label>
                                         <asp:TextBox ID="TxtCarro" runat="server" Enabled="true" MaxLength="150" Width="500px" CssClass="form-control"></asp:TextBox>
                                         <asp:Label runat="server" Font-Bold="true" Font-Size="X-Small">Indicar el número de placa, color y marca.</asp:Label>
                                         <br />
