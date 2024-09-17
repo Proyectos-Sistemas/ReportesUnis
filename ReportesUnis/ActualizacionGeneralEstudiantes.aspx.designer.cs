@@ -1086,6 +1086,15 @@ namespace ReportesUnis
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden CE_Principal1;
 
         /// <summary>
+        /// Control CE_CodArea1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden CE_CodArea1;
+
+        /// <summary>
         /// Control CE_parentesco2.
         /// </summary>
         /// <remarks>
@@ -1138,6 +1147,15 @@ namespace ReportesUnis
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden CE_Principal2;
+
+        /// <summary>
+        /// Control CE_CodArea2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden CE_CodArea2;
 
         /// <summary>
         /// Control EmplidAtencion.

@@ -1419,6 +1419,7 @@ namespace ReportesUnis
             dt.Columns.Add("Parentesco");
             dt.Columns.Add("Nombre");
             dt.Columns.Add("Teléfono");
+            dt.Columns.Add("Codigo");
             dt.Columns.Add("PRIMARY_CONTACT");
 
             // Fila para Contacto1
@@ -1427,6 +1428,7 @@ namespace ReportesUnis
             dr1["Parentesco"] = String.Empty;
             dr1["Nombre"] = String.Empty;
             dr1["Teléfono"] = String.Empty;
+            dr1["Codigo"] = String.Empty;
             dr1["PRIMARY_CONTACT"] = String.Empty;
             dt.Rows.Add(dr1);
 
@@ -1436,6 +1438,7 @@ namespace ReportesUnis
             dr2["Parentesco"] = String.Empty;
             dr2["Nombre"] = String.Empty;
             dr2["Teléfono"] = String.Empty;
+            dr2["Codigo"] = String.Empty;
             dr2["PRIMARY_CONTACT"] = String.Empty;
             dt.Rows.Add(dr2);
 
@@ -1665,7 +1668,7 @@ namespace ReportesUnis
                 con.Open();
                 using (OracleCommand cmd = new OracleCommand())
                 {
-                    cmd.CommandText = "SELECT CONTACT_NAME AS Nombre, PHONE as Teléfono, RELATIONSHIP as Parentesco, PRIMARY_CONTACT " +
+                    cmd.CommandText = "SELECT CONTACT_NAME AS Nombre, PHONE as Teléfono, RELATIONSHIP as Parentesco, COUNTRY_CODE AS Codigo, PRIMARY_CONTACT " +
                         "FROM SYSADM.PS_EMERGENCY_CNTCT " +
                     "WHERE EMPLID = '" + txtCarne.Text + "'";
                     cmd.Connection = con;
@@ -1681,6 +1684,7 @@ namespace ReportesUnis
                                 txtNombreE1_Inicial.Value = reader["Nombre"].ToString();
                                 dt.Rows[0]["Teléfono"] = reader["Teléfono"].ToString();
                                 dt.Rows[0]["Parentesco"] = reader["Parentesco"].ToString();
+                                dt.Rows[0]["Codigo"] = reader["Codigo"].ToString().TrimEnd(); ;
                                 dt.Rows[0]["PRIMARY_CONTACT"] = reader["PRIMARY_CONTACT"].ToString();
                                 contador++;
                             }
@@ -1690,6 +1694,7 @@ namespace ReportesUnis
                                 txtNombreE2_Inicial.Value = reader["Nombre"].ToString();
                                 dt.Rows[1]["Teléfono"] = reader["Teléfono"].ToString();
                                 dt.Rows[1]["Parentesco"] = reader["Parentesco"].ToString();
+                                dt.Rows[1]["Codigo"] = reader["Codigo"].ToString().TrimEnd();
                                 dt.Rows[1]["PRIMARY_CONTACT"] = reader["PRIMARY_CONTACT"].ToString();
                                 contador++;
                             }
@@ -1701,7 +1706,7 @@ namespace ReportesUnis
                 }
             }
         }
-        protected string ContactoEmergenciaCampus(string nombre1, string parentesco1, string telefono1, string principal1, string nombre2, string parentesco2, string telefono2, string principal2, string nombre1_a, string nombre2_a)
+        protected string ContactoEmergenciaCampus(string nombre1, string parentesco1, string telefono1, string principal1, string nombre2, string parentesco2, string telefono2, string principal2, string nombre1_a, string nombre2_a, string codigo1, string codigo2)
         {
             string parentesco1_campus = null;
             string parentesco2_campus = null;
@@ -1745,25 +1750,37 @@ namespace ReportesUnis
                         principal1 = "Y";
                     }
 
+                    if (String.IsNullOrEmpty(codigo1))
+                    {
+                        codigo1= " ";
+                    }
+
+                    if (String.IsNullOrEmpty(codigo2))
+                    {
+                        codigo2 = " ";
+                    }
+
                     string InsertContacto1 = "INSERT INTO SYSADM.PS_EMERGENCY_CNTCT (EMPLID, CONTACT_NAME, PHONE, PRIMARY_CONTACT, RELATIONSHIP, SAME_ADDRESS_EMPL,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,NUM1,NUM2,HOUSE_TYPE,ADDR_FIELD1,ADDR_FIELD2,ADDR_FIELD3,COUNTY,STATE,POSTAL,GEO_CODE,IN_CITY_LIMIT,COUNTRY_CODE,SAME_PHONE_EMPL,ADDRESS_TYPE,PHONE_TYPE,EXTENSION) " +
-                    "VALUES ('" + txtEmplid.Value + "', '" + nombre1 + "', '" + telefono1 + "', '" + principal1 + "', '" + parentesco1_campus + "', 'N',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','N',' ',' ',' ')";
+                    "VALUES ('" + txtEmplid.Value + "', '" + nombre1 + "', '" + telefono1 + "', '" + principal1 + "', '" + parentesco1_campus + "', 'N',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',"+codigo1+",'N',' ',' ',' ')";
 
                     string UpdateContacto1 = "UPDATE SYSADM.PS_EMERGENCY_CNTCT SET " +
                         "CONTACT_NAME = '" + nombre1 + "', " +
                         "PRIMARY_CONTACT = '" + principal1 + "', " +
                         "PHONE = '" + telefono1 + "', " +
-                        "RELATIONSHIP = '" + parentesco1_campus + "' " +
+                        "RELATIONSHIP = '" + parentesco1_campus + "', " +
+                        "COUNTRY_CODE = '" + codigo1 + "' " +
                         "WHERE EMPLID ='" + txtEmplid.Value + "'" +
                         "AND CONTACT_NAME = '" + nombre1_a + "'";
 
                     string InsertContacto2 = "INSERT INTO SYSADM.PS_EMERGENCY_CNTCT (EMPLID, CONTACT_NAME, PHONE, PRIMARY_CONTACT, RELATIONSHIP,SAME_ADDRESS_EMPL,COUNTRY,ADDRESS1,ADDRESS2,ADDRESS3,ADDRESS4,CITY,NUM1,NUM2,HOUSE_TYPE,ADDR_FIELD1,ADDR_FIELD2,ADDR_FIELD3,COUNTY,STATE,POSTAL,GEO_CODE,IN_CITY_LIMIT,COUNTRY_CODE,SAME_PHONE_EMPL,ADDRESS_TYPE,PHONE_TYPE,EXTENSION) " +
-                    "VALUES ('" + txtEmplid.Value + "', '" + nombre2 + "', '" + telefono2 + "', '" + principal2 + "', '" + parentesco2_campus + "', 'N', ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','N',' ',' ',' ')";
+                    "VALUES ('" + txtEmplid.Value + "', '" + nombre2 + "', '" + telefono2 + "', '" + principal2 + "', '" + parentesco2_campus + "', 'N', ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',"+codigo2+",'N',' ',' ',' ')";
 
                     string UpdateContacto2 = "UPDATE SYSADM.PS_EMERGENCY_CNTCT SET " +
                         "CONTACT_NAME = '" + nombre2 + "', " +
                         "PRIMARY_CONTACT = '" + principal2 + "', " +
                         "PHONE = '" + telefono2 + "', " +
-                        "RELATIONSHIP = '" + parentesco2_campus + "' " +
+                        "RELATIONSHIP = '" + parentesco2_campus + "', " +
+                        "COUNTRY_CODE = '" + codigo2 + "' " +
                         "WHERE EMPLID ='" + txtEmplid.Value + "'" +
                         "AND CONTACT_NAME = '" + nombre2_a + "'";
 
@@ -3718,6 +3735,8 @@ namespace ReportesUnis
                                                         " TELEFONO_CONTACTO2, " +
                                                         " TALLA_SUDADERO, " +
                                                         " DATOS_CARRO, " +
+                                                        " COD_AREA1, " +
+                                                        " COD_AREA2, " +
                                                         " FECHA_REGISTRO, " +
                                                         " USUARIO_MODIFICO) " +
                                                         "VALUES( " +
@@ -3782,6 +3801,8 @@ namespace ReportesUnis
                                                         "'" + CE_telefono2.Value + "' , " +
                                                         "'" + CmbTalla.SelectedItem + "' , " +
                                                         "'" + TxtCarro.Text + "' , " +
+                                                        "'" + CE_CodArea1.Value + "' , " +
+                                                        "'" + CE_CodArea2.Value + "' , " +
                                                         "SYSDATE , " +
                                                         "'" + TextUser.Text + "'" +
                                                         ") ";
@@ -4067,9 +4088,11 @@ namespace ReportesUnis
             string parentesco1 = null;
             string nombre1 = null;
             string telefono1 = null;
+            string codtelefono1 = null;
             string parentesco2 = null;
             string nombre2 = null;
             string telefono2 = null;
+            string codtelefono2 = null;
             string pais1 = null;
             string nroDocumento1 = null;
             string pais2 = null;
@@ -4121,6 +4144,8 @@ namespace ReportesUnis
                 DropDownList ddlParentesco1 = (DropDownList)row1.FindControl("CmbPatentesco");
                 TextBox txtNombre1 = (TextBox)row1.FindControl("TxtNombreE");
                 TextBox txtTelefono1 = (TextBox)row1.FindControl("TxtTelefonoE");
+                TextBox TxtCodTelE1 = (TextBox)row1.FindControl("TxtCodTelE");
+
 
                 // Variables para la primera fila
                 isPrincipalC1 = rdbPrincipal1.Checked;
@@ -4130,6 +4155,8 @@ namespace ReportesUnis
                 }
                 nombre1 = txtNombre1.Text;
                 telefono1 = txtTelefono1.Text;
+                codtelefono1 = TxtCodTelE1.Text;
+                CE_CodArea1.Value = codtelefono1;
 
                 // Obtener la segunda fila
                 GridViewRow row2 = GridViewContactos.Rows[1];
@@ -4137,6 +4164,7 @@ namespace ReportesUnis
                 DropDownList ddlParentesco2 = (DropDownList)row2.FindControl("CmbPatentesco");
                 TextBox txtNombre2 = (TextBox)row2.FindControl("TxtNombreE");
                 TextBox txtTelefono2 = (TextBox)row2.FindControl("TxtTelefonoE");
+                TextBox TxtCodTelE2 = (TextBox)row2.FindControl("TxtCodTelE");
 
                 // Variables para la segunda fila
                 isPrincipalC2 = rdbPrincipal2.Checked;
@@ -4150,6 +4178,8 @@ namespace ReportesUnis
                 }
                 nombre2 = txtNombre2.Text;
                 telefono2 = txtTelefono2.Text;
+                codtelefono2 = TxtCodTelE2.Text;
+                CE_CodArea2.Value = codtelefono2;
             }
 
 
@@ -4362,8 +4392,8 @@ namespace ReportesUnis
                                     "\"PersonDEO_ContactoDeEmergencia2_c\": \"" + nombre2 + "\",\r\n    " +
                                     "\"PersonDEO_ParentescoContactoEmergencia1_c\": \"" + parentesco1_crm + "\",\r\n    " +
                                     "\"PersonDEO_ParentescoContactoEmergencia2_c\": \"" + parentesco2_crm + "\",\r\n    " +
-                                    "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + telefono1 + "\",\r\n    " +
-                                    "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + telefono2 + "\",\r\n    " +
+                                    "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + codtelefono1.TrimEnd() +" "+ telefono1 + "\",\r\n    " +
+                                    "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + codtelefono2.TrimEnd() + " " + telefono2 + "\",\r\n    " +
                                     "\"PersonDEO_HospitalTraslado_c\": \"" + hospital + "\",\r\n    " +
                                     "\"PersonDEO_OtroHospital_c\": \"" + TxtOtroHospital.Text + "\",\r\n    " +
                                     "\"PersonDEO_ListaAlergias_c\": \"" + seleccionadosAlergia_CRM.Value + "\",\r\n    " +
@@ -4384,7 +4414,7 @@ namespace ReportesUnis
                                     log("Actualización en CRM", "Correcto", "La información se actualizo correctamente", "Actualización información de contacto en CRM");
                                     //ACTUALIZACION CONTACTOS DE EMERGENCIA EN CAMPUS
                                     if (!String.IsNullOrEmpty(nombre1) || !String.IsNullOrEmpty(nombre2))
-                                        resultados = ContactoEmergenciaCampus(nombre1, CE_parentesco1.Value, telefono1, PrincipalC1, nombre2, CE_parentesco2.Value, telefono2, PrincipalC2, txtNombreE1_Inicial.Value, txtNombreE2_Inicial.Value);
+                                        resultados = ContactoEmergenciaCampus(nombre1, CE_parentesco1.Value, telefono1, PrincipalC1, nombre2, CE_parentesco2.Value, telefono2, PrincipalC2, txtNombreE1_Inicial.Value, txtNombreE2_Inicial.Value, codtelefono1, codtelefono2);
                                     if (resultados == "0")
                                     {
 
@@ -4751,7 +4781,7 @@ namespace ReportesUnis
                 }
             }
 
-            if (CmbBusqueda.Text.Equals("Carnet"))
+            if (CmbBusqueda.Text.Equals("ID Campus"))
             {
                 LoadData();
                 ConsultarId(TxtBusqueda.Text);

@@ -269,12 +269,14 @@
                 <input type="hidden" id="CE_pais1" runat="server" />
                 <input type="hidden" id="CE_nroDocumento1" runat="server" />
                 <input type="hidden" id="CE_Principal1" runat="server" />
+                <input type="hidden" id="CE_CodArea1" runat="server" />
                 <input type="hidden" id="CE_parentesco2" runat="server" />
                 <input type="hidden" id="CE_nombre2" runat="server" />
                 <input type="hidden" id="CE_telefono2" runat="server" />
                 <input type="hidden" id="CE_pais2" runat="server" />
                 <input type="hidden" id="CE_nroDocumento2" runat="server" />
                 <input type="hidden" id="CE_Principal2" runat="server" />
+                <input type="hidden" id="CE_CodArea2" runat="server" />
 
                 <%-- DATOS INCIALES EMERGENCIAS--%>
                 <input type="hidden" id="EmplidAtencion" runat="server" />
@@ -787,6 +789,11 @@
                                                 <asp:TemplateField HeaderText="Nombre" ItemStyle-CssClass="nowrap">
                                                     <ItemTemplate>
                                                         <asp:TextBox ID="TxtNombreE" runat="server" Text='<%# Eval("Nombre") %>' MaxLength="50"></asp:TextBox>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>                                                
+                                                <asp:TemplateField HeaderText="Código de Área" ItemStyle-CssClass="nowrap">
+                                                    <ItemTemplate>
+                                                        <asp:TextBox ID="TxtCodTelE" runat="server" Text='<%# Eval("Codigo") %>' MaxLength="3"></asp:TextBox>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Teléfono" ItemStyle-CssClass="nowrap">
