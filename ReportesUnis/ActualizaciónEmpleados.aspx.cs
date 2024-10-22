@@ -23,6 +23,7 @@ using System.Security.Authentication;
 using Windows.Media.Protection.PlayReady;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Office.Word;
+using System.Web.Security;
 
 namespace ReportesUnis
 {
@@ -205,11 +206,12 @@ namespace ReportesUnis
                         txtNit.Enabled = true;
                     }
 
-                    if (String.IsNullOrEmpty(txtdPI.Text))
+                    if (String.IsNullOrEmpty(txtdPI.Text) || String.IsNullOrEmpty(txtFacultad.Text))
                     {
                         BtnActualizar.Visible = false;
-                        lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como empleados";
+                        lblActualizacion.Text = "El usuario utilizado no se encuentra registrado como empleado, favor de comunicarse con Gestión de Personal";
                         tabla.Visible = false;
+                        divActividad.Visible = false;
                     }
                 }
                 else
@@ -420,60 +422,69 @@ namespace ReportesUnis
             try
             {
                 int j = 0;
-                for (int i = 0; i < count;)
+                if (!result[0].Contains(txtdPI.Text))
                 {
-                    if (i == 0)
+                    for (int i = 0; i < count;)
                     {
-                        resultadoVista[j] = result[i];
-                        ControlRoles.Value = result[i];
-                    }
-                    else
-                    {
-                        resultadoVista[j] = result[i];
-                        ControlRoles.Value = ControlRoles.Value + " " + result[i];
-                    }
-                    i = i + 2;
-                    j++;
-                }
-
-                j = 0;
-                for (int i = 1; i < count;)
-                {
-                    if (i == 1)
-                    {
-                        if (result[i].Substring(0, 1) == "O" || result[i].Substring(0, 1) == "S" || result[i].Substring(0, 1) == "N")
+                        if (i == 0)
                         {
-                            resultadoValores[j] = (result[i].Substring(0, 1));
+                            resultadoVista[j] = result[i];
+                            ControlRoles.Value = result[i];
                         }
                         else
                         {
-                            resultadoValores[j] = result[i].Substring(0, 1);
+                            resultadoVista[j] = result[i];
+                            ControlRoles.Value = ControlRoles.Value + " " + result[i];
                         }
+                        i = i + 2;
+                        j++;
                     }
-                    else
+
+                    j = 0;
+                    for (int i = 1; i < count;)
                     {
-                        resultadoValores[j] = result[i];
+                        if (i == 1)
+                        {
+                            if (result[i].Substring(0, 1) == "O" || result[i].Substring(0, 1) == "S" || result[i].Substring(0, 1) == "N")
+                            {
+                                resultadoValores[j] = (result[i].Substring(0, 1));
+                            }
+                            else
+                            {
+                                resultadoValores[j] = result[i].Substring(0, 1);
+                            }
+                        }
+                        else
+                        {
+                            resultadoValores[j] = result[i];
+                        }
+                        i = i + 2;
+                        j++;
                     }
-                    i = i + 2;
-                    j++;
-                }
 
-                if (resultadoVista[0].ToString().Equals(""))
-                {
-                    resultadoVista[0] = "-";
-                    resultadoValores[0] = " ";
-                }
-                Dictionary<string, string> rolesDictionary = new Dictionary<string, string>();
-                for (int i = 0; i < largo; i++)
-                {
-                    rolesDictionary.Add(resultadoVista[i], resultadoValores[i]);
-                }
+                    if (resultadoVista[0].ToString().Equals(""))
+                    {
+                        resultadoVista[0] = "-";
+                        resultadoValores[0] = " ";
+                    }
+                    Dictionary<string, string> rolesDictionary = new Dictionary<string, string>();
+                    for (int i = 0; i < largo; i++)
+                    {
+                        rolesDictionary.Add(resultadoVista[i], resultadoValores[i]);
+                    }
 
-                // Enlazar el diccionario al DropDownList
-                CmbRoles.DataSource = rolesDictionary;
-                CmbRoles.DataTextField = "Key";       // La propiedad "Key" del diccionario se utilizará para mostrar la información
-                CmbRoles.DataValueField = "Value";    // La propiedad "Value" del diccionario se utilizará como valor interno
-                CmbRoles.DataBind();
+                    // Enlazar el diccionario al DropDownList
+                    CmbRoles.DataSource = rolesDictionary;
+                    CmbRoles.DataTextField = "Key";       // La propiedad "Key" del diccionario se utilizará para mostrar la información
+                    CmbRoles.DataValueField = "Value";    // La propiedad "Value" del diccionario se utilizará como valor interno
+                    CmbRoles.DataBind();
+                }
+                else
+                {
+                    CmbRoles.DataSource = "-";
+                    CmbRoles.DataTextField = "-";
+                    CmbRoles.DataValueField = "-";
+                }
             }
             catch (Exception)
             {
@@ -495,12 +506,19 @@ namespace ReportesUnis
         {
             aux = 7;
             string[] result = sustituirCaracteres().Split('|');
-            try
-            {
-                txtPuesto.Text = result[0];
-                txtFacultad.Text = result[1];
+            if (!result[0].Contains("DPI")) {
+                try
+                {
+                    txtPuesto.Text = result[0];
+                    txtFacultad.Text = result[1];
+                }
+                catch (Exception)
+                {
+                    txtPuesto.Text = "";
+                    txtFacultad.Text = "";
+                }
             }
-            catch (Exception)
+            else
             {
                 txtPuesto.Text = "";
                 txtFacultad.Text = "";
