@@ -49,6 +49,15 @@ namespace ReportesUnis
                     //RepCamarasEmp.Visible = respuesta.Contains(RepCamarasEmp.ValidationGroup); DESCOMENTAR EN LA FASE 2
                 }
 
+                if (respuesta.Contains("RLI_VistaAdmisiones"))
+                {
+                    ActualizacionGeneralEstudiantes.Visible = true;
+                }
+                else
+                {
+                    ActualizacionGeneralEstudiantes.Visible = respuesta.Contains(ActualizacionGeneralEstudiantes.ValidationGroup);
+                }
+
                 if (respuesta.Contains("ACCESO_CARNETIZACION"))
                 {
                     MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = GestionesEmpleados.Visible = ConfirmacionEmpleados.Visible = AccesosFacultad.Visible = true;

@@ -2996,7 +2996,14 @@ namespace ReportesUnis
                     EliminarAlmacenada();
                     mensaje = "Error";
                     log("ERROR - Error en la funcion IngresoDatos: " + X.Message);
-                    File.Delete(txtPath.Text + txtCarne.Text + ".jpg");
+                    try
+                    {
+                        File.Delete(txtPath.Text + txtCarne.Text + ".jpg");
+                    }
+                    catch (Exception)
+                    {
+                        log("ERROR - No se almaceno la fotografía de manera correcta");
+                    }
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModalError", "mostrarModalError();", true);
                 }
 
@@ -3618,7 +3625,7 @@ namespace ReportesUnis
                 using (OracleCommand cmd = new OracleCommand())
                 {
                     cmd.Connection = con;
-                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + txtCarne.Text + "','" + ErrorLog + "','ACTUALIZACION EMPLEADOS',SYSDATE)";
+                    cmd.CommandText = "INSERT INTO UNIS_INTERFACES.TBL_LOG_CARNE (CARNET, MESSAGE, PANTALLA, FECHA_REGISTRO) VALUES ('" + txtCarne.Text + "','" + ErrorLog.Replace('\'',' ') + "','ACTUALIZACION EMPLEADOS',SYSDATE)";
                     cmd.ExecuteNonQuery();
                     if (txtControlBit.Text == "0" && !txtInsertBit.Text.IsNullOrWhiteSpace())
                     {
