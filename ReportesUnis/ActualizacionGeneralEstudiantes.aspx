@@ -1762,6 +1762,155 @@
             });
         });
 
+        //VALIDACION CARACTERES EN NOMBRE
+        $(document).ready(function () {
+            $('#<%= txtNombre.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+                var valorActual = $(this).val();
+
+                // No permitir espacio al principio
+                if (valorActual === '' && character === ' ') {
+                    event.preventDefault();
+                }
+
+                // No permitir más de un espacio entre palabras
+                if (valorActual.length > 0 && valorActual[valorActual.length - 1] === ' ' && character === ' ') {
+                    event.preventDefault();
+                }
+            });
+
+            // Eliminar espacio al final al perder el foco
+            $('#<%= txtNombre.ClientID %>').on('blur', function () {
+                var valorActual = $(this).val();
+                $(this).val(valorActual.trim());
+            });
+        });
+
+        //VALIDACION CARACTERES EN APELLIDO
+        $(document).ready(function () {
+            $('#<%= txtApellido.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+                var valorActual = $(this).val();
+
+                // No permitir espacio al principio
+                if (valorActual === '' && character === ' ') {
+                    event.preventDefault();
+                }
+
+                // No permitir más de un espacio entre palabras
+                if (valorActual.length > 0 && valorActual[valorActual.length - 1] === ' ' && character === ' ') {
+                    event.preventDefault();
+                }
+            });
+
+            // Eliminar espacio al final al perder el foco
+            $('#<%= txtApellido.ClientID %>').on('blur', function () {
+                var valorActual = $(this).val();
+                $(this).val(valorActual.trim());
+            });
+        });
+
+        //VALIDACION CARACTERES EN APELLIDO DE CASADA
+        $(document).ready(function () {
+            $('#<%= txtCasada.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+                var valorActual = $(this).val();
+
+                // No permitir espacio al principio
+                if (valorActual === '' && character === ' ') {
+                    event.preventDefault();
+                }
+
+                // No permitir más de un espacio entre palabras
+                if (valorActual.length > 0 && valorActual[valorActual.length - 1] === ' ' && character === ' ') {
+                    event.preventDefault();
+                }
+            });
+
+            // Eliminar espacio al final al perder el foco
+            $('#<%= txtCasada.ClientID %>').on('blur', function () {
+                var valorActual = $(this).val();
+                $(this).val(valorActual.trim());
+            });
+        });
+
+        //VALIDACION CARACTERES EN NOMBRE 1 DEL RECIBO
+        $(document).ready(function () {
+            $('#<%= TxtNombreR.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+                var valorActual = $(this).val();
+
+                // No permitir espacio al principio
+                if (valorActual === '' && character === ' ') {
+                    event.preventDefault();
+                }
+
+                // No permitir más de un espacio entre palabras
+                if (valorActual.length > 0 && valorActual[valorActual.length - 1] === ' ' && character === ' ') {
+                    event.preventDefault();
+                }
+            });
+
+            // Eliminar espacio al final al perder el foco
+            $('#<%= TxtNombreR.ClientID %>').on('blur', function () {
+                var valorActual = $(this).val();
+                $(this).val(valorActual.trim());
+            });
+        });
+
+        //VALIDACION CARACTERES EN NOMBRE 2 DEL RECIBO
+        $(document).ready(function () {
+            $('#<%= TxtApellidoR.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+                var valorActual = $(this).val();
+
+                // No permitir espacio al principio
+                if (valorActual === '' && character === ' ') {
+                    event.preventDefault();
+                }
+
+                // No permitir más de un espacio entre palabras
+                if (valorActual.length > 0 && valorActual[valorActual.length - 1] === ' ' && character === ' ') {
+                    event.preventDefault();
+                }
+            });
+
+            // Eliminar espacio al final al perder el foco
+            $('#<%= TxtApellidoR.ClientID %>').on('blur', function () {
+                var valorActual = $(this).val();
+                $(this).val(valorActual.trim());
+            });
+        });
+
+        //VALIDACION CARACTERES EN NOMBRE 3 DEL RECIBO
+        $(document).ready(function () {
+            $('#<%= TxtCasadaR.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+                var valorActual = $(this).val();
+
+                // No permitir espacio al principio
+                if (valorActual === '' && character === ' ') {
+                    event.preventDefault();
+                }
+
+                // No permitir más de un espacio entre palabras
+                if (valorActual.length > 0 && valorActual[valorActual.length - 1] === ' ' && character === ' ') {
+                    event.preventDefault();
+                }
+            });
+
+            // Eliminar espacio al final al perder el foco
+            $('#<%= TxtCasadaR.ClientID %>').on('blur', function () {
+                var valorActual = $(this).val();
+                $(this).val(valorActual.trim());
+            });
+        });
 
 
         function mostrarModalEspera() {
