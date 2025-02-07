@@ -418,6 +418,7 @@
                                         <asp:Label runat="server" Font-Bold="true">Apellido de casada:</asp:Label>
                                         <br />
                                         <asp:TextBox ID="txtCasada" runat="server" Enabled="true" MaxLength="30" Width="275px" CssClass="form-control"></asp:TextBox>
+                                        <asp:Label runat="server" Font-Bold="true" Font-Size="X-Small">La preposición De será agregada en automático</asp:Label>
                                         <br />
                                     </div>
 
@@ -1787,6 +1788,29 @@
             });
         });
 
+        //VALIDACION DE PROPOSICIONES DE PALABRAS EN NOMBRES
+        $(document).ready(function () {
+            $('#<%= txtNombre.ClientID %>').on('blur', function () {
+                var valorActual = $(this).val().toLowerCase();
+                var palabras = valorActual.split(' ');
+                var resultado = '';
+
+                for (var i = 0; i < palabras.length; i++) {
+                    if (palabras[i] === 'de' || palabras[i] === 'del' || palabras[i] === 'los' || palabras[i] === 'la') {
+                        if (i > 0 && i < palabras.length - 1) {
+                            resultado += palabras[i] + ' ';
+                        } else {
+                            resultado += palabras[i] + ' ';
+                        }
+                    } else {
+                        resultado += palabras[i].charAt(0).toUpperCase() + palabras[i].slice(1) + ' ';
+                    }
+                }
+
+                $(this).val(resultado.trim());
+            });
+        });
+
         //VALIDACION CARACTERES EN APELLIDO
         $(document).ready(function () {
             $('#<%= txtApellido.ClientID %>').on('keypress', function (event) {
@@ -1812,6 +1836,27 @@
             });
         });
 
+        //VALIDACION DE PROPOSICIONES DE PALABRAS EN APELLIDOS
+        $(document).ready(function () {
+            $('#<%= txtApellido.ClientID %>').on('blur', function () {
+                var valorActual = $(this).val().toLowerCase();
+                var palabras = valorActual.split(' ');
+                var resultado = '';
+
+                for (var i = 0; i < palabras.length; i++) {
+                    if (i === 0 && (palabras[i] === 'de' || palabras[i] === 'del' || palabras[i] === 'la' || palabras[i] === 'los')) {
+                        resultado += palabras[i].charAt(0).toUpperCase() + palabras[i].slice(1) + ' ';
+                    } else if (palabras[i] === 'de' || palabras[i] === 'del' || palabras[i] === 'la' || palabras[i] === 'los') {
+                        resultado += palabras[i] + ' ';
+                    } else {
+                        resultado += palabras[i].charAt(0).toUpperCase() + palabras[i].slice(1) + ' ';
+                    }
+                }
+
+                $(this).val(resultado.trim());
+            });
+        });
+
         //VALIDACION CARACTERES EN APELLIDO DE CASADA
         $(document).ready(function () {
             $('#<%= txtCasada.ClientID %>').on('keypress', function (event) {
@@ -1834,6 +1879,32 @@
             $('#<%= txtCasada.ClientID %>').on('blur', function () {
                 var valorActual = $(this).val();
                 $(this).val(valorActual.trim());
+            });
+        });
+
+
+        //VALIDACION DE PROPOSICIONES DE PALABRAS EN APELLIDO DE CASADA
+        $(document).ready(function () {
+            $('#<%= txtCasada.ClientID %>').on('blur', function () {
+                var valorActual = $(this).val().toLowerCase();
+                var palabras = valorActual.split(' ');
+                var resultado = '';
+
+                resultado += 'de ';
+
+                for (var i = 0; i < palabras.length; i++) {
+                    if (palabras[i] === 'los' || palabras[i] === 'la') {
+                        if (i > 0 && i < palabras.length - 1) {
+                            resultado += palabras[i] + ' ';
+                        } else {
+                            resultado += palabras[i] + ' ';
+                        }
+                    } else {
+                        resultado += palabras[i].charAt(0).toUpperCase() + palabras[i].slice(1) + ' ';
+                    }
+                }
+
+                $(this).val(resultado.trim());
             });
         });
 
@@ -1909,6 +1980,32 @@
             $('#<%= TxtCasadaR.ClientID %>').on('blur', function () {
                 var valorActual = $(this).val();
                 $(this).val(valorActual.trim());
+            });
+        });
+
+        //VALIDACION CARACTERES EN NIT
+
+        $(document).ready(function () {
+            $('#<%= txtNit.ClientID %>').on('keypress', function (event) {
+                var keyCode = event.which || event.keyCode;
+                var character = String.fromCharCode(keyCode);
+                var valorActual = $(this).val();
+
+                // No permitir espacio al principio
+                if (valorActual === '' && character === ' ') {
+                    event.preventDefault();
+                }
+
+                // No permitir espacios en general
+                if (character === ' ') {
+                    event.preventDefault();
+                }
+            });
+
+            // Eliminar espacio al final al perder el foco
+            $('#<%= txtNit.ClientID %>').on('blur', function () {
+                var valorActual = $(this).val();
+                $(this).val(valorActual.replace(/\s+/g, ''));
             });
         });
 
