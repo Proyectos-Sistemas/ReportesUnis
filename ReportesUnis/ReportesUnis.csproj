@@ -420,8 +420,6 @@
     <Content Include="ActualizacionEstudiantes.aspx" />
     <Content Include="ActualizacionGeneralEstudiantes.aspx" />
     <Content Include="ActualizaciónEmpleados.aspx" />
-    <Content Include="Emails\ActualizacionGeneral\bodyCambioDocumentoIdentificacion.txt" />
-    <Content Include="Emails\ActualizacionGeneral\datosCambioDocumentoIdentificacion.txt" />
     <Content Include="Tabs.aspx" />
     <Content Include="VersionesCampus.txt" />
     <Content Include="ConfirmacionDeFotografias.aspx" />
@@ -437,31 +435,6 @@
     <Content Include="CredencialesNIT.txt" />
     <Content Include="Default.aspx" />
     <Content Include="DirectorioUnis.aspx" />
-    <Content Include="Emails\bodyConfirmacionEmpleados.txt" />
-    <Content Include="Emails\bodyConfirmacionFotoEmpleados.txt" />
-    <Content Include="Emails\bodyIngresoEmpleados-Operador.txt" />
-    <Content Include="Emails\bodyIngresoEmpleados.txt" />
-    <Content Include="Emails\bodyRechazoEmpleados.txt" />
-    <Content Include="Emails\bodyRechazoFotoEmpleados.txt" />
-    <Content Include="Emails\Credenciales.txt" />
-    <Content Include="Emails\datosConfirmacionEmpleados.txt" />
-    <Content Include="Emails\datosConfirmacionFotoEmpleados.txt" />
-    <Content Include="Emails\datosIngresoEmpleados-Operador.txt" />
-    <Content Include="Emails\datosIngresoEmpleados.txt" />
-    <Content Include="Emails\datosRechazoEmpleados.txt" />
-    <Content Include="Emails\datosRechazoFotoEmpleados.txt" />
-    <Content Include="Emails\Estudiantes\bodyConfirmacionEstudiante.txt" />
-    <Content Include="Emails\Estudiantes\bodyConfirmacionFotoEstudiante.txt" />
-    <Content Include="Emails\Estudiantes\bodyIngresoEstudiante-Operador.txt" />
-    <Content Include="Emails\Estudiantes\bodyIngresoEstudiante.txt" />
-    <Content Include="Emails\Estudiantes\bodyRechazoEstudiante.txt" />
-    <Content Include="Emails\Estudiantes\bodyRechazoFotoEstudiante.txt" />
-    <Content Include="Emails\Estudiantes\datosConfirmacionEstudiante.txt" />
-    <Content Include="Emails\Estudiantes\datosConfirmacionFotoEstudiante.txt" />
-    <Content Include="Emails\Estudiantes\datosIngresoEstudiante-Operador.txt" />
-    <Content Include="Emails\Estudiantes\datosIngresoEstudiante.txt" />
-    <Content Include="Emails\Estudiantes\datosRechazoEstudiante.txt" />
-    <Content Include="Emails\Estudiantes\datosRechazoFotoEstudiante.txt" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -482,6 +455,7 @@
     <Content Include="DataSet1.xsc">
       <DependentUpon>DataSet1.xsd</DependentUpon>
     </Content>
+    <Content Include="Web.config" />
     <None Include="DataSet1.xsd" />
     <Content Include="DataSet1.xss">
       <DependentUpon>DataSet1.xsd</DependentUpon>
@@ -592,7 +566,6 @@
     <Content Include="urlApex.txt" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Bundle.config" />
-    <Content Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

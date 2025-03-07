@@ -4392,8 +4392,8 @@ namespace ReportesUnis
                                     "\"PersonDEO_ContactoDeEmergencia2_c\": \"" + nombre2 + "\",\r\n    " +
                                     "\"PersonDEO_ParentescoContactoEmergencia1_c\": \"" + parentesco1_crm + "\",\r\n    " +
                                     "\"PersonDEO_ParentescoContactoEmergencia2_c\": \"" + parentesco2_crm + "\",\r\n    " +
-                                    "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + (codtelefono1.Trim() +" "+ telefono1).Trim() + "\",\r\n    " +
-                                    "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + (codtelefono2.Trim() + " " + telefono2).Trim() + "\",\r\n    " +
+                                    "\"PersonDEO_TelefonoContactoEmergencia1_c\": \"" + (codtelefono1.Trim() + telefono1).Trim() + "\",\r\n    " +
+                                    "\"PersonDEO_TelefonoContactoEmergencia2_c\": \"" + (codtelefono2.Trim() + telefono2).Trim() + "\",\r\n    " +
                                     "\"PersonDEO_HospitalTraslado_c\": \"" + hospital + "\",\r\n    " +
                                     "\"PersonDEO_OtroHospital_c\": \"" + TxtOtroHospital.Text + "\",\r\n    " +
                                     "\"PersonDEO_ListaAlergias_c\": \"" + seleccionadosAlergia_CRM.Value + "\",\r\n    " +
