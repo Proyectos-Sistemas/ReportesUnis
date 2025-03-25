@@ -4295,10 +4295,24 @@ namespace ReportesUnis
                             {
                                 //ACTUALIZACION EN CRM
                                 LimpiarVariables();
-                                if (!String.IsNullOrEmpty(DOCUMENTO1_INICIAL.Value))
-                                    getInfo = ConsultaGet(DOCUMENTO1_INICIAL.Value);
+
+                                if (!String.IsNullOrEmpty(txtCarne.Text))
+                                {
+                                    getInfo = ConsultaID(txtCarne.Text); // Método Nuevo
+                                }
+                                
+                                //Si txtEmplid está vacío, intentar con documentos
                                 else
-                                    getInfo = ConsultaGet(DOCUMENTO2_INCIAL.Value);
+                                {
+                                    if (!String.IsNullOrEmpty(DOCUMENTO1_INICIAL.Value))
+                                    {
+                                        getInfo = ConsultaGet(DOCUMENTO1_INICIAL.Value);
+                                    }
+                                    else
+                                    {
+                                        getInfo = ConsultaGet(DOCUMENTO2_INCIAL?.Value ?? "");
+                                    }
+                                }
                                 
                                 PartyNumber = GetBetween(getInfo, "PartyNumber\" : \"", "\",");
                                 
@@ -5211,6 +5225,17 @@ namespace ReportesUnis
             var pass = Variables.wsPassword;
             var dtFechaBuscarPersona = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             string respuesta = api.Get(vchrUrlWS + "/crmRestApi/resources/11.13.18.05/contacts/?q=TaxpayerIdentificationNumber='" + identificacion + "'", user, pass);
+            return respuesta;
+        }
+
+        private string ConsultaID(string identificacion)
+        {
+            CredencialesWS_CRM(archivoWS);
+            var vchrUrlWS = Variables.wsUrl;
+            var user = Variables.wsUsuario;
+            var pass = Variables.wsPassword;
+            var dtFechaBuscarPersona = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+            string respuesta = api.Get(vchrUrlWS + "/crmRestApi/resources/11.13.18.05/contacts/?q=PersonDEO_IDCampus_c='" + identificacion + "'", user, pass);
             return respuesta;
         }
 
