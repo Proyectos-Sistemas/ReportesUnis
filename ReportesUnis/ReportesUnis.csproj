@@ -48,14 +48,14 @@
     <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
       <HintPath>..\packages\AForge.2.2.5\lib\AForge.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
-      <HintPath>..\packages\AForge.Video.2.2.5\lib\AForge.Video.dll</HintPath>
-    </Reference>
-    <Reference Include="AForge.Video.DirectShow, Version=2.2.5.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL">
-      <HintPath>..\packages\AForge.Video.DirectShow.2.2.5\lib\AForge.Video.DirectShow.dll</HintPath>
+    <Reference Include="AspNet.ScriptManager.jQuery, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AspNet.ScriptManager.jQuery.3.1.1\lib\net45\AspNet.ScriptManager.jQuery.dll</HintPath>
     </Reference>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>..\packages\Portable.BouncyCastle.1.8.9\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.Cryptography.2.2.1\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.12.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.12.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
@@ -71,6 +71,9 @@
     </Reference>
     <Reference Include="LoginAD">
       <HintPath>..\..\..\..\..\Visual Studio 2015\Projects\2019-02-28Projects VS2013(ACALIPC)\Projects\LoginAD\LoginAD\bin\Debug\LoginAD.dll</HintPath>
+    </Reference>
+    <Reference Include="MailKit, Version=4.3.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
+      <HintPath>..\packages\MailKit.4.3.0\lib\net47\MailKit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Cors, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Cors.2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Cors.dll</HintPath>
@@ -101,6 +104,9 @@
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Build.Framework, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Build.Framework.17.7.2\lib\net472\Microsoft.Build.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Extensions.Configuration, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
@@ -179,6 +185,13 @@
     <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.1016.290\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Setup.Configuration.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\lib\net35\Microsoft.VisualStudio.Setup.Configuration.Interop.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="MimeKit, Version=4.3.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeKit.4.3.0\lib\net47\MimeKit.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -224,6 +237,9 @@
     <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Drawing.Common.5.0.0\lib\net461\System.Drawing.Common.dll</HintPath>
     </Reference>
+    <Reference Include="System.Formats.Asn1, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Formats.Asn1.7.0.0\lib\net462\System.Formats.Asn1.dll</HintPath>
+    </Reference>
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Services" />
     <Reference Include="System.IO.Compression" />
@@ -235,8 +251,8 @@
     <Reference Include="System.IO.Packaging, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Packaging.4.6.0\lib\net46\System.IO.Packaging.dll</HintPath>
     </Reference>
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -252,6 +268,7 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Security" />
     <Reference Include="System.Text.Encodings.Web, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.6.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
@@ -292,9 +309,6 @@
     </Reference>
     <Reference Include="AspNet.ScriptManager.bootstrap">
       <HintPath>..\packages\AspNet.ScriptManager.bootstrap.3.4.1\lib\net45\AspNet.ScriptManager.bootstrap.dll</HintPath>
-    </Reference>
-    <Reference Include="AspNet.ScriptManager.jQuery">
-      <HintPath>..\packages\AspNet.ScriptManager.jQuery.3.3.1\lib\net45\AspNet.ScriptManager.jQuery.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ScriptManager.MSAjax">
       <HintPath>..\packages\Microsoft.AspNet.ScriptManager.MSAjax.5.0.0\lib\net45\Microsoft.ScriptManager.MSAjax.dll</HintPath>
@@ -401,14 +415,50 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="AccesosFacultad_ActulizacionGeneral.aspx" />
     <Content Include="Account\SignOut.aspx" />
     <Content Include="ActualizacionEstudiantes.aspx" />
+    <Content Include="ActualizacionGeneralEstudiantes.aspx" />
     <Content Include="ActualizaciónEmpleados.aspx" />
+    <Content Include="bin\ReportesUnis.dll" />
+    <Content Include="bin\ReportesUnis.pdb" />
+    <Content Include="BusquedaModal.aspx" />
     <Content Include="CapturaFoto.aspx" />
     <Content Include="Cargarfotografia.aspx" />
     <Content Include="CargarFotografiaEmpleados.aspx" />
+    <Content Include="ComboDinamicoaspx.aspx" />
     <Content Include="conexion.txt" />
     <Content Include="conexionSQL.txt" />
+    <Content Include="Emails\ActualizacionGeneral\bodyCambioDocumentoIdentificacion.txt" />
+    <Content Include="Emails\ActualizacionGeneral\datosCambioDocumentoIdentificacion.txt" />
+    <Content Include="Emails\bodyConfirmacionEmpleados.txt" />
+    <Content Include="Emails\bodyConfirmacionFotoEmpleados.txt" />
+    <Content Include="Emails\bodyIngresoEmpleados-Operador.txt" />
+    <Content Include="Emails\bodyIngresoEmpleados.txt" />
+    <Content Include="Emails\bodyRechazoEmpleados.txt" />
+    <Content Include="Emails\bodyRechazoFotoEmpleados.txt" />
+    <Content Include="Emails\Credenciales.txt" />
+    <Content Include="Emails\datosConfirmacionEmpleados.txt" />
+    <Content Include="Emails\datosConfirmacionFotoEmpleados.txt" />
+    <Content Include="Emails\datosIngresoEmpleados-Operador.txt" />
+    <Content Include="Emails\datosIngresoEmpleados.txt" />
+    <Content Include="Emails\datosRechazoEmpleados.txt" />
+    <Content Include="Emails\datosRechazoFotoEmpleados.txt" />
+    <Content Include="Emails\Estudiantes\bodyConfirmacionEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\bodyConfirmacionFotoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\bodyIngresoEstudiante-Operador.txt" />
+    <Content Include="Emails\Estudiantes\bodyIngresoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\bodyRechazoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\bodyRechazoFotoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\datosConfirmacionEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\datosConfirmacionFotoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\datosIngresoEstudiante-Operador.txt" />
+    <Content Include="Emails\Estudiantes\datosIngresoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\datosRechazoEstudiante.txt" />
+    <Content Include="Emails\Estudiantes\datosRechazoFotoEstudiante.txt" />
+    <Content Include="IM.txt" />
+    <Content Include="Tabs.aspx" />
+    <Content Include="VersionesCampus.txt" />
     <Content Include="ConfirmacionDeFotografias.aspx" />
     <Content Include="ConfirmacionDeFotografiasEmpleados.aspx" />
     <Content Include="ConfirmaciónCarneEmpleados.aspx" />
@@ -421,19 +471,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="CredencialesNIT.txt" />
     <Content Include="Default.aspx" />
-    <Content Include="Emails\bodyConfirmacionEmpleados.txt" />
-    <Content Include="Emails\bodyConfirmacionFotoEmpleados.txt" />
-    <Content Include="Emails\bodyIngresoEmpleados-Operador.txt" />
-    <Content Include="Emails\bodyIngresoEmpleados.txt" />
-    <Content Include="Emails\bodyRechazoEmpleados.txt" />
-    <Content Include="Emails\bodyRechazoFotoEmpleados.txt" />
-    <Content Include="Emails\datosConfirmacionEmpleados.txt" />
-    <Content Include="Emails\datosConfirmacionFotoEmpleados.txt" />
-    <Content Include="Emails\datosIngresoEmpleados-Operador.txt" />
-    <Content Include="Emails\datosIngresoEmpleados.txt" />
-    <Content Include="Emails\datosRechazoEmpleados.txt" />
-    <Content Include="Emails\datosRechazoFotoEmpleados.txt" />
-    <Content Include="EnvioEmail.aspx" />
+    <Content Include="DirectorioUnis.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -451,13 +489,14 @@
     <Content Include="DataSetLocalRpt.xsc">
       <DependentUpon>DataSetLocalRpt.xsd</DependentUpon>
     </Content>
-    <Content Include="conf.dat" />
-    <Content Include="Config.dat" />
-    <Content Include="ConfigWS.dat" />
     <Content Include="DataSet1.xsc">
       <DependentUpon>DataSet1.xsd</DependentUpon>
     </Content>
+    <Content Include="Web.config" />
+    <Content Include="conf.dat" />
+    <Content Include="Config.dat" />
     <Content Include="ConfigCampus.dat" />
+    <Content Include="ConfigWS.dat" />
     <None Include="DataSet1.xsd" />
     <Content Include="DataSet1.xss">
       <DependentUpon>DataSet1.xsd</DependentUpon>
@@ -495,38 +534,35 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="PathAlmacenamiento.txt" />
-    <Content Include="PathConfirmacionEmpleados.txt" />
     <Content Include="PathConfirmacion.txt" />
-    <Content Include="Recursos\LogoCorreos.png" />
-    <Content Include="ReportesCT\Reporte Camara Termica Empleados 28 11 2022 11_49_37 a.xlsx" />
-    <Content Include="ReportesCT\Reporte Camara Termica Estudiantes13 12 2022 03_32_16 p.xlsx" />
-    <Content Include="ReportesCT\Reporte Camara Termica Estudiantes13 12 2022 03_34_03 p.xlsx" />
-    <Content Include="ReportesCT\Reporte Camara Termica Estudiantes28 11 2022 11_46_33 a.xlsx" />
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="PathConfirmacionEmpleados.txt" />
+    <Content Include="PruebaControlPermisos.aspx" />
     <Content Include="HistoricoCXC.aspx" />
     <Content Include="HistoricoCXP.aspx" />
     <Content Include="HistoricoGL.aspx" />
     <Content Include="HistoricoHCM.aspx" />
-    <Content Include="Imagenes\Fotos\00000000005.jpg" />
-    <Content Include="Imagenes\Fotos\00000000987.jpg" />
     <Content Include="LogInterfazCC.aspx" />
     <Content Include="LogInterfazHCMCS.aspx" />
     <Content Include="LogSerbipagos.aspx" />
     <Content Include="MantenimientoPantallas.aspx" />
-    <Content Include="MyFolder\300000006712889 %281%29.jpg" />
-    <Content Include="MyFolder\300000006712889 %282%29.jpg" />
-    <Content Include="MyFolder\300000006712889 %283%29.jpg" />
     <Content Include="ReporteCamarasTermicas.aspx" />
     <Content Include="ReporteCamarasTermicasEmpleados.aspx" />
     <Content Include="ReporteEmpleados.aspx" />
     <Content Include="ReporteEstudiantes.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.min.js" />
+    <Content Include="Scripts\dataTables\dataTables.bootstrap4.min.js" />
+    <Content Include="Scripts\dataTables\dataTables.fixedColumns.min.js" />
+    <Content Include="Scripts\dataTables\jquery.dataTables.min.js" />
+    <Content Include="Scripts\jquery-3.1.1.js" />
+    <Content Include="Scripts\jquery-3.1.1.min.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
+    <Content Include="Scripts\jquery\jquery-3.3.1.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\UNIS\Unis.js" />
     <Content Include="Scripts\WebForms\DetailsView.js" />
     <Content Include="Scripts\WebForms\Focus.js" />
     <Content Include="Scripts\WebForms\GridView.js" />
@@ -570,10 +606,23 @@
     <Content Include="UnificacionActualización.aspx" />
     <Content Include="urlApex.txt" />
     <Content Include="ViewSwitcher.ascx" />
-    <Content Include="Web.config" />
     <Content Include="Bundle.config" />
+    <Content Include="Web.config.backup.1" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccesosFacultad_ActulizacionGeneral.aspx.cs">
+      <DependentUpon>AccesosFacultad_ActulizacionGeneral.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AccesosFacultad_ActulizacionGeneral.aspx.designer.cs">
+      <DependentUpon>AccesosFacultad_ActulizacionGeneral.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Account\SignOut.aspx.cs">
       <DependentUpon>SignOut.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -587,6 +636,13 @@
     </Compile>
     <Compile Include="ActualizacionEstudiantes.aspx.designer.cs">
       <DependentUpon>ActualizacionEstudiantes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ActualizacionGeneralEstudiantes.aspx.cs">
+      <DependentUpon>ActualizacionGeneralEstudiantes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ActualizacionGeneralEstudiantes.aspx.designer.cs">
+      <DependentUpon>ActualizacionGeneralEstudiantes.aspx</DependentUpon>
     </Compile>
     <Compile Include="ActualizaciónEmpleados.aspx.cs">
       <DependentUpon>ActualizaciónEmpleados.aspx</DependentUpon>
@@ -606,6 +662,13 @@
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\StartupAuth.cs" />
+    <Compile Include="BusquedaModal.aspx.cs">
+      <DependentUpon>BusquedaModal.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BusquedaModal.aspx.designer.cs">
+      <DependentUpon>BusquedaModal.aspx</DependentUpon>
+    </Compile>
     <Compile Include="CapturaFoto.aspx.cs">
       <DependentUpon>CapturaFoto.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -626,6 +689,13 @@
     </Compile>
     <Compile Include="CargarFotografiaEmpleados.aspx.designer.cs">
       <DependentUpon>CargarFotografiaEmpleados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ComboDinamicoaspx.aspx.cs">
+      <DependentUpon>ComboDinamicoaspx.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ComboDinamicoaspx.aspx.designer.cs">
+      <DependentUpon>ComboDinamicoaspx.aspx</DependentUpon>
     </Compile>
     <Compile Include="ConfirmacionDeFotografias.aspx.cs">
       <DependentUpon>ConfirmacionDeFotografias.aspx</DependentUpon>
@@ -684,12 +754,12 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="EnvioEmail.aspx.cs">
-      <DependentUpon>EnvioEmail.aspx</DependentUpon>
+    <Compile Include="DirectorioUnis.aspx.cs">
+      <DependentUpon>DirectorioUnis.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="EnvioEmail.aspx.designer.cs">
-      <DependentUpon>EnvioEmail.aspx</DependentUpon>
+    <Compile Include="DirectorioUnis.aspx.designer.cs">
+      <DependentUpon>DirectorioUnis.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -751,7 +821,16 @@
       <DependentUpon>MantenimientoPantallas.aspx</DependentUpon>
     </Compile>
     <Compile Include="Models\Modelos.cs" />
+    <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
+    <Compile Include="obj\Release\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PruebaControlPermisos.aspx.cs">
+      <DependentUpon>PruebaControlPermisos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PruebaControlPermisos.aspx.designer.cs">
+      <DependentUpon>PruebaControlPermisos.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ReporteCamarasTermicas.aspx.cs">
       <DependentUpon>ReporteCamarasTermicas.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -796,6 +875,13 @@
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Tabs.aspx.cs">
+      <DependentUpon>Tabs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tabs.aspx.designer.cs">
+      <DependentUpon>Tabs.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UnificacionActualización.aspx.cs">
       <DependentUpon>UnificacionActualización.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -816,23 +902,29 @@
     <Folder Include="App_Data\" />
     <Folder Include="CapturedImages\" />
     <Folder Include="Files\" />
+    <Folder Include="Imagenes\" />
+    <Folder Include="Logs\" />
+    <Folder Include="MyFolder\" />
+    <Folder Include="ReportesCT\" />
     <Folder Include="Usuarios\DPI\" />
-    <Folder Include="Usuarios\FotosConfirmacion\" />
-    <Folder Include="Usuarios\Fotos\" />
-    <Folder Include="Usuarios\UltimasCargas\" />
+    <Folder Include="Usuarios\FotosColaboradores\" />
+    <Folder Include="Usuarios\FotosConfirmacion\ACTUALIZACION-AC\" />
+    <Folder Include="Usuarios\FotosConfirmacion\PRIMER_CARNET-PC\" />
+    <Folder Include="Usuarios\FotosConfirmacion\RENOVACION_CARNE-RC\" />
+    <Folder Include="Usuarios\Fotos\ACTUALIZACION-AC\" />
+    <Folder Include="Usuarios\Fotos\PRIMER_CARNET-PC\" />
+    <Folder Include="Usuarios\Fotos\RENOVACION_CARNE-RC\" />
+    <Folder Include="Usuarios\UltimasCargas\ACTUALIZACION-AC\" />
+    <Folder Include="Usuarios\UltimasCargas\CONTROL\" />
+    <Folder Include="Usuarios\UltimasCargas\PRIMER_CARNET-PC\" />
+    <Folder Include="Usuarios\UltimasCargas\RENOVACION_CARNE-RC\" />
     <Folder Include="Zips\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
     <Content Include="Site.Mobile.Master" />
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
+    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="rptLogInterfazCC.rdlc" />
@@ -870,9 +962,11 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets'))" />
     <Error Condition="!Exists('..\packages\Uno.SourceGenerationTasks.4.1.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Uno.SourceGenerationTasks.4.1.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\build\Microsoft.VisualStudio.Setup.Configuration.Interop.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\build\Microsoft.VisualStudio.Setup.Configuration.Interop.targets'))" />
   </Target>
   <Import Project="..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" />
   <Import Project="..\packages\Uno.SourceGenerationTasks.4.1.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets" Condition="Exists('..\packages\Uno.SourceGenerationTasks.4.1.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" />
+  <Import Project="..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\build\Microsoft.VisualStudio.Setup.Configuration.Interop.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\build\Microsoft.VisualStudio.Setup.Configuration.Interop.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -85,10 +85,10 @@ namespace ReportesUnis
 
         private string consultaGetworkers(string expand, int cantidad, string personId)
         {
+            credencialesWS(archivoWS, "Consultar");
             string consulta = consultaUser("nationalIdentifiers", personId);
             if (cantidad >= 0)
                 consulta = consulta.Substring(0, cantidad);
-            credencialesWS(archivoWS, "Consultar");
             var vchrUrlWS = Variables.wsUrl;
             var user = Variables.wsUsuario;
             var pass = Variables.wsPassword;
@@ -102,16 +102,11 @@ namespace ReportesUnis
             string respuesta = "";
             if (consultar != "/child/photo/")
             {
+                credencialesWS(archivoWS, "Consultar");
                 string consulta = consultaUser("nationalIdentifiers", personId);
-                /*if (cantidad >= 0)
-                    consulta = consulta.Substring(0, cantidad);*/
                 string consulta2 = consulta.Replace("\n    \"", "|");
                 string[] result = consulta2.Split('|');
                 string personID = getBetween(consulta, "\n      \"NationalIdentifierId\" : ", ",\n      \"LegislationCode\" : \"GT\",\n      \"NationalIdentifierType\" : \"CUI\"");
-                /*if (personID=="")
-                    personID = getBetween(consulta, "\n      \"NationalIdentifierId\" : ", ",\n      \"LegislationCode\" : \"GT\",\n      \"NationalIdentifierType\" : \"PASAPORTE\"");
-                */
-                credencialesWS(archivoWS, "Consultar");
                 var vchrUrlWS = Variables.wsUrl;
                 var user = Variables.wsUsuario;
                 var pass = Variables.wsPassword;
@@ -821,7 +816,7 @@ namespace ReportesUnis
         //Crea un archivo .txt para guardar bitácora
         public void CrearArchivoBitacora(string archivoBitacora, string FechaHoraEjecución)
         {
-            using (StreamWriter sw = File.CreateText(archivoBitacora)) ;
+            StreamWriter sw = File.CreateText(archivoBitacora);
         }
 
         //Crea el cuerpo que se utiliza para consultar los empleados por DPI

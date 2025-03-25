@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -77,7 +77,7 @@ namespace ReportesUnis.API
                 request.AddHeader("content-type", "application/vnd.oracle.adf.resourceitem+json");
                 request.AddHeader("username", user);
                 request.AddHeader("password", pass);
-                if (consulta.Equals("legislativeInfo") || consulta.Equals("addresses") )
+                if (consulta.Equals("legislativeInfo") || consulta.Equals("addresses"))
                 {
                     request.AddHeader("effective-of", range);
                     request.AddParameter("application/json", info, ParameterType.RequestBody);
@@ -87,7 +87,8 @@ namespace ReportesUnis.API
                     request.AddHeader("effective-of", range);
                     request.AddParameter("application/vnd.oracle.adf.resourceitem+json", info, ParameterType.RequestBody);
 
-                }else
+                }
+                else
                     request.AddParameter("application/vnd.oracle.adf.resourceitem+json", info, ParameterType.RequestBody);
 
                 IRestResponse response = client.Execute(request);
@@ -98,7 +99,7 @@ namespace ReportesUnis.API
                 else
                     return 1;
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return 1;
             }
@@ -112,7 +113,7 @@ namespace ReportesUnis.API
             {
                 var client = new RestClient(url);
                 var request = new RestRequest(Method.DELETE);
-                var range = "RangeMode=DELETE_CHANGES;RangeStartDate="+effective+";RangeEndDate=4712-12-31";
+                var range = "RangeMode=DELETE_CHANGES;RangeStartDate=" + effective + ";RangeEndDate=4712-12-31";
                 request.AddHeader("Authorization", "Basic " + svcCredentials);
                 request.AddHeader("content-type", "application/vnd.oracle.adf.resourceitem+json");
                 request.AddHeader("username", user);
@@ -137,7 +138,7 @@ namespace ReportesUnis.API
         }
 
         public dynamic PostNit(string url, string json)
-        {           
+        {
             try
             {
                 var client = new RestClient(url);
@@ -200,6 +201,35 @@ namespace ReportesUnis.API
             catch (Exception)
             {
                 return 1;
+            }
+        }
+
+
+        public (int respuesta, string mensaje) Patch_CRM(string url, string user, string pass, string info)
+        {
+            string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(user + ":" + pass));
+
+            try
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest(Method.PATCH);
+                request.AddHeader("Authorization", "Basic " + svcCredentials);
+                request.AddHeader("content-type", "application/vnd.oracle.adf.resourceitem+json");
+                request.AddHeader("username", user);
+                request.AddHeader("password", pass);
+                request.AddParameter("application/vnd.oracle.adf.resourceitem+json", info, ParameterType.RequestBody);
+
+                IRestResponse response = client.Execute(request);
+
+                //dynamic datos = JsonConvert.DeserializeObject(response.Content).ToString();
+                if (response.StatusCode.ToString() == "OK")
+                    return (0, response.StatusCode.ToString());
+                else
+                    return (1, response.StatusCode.ToString()+"-"+response.Content.ToString());
+            }
+            catch (Exception x)
+            {
+                return (1, x.Message);
             }
         }
     }

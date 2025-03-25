@@ -1,6 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ActualizacionEstudiantes.aspx.cs" Inherits="ReportesUnis.ActualizacionEstudiantes" %>
 
-
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <br />
     <div class="container">
@@ -9,7 +8,27 @@
                 <h2 style="text-align: center;">ACTUALIZACIÓN DE INFORMACIÓN</h2>
             </div>
         </div>
+        <div id="divActividad" runat="server" style="display: block">
+            <div class="row">
+                <div class="form-group col">
+                    <h6 style="text-align: center;">¿Qué desea realizar el día de hoy?*</h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 mx-auto text-center">
+                </div>
+                <div class="col-md-4 mx-auto text-center">
+                    <asp:RadioButton ID="RadioButtonCarne" runat="server" GroupName="Accion" Text="Solicitar carné y actualizar información" />
+                </div>
+                <div class="col-md-4 mx-auto text-center">
+                    <asp:RadioButton ID="RadioButtonActualiza" runat="server" GroupName="Accion" Text="Solo actualizar información" />
+                </div>
+                <div class="col-md-2 mx-auto text-center">
+                </div>
+            </div>
+        </div>
     </div>
+
     <asp:HiddenField ID="hdnCameraAvailable" runat="server" ClientIDMode="Static" />
     <asp:HiddenField ID="cameraPermissionsGranted" runat="server" ClientIDMode="Static" />
     <div id="CargaFotografia" runat="server" style="display: none">
@@ -17,10 +36,27 @@
         <div class="container">
             <div class="row">
                 <div class="form-group  col-md">
-                    <h5 style="text-align: center;">Toma de Fografía</h5>
+                    <h5 style="text-align: center;">Toma de Fografía*</h5>
                 </div>
             </div>
         </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-1 mx-auto text-center">
+                </div>
+                <div class="col-md-10 mx-auto">
+                    <h6>Recomendaciones:</h6>
+                    <ul>
+                        <li>Ret&iacute;rate cualquier accesorio que pueda interferir con la fotograf&iacute;a. Por ejemplo: mascarillas, lentes de sol, gorras o headset.</li>
+                        <li>Ub&iacute;cate en un entorno con fondo uniforme (de preferencia una pared o fondo color blanco). Recuerda que el carn&eacute; es un documento formal.</li>
+                    </ul>
+                </div>
+                <div class="col-md-1 mx-auto text-center">
+                </div>
+            </div>
+        </div>
+
+
         <br />
 
 
@@ -75,7 +111,7 @@
             <br />
             <asp:Label ID="Label4" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">a.) Fotografía de su DPI de ambos lados, es decir 2 fotografías</asp:Label>
             <br />
-            <asp:Label ID="Label5" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">b.) Fotografía de su Pasaporte</asp:Label>
+            <asp:Label ID="Label5" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Blue">b.) Fotografía de su Pasaporte (1 fotografía)</asp:Label>
             <br />
             <br />
 
@@ -111,8 +147,15 @@
             <asp:Label ID="txtTipoAccion" runat="server" Visible="false"></asp:Label>
             <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT ESPEJO --%>
             <asp:TextBox ID="txtInsert" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtInsertBit" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtControlBit" runat="server" Visible="false"></asp:TextBox>
             <%-- TXTINSERT ALMACENA EL QUERY PARA HACER INSERT EN EL BANCO --%>
             <asp:TextBox ID="txtInsertBI" runat="server" Visible="false"></asp:TextBox>
+            <%-- TXTINSERT ALMACENA EL QUERY PARA HACER CONTROL NOMBRES RECIBO --%>
+            <asp:TextBox ID="txtUpdateAR" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtUpdateNR" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtControlNR" runat="server" Visible="false"></asp:TextBox>
+            <asp:TextBox ID="txtControlAR" runat="server" Visible="false"></asp:TextBox>
             <%-- TXTEXISTE ALMACENA vALORES PARA HACER VALIDACIONES --%>
             <asp:Label ID="txtExiste" runat="server" Visible="false"></asp:Label>
             <%-- TXTEXISTE2 ALMACENA vALORES PARA HACER VALIDACIONES --%>
@@ -127,6 +170,9 @@
             <asp:Label ID="txtDepartamentoDPI" runat="server" Visible="false"></asp:Label>
             <%-- TXTPath ALMACENA EL PATH DONDE SE ALMACENARA LA IMAGEN --%>
             <asp:Label ID="txtPath" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="txtPathAC" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="txtPathPC" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="txtPathRC" runat="server" Visible="false"></asp:Label>
             <%-- TXTPath URL APEX SERVICIO --%>
             <asp:Label ID="txtApex" runat="server" Visible="false"></asp:Label>
             <%-- APELLIDO PARA APEX --%>
@@ -208,6 +254,9 @@
             <input type="hidden" id="UD_PERSONAL_PHONE" runat="server" />
             <%-- TEXTBOX ALMACENA UD CORREO PERSONAL--%>
             <input type="hidden" id="UD_EMAIL_ADDRESSES" runat="server" />
+
+            <input type="hidden" id="VersionUP" runat="server" />
+            <input type="hidden" id="VersionUD" runat="server" />
             <%-- TEXTBOX ALMACENA LA VARIABLE DE SESION--%>
             <input type="text" id="ISESSION" style="display: none" value="0" runat="server" />
             <input type="hidden" id="banderaSESSION" runat="server" />
@@ -220,6 +269,11 @@
             <input type="hidden" id="InicialNR1" runat="server" />
             <input type="hidden" id="InicialNR2" runat="server" />
             <input type="hidden" id="InicialNR3" runat="server" />
+            <input type="hidden" id="ControlCF" runat="server" />
+            <input type="hidden" id="ControlCF2" runat="server" />
+
+            <%-- CONTROL PARA ACTUALIZAR O SOLICITAR CARNE--%>
+            <input type="hidden" id="ControlAct" runat="server" />
 
 
             <%-- TABLA EN LA QUE SE COLOCAN LOS OBJETOS --%>
@@ -305,9 +359,9 @@
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <asp:Label runat="server" Font-Bold="true">Dirección 3:</asp:Label>
+                                    <asp:Label runat="server" Font-Bold="true">Zona:</asp:Label>
                                     <br />
-                                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" onkeypress="return evitarEnter(event)"></asp:TextBox>
+                                    <asp:TextBox ID="txtDireccion3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="2" Width="275px" CssClass="form-control" onkeypress="return evitarEnteryNumeros(event)"></asp:TextBox>
                                 </div>
 
 
@@ -367,12 +421,12 @@
                         <hr />
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-4 mx-auto text-center">
+                                <div class="col-md-2 mx-auto text-center">
                                 </div>
-                                <div class="col-md-4 mx-auto text-center">
-                                    <h5 style="text-align: center;">Información para recibos de pago</h5>
+                                <div class="col-md-8 mx-auto text-center">
+                                    <h5 style="text-align: center;">Información para recibos de pago para futuras transacciones en la universidad</h5>
                                 </div>
-                                <div class="col-md-4 mx-auto text-center">
+                                <div class="col-md-2 mx-auto text-center">
                                 </div>
                             </div>
                         </div>
@@ -476,8 +530,8 @@
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <asp:Label runat="server" Font-Bold="true">Dirección 3:</asp:Label>
-                                        <asp:TextBox ID="TxtDiRe3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="55" Width="275px" CssClass="form-control" Enabled="false" onkeypress="return evitarEnter(event)"></asp:TextBox>
+                                        <asp:Label runat="server" Font-Bold="true">Zona:</asp:Label>
+                                        <asp:TextBox ID="TxtDiRe3" runat="server" TextMode="MultiLine" Rows="2" MaxLength="2" Width="275px" CssClass="form-control" Enabled="false" onkeypress="return evitarEnter(event)"></asp:TextBox>
                                         <br />
                                     </div>
 
@@ -554,45 +608,81 @@
         </div>
     </div>
 
-    <div id="myModalActualizacion" class="modal">
+    <div class="modal" id="myModalActualizacion" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-spinner">
-                    <div class="spinner"></div>
+                <div class="row">
+                    <div class="col-md-4 mx-auto text-center">
+                    </div>
+                    <div class="col-md-4 mx-auto text-center">
+                        <div class="modal-spinnerCarne">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mx-auto text-center">
+                    </div>
                 </div>
-                <div class="modal-message">Por favor, espera mientras la información se está actualizando...</div>
-
-            </div>
-        </div>
-    </div>
-    <div id="myModalCorrecto" class="modal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-message">Su información fue actualizada correctamente.</div>
-
-            </div>
-        </div>
-    </div>
-    <div id="myModalEspera" class="modal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-spinner">
-                    <div class="spinner"></div>
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div class="modal-messageCarne">Por favor, espera mientras la información se está actualizando...</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
                 </div>
-                <div class="modal-message">Por favor, espera un momento</div>
-
             </div>
         </div>
     </div>
 
-    <div id="myModalError" class="modal">
+    <div class="modal" id="myModalCorrecto" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-message">Ocurrió un error, intente más tarde.</div>
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div style="margin-bottom: 20px;"></div>
+                        <div class="modal-messageCarne">Su información fue actualizada correctamente.</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <div class="modal" id="myModalEspera" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-4 mx-auto text-center">
+                    </div>
+                    <div class="col-md-4 mx-auto text-center">
+                        <div class="modal-spinnerCarne">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mx-auto text-center">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div class="modal-messageCarne">Por favor, espera un momento</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="myModalError" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12 mx-auto text-center">
+                        <div style="margin-bottom: 20px;"></div>
+                        <div class="modal-messageCarne">Ocurrió un error, intente más tarde.</div>
+                        <div style="margin-bottom: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <div class="container" runat="server">
@@ -627,7 +717,7 @@
         </div>
     </div>
 
-    <div id="myModal" class="modal">
+    <div id="myModal" class="modal" style="background: rgba(0, 0, 0, 0.5); display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center; z-index: 9999;">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -654,7 +744,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-md">
-                                                <asp:Label ID="Label6" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Black">&nbsp;&nbsp;&nbsp;&nbsp;b.) Fotografia de su Pasaporte</asp:Label>
+                                                <asp:Label ID="Label6" runat="server" Font-Bold="false" Font-Size="Small" ForeColor="Black">&nbsp;&nbsp;&nbsp;&nbsp;b.) Fotografia de su Pasaporte (1 fotografía)</asp:Label>
                                                 <br />
                                             </div>
                                         </div>
@@ -670,7 +760,7 @@
                                             <div class="form-group col-md-5">
                                             </div>
                                             <div class="form-group col-md-2">
-                                                <asp:Button ID="BtnAceptarCarga" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" OnClick="BtnAceptarCarga_Click" />
+                                                <asp:Button ID="BtnAceptarCarga" runat="server" Text="Aceptar" CssClass="btn-danger-unis" Enabled="true" OnClientClick="return mostrarAlerta();" OnClick="BtnAceptarCarga_Click" />
                                             </div>
                                             <div class="form-group col-md-5">
                                             </div>
@@ -692,7 +782,6 @@
 
     <script>
         var userAgent = navigator.userAgent;
-
         if (userAgent.indexOf("Safari") != -1 && userAgent.indexOf("Chrome") == 0) {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
@@ -700,7 +789,6 @@
                     videoElement.srcObject = stream;
                 })
                 .catch(function (error) {
-                    console.log(error.message);
                     error;
                 });
         } else if (userAgent.indexOf("Chrome") != -1) {
@@ -722,10 +810,10 @@
                 $('#<%= BtnDownload.ClientID %>').css("display", "none");
                 var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
                 lblActualizacion.html("");
-                $('#<%= BtnReload.ClientID %>').click;
+               <%-- $('#<%= BtnReload.ClientID %>').click;--%>
             }, function (error) {
                 let mensajeError = error.message;
-                if (mensajeError.indexOf("Permission denied" != -1)) {
+                if (mensajeError == "Permission denied") {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
                     $('#<%= tbactualizar.ClientID %>').css("display", "none");
@@ -736,8 +824,7 @@
                     lblActualizacion.html(mensaje);
                     $('#<%= BtnReload.ClientID %>').css("display", "block");
                     $('#<%= BtnDownload.ClientID %>').css("display", "block");
-                }
-                if (mensajeError.indexOf("Could not start video source" != -1)) {
+                } else if (mensajeError == "Could not start video source" || mensajeError == "Device in use") {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
                     $('#<%= tbactualizar.ClientID %>').css("display", "none");
@@ -769,10 +856,9 @@
                 $('#<%= BtnDownload.ClientID %>').css("display", "none");
                 var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
                 lblActualizacion.html("");
-                $('#<%= BtnReload.ClientID %>').click;
+                <%--$('#<%= BtnReload.ClientID %>').click;--%>
             }, function (error) {
                 let mensajeError = error.message;
-
                 if (mensajeError.indexOf("Permission denied" != -1)) {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
@@ -786,7 +872,7 @@
                     $('#<%= BtnDownload.ClientID %>').css("display", "block");
                 }
 
-                if (mensajeError.indexOf("Could not start video source" != -1)) {
+                if (mensajeError.indexOf("Could not start video source" != -1) || mensajeError.indexOf("Device in use" != -1)) {
                     $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                     $('#<%= tabla.ClientID %>').css("display", "none");
                     $('#<%= tbactualizar.ClientID %>').css("display", "none");
@@ -799,6 +885,15 @@
                     $('#<%= BtnDownload.ClientID %>').css("display", "none");
                 }
             });
+        } else if (userAgent.indexOf("Mozilla") != -1) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    var videoElement = document.getElementById('videoElement');
+                    videoElement.srcObject = stream;
+                })
+                .catch(function (error) {
+                    error;
+                });
         } else {
             var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
             mensaje = "El navegador no es compatible";
@@ -830,7 +925,7 @@
                     const status = await navigator.permissions.query({ name: 'camera' });
 
                     status.onchange = function () {
-                        location.reload();
+                        /*location.reload();*/
                     };
                 } catch (error) {
 
@@ -858,7 +953,7 @@
                             $('#<%= InfePersonal.ClientID %>').css("display", "block");
                             $('#<%= BtnReload.ClientID %>').css("display", "none");
                             $('#<%= BtnDownload.ClientID %>').css("display", "none");
-                            $('#<%= BtnReload.ClientID %>').click;
+                            <%--$('#<%= BtnReload.ClientID %>').click;--%>
                             guardarEnSessionStorage("1");
                             bandera.text = "1";
                             lblActualizacion.html("");
@@ -867,7 +962,6 @@
                     .catch(function (error) {
                         if ((sesion == "0" || sesion == "2") && bandera == 0) {
                             let mensajeError = error.message;
-
                             if (mensajeError.indexOf("Permission denied" != -1)) {
                                 $('#<%= CargaFotografia.ClientID %>').css("display", "none");
                                 $('#<%= tabla.ClientID %>').css("display", "none");
@@ -881,27 +975,35 @@
                                 $('#<%= BtnDownload.ClientID %>').css("display", "block");
                             }
 
-                            if (mensajeError.indexOf("Could not start video source" != -1)) {
+                            if (mensajeError.indexOf("Could not start video source" != -1) || mensajeError.indexOf("Device in use" != -1)) {
                                 $('#<%= CargaFotografia.ClientID %>').css("display", "none");
-                                    $('#<%= tabla.ClientID %>').css("display", "none");
-                                    $('#<%= tbactualizar.ClientID %>').css("display", "none");
-                                    $('#<%= InfePersonal.ClientID %>').css("display", "none");
-                                    var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
-                                    mensaje = "La cámara está siendo utilizada por otras aplicaciones. <br />  <br>Para poder continuar cierre dichas aplicaciones y luego haga clic en el botón de Recargar Página. <br>";
-                                    lblActualizacion.css("color", "black");
-                                    lblActualizacion.html(mensaje);
-                                    $('#<%= BtnReload.ClientID %>').css("display", "block");
-                                    $('#<%= BtnDownload.ClientID %>').css("display", "none");
+                                $('#<%= tabla.ClientID %>').css("display", "none");
+                                $('#<%= tbactualizar.ClientID %>').css("display", "none");
+                                $('#<%= InfePersonal.ClientID %>').css("display", "none");
+                                var lblActualizacion = $("#<%= lblActualizacion.ClientID %>");
+                                mensaje = "La cámara está siendo utilizada por otras aplicaciones. <br />  <br>Para poder continuar cierre dichas aplicaciones y luego haga clic en el botón de Recargar Página. <br>";
+                                lblActualizacion.css("color", "black");
+                                lblActualizacion.html(mensaje);
+                                $('#<%= BtnReload.ClientID %>').css("display", "block");
+                                $('#<%= BtnDownload.ClientID %>').css("display", "none");
                             }
                         }
                     });
 
-
-                setTimeout(function () {
-                    ValidarEstadoCamara1()
-                }, 240000);
-
             };
+            var intervalID; // Variable para almacenar el ID del intervalo
+
+            function iniciarValidacionCamara() {
+                ValidarEstadoCamara1(); // Ejecuta la función una vez inmediatamente
+
+                // Establece un intervalo para ejecutar la función cada 10 minutos
+                intervalID = setInterval(ValidarEstadoCamara1, 600000); // 600,000 milisegundos = 10 minutos
+            }
+
+            function detenerValidacionCamara() {
+                // Detiene el intervalo
+                clearInterval(intervalID);
+            }
         }
 
         // Función para guardar en sessionStorage
@@ -983,14 +1085,27 @@
             var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
             var txtNombre = $('#<%= txtNombre.ClientID %>').val().trim();
             var txtNInicial = $('#<%= txtNInicial.ClientID %>').val().trim();
+            var ControlCF2 = $('#<%= ControlCF2.ClientID %>').val().trim();
             var txtApellido = $('#<%= txtApellido.ClientID %>').val().trim();
             var txtAInicial = $('#<%= txtAInicial.ClientID %>').val().trim();
             var txtCasada = $('#<%= txtCasada.ClientID %>').val().trim();
             var txtCInicial = $('#<%= txtCInicial.ClientID %>').val().trim();
             var modal = document.getElementById("myModalActualizacion");
             var divCombos = $('#<%= Combos.ClientID %>');
+            var fileUpload = document.getElementById('<%= FileUpload2.ClientID %>');
+            var files = fileUpload.files;
+            var radioButtonCarne = document.getElementById('<%= RadioButtonCarne.ClientID %>');
+            var radioButtonActualiza = document.getElementById('<%= RadioButtonActualiza.ClientID %>');
 
-            if (txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) {
+
+            if (!(radioButtonCarne.checked || radioButtonActualiza.checked)) {
+                alert('Por favor, selecciona al menos una opción de lo que deseas realizar el dia de hoy.');
+                return false; // Evitar que la función continúe si no hay ninguna opción seleccionada
+            } else if ((txtNombre !== txtNInicial || txtApellido !== txtAInicial || txtCasada !== txtCInicial) && $('#myModal').css('display') != 'block') {
+                $('#myModal').css('display', 'block');
+                return false;
+            } else if (files.length == 0 && $('#myModal').css('display') === 'block') {
+                alert("Es necesario adjuntar la imagen de su documento de identificación para continuar con la actualización.");
                 $('#myModal').css('display', 'block');
                 return false;
             } else if (TrueNit !== nit && nit !== "CF") {
@@ -1093,7 +1208,7 @@
 
 
 
-                if (paisN.trim() === "") {
+                if (paisN.trim() === "" && ControlCF2.trim() === "2") {
                     if (mensaje.trim() == "") {
                         mensaje = "-El país para el recibo es requerido.";
                     } else {
@@ -1101,7 +1216,7 @@
                     }
                 }
 
-                if (deptoN.trim() === "") {
+                if (deptoN.trim() === "" && ControlCF2.trim() === "2") {
                     if (mensaje.trim() == "") {
                         mensaje = "-El departamento para el recibo es requerido.";
                     } else {
@@ -1109,7 +1224,7 @@
                     }
                 }
 
-                if (muniN.trim() === "") {
+                if (muniN.trim() === "" && ControlCF2.trim() === "2") {
                     if (mensaje.trim() == "") {
                         mensaje = "-El municipio para el recibo es requerido.";
                     } else {
@@ -1122,6 +1237,7 @@
                     alert(mensaje);
                     return false;
                 } else if (confirm("¿Está seguro de que su información es correcta?")) {
+                    $('#myModal').css('display', 'none'); // Cierra #myModal cuando se abre para cargar documentos
                     $('#myModalActualizacion').css('display', 'block');
                     __doPostBack('<%= BtnActualizar.ClientID %>', '');
                     return true; // Permite continuar con la acción del botón
@@ -1160,6 +1276,8 @@
             function RBSi() {
                 $('#<%= RadioButtonNombreSi.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
+                        $('#<%= ControlCF.ClientID %>').val(" ");
+                        $('#<%= ControlCF2.ClientID %>').val("1");
                         $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
                         $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
                         $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
@@ -1224,6 +1342,8 @@
             function RBNo() {
                 $('#<%= RadioButtonNombreNo.ClientID %>').on('change', function () {
                     if ($(this).is(':checked')) {
+                        $('#<%= ControlCF.ClientID %>').val(" ");
+                        $('#<%= ControlCF2.ClientID %>').val("2");
                         $('#<%= TxtNombreR.ClientID %>').val("");
                         $('#<%= TxtApellidoR.ClientID %>').val("");
                         $('#<%= TxtCasadaR.ClientID %>').val("");
@@ -1256,15 +1376,41 @@
                         while (muni.options.length > 0) {
                             muni.remove(0);
                         }
-                        //llenadoPaisnit();
-                        //llenadoDepartamentoNit();
-                        //llenadoMunicipioNIT();
                     }
                 });
             }
 
             // Call the function
             RBNo();
+
+        });
+
+        $(document).ready(function () {
+            // Function to add the code
+            function RBAC() {
+                $('#<%= RadioButtonActualiza.ClientID %>').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        $('#<%= ControlAct.ClientID %>').val("AC");
+
+                    }
+                });
+            }
+            // Call the function
+            RBAC();
+
+        });
+
+        $(document).ready(function () {
+            // Function to add the code
+            function RBAC() {
+                $('#<%= RadioButtonCarne.ClientID %>').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        $('#<%= ControlAct.ClientID %>').val("");
+                    }
+                });
+            }
+            // Call the function
+            RBAC();
 
         });
 
@@ -1275,10 +1421,7 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO NOMBRE EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtNombre.ClientID %>').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtNombreR.ClientID %>').val($('#<%= txtNombre.ClientID %>').val());
                 }
             });
@@ -1287,10 +1430,7 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtApellido.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtApellidoR.ClientID %>').val($('#<%= txtApellido.ClientID %>').val());
                 }
             });
@@ -1299,10 +1439,7 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO APELLIDO DE CASADA EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtCasada.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtCasadaR.ClientID %>').val($('#<%= txtCasada.ClientID %>').val());
                 }
             });
@@ -1311,22 +1448,16 @@
         //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 1 EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtDireccion.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtDiRe1.ClientID %>').val($('#<%= txtDireccion.ClientID %>').val());
                 }
             });
         });
 
-        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 2 EN EL RECIBO 
+        //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 2 EN EL RECIBO 2.0
         $(document).ready(function () {
             $('#<%= txtDireccion2.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtDiRe2.ClientID %>').val($('#<%= txtDireccion2.ClientID %>').val());
                 }
             });
@@ -1335,10 +1466,7 @@
         //FUNCION QUE PERMITE QUE SE INGRESE LA MISMA DIRECCION 3 EN EL RECIBO 
         $(document).ready(function () {
             $('#<%= txtDireccion3.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= TxtDiRe3.ClientID %>').val($('#<%= txtDireccion3.ClientID %>').val());
                 }
             });
@@ -1347,10 +1475,7 @@
         //FUNCION QUE PERMITE QUE SE INGRESE EL MISMO PAIS EN EL RECIBO
         $(document).ready(function () {
             $('#<%= CmbPaisNIT.ClientID %> ').on('input', function () {
-                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') &&
-                    ($('#<%= InicialNR1.ClientID %>').val().trim() !== $('#<%= TxtNombreR.ClientID %>').val() ||
-                        $('#<%= InicialNR2.ClientID %>').val().trim() !== $('#<%= TxtApellidoR.ClientID %>').val() ||
-                    $('#<%= InicialNR3.ClientID %>').val().trim() !== $('#<%= TxtCasadaR.ClientID %>').val())) {
+                if (!$('#<%= RadioButtonNombreNo.ClientID %>').is(':checked') && $('#<%= ControlCF.ClientID %>').val().trim() != 'CF') {
                     $('#<%= PaisNit.ClientID %>').val($('#<%= CmbPaisNIT.ClientID %>').val());
                 }
             });
@@ -1378,10 +1503,13 @@
 
             if (files.length > 2) {
                 alert("Solo se permiten cargar 2 archivos.");
-                // Eliminar los archivos adicionales
-                while (files.length > 2) {
-                    fileUpload.remove(files.length - 1);
-                    fileUpload.value = "";
+
+                for (var i = 0; i < fileUpload.files.length; i++) {
+                    var file = fileUpload.files[i];
+
+                    // Elimina el archivo seleccionado
+                    fileUpload.value = '';
+
                 }
             }
         }
@@ -1393,7 +1521,10 @@
                 var character = String.fromCharCode(keyCode);
                 if (character === '-') {
                     event.preventDefault();
-                    alert('No se permite el ingreso del guín (-)');
+                    alert('No se permite el ingreso del guión (-)');
+                } else if (character === 'C' || character === 'c') {
+                    event.preventDefault();
+                    alert('Para ingresar CF, seleccione la casilla NO, que se encuentra arriba del campo del ingreso del NIT');
                 }
             });
         });
@@ -1424,6 +1555,7 @@
                 var TrueNit = $('#<%= TrueNit.ClientID %>').val().trim();
                 var labelValidacion = $('#<%= ValidacionNit.ClientID %>').val().trim();
 
+
                 if (txtNit !== TrueNit || txtNit !== 'CF') {
                     $('#<%= ValidacionNit.ClientID %>').val("1");
                 } else {
@@ -1432,6 +1564,8 @@
                 }
             });
         });
+
+
 
         document.addEventListener("DOMContentLoaded", function () {
             // Obtenemos el elemento de video y la imagen en JavaScript
@@ -1509,13 +1643,28 @@
             }, 4000); // 4000 milisegundos =  segundos
         }
 
-        //evitar enter
-        function evitarEnter(e) {
-            if (e.keyCode == 13) {
-                e.preventDefault(); // Evitar que se realice una nueva línea
-                return false;
+        //evitar enter y letras, permite ingresar solo numeros
+        function evitarEnteryNumeros(e) {
+            var charCode = (e.which) ? e.which : event.keyCode;
+
+            // Verifica si la tecla presionada es un número y no es Enter
+            if ((charCode >= 48 && charCode <= 57) && charCode !== 13) {
+                return true;
             }
-            return true;
+
+            return false;
+        }
+
+
+        function evitarEnter(e) {
+            var charCode = (e.which) ? e.which : event.keyCode;
+
+            // Verifica si la tecla presionada es un número y no es Enter
+            if (charCode !== 13) {
+                return true;
+            }
+
+            return false;
         }
 
     </script>
@@ -1524,4 +1673,3 @@
     <script src="Scripts/UNIS/Unis.js"></script>
     <div class="preloader" id="preloader"></div>
 </asp:Content>
-

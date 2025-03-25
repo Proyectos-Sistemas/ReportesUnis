@@ -1,1 +1,1 @@
-https://apexdes.unis.edu.gt:8443/ords/
+https://apexcert.unis.edu.gt:8443/ords/

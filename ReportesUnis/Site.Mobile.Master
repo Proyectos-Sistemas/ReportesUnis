@@ -1,4 +1,5 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Mobile.master.cs" Inherits="ReportesUnis.Site_Mobile" %>
+
 <%@ Register Src="~/ViewSwitcher.ascx" TagPrefix="friendlyUrls" TagName="ViewSwitcher" %>
 
 
@@ -64,16 +65,13 @@
     <link rel="stylesheet" type="text/css" href="Styles/estilo-unis.css" crossorigin="anonymous" />
     <script>
         $(document).ready(function () {
-            console.log("ready");
             DivCargandoNoVisible();
 
         });
         window.onload = function () {
-            console.log("onload");
 
             if ($('#overlay').length) {
 
-                console.log("overlay exists");
             } else {
                 var $div = $('<div />').appendTo('body');
                 $div.attr('id', 'overlay');
@@ -82,31 +80,26 @@
                 var $div2 = $('<div />').appendTo('body');
                 $div2.attr('id', 'loading');
                 $div2.attr('class', 'loading');
-                console.log("overlay does not exists");
                 DivCargandoVisible();
             }
 
         };
         function DivCargandoNoVisible() {
             if ($('#overlay').is(':visible')) {
-                console.log("overlay no visible");
                 $('#overlay').hide();
             };
 
             if ($('#loading').is(':visible')) {
-                console.log("loading no visible");
                 $('#loading').hide();
             };
         }
 
         function DivCargandoVisible() {
             if (!$('#overlay').is(':visible')) {
-                console.log("overlay visible");
                 $('#overlay').show();
             };
 
             if (!$('#loading').is(':visible')) {
-                console.log("loading visible");
                 $('#loading').show();
             };
         }
@@ -114,7 +107,8 @@
 </head>
 <body>
     <div class="overlay" id="overlay" style=""></div>
-    <div class="loading" id="loading" style="">Cargando. Espere por favor...<div class="lds-dual-ring"></div>
+    <div class="loading" id="loading" style="">
+        Cargando. Espere por favor...<div class="lds-dual-ring"></div>
     </div>
     <form runat="server" class="needs-validation">
         <asp:ScriptManager runat="server" EnablePageMethods="true">
@@ -165,31 +159,36 @@
                             <a id="MenuHistoricosCXP" runat="server" validationgroup="HISTORICO_FINANZAS" class="dropdown-item" href="~/HistoricoCXP">Históricos Cuentas por pagar</a>
                             <a id="MenuHistoricosGL" runat="server" validationgroup="HISTORICO_FINANZAS" class="dropdown-item" href="~/HistoricoGL">Históricos Contabilidad general</a>
                         </div>
-                    </li>                    
+                    </li>
                     <li class="nav-item dropdown" id="liNavbarInformacion">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarInformacion" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Información
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a id="RepEstudiantes" runat="server" class="dropdown-item" href="~/ReporteEstudiantes">Reportes de Carné de Estudiantes</a>
-                            <a id="RepEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteEmpleados">Reportes de Carné  de Empleados</a>
                             <a id="RepCamarasEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicas">Reportes Cámaras Térmicas de Estudiantes</a>
-                            <a id="RepCamarasEmp" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ReporteCamarasTermicasEmpleados">Reportes Cámaras Térmicas de Empleados</a>
-                            <a id="CargaCTEst" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/Cargarfotografia">Carga Masiva de Fotografías Estudiantes</a>
-                            <a id="CargaCTEmp" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/CargarFotografiaEmpleados">Carga Masiva de Fotografías Empleados</a>
-                            <%--<a id="ActEstudiantes" runat="server" validationgroup="RLI_VistaAlumnos" class="dropdown-item" href="~/ActualizacionEstudiantes">Actualización de información de Estudiantes</a>
-                            <a id="ActEmpleados" runat="server" validationgroup="RLI_VistaEmpleados" class="dropdown-item" href="~/ActualizaciónEmpleados">Actualización de información de Empleados</a>--%>
-                            <a id="Actualizacion" runat="server"  class="dropdown-item" href="~/UnificacionActualización">Actualización de información</a>                       
+                            <a id="AccesosFacultad" runat="server" validationgroup="ACCESO_CARNETIZACION" class="dropdown-item" href="~/AccesosFacultad_ActulizacionGeneral">Gestion Accesos Actualización General</a>
+                            <a id="MantPantallas" runat="server" validationgroup="ACCESO_CARNETIZACION" class="dropdown-item" href="~/MantenimientoPantallas">Tiempo Pantallas</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown" id="liNavbarCarnet">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarCarnet" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Carnetización
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a id="MantPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Tiempo Pantallas</a>
+                            <a id="Actualizacion" runat="server" class="dropdown-item" href="~/UnificacionActualización">Actualización de información</a>
                             <a id="GestionesEstudiantes" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónDeCarne">Gestión Estudiantes</a>
-                            <a id="Confirmacion" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografias">Confirmar Fotografías</a>
-                            <%--<a id="MantenimientoPantallas" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/MantenimientoPantallas">Mantenimiento Pantallas</a>--%>
+                            <a id="GestionesEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmaciónCarneEmpleados">Gestión Empleados</a>
+                            <a id="Confirmacion" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografias">Confirmar Fotografías Estudiantes</a>                            
+                            <a id="ConfirmacionEmpleados" runat="server" validationgroup="DATOS_FOTOGRAFIAS" class="dropdown-item" href="~/ConfirmacionDeFotografiasEmpleados">Confirmar Fotografías Colaboradores</a>     
+                            <a id="ActualizacionGeneralEstudiantes" runat="server" validationgroup="RLI_VistaAdmisiones" class="dropdown-item" href="~/ActualizacionGeneralEstudiantes">Actualización General Estudiantes</a> 
                         </div>
+                    </li>
+                    <li class="nav-item dropdown" id="liNavbarDirectorio">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDirectorio"
+                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Directorio</a>
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a id="MenuDirectorio" runat="server" validationgroup="RLI_VistaEmpleados" class="dropdown-item" href="~/DirectorioUnis">Directorio</a>
+                        </div>
+
                     </li>
                 </ul>
 

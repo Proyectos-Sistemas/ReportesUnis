@@ -1,1 +1,3 @@
-/Usuarios/FotosColaboradores/
+/Usuarios/FotosColaboradores/Fotos/ACTUALIZACION-AC/
+/Usuarios/FotosColaboradores/Fotos/PRIMER_CARNET-PC/
+/Usuarios/FotosColaboradores/Fotos/RENOVACION_CARNE-RC/

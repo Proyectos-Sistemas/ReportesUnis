@@ -26,7 +26,7 @@ namespace ReportesUnis
 
                 if (respuesta.Contains("RLI_Admin"))
                 {
-                    MenuLogServipagos.Visible = MenuLogInterfaz.Visible = MenuLogInterfazHCMCS.Visible = MenuHistoricosHCM.Visible = MenuHistoricosCXC.Visible = MenuHistoricosCXP.Visible = MenuHistoricosGL.Visible = true;
+                    MenuLogServipagos.Visible = MenuLogInterfaz.Visible = MenuLogInterfazHCMCS.Visible = MenuHistoricosHCM.Visible = MenuHistoricosCXC.Visible = MenuHistoricosCXP.Visible = MenuHistoricosGL.Visible = MenuDirectorio.Visible = true;
                 }
                 else
                 {
@@ -37,27 +37,32 @@ namespace ReportesUnis
                     MenuHistoricosCXC.Visible = respuesta.Contains(MenuHistoricosCXC.ValidationGroup);
                     MenuHistoricosCXP.Visible = respuesta.Contains(MenuHistoricosCXP.ValidationGroup);
                     MenuHistoricosGL.Visible = respuesta.Contains(MenuHistoricosGL.ValidationGroup);
+                    MenuDirectorio.Visible = respuesta.Contains(MenuDirectorio.ValidationGroup);
 
                 }
 
                 if (respuesta.Contains("DATOS_FOTOGRAFIAS"))
                 {
-                    //RepEstudiantes.Visible = RepEmpleados.Visible = RepCamarasEst.Visible = RepCamarasEmp.Visible = CargaCTEst.Visible = CargaCTEmp.Visible = true;
-                   RepCamarasEst.Visible = true;
+                    //RepCamarasEst.Visible = RepCamarasEmp.Visible = true;
+                    RepCamarasEst.Visible = true;
                 }
                 else
                 {
-                    //RepEstudiantes.Visible = respuesta.Contains(RepEstudiantes.ValidationGroup); NO SE UTILIZARÁ
-                    //RepEmpleados.Visible = respuesta.Contains(RepEmpleados.ValidationGroup); NO SE UTILIZARÁ
                     RepCamarasEst.Visible = respuesta.Contains(RepCamarasEst.ValidationGroup);
                     //RepCamarasEmp.Visible = respuesta.Contains(RepCamarasEmp.ValidationGroup); DESCOMENTAR EN LA FASE 2
-                    //CargaCTEst.Visible = respuesta.Contains(CargaCTEst.ValidationGroup); NO SE UTILIZARÁ
-                    //CargaCTEmp.Visible = respuesta.Contains(CargaCTEmp.ValidationGroup); NO SE UTILIZARÁ
+                }
+                if (respuesta.Contains("RLI_VistaAdmisiones"))
+                {
+                    ActualizacionGeneralEstudiantes.Visible = true;
+                }
+                else
+                {
+                    ActualizacionGeneralEstudiantes.Visible = respuesta.Contains(ActualizacionGeneralEstudiantes.ValidationGroup);
                 }
 
                 if (respuesta.Contains("ACCESO_CARNETIZACION"))
                 {
-                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = GestionesEmpleados.Visible = ConfirmacionEmpleados.Visible = true;
+                    MantPantallas.Visible = GestionesEstudiantes.Visible = Confirmacion.Visible = GestionesEmpleados.Visible = ConfirmacionEmpleados.Visible = AccesosFacultad.Visible = true;
                 }
                 else
                 {
@@ -65,7 +70,7 @@ namespace ReportesUnis
                     GestionesEstudiantes.Visible = respuesta.Contains(GestionesEstudiantes.ValidationGroup);
                     GestionesEmpleados.Visible = respuesta.Contains(GestionesEmpleados.ValidationGroup);
                     Confirmacion.Visible = respuesta.Contains(Confirmacion.ValidationGroup);
-                    ConfirmacionEmpleados.Visible = respuesta.Contains(ConfirmacionEmpleados.ValidationGroup);
+                    AccesosFacultad.Visible = respuesta.Contains(AccesosFacultad.ValidationGroup);
                 }
             }
             catch (Exception)
