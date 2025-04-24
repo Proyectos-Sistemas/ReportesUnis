@@ -1470,6 +1470,6 @@ namespace ReportesUnis
             SetActiveTab(2);
         }
 
->>>>>>> Chrome-v2
+
     }
 }
